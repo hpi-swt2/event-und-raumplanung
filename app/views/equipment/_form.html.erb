@@ -1,0 +1,24 @@
+<%= form_for @equipment, :html => { :class => "form-horizontal equipment" } do |f| %>
+
+    <% if @equipment.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@equipment.errors.count, "error") %> prohibited this equipment from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @equipment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            equipment_index_path, :class => 'btn btn-default' %>
+
+<% end %>
