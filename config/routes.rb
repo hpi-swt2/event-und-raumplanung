@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
+  resources :equipment
+
   resources :bookings
 
   resources :events
 
   resources :tasks
-
-  resources :equipment
-
-  resources :equipments
 
   resources :rooms
 

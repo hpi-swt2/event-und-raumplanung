@@ -15,6 +15,27 @@
     </div>
   <% end %>
 
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%= error_span(@equipment[:name]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :description, :class => 'form-control' %>
+    </div>
+    <%= error_span(@equipment[:description]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :room_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :room_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@equipment[:room_id]) %>
+  </div>
 
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
