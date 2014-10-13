@@ -136,11 +136,11 @@ de:
       update: ! '%{model} aktualisieren'
     links:
       edit: Bearbeiten
-      destroy: Entfernen
+      destroy: Löschen
       confirm: Sind sie sicher?
       new: Neu
       cancel: Abbrechen
-      back: Zurück 
+      back: Zurück
   number:
     currency:
       format:
@@ -204,3 +204,7 @@ de:
       long: ! '%A, %d. %B %Y, %H:%M Uhr'
       short: ! '%d. %B, %H:%M Uhr'
     pm: nachmittags
+  notices:
+    successful_create: ! '%{model} wurde erfolgreich erstellt.'
+    successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
+    successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
