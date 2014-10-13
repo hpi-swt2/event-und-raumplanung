@@ -8,6 +8,8 @@
   <dd><%= @room.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:size) %>:</strong></dt>
   <dd><%= @room.size %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:booking_id) %>:</strong></dt>
+  <dd><%= @room.booking_id %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

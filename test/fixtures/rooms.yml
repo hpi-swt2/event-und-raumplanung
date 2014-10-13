@@ -2,8 +2,10 @@
 
 one:
   name: MyString
-  size: 
+  size: 1
+  booking_id: 
 
 two:
   name: MyString
-  size: 
+  size: 1
+  booking_id: 
