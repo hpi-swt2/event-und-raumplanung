@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
+  resources :rooms
+
   resources :tasks
 
   resources :bookings
-
-  resources :rooms
 
   resources :equipment
 

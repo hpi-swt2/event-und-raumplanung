@@ -1,1 +1,1 @@
-json.extract! @room, :id, :name, :size, :booking_id, :created_at, :updated_at
+json.extract! @room, :id, :name, :size, :created_at, :updated_at
