@@ -10,8 +10,12 @@
   <dd><%= @booking.description %></dd>
   <dt><strong><%= model_class.human_attribute_name(:start) %>:</strong></dt>
   <dd><%= @booking.start %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:stop) %>:</strong></dt>
-  <dd><%= @booking.stop %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:end) %>:</strong></dt>
+  <dd><%= @booking.end %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
+  <dd><%= @booking.event_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:room_id) %>:</strong></dt>
+  <dd><%= @booking.room_id %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

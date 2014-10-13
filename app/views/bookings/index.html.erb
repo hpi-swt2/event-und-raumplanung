@@ -9,7 +9,9 @@
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th><%= model_class.human_attribute_name(:start) %></th>
-      <th><%= model_class.human_attribute_name(:stop) %></th>
+      <th><%= model_class.human_attribute_name(:end) %></th>
+      <th><%= model_class.human_attribute_name(:event_id) %></th>
+      <th><%= model_class.human_attribute_name(:room_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -21,7 +23,9 @@
         <td><%= booking.name %></td>
         <td><%= booking.description %></td>
         <td><%= booking.start %></td>
-        <td><%= booking.stop %></td>
+        <td><%= booking.end %></td>
+        <td><%= booking.event_id %></td>
+        <td><%= booking.room_id %></td>
         <td><%=l booking.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
