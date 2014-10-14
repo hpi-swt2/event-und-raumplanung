@@ -1,4 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/hpi-swt2/event-und-raumplanung/badges/gpa.svg)](https://codeclimate.com/github/hpi-swt2/event-und-raumplanung)
+[![Test Coverage](https://codeclimate.com/github/hpi-swt2/event-und-raumplanung/badges/coverage.svg)](https://codeclimate.com/github/hpi-swt2/event-und-raumplanung)
 
 event-und-raumplanung
 =====================
