@@ -58,6 +58,9 @@ gem 'cancancan', '~> 1.9'
 # see: https://github.com/codeclimate/ruby-test-reporter
 gem "codeclimate-test-reporter", group: :test, require: nil
 
+# performance management system, see: https://github.com/newrelic/rpm
+gem 'newrelic_rpm'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
