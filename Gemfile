@@ -35,6 +35,21 @@ gem 'devise'
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
 gem 'factory_girl_rails'
 
+# better error pages, see: https://github.com/charliesome/better_errors
+gem 'better_errors', group: :development
+gem 'binding_of_caller', group: :development
+
+# an IRB alternative and runtime developer console
+gem 'pry', group: :development
+gem 'pry-rails', group: :development
+
+# code coverage analysis tool, see: https://github.com/colszowka/simplecov
+gem 'simplecov', require: false, group: :test
+
+# continuation of CanCan, the authorization Gem for Ruby on Rails,
+# see: https://github.com/CanCanCommunity/cancancan
+gem 'cancancan', '~> 1.9'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
