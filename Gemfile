@@ -32,6 +32,9 @@ gem 'spring',        group: :development
 # authentification, see: https://github.com/plataformatec/devise
 gem 'devise'
 
+# fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
+gem 'factory_girl_rails'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
