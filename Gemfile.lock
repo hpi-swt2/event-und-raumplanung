@@ -80,6 +80,7 @@ GEM
     minitest (5.4.2)
     multi_json (1.10.1)
     orm_adapter (0.5.0)
+    pg (0.17.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -163,6 +164,7 @@ DEPENDENCIES
   factory_girl_rails
   jbuilder (~> 2.0)
   jquery-rails
+  pg
   pry
   pry-rails
   rails (= 4.1.6)
