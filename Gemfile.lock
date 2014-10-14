@@ -37,6 +37,8 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     cancancan (1.9.2)
+    codeclimate-test-reporter (0.4.1)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -156,6 +158,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   cancancan (~> 1.9)
+  codeclimate-test-reporter
   devise
   factory_girl_rails
   jbuilder (~> 2.0)

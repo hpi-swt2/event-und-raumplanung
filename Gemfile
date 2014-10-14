@@ -50,6 +50,11 @@ gem 'simplecov', require: false, group: :test
 # see: https://github.com/CanCanCommunity/cancancan
 gem 'cancancan', '~> 1.9'
 
+# collects test coverage data from your Ruby test suite
+# and sends it to Code Climate's hosted, automated code review service,
+# see: https://github.com/codeclimate/ruby-test-reporter
+gem "codeclimate-test-reporter", group: :test, require: nil
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
