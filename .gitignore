@@ -34,3 +34,5 @@
 
 # .orig Files
 .orig
+
+/cookbooks

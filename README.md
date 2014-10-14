@@ -5,3 +5,34 @@ event-und-raumplanung
 =====================
 
 Ein Tool das die interne Planung von Events verbessern soll und dabei besonderen Fokus auf die Zuteilung von Räumen und Ausstattung legt.
+
+
+Setup
+-----
+Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen Maschine und Vagrant
+(langsamer, geht dafür auch unter Windows) oder direkt auf deinem System.
+
+Wenn du Vagrant (mit psql) benutzen wollt:
+
+  vagrant up #this may take up to 10 minutes
+  vagrant ssh
+  cd hpi-swt2
+  bundle install
+  gem install pg
+  cp config/database.psql.yml config/database.yml
+  exit
+
+Ansonsten könnt ihr das System auch mit sqlite nutzen (nicht empfohlen)
+  bundle install --without=production
+  ln -s config/database.sqlite.yml config/database.yml
+
+Um `rails` zu starten müsst ihr folgendes ausführen:
+
+  vagrant ssh
+  cd hpi-swt2
+  rails s
+
+
+
+
+
