@@ -1,3 +1,6 @@
- addons:
-   code_climate:
-     repo_token: c75df5383c6ed506f57bd7281c1c41200a139a6847ad4c62d0371a23d457f8c6
+addons:
+  code_climate:
+    repo_token: c75df5383c6ed506f57bd7281c1c41200a139a6847ad4c62d0371a23d457f8c6
+language: ruby
+  rvm:
+    - 2.1.3
