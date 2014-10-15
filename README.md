@@ -26,7 +26,8 @@ Wenn du Vagrant (mit psql) benutzen wollt:
     cp config/database.psql.yml config/database.yml
     exit
 
-Ansonsten könnt ihr das System auch mit sqlite nutzen (nicht empfohlen)
+Ihr könnt das System auch mit sqlite nutzen (nicht empfohlen):
+
     bundle install --without=production
     cp config/database.sqlite.yml config/database.yml
 
