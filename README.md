@@ -13,9 +13,9 @@ Setup
 Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen Maschine und Vagrant
 (langsamer, geht dafür auch unter Windows) oder direkt auf deinem System.
 
-Wenn du Vagrant (mit psql) benutzen wollt:
+Wenn du Vagrant (mit psql) benutzen willst:
 
-    vagrant up #this may take up to 10 minutes
+    vagrant up
     vagrant ssh
     cd hpi-swt2
     # Lokale docs machen die Gem-Installation langsamer und brauchen
