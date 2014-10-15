@@ -79,6 +79,3 @@ gem 'rails_12factor', group: :production
 gem 'airbrake'
 
 ruby "2.1.3"
-
-
-
