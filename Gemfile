@@ -77,6 +77,3 @@ gem 'rails_12factor', group: :production
 # gem 'debugger', group: [:development, :test]
 
 ruby "2.1.3"
-
-
-
