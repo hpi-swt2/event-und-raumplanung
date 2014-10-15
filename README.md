@@ -15,23 +15,26 @@ Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen
 
 Wenn du Vagrant (mit psql) benutzen wollt:
 
-  vagrant up #this may take up to 10 minutes
-  vagrant ssh
-  cd hpi-swt2
-  bundle install
-  gem install pg
-  cp config/database.psql.yml config/database.yml
-  exit
+    vagrant up #this may take up to 10 minutes
+    vagrant ssh
+    cd hpi-swt2
+    # Lokale docs machen die Gem-Installation langsamer und brauchen
+    # Speicherplatz
+    echo “gem: --no-document” >> ~/.gemrc
+    bundle install
+    gem install pg
+    cp config/database.psql.yml config/database.yml
+    exit
 
 Ansonsten könnt ihr das System auch mit sqlite nutzen (nicht empfohlen)
-  bundle install --without=production
-  ln -s config/database.sqlite.yml config/database.yml
+    bundle install --without=production
+    cp config/database.sqlite.yml config/database.yml
 
 Um `rails` zu starten müsst ihr folgendes ausführen:
 
-  vagrant ssh
-  cd hpi-swt2
-  rails s
+    vagrant ssh
+    cd hpi-swt2
+    rails s
 
 
 
