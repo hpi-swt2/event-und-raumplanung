@@ -3,9 +3,16 @@ addons:
     repo_token: c75df5383c6ed506f57bd7281c1c41200a139a6847ad4c62d0371a23d457f8c6
 language: ruby
 rvm:
-  - 2.1.3
+- 2.1.3
 before_script:
-    - cp config/database.psql.yml config/database.yml
-    - psql -c 'create database hpi_swt2_test;' -U postgres
+- cp config/database.psql.yml config/database.yml
+- psql -c 'create database hpi_swt2_test;' -U postgres
 notifications:
-    email: false
+  email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: WzFaSSXw6M7xCmEyfqf/Kgdik2pHtDtm/kli3E52Nsewl6i2CFA+G9Vpc/xDkkKQlokX2OnvGYqETx3jGCuvcZ75u89l8izKDPr7AP9/tz5Y491+JqZf7qiAAHCKaYmqafY8KeUNiS/7JyLoCXLM+HtIUvcdyTSh98M4Nnd0OBc=
+  app: event-und-raumplanung
+  on:
+    repo: hpi-swt2/event-und-raumplanung
