@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
 [![Dependency Status](https://gemnasium.com/hpi-swt2/event-und-raumplanung.svg)](https://gemnasium.com/hpi-swt2/event-und-raumplanung)
 [![Heroku](https://heroku-badge.herokuapp.com/?app=event-und-raumplanung)](http://event-und-raumplanung.herokuapp.com/)
+[![Open Issues](http://img.shields.io/github/issues/hpi-swt2/event-und-raumplanung.svg)](https://github.com/hpi-swt2/event-und-raumplanung/issues?q=is%3Aopen+is%3Aissue)
+
 event-und-raumplanung
 =====================
 
