@@ -36,4 +36,5 @@
 # .orig Files
 .orig
 
-/cookbooks
+# Ignore anvil files used by Travis
+.anvil/
