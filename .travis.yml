@@ -16,6 +16,5 @@ deploy:
   app: event-und-raumplanung
   on:
     repo: hpi-swt2/event-und-raumplanung
-  buildpack: https://github.com/heroku/heroku-buildpack-ruby.git
 env:
 - STACK=cedar-14
