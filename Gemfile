@@ -1,8 +1,12 @@
 source 'https://rubygems.org'
+# Newest version is 2.1.3, but that is not yet supported by
+# Travis when deploying to Heroku
+# see: https://github.com/heroku/heroku-buildpack-ruby/issues/304 and
+# https://github.com/heroku/heroku-buildpack-ruby/issues/308
 ruby "2.1.2"
 
 #
-# When adding gems, make sure they are Rails 4 and Ruby 2.1.3 compatible
+# When adding gems, make sure they are Rails 4 and Ruby 2.1.2 compatible
 #
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
