@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby "2.1.3"
 
 #
 # When adding gems, make sure they are Rails 4 and Ruby 2.1.3 compatible
