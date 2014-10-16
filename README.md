@@ -37,7 +37,10 @@ Um `rails` zu starten müsst ihr folgendes ausführen:
     cd hpi-swt2
     rails s
 
+Pull request
+------------
 
+Wir benutzen [review.ninja](http://app.review.ninja/hpi-swt2/event-und-raumplanung) für Pull requests.
 
 
 
