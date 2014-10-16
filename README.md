@@ -43,5 +43,8 @@ Pull request
 
 Wir benutzen [review.ninja](http://app.review.ninja/hpi-swt2/event-und-raumplanung) für Pull requests.
 
+Deployment
+----------
 
-
+Travis CI deployed den Master-Branch (nach erfolgreichem Build) auf Heroku.
+Die Badges enthalten die Links zu den verschiedenen Diensten.
