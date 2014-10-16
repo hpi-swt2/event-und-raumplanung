@@ -3,7 +3,7 @@ addons:
     repo_token: c75df5383c6ed506f57bd7281c1c41200a139a6847ad4c62d0371a23d457f8c6
 language: ruby
 rvm:
-- 2.1.2
+- 2.1.3
 before_script:
 - cp config/database.psql.yml config/database.yml
 - psql -c 'create database hpi_swt2_test;' -U postgres
@@ -16,3 +16,5 @@ deploy:
   app: event-und-raumplanung
   on:
     repo: hpi-swt2/event-und-raumplanung
+env:
+- STACK=cedar-14

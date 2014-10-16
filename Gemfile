@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Travis when deploying to Heroku
 # see: https://github.com/heroku/heroku-buildpack-ruby/issues/304 and
 # https://github.com/heroku/heroku-buildpack-ruby/issues/308
-ruby "2.1.2"
+ruby "2.1.3"
 
 #
 # When adding gems, make sure they are Rails 4 and Ruby 2.1.2 compatible
