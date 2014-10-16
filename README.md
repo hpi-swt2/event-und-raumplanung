@@ -14,17 +14,18 @@ Setup
 Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen Maschine und Vagrant
 (langsamer, geht dafür auch unter Windows) oder direkt auf deinem System.
 
-Wenn du Vagrant (mit psql) benutzen willst:
+Wenn du Vagrant (mit postgresql) benutzen willst (Vagrant muss installiert sein):
 
     vagrant up
     vagrant ssh
     cd hpi-swt2
-    # Lokale docs machen die Gem-Installation langsamer und brauchen
-    # Speicherplatz
+    # Lokale docs machen die Gem-Installation langsamer
+    # und brauchen Speicherplatz
     echo “gem: --no-document” >> ~/.gemrc
     bundle install
     gem install pg
     cp config/database.psql.yml config/database.yml
+    # Die Session muss neu gestartet werden
     exit
 
 Ihr könnt das System auch mit sqlite nutzen (nicht empfohlen):
@@ -32,11 +33,11 @@ Ihr könnt das System auch mit sqlite nutzen (nicht empfohlen):
     bundle install --without=production
     cp config/database.sqlite.yml config/database.yml
 
-Um `rails` zu starten müsst ihr folgendes ausführen:
+Um den `rails dev server` zu starten:
 
-    vagrant ssh
+    vagrant ssh # mit der VM verbinden
     cd hpi-swt2
-    rails s
+    rails s # kurz für rails server
 
 Pull request
 ------------
