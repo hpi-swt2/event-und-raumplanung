@@ -1,12 +1,20 @@
 source 'https://rubygems.org'
+# Newest version is 2.1.3, but that is not yet supported by
+# Travis when deploying to Heroku
+# see: https://github.com/heroku/heroku-buildpack-ruby/issues/304 and
+# https://github.com/heroku/heroku-buildpack-ruby/issues/308
+ruby "2.1.2"
 
+#
+# When adding gems, make sure they are Rails 4 and Ruby 2.1.2 compatible
+#
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', group: :development
 
-# use postgresql as default for heroku
+# use postgresql in production (for deployment on heroku)
 gem 'pg', group: :production
 
 # Use Bootstrap, see app/assets/stylesheets
@@ -64,6 +72,13 @@ gem 'newrelic_rpm'
 # Needed for Heroku deployment
 gem 'rails_12factor', group: :production
 
+# Send application errors to hosted service instead of email inbox.
+gem 'airbrake'
+
+# creating navigations (with multiple levels)
+# see: https://github.com/codeplant/simple-navigation
+# gem simple-navigation
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -76,6 +91,3 @@ gem 'rails_12factor', group: :production
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'airbrake'
-
-ruby "2.1.3"

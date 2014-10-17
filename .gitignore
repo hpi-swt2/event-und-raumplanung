@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+/vendor/bundle/*
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -35,4 +36,5 @@
 # .orig Files
 .orig
 
-/cookbooks
+# Ignore anvil files used by Travis
+.anvil/
