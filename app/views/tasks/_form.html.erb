@@ -3,7 +3,7 @@
     <% if @task.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h3>
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Task.model_name.human, :count => @task.errors.count %></h3>
       </div>
       <div class="panel-body">
         <ul>

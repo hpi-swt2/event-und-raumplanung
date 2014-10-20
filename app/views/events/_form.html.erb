@@ -3,7 +3,7 @@
     <% if @event.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h3>
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Event.model_name.human, :count => @event.errors.count %></h3>
       </div>
       <div class="panel-body">
         <ul>
