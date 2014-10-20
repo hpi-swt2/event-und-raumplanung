@@ -134,13 +134,6 @@ de:
       create: ! '%{model} erstellen'
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
-    links:
-      edit: Bearbeiten
-      destroy: Löschen
-      confirm: Sind sie sicher?
-      new: Neu
-      cancel: Abbrechen
-      back: Zurück
   number:
     currency:
       format:
