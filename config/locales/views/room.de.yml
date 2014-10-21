@@ -1,7 +1,6 @@
 # ruby encoding: utf-8
 
 de:
-  views:
-    room:
-      index:
-        title: Raumübersicht
+  rooms:
+    index:
+      title: Raumübersicht
