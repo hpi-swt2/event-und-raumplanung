@@ -28,7 +28,7 @@ class EquipmentController < ApplicationController
 
     respond_to do |format|
       if @equipment.save
-        format.html { redirect_to @equipment, notice: t('notices.successful_create', :model => Equipment) }
+        format.html { redirect_to @equipment, notice: t('notices.successful_create', :model => Equipment.model_name.human) }
         format.json { render :show, status: :created, location: @equipment }
       else
         format.html { render :new }
@@ -42,7 +42,7 @@ class EquipmentController < ApplicationController
   def update
     respond_to do |format|
       if @equipment.update(equipment_params)
-        format.html { redirect_to @equipment, notice: t('notices.successful_update', :model => Equipment) }
+        format.html { redirect_to @equipment, notice: t('notices.successful_update', :model => Equipment.model_name.human) }
         format.json { render :show, status: :ok, location: @equipment }
       else
         format.html { render :edit }
@@ -56,7 +56,7 @@ class EquipmentController < ApplicationController
   def destroy
     @equipment.destroy
     respond_to do |format|
-      format.html { redirect_to equipment_index_url, notice: t('notices.successful_destroy', :model => Equipment) }
+      format.html { redirect_to equipment_index_url, notice: t('notices.successful_destroy', :model => Equipment.model_name.human) }
       format.json { head :no_content }
     end
   end
