@@ -3,6 +3,8 @@ require 'test_helper'
 class BookingsControllerTest < ActionController::TestCase
   setup do
     @booking = bookings(:one)
+    @user = create(:user)
+    sign_in @user
   end
 
   test "should get index" do
