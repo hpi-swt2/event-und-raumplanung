@@ -8,7 +8,12 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       super
     else
+      store_location_for(:user, request.env['PATH_INFO'])
       redirect_to new_user_session_path
     end
+  end
+
+  def after_sign_in_path_for(resource)
+    stored_location_for(:user)
   end
 end
