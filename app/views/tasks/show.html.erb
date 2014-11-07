@@ -10,6 +10,8 @@
   <dd><%= @task.description %></dd>
   <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
   <dd><%= @task.event_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
+  <dd><%= @task.done %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

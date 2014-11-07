@@ -7,6 +7,10 @@ class TasksController < ApplicationController
     @tasks = Task.all
   end
 
+  def panel
+    redirect_to panel.html.erb
+  end
+
   # GET /tasks/1
   # GET /tasks/1.json
   def show
@@ -69,6 +73,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id)
+      params.require(:task).permit(:name, :description, :event_id, :done)
     end
 end
