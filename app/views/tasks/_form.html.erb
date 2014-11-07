@@ -36,6 +36,13 @@
     </div>
     <%= error_span(@task[:event_id]) %>
   </div>
+  <div class="control-group">
+    <%= f.label :assignee_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :assignee_id, :class => 'form-control' %>
+    </div>
+      <%= error_span(@task[:assignee_id]) %>
+  </div>
 
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
