@@ -6,7 +6,7 @@ class AttachmentsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    xhr :get, :index, :format => :js
     assert_response :success
     assert_not_nil assigns(:attachments)
   end
