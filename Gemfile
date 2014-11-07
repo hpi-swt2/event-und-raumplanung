@@ -42,6 +42,8 @@ gem 'spring',        group: :development
 
 # authentification, see: https://github.com/plataformatec/devise
 gem 'devise'
+gem 'devise_openid_authenticatable' # https://github.com/nbudin/devise_openid_authenticatable
+gem 'rack-openid' # https://github.com/josh/rack-openid
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
 gem 'factory_girl_rails'
