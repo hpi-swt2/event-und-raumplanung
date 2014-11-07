@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  
+
   resources :rooms
 
   resources :tasks
@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   resources :equipment
 
   resources :events
+
+  resources :event_templates, :path => "templates"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
