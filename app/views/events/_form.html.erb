@@ -46,7 +46,7 @@
         <%= f.time_field :start_time, :class => 'form-control' %>
       </div>
     </div>
-    <%= error_span(@event[:start_date]) %> <%= error_span(@event[:end_date]) %>
+    <%= error_span(@event[:start_date]) %> <%= error_span(@event[:start_time]) %>
   </div>
  <div class="control-group">
     <%= f.label 'Enddatum', :class => 'control-label' %>
@@ -58,7 +58,7 @@
         <%= f.time_field :end_time, :class => 'form-control' %>
       </div>
     </div>
-    <%= error_span(@event[:start_date]) %> <%= error_span(@event[:end_date]) %>
+    <%= error_span(@event[:end_date]) %> <%= error_span(@event[:end_time]) %>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
