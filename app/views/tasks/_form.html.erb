@@ -37,9 +37,22 @@
     <%= error_span(@task[:event_id]) %>
   </div>
 
-
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             tasks_path, :class => 'btn btn-default' %>
 
 <% end %>
+
+<div class="control-group">
+  <div id="attachments">
+    <%= render :partial => 'attachments/index', locals: { attachments: @task.attachments } %>
+  </div>
+  <%= render :partial => 'attachments/form' %>
+  <script>
+    $(".new_attachment").bind('ajax:complete', function() {
+      $.getScript('<%= attachments_path(task_id: @task.id) %>');
+      $('#attachment_title').val('');
+      $('#attachment_url').val('');
+    });
+  </script>
+</div>

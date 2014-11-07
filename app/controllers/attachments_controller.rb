@@ -3,8 +3,10 @@ class AttachmentsController < ApplicationController
   before_action :set_attachment, only: [:show, :edit, :update, :destroy]
 
   def index
-    @attachments = Attachment.all
-    respond_with(@attachments)
+    @attachments = Attachment.where(task_id: params[:task_id])
+    respond_to do |format|
+        format.js
+    end
   end
 
   def show

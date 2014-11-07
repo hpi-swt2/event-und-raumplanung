@@ -1,4 +1,4 @@
-<%= form_for(@attachment) do |f| %>
+<%= form_for(@attachment, remote: true) do |f| %>
   <% if @attachment.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@attachment.errors.count, "error") %> prohibited this attachment from being saved:</h2>
@@ -19,10 +19,7 @@
     <%= f.label :url %><br>
     <%= f.text_field :url %>
   </div>
-  <div class="field">
-    <%= f.label :task_id %><br>
-    <%= f.text_field :task_id %>
-  </div>
+  <%= f.hidden_field :task_id %>
   <div class="actions">
     <%= f.submit %>
   </div>

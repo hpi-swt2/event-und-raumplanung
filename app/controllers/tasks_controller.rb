@@ -1,5 +1,6 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :new_attachment, only: [:new, :edit]
 
   # GET /tasks
   # GET /tasks.json
@@ -65,6 +66,10 @@ class TasksController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])
+    end
+
+    def new_attachment
+      @attachment = Attachment.new(task: @task)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
