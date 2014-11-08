@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   # If you add an option, be sure to inspect the migration file
   # "devise_create_user" and uncomment the appropriate section
   devise :openid_authenticatable, :rememberable
+  belongs_to :group
 
   def self.build_from_identity_url(identity_url)
     User.new(:identity_url => identity_url)
