@@ -37,11 +37,11 @@
     <%= error_span(@task[:event_id]) %>
   </div>
   <div class="control-group">
-    <%= f.label :assignee_id, :class => 'control-label' %>
+    <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :assignee_id, :class => 'form-control' %>
+      <%= f.collection_select :user_id, User.all, :id, :email, :prompt => true %>
     </div>
-      <%= error_span(@task[:assignee_id]) %>
+      <%= error_span(@task[:user_id]) %>
   </div>
 
 
