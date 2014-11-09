@@ -19,3 +19,24 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+
+<h2 id="events"><%=t '.title', :default => Event.model_name.human.pluralize.titleize %></h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Event.human_attribute_name(:name) %></th>
+      <th><%= Booking.human_attribute_name(:start) %></th>
+      <th><%= Booking.human_attribute_name(:end) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @room.bookings.each do |booking| %>
+        <tr>
+            <td><%= link_to booking.event.name, event_path(booking.event) %></td>
+            <td><%= booking.start %></td>
+            <td><%= booking.end %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -20,6 +20,8 @@
         <td><%= room.size %></td>
         <td><%=l room.created_at %></td>
         <td>
+          <%= link_to 'List Events',
+                      room_path(room, anchor: 'events'), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_room_path(room), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
