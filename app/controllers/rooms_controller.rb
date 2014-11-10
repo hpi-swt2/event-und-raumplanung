@@ -28,7 +28,7 @@ class RoomsController < ApplicationController
 
     respond_to do |format|
       if @room.save
-        format.html { redirect_to @room, notice: t('notices.successful_create', :model => Room.model_name.human) }
+        format.html { redirect_to rooms_path, notice: t('notices.successful_create', :model => Room.model_name.human) }
         format.json { render :show, status: :created, location: @room }
       else
         format.html { render :new }
@@ -42,7 +42,7 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
-        format.html { redirect_to @room, notice: t('notices.successful_update', :model => Room.model_name.human) }
+        format.html { redirect_to rooms_path, notice: t('notices.successful_update', :model => Room.model_name.human) }
         format.json { render :show, status: :ok, location: @room }
       else
         format.html { render :edit }
