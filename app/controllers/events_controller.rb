@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create]
   # GET /events
   # GET /events.json
   def index
