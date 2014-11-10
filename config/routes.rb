@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+
   devise_for :users
+  
+  resources :room_properties
   
   resources :rooms
 
