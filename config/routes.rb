@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'events#index'
 
+
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -1,5 +1,5 @@
 class EventTemplatesController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
 
   # GET /templates
   # GET /templates.json
@@ -15,6 +15,18 @@ class EventTemplatesController < ApplicationController
   # GET /templates/new
   def new
     @event_template = EventTemplate.new
+  end
+
+   # GET /templates/1/new_event
+  def new_event
+    @event = Event.new
+    @event.name = @event_template.name
+    @event.description = @event_template.description
+    @event.start_date = @event_template.start_date
+    @event.end_date = @event_template.end_date
+    @event.start_time = @event_template.start_time
+    @event.end_time = @event_template.end_time
+    render "events/new"
   end
 
   # GET /templates/1/edit
@@ -63,7 +75,7 @@ class EventTemplatesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_event
+    def set_event_template
       @event_template = EventTemplate.find(params[:id])
     end
 
