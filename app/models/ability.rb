@@ -28,5 +28,15 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
+    if user.identity_url == load_admin
+        can :manage, Group
+    else
+        can :read, Group
+    end
+  end
+
+  def load_admin
+    config = YAML.load_file(Rails.root.join('config', 'config.yml'))
+    admin_identity = config['admin']['identity_url']
   end
 end
