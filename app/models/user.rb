@@ -8,4 +8,8 @@ class User < ActiveRecord::Base
   def self.build_from_identity_url(identity_url)
     User.new(:identity_url => identity_url)
   end
+
+  def self.openid_required_fields
+    ["email", "https://openid.hpi.uni-potsdam.de/contact/email"]
+  end
 end
