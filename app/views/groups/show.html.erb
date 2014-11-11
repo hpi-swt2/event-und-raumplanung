@@ -5,5 +5,8 @@
   <%= @group.name %>
 </p>
 
-<%= link_to 'Edit', edit_group_path(@group) %> |
-<%= link_to 'Back', groups_path %>
+<%= link_to 'Bearbeiten', edit_group_path(@group) %> |
+<%= link_to 'Räume zuweisen', manage_rooms_group_path(@group) 
+#TODO Authenticate admin
+%> | 
+<%= link_to 'Zurück', groups_path %>

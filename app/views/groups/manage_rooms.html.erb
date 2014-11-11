@@ -1,0 +1,28 @@
+<h1><%= @group.name %> <br>
+<small>Gruppenräume zuweisen</small></h1> <br>
+
+
+
+<h2> Aktuelle Gruppenräume </h2>
+
+<ul>
+<% if @group.rooms.each do |room| %>
+	<li><%= room.name %>  <%= link_to 'Entfernen', unassign_room_group_path(@group,room)%> </li>
+<% end.empty? %>
+	<p>Keine Räume zugewiesen </p>
+<% end %>
+</ul>
+
+
+
+
+<h2>Verfügbare Räume</h2>
+
+<ul>
+<% if @unassigned_rooms.each do |room| %>
+	<li><%= room.name %>    <%= link_to 'Hinzufügen', assign_room_group_path(@group,room)%> </li>
+<% end.empty? %>
+	<p>Keine Räume verfügbar </p>
+<% end %>
+</ul>
+

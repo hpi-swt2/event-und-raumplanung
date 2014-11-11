@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room]
+  before_action :set_room, only: [:assign_room ,:unassign_room]
+  #TODO Authenticate, so that only admin can access manage_room, assign_room, unaasign_room
 
   def index
     @groups = Group.all
@@ -49,6 +51,23 @@ class GroupsController < ApplicationController
     end
   end
 
+  def manage_rooms
+    @unassigned_rooms = Room.where(:group_id => nil)
+  end
+
+  def assign_room
+    @group.rooms << @room
+    flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
+    redirect_to manage_rooms_group_path(@group)
+  end
+
+  def unassign_room
+    @group.rooms.delete(@room)
+    flash[:notice] = "Raum "+@room.name+" erfolgreich gelöscht."
+    redirect_to manage_rooms_group_path(@group)
+  end
+
+
   private
     def set_group
       @group = Group.find(params[:id])
@@ -56,5 +75,8 @@ class GroupsController < ApplicationController
 
     def group_params
       params.require(:group).permit(:name)
+    end
+    def set_room
+      @room = Room.find(params[:room_id])
     end
 end
