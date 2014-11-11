@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_group, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -10,6 +11,7 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    authorize! :new, @group
   end
 
   def edit
@@ -17,6 +19,7 @@ class GroupsController < ApplicationController
 
   def create
     @group = Group.new(group_params)
+    authorize! :create, @group
 
     respond_to do |format|
       if @group.save
@@ -30,6 +33,8 @@ class GroupsController < ApplicationController
   end
 
   def update
+    authorize! :update, @group
+
     respond_to do |format|
       if @group.update(group_params)
         format.html { redirect_to @group, notice: t('notices.successful_update', :model => Group.model_name.human) }
@@ -42,6 +47,8 @@ class GroupsController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, @group
+
     @group.destroy
     respond_to do |format|
       format.html { redirect_to groups_url, notice: t('notices.successful_destroy', :model => Group.model_name.human) }
