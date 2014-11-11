@@ -12,7 +12,7 @@ notifications:
 deploy:
   provider: heroku
   api_key:
-  	secure: 8eae5a00-c33d-4505-b6ff-2e0d8db4d9b8
+    secure: 8eae5a00-c33d-4505-b6ff-2e0d8db4d9b8
   app: event-und-raumplanung-Biber
   on:
     repo: atyanar/event-und-raumplanung
