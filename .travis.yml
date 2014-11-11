@@ -16,3 +16,4 @@ deploy:
   app: event-und-raumplanung-Biber
   on:
     repo: atyanar/event-und-raumplanung
+    branch: dev
