@@ -8,6 +8,32 @@
   <dd><%= @group.name %></dd>
 </dl>
 
+<h3><%= User.model_name.human.pluralize %></h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= User.human_attribute_name(:identity_url) %></th>
+      <th><%=t '.status', :default => t("helpers.status") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.identity_url %></td>
+        <td>
+          <% if @group.users.include? user %>
+            <%= 'zugewiesen' %>
+          <% else %>
+            <%= 'entfernt' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
 <% if can? :update, @group %>

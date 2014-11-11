@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :groups
+  resources :groups do
+    member do
+      get 'assign_user/:user_id', :action => 'assign_user', :as => 'assign_user'
+      get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
+    end
+  end
 
   devise_for :users, :controllers => {:sessions => "sessions"}
   

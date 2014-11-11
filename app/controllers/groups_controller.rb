@@ -1,12 +1,30 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :assign_user, :unassign_user]
+  before_action :set_user, only: [:assign_user, :unassign_user]
 
   def index
     @groups = Group.all
   end
 
   def show
+    @users = User.all
+  end
+
+  def assign_user
+    authorize! :update, @group
+
+    @group.users << @user
+    @user.groups << @group
+    redirect_to edit_group_path(@group)
+  end
+
+  def unassign_user
+    authorize! :update, @group
+
+    @group.users.delete(@user)
+    @user.groups.delete(@group)
+    redirect_to edit_group_path(@group)
   end
 
   def new
@@ -15,6 +33,7 @@ class GroupsController < ApplicationController
   end
 
   def edit
+    @users = User.all
   end
 
   def create
@@ -56,9 +75,15 @@ class GroupsController < ApplicationController
     end
   end
 
+
+
   private
     def set_group
       @group = Group.find(params[:id])
+    end
+
+    def set_user
+      @user = User.find(params[:user_id])
     end
 
     def group_params
