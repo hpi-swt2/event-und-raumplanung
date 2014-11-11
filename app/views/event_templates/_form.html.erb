@@ -1,0 +1,37 @@
+<%= form_for @event_template, :html => { :class => "form-horizontal event" } do |f| %>
+
+    <% if @event_template.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => EventTemplate.model_name.human, :count => @event_template.errors.count %></h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @event_template.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%= error_span(@event_template[:name]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'form-control' %>
+    </div>
+    <%= error_span(@event_template[:description]) %>
+  </div>
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            event_templates_path, :class => 'btn btn-default' %>
+
+<% end %>

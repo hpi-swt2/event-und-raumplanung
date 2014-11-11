@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  has_many :tasks
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # If you add an option, be sure to inspect the migration file
@@ -10,11 +12,10 @@ class User < ActiveRecord::Base
     User.new(:identity_url => identity_url)
   end
   def self.openid_required_fields
-    ["http://axschema.org/namePerson/first", "http://axschema.org/contact/email"]
+    ["http://axschema.org/contact/email"]
   end 
     
   def openid_fields=(fields)
-    # TODO
     logger.info "OPENID FIELDS: #{fields.inspect}"
     fields.each do |key, value|
       # Some AX providers can return multiple values per key

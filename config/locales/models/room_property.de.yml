@@ -1,0 +1,10 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      room_property: 'Raumeigenschaft'
+    attributes:
+      room_property:
+        name: 'Name'
+        created_at: 'Erstellungsdatum'

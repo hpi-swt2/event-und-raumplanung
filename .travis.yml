@@ -9,10 +9,18 @@ before_script:
 - psql -c 'create database hpi_swt2_test;' -U postgres
 notifications:
   email: false
+
 deploy:
   provider: heroku
   api_key:
-    secure: 8eae5a00-c33d-4505-b6ff-2e0d8db4d9b8
-  app: event-und-raumplanung-biber
+    secure: BekStuNkzLBVTxPjbAUBorYniLIXmAp2TPmcRNZG7Q5cCPmx/I7F9Hua0ABmmK4onAnB8XvU8q/tBde5CxApE46qqRMmajBF2UkY8CADhzCs3IZB8jy3IOm3Unmv5OjrbDF+uruxx5VJ/4naNWfOwtbxG0saRsG3Aic1PhwcH8w=
+  app:
+    master: event-und-raumplanung
+    dev: event-und-raumplanung-dev
   on:
-    branch: dev
+    repo: hpi-swt2/event-und-raumplanung
+  run:
+    - "rake db:migrate"
+    - "rake db:seed"
+    - restart
+
