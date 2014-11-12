@@ -5,21 +5,19 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:size) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @rooms.each do |room| %>
-      <tr>
-        <td><%= link_to room.id, room_path(room) %></td>
+      <tr data-link="<%= room_path(room) %>">
         <td><%= room.name %></td>
         <td><%= room.size %></td>
-        <td><%=l room.created_at %></td>
         <td>
+          <%= link_to 'Anstehende ' + Event.model_name.human.pluralize.titleize,
+                      room_events_path(room), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_room_path(room), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
