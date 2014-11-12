@@ -1,0 +1,26 @@
+<%- model_class = Room -%>
+<div class="page-header">
+  <h1>Anstehende <%=t '.title', :default => Event.model_name.human.pluralize.titleize %> in <%= @room.name %></h1>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Event.human_attribute_name(:name) %></th>
+      <th><%= Booking.human_attribute_name(:start) %></th>
+      <th><%= Booking.human_attribute_name(:end) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @room.bookings.order('start asc').each do |booking| %>
+      <tr data-link="<%= event_path(booking.event) %>">
+        <td><%= booking.event.name %></td>
+        <td><%=l booking.start %></td>
+        <td><%=l booking.end %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              room_path(@room), :class => 'btn btn-default'  %>
