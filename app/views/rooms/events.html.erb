@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @room.bookings.order('start asc').each do |booking| %>
+    <% @room.upcoming_events.each do |booking| %>
       <tr data-link="<%= event_path(booking.event) %>">
         <td><%= booking.event.name %></td>
         <td><%=l booking.start %></td>

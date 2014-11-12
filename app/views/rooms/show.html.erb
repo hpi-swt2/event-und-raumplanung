@@ -39,7 +39,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @room.bookings.order('start asc').take(maximum_events).each do |booking| %>
+      <% @room.upcoming_events.take(maximum_events).each do |booking| %>
         <tr data-link="<%= event_path(booking.event) %>">
           <td><%= booking.event.name %></td>
           <td><%=l booking.start %></td>
