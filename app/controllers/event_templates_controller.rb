@@ -1,5 +1,8 @@
 class EventTemplatesController < ApplicationController
+  include EventTemplatesHelper
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
+  helper_method :viewDate
+  
 
   # GET /templates
   # GET /templates.json
@@ -83,4 +86,6 @@ class EventTemplatesController < ApplicationController
     def eventtemplate_params
       params.require(:event_template).permit(:name, :description, :start_date, :end_date, :start_time, :end_time)
     end
+
+
 end

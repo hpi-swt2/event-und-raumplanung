@@ -20,8 +20,8 @@
         <td><%= link_to event_template.id, event_template_path(event_template) %></td>
         <td><%= event_template.name %></td>
         <td><%= event_template.description %></td>
-        <td><%= event_template.start_date.to_s + event_template.start_time.to_s %> </td> <!-- TODO :) -->
-        <td><%= event_template.end_time   %> </td>
+        <td>  <%= viewDate event_template.start_date, event_template.start_time %> </td>
+        <td>  <%= viewDate event_template.end_date, event_template.end_time %> </td> 
         <td><%= event_template.created_at.strftime('%d.%m.%Y') %></td>  
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
