@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  
+
   resources :rooms
 
   resources :tasks
@@ -11,12 +11,16 @@ Rails.application.routes.draw do
 
   resources :events
 
+  resources :event_templates, :path => "templates"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'events#index'
 
+
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-
+  load_and_authorize_resource
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create]
   # GET /events
   # GET /events.json
   def index
@@ -19,6 +20,7 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    #authorize! :edit, @event
   end
 
   # POST /events
@@ -69,6 +71,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count)
+      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time)
     end
 end
