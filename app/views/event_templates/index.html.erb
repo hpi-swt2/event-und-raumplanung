@@ -5,7 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
+     <!-- <th><%= model_class.human_attribute_name(:id) %></th> don´t show the id-->
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th><%= model_class.human_attribute_name(:start_time) %></th>
@@ -17,9 +17,9 @@
   <tbody>
     <% @event_templates.each do |event_template| %>
       <tr>
-        <td><%= link_to event_template.id, event_template_path(event_template) %></td>
-        <td><%= event_template.name %></td>
-        <td><%= event_template.description %></td>
+        <!-- <td><%= link_to event_template.id, event_template_path(event_template) %></td> don´t show the id -->
+        <td><%= link_to event_template.name, event_template_path(event_template) %></td>
+        <td><%= viewDescription event_template.description %></td>
         <td>  <%= viewDate event_template.start_date, event_template.start_time %> </td>
         <td>  <%= viewDate event_template.end_date, event_template.end_time %> </td> 
         <td><%= event_template.created_at.strftime('%d.%m.%Y') %></td>  

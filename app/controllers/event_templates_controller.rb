@@ -1,9 +1,8 @@
 class EventTemplatesController < ApplicationController
   include EventTemplatesHelper
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
-  helper_method :viewDate
   
-
+  
   # GET /templates
   # GET /templates.json
   def index

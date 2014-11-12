@@ -14,4 +14,11 @@ module EventTemplatesHelper
 		end
 		return output
 	end
+
+	def viewDescription(description)
+		if description.length > 60
+			return description[0, 55] + "[...]"
+		end
+		return description
+	end
 end
