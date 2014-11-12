@@ -1,0 +1,7 @@
+# ruby encoding: utf-8
+
+de:
+  groups:
+    index:
+      title: Gruppenübersicht
+      all_events: Alle Gruppen
