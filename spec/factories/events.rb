@@ -9,4 +9,14 @@ FactoryGirl.define do
     f.is_private true
     f.user_id 122
   end
+
+  factory :upcoming_event, :class => Event do |f|
+    f.name "Eventname"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.starts_at '9999-09-10'
+    f.ends_at '9999-10-10'
+    f.is_private true
+    f.user_id 122
+  end
 end
