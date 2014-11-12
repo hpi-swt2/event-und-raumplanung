@@ -8,6 +8,7 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:category) %></th>
       <th><%= model_class.human_attribute_name(:room_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -19,6 +20,7 @@
         <td><%= link_to equipment.id, equipment_path(equipment) %></td>
         <td><%= equipment.name %></td>
         <td><%= equipment.description %></td>
+        <td><%= equipment.category %></td>
         <td><%= equipment.room_id %></td>
         <td><%=l equipment.created_at %></td>
         <td>
