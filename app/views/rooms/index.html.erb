@@ -12,8 +12,8 @@
   </thead>
   <tbody>
     <% @rooms.each do |room| %>
-      <tr data-link="<%= room_path(room) %>">
-        <td><%= room.name %></td>
+      <tr>
+        <td><%= link_to room.name, room_path(room) %></td>
         <td><%= room.size %></td>
         <td>
           <%= link_to 'Anstehende ' + Event.model_name.human.pluralize.titleize,

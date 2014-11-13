@@ -13,8 +13,8 @@
   </thead>
   <tbody>
     <% @room.upcoming_events.each do |booking| %>
-      <tr data-link="<%= event_path(booking.event) %>">
-        <td><%= booking.event.name %></td>
+      <tr>
+        <td><%= link_to booking.event.name, event_path(booking.event) %></td>
         <td><%=l booking.start %></td>
         <td><%=l booking.end %></td>
       </tr>
