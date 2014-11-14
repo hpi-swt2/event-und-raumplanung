@@ -42,7 +42,7 @@ class TasksController < ApplicationController
   def update
     update_params = task_params
     if update_params[:user_id].blank?
-      update_params[:status] = "not assigned"
+      update_params[:status] = "not_assigned"
     elsif update_params[:user_id].to_i != @task.user_id.to_i
       update_params[:status] = "pending"
     end

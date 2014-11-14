@@ -21,7 +21,7 @@
         <td><%= task.name %></td>
         <td><%= task.description %></td>
         <td><%= task.event_id %></td>
-        <td class="<%= task.status %>"><%= (task.user_id.blank?) ? "not assigned" : (get_email task.user_id) %></td>
+        <td class="<%= task.status %>"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (get_email task.user_id) %></td>
         <td><%=l task.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

@@ -1,5 +1,5 @@
 class AddStatusToTasks < ActiveRecord::Migration
   def change
-    add_column :tasks, :status, :string, default:"not assigned"
+    add_column :tasks, :status, :string, default:"not_assigned"
   end
 end
