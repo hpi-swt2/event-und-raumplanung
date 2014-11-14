@@ -29,6 +29,11 @@ class RoomsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should show room events" do
+    get :list_events, id: @room
+    assert_response :success
+  end
+
   test "should get edit" do
     get :edit, id: @room
     assert_response :success
