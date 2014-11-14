@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'rooms/list'
+  post 'rooms/list'
 
   devise_for :users
 

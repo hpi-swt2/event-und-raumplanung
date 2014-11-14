@@ -17,6 +17,15 @@ class RoomsController < ApplicationController
     @room = Room.new
   end
 
+  def list
+    if !params[:room].nil? and !params[:room][:size].empty?
+      size = params[:room][:size]
+      @rooms = Room.where('size > ?', size)
+    else
+      @rooms = Room.all
+    end
+  end
+
   # GET /rooms/1/edit
   def edit
   end
