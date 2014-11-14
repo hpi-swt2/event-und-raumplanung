@@ -21,7 +21,7 @@
         <td><%= task.name %></td>
         <td><%= task.description %></td>
         <td><%= task.event_id %></td>
-        <td><%= task.user_id %></td>
+        <td class="<%= task.status %>"><%= get_email task.user_id %></td>
         <td><%=l task.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

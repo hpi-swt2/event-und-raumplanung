@@ -1,4 +1,3 @@
 class Task < ActiveRecord::Base
-  belongs_to :event
-  belongs_to :user
+  belongs_to :event, :user
 end
