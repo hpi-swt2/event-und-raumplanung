@@ -1,31 +1,14 @@
-<%- model_class = Task -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%=t '.title', :default => Task.model_name.human.pluralize.titleize %></h1>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:done) %></th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-    </tr>
-  </thead>
-  <tbody>
-      <% @tasks.each do |task| %>
-        <%= form_for task do |f| %>
-        <tr>
-          <td><%= f.check_box :done %></td>
-          <td><%= link_to task.name, task_path(task) %></td>
-          <td><%= task.description %></td>
-        </tr>
-        <% end %> 
-      <% end %>
-  </tbody>
-</table>
+<div>
+  <%= form_tag(tasks_path, :method => "get") do %>
+    <%= collection_select :event, :event_id, @events, :id, :name, {:include_blank => "All events", :selected => @event_id} %>
+    <%= submit_tag 'Filtern' %>
+  <% end %>
+</div>
+<%= render :partial => 'tasks_box', :locals => {:tasks => @tasks} %>
 
-<% @tasks.each do |task| %>
-
-<% end %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_task_path,
             :class => 'btn btn-primary' %>

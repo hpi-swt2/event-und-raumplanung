@@ -1,0 +1,17 @@
+<%- model_class = Task -%>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
+      <th class="col-sm-11"><%= model_class.human_attribute_name(:name) %></th>
+    </tr>
+  </thead>
+  <tbody>
+      <% tasks.each do |task| %>
+        <tr>
+          <td><input type="checkbox" value="<%= task.done %>"></td>
+          <td><%= link_to task.name, task_path(task) %></td>
+        </tr>
+      <% end %>
+  </tbody>
+</table>

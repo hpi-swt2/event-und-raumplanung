@@ -5,10 +5,10 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     @tasks = Task.all
-  end
-
-  def panel
-    redirect_to panel.html.erb
+    @events = Event.all
+    @event_id = event_id
+    #puts "########## #{event_params[:event_id]}"
+    @tasks.where! event_id: event_id if event_id
   end
 
   # GET /tasks/1
@@ -74,5 +74,11 @@ class TasksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
       params.require(:task).permit(:name, :description, :event_id, :done)
+    end
+    def event_id
+      if params[:event]
+        return params[:event][:event_id] unless params[:event][:event_id].empty?
+      end
+      nil
     end
 end
