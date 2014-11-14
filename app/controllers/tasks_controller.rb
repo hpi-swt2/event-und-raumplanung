@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
 
   # GET /tasks
   # GET /tasks.json
@@ -62,14 +62,12 @@ class TasksController < ApplicationController
   end
 
   def accept
-    set_task
     @task.status = "accepted"
     @task.save
     redirect_to @task
   end
 
   def decline
-    set_task
     @task.status = "declined"
     @task.save
     redirect_to @task
