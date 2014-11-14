@@ -32,8 +32,7 @@
   <div class="control-group">
     <%= f.label :event_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :event_id, :class => 'form-control' %>
-    </div>
+      <%= f.text_field :event_id, :class => 'form-control' , :readonly => @event_field_readonly %>
     <%= error_span(@task[:event_id]) %>
   </div>
   <% unless @task.new_record? %>

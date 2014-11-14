@@ -19,6 +19,10 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    unless params[:event_id].blank?
+      @task.event_id = params[:event_id] 
+      @event_field_readonly = :true
+    end
   end
 
   # GET /tasks/1/edit
