@@ -95,4 +95,6 @@ group :test, :development  do
 	gem 'rspec-rails'
 	gem 'capybara'
 	gem 'guard-rspec'
+	gem 'phantomjs'
+	gem 'poltergeist'
 end
