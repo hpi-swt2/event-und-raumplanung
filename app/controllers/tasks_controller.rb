@@ -40,8 +40,14 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
+    update_params = task_params
+    if update_params[:user_id].blank?
+      update_params[:status] = "not assigned"
+    elsif update_params[:user_id].to_i != @task.user_id.to_i
+      update_params[:status] = "pending"
+    end
     respond_to do |format|
-      if @task.update(task_params)
+      if @task.update(update_params)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -62,14 +68,18 @@ class TasksController < ApplicationController
   end
 
   def accept
-    @task.status = "accepted"
-    @task.save
+    if @task.user_id
+      @task.status = "accepted"
+      @task.save
+    end
     redirect_to @task
   end
 
   def decline
-    @task.status = "declined"
-    @task.save
+    if @task.user_id
+      @task.status = "declined"
+      @task.save
+    end
     redirect_to @task
   end
 
