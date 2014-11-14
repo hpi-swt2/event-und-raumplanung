@@ -4,3 +4,8 @@ de:
   rooms:
     index:
       title: Raumübersicht
+      all_events: Alle Events
+    show:
+      upcoming_events: Anstehende Events
+      all_events: Alle Events
+      no_properties: Keine speziellen Eigenschaften

@@ -7,4 +7,8 @@ class Room < ActiveRecord::Base
     return self.bookings.where(['start > ?', DateTime.now]).order('start asc')
   end
 
+  def list_properties
+    return self.properties.all.map{ |p| p.name }.join(', ')
+  end
+
 end
