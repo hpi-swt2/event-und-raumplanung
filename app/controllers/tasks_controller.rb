@@ -61,6 +61,20 @@ class TasksController < ApplicationController
     end
   end
 
+  def accept
+    set_task
+    @task.status = "accepted"
+    @task.save
+    redirect_to @task
+  end
+
+  def decline
+    set_task
+    @task.status = "declined"
+    @task.save
+    redirect_to @task
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
