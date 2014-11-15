@@ -78,9 +78,12 @@ GEM
     libv8 (3.16.14.7)
     mail (2.6.1)
       mime-types (>= 1.16, < 3)
+    metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.4.1)
     minitest (5.4.2)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     multi_json (1.10.1)
     newrelic_rpm (3.9.5.251)
     orm_adapter (0.5.0)
@@ -174,6 +177,7 @@ DEPENDENCIES
   factory_girl_rails
   jbuilder (~> 2.0)
   jquery-rails
+  mocha
   newrelic_rpm
   pg
   pry

@@ -28,6 +28,10 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
+        if @task.user
+          @task.send_notification
+        end
+
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
       else
@@ -41,7 +45,7 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1.json
   def update
     respond_to do |format|
-      if @task.update(task_params)
+      if @task.update_and_send_notification(task_params)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else

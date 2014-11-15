@@ -46,4 +46,16 @@ class TasksControllerTest < ActionController::TestCase
 
     assert_redirected_to tasks_path
   end
+
+  test "should send email if user was assigned to task" do
+    user = users(:one)
+    post :create, task: { description: @task.description, event_id: @task.event_id, name: @task.name, user_id: user.id }
+    assert_not ActionMailer::Base.deliveries.empty?
+    ActionMailer::Base.deliveries.clear
+  end
+
+  test "should not send email if no user was assigned to task" do
+    post :create, task: { description: @task.description, event_id: @task.event_id, name: @task.name }
+    assert ActionMailer::Base.deliveries.empty?
+  end
 end
