@@ -8,6 +8,8 @@
   <dd><%= @event.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @event.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:is_private) %>:</strong></dt>
+  <dd><%= check_box_tag 'private', 'private', @event.is_private %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
