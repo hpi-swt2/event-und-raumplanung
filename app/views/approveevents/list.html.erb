@@ -1,32 +1,17 @@
-<h1>Approveevents#list</h1>
+<h1>Approve Events</h1>
 
 <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Created</th>
-      <th>More</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
   <tbody>
     <% @events.each do |event| %>
       <tr>
-        <td><%= link_to event.id, event_path(event) %></td>
-        <td><%= event.name %></td>
-        <td><%= event.description %></td>
-        <td><%=l event.created_at %></td>
+        <td> Max Mustermann requests <br/>
+        	<%= link_to event.name, event_path(event) %> <br/>
+        	<%= event.description %>
+        </td>
         <td>
-        	ab
-        <% if event.bookings.nil? %>
         	<% event.bookings.each do |booking| %>
-
-        	<%=l booking.description %>
-        	cd
+        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %> <br/>
         	<% end %>
-        <% end %>
         </td>
         <td>
           	<%= link_to "Reject", event_path(event),
@@ -39,4 +24,24 @@
   </tbody>
 </table>
 
-<p>Find me in app/views/approveevents/list.html.erb</p>
+<center>
+	<-- <%= @date.strftime '%A, %d/%m/%Y' %> -->
+</center>
+
+<table class="table table-striped">
+  <tbody>
+    <% @events.where('created_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).each do |event| %>
+      <tr>
+        <td>
+        	<%= link_to event.name, event_path(event) %> <br/>
+        	<%= event.description %>
+        </td>
+        <td>
+        	<% event.bookings.each do |booking| %>
+        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %> <br/>
+        	<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
