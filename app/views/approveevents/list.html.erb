@@ -1,2 +1,42 @@
 <h1>Approveevents#list</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Created</th>
+      <th>More</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @events.each do |event| %>
+      <tr>
+        <td><%= link_to event.id, event_path(event) %></td>
+        <td><%= event.name %></td>
+        <td><%= event.description %></td>
+        <td><%=l event.created_at %></td>
+        <td>
+        	ab
+        <% if event.bookings.nil? %>
+        	<% event.bookings.each do |booking| %>
+
+        	<%=l booking.description %>
+        	cd
+        	<% end %>
+        <% end %>
+        </td>
+        <td>
+          	<%= link_to "Reject", event_path(event),
+                      :method => :delete, :class => 'btn btn-xs btn-danger' %>
+            <%= link_to "Approve", event_path(event),
+                      :class => 'btn btn-default btn-xs' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <p>Find me in app/views/approveevents/list.html.erb</p>
