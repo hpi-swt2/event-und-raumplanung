@@ -1,0 +1,24 @@
+<h1>Räume</h1>
+
+<%= form_tag("/rooms/list", method: "get") do %>
+<%= label_tag(:size, "größer als:") %>
+<%= number_field(:room, :size, in: 1.0..500.0, step: 1.0) %>
+<br>
+<%= check_box_tag(:beamer) %>
+<%= label_tag(:beamer, "Beamer") %>
+<br>
+
+  <%= submit_tag("Search") %>
+<% end %>
+
+<br><br>
+<table border=1px>
+<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th></tr>
+<% @rooms.each do |room| %>
+<tr>
+  <td align="middle"><%= room.id %></td>
+  <td><%= room.name %></td>
+  <td align="middle"><%=room.size %><br/></td>
+</tr>
+<% end %>
+</table>
