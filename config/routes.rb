@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'approveevents/list'
+
   devise_for :users
   
   resources :rooms
