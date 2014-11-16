@@ -60,6 +60,14 @@
     </div>
     <%= error_span(@event[:start_date]) %> <%= error_span(@event[:end_date]) %>
   </div>
+  <div class="control-group">
+    <%= f.label 'Privat', :class => 'control-label' %>
+    <div class="row">
+      <div class="checkbox col-sm-1" align="left">
+        <%= f.check_box :is_private, :class => 'form-control' %>
+      </div>
+    </div>
+  </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
