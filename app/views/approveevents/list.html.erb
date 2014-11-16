@@ -10,7 +10,11 @@
         </td>
         <td>
         	<% event.bookings.each do |booking| %>
-        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %> <br/>
+        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>,
+        		<% if !booking.room.nil? %> 
+        			<%= booking.room.name %>
+        		<% end %>
+        		<br/>
         	<% end %>
         </td>
         <td>
@@ -38,7 +42,11 @@
         </td>
         <td>
         	<% event.bookings.each do |booking| %>
-        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %> <br/>
+        		<%= booking.start.strftime '%A, %d/%m/%Y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>
+        		<% if !booking.room.nil? %> 
+        			<%= booking.room.name %>
+        		<% end %>
+        		<br/>
         	<% end %>
         </td>
       </tr>
