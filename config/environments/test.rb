@@ -39,4 +39,7 @@ Rails.application.configure do
 
   # needed for mailer tests
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  #don't send an e-mail whilst testing
+  ActionMailer::Base.delivery_method = :test
 end
