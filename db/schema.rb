@@ -50,6 +50,12 @@ ActiveRecord::Schema.define(version: 20141112125005) do
     t.datetime "updated_at"
   end
 
+  create_table "room_properties", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "rooms", force: true do |t|
     t.string   "name"
     t.integer  "size"
