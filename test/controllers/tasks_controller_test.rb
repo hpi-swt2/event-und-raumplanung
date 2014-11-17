@@ -24,6 +24,15 @@ class TasksControllerTest < ActionController::TestCase
     assert_redirected_to task_path(assigns(:task))
   end
 
+  test "should create attachments for new task" do
+    assert_difference('Attachment.count') do
+      post :create, task: { description: @task.description, event_id: @task.event_id, name: @task.name,
+                            attachments_attributes: [ { title: "Example", url: "http://example.com" } ] }
+    end
+
+    assert_redirected_to task_path(assigns(:task))
+  end
+
   test "should show task" do
     get :show, id: @task
     assert_response :success
