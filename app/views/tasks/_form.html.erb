@@ -1,4 +1,4 @@
-<%= form_for @task, :html => { :class => "form-horizontal task" } do |f| %>
+<%= form_for @task, :html => { :class => "form-horizontal task edit-task" } do |f| %>
 
     <% if @task.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -37,22 +37,71 @@
     <%= error_span(@task[:event_id]) %>
   </div>
 
+  <ul data-bind="foreach: attachments">
+      <li>
+        <a data-bind="text: title, attr: { href: url }"></a>
+        <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
+        <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
+        <button data-bind="click: $parent.deleteAttachment">Delete</button>
+      </li>
+  </ul>
+
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             tasks_path, :class => 'btn btn-default' %>
 
 <% end %>
 
-<div class="control-group">
-  <div id="attachments">
-    <%= render :partial => 'attachments/index', locals: { attachments: @task.attachments } %>
-  </div>
-  <%= render :partial => 'attachments/form' %>
+<form data-bind="submit: addAttachment">
+  <input type="text" data-bind="value: newAttachmentTitle" />
+  <input type="text" data-bind="value: newAttachmentUrl" />
+  <input type="submit" value="Add Attachment" data-bind="enable: isInputValid" />
+</form>
+
   <script>
-    $(".new_attachment").bind('ajax:complete', function() {
-      $.getScript('<%= attachments_path(task_id: @task.id) %>');
-      $('#attachment_title').val('');
-      $('#attachment_url').val('');
-    });
-  </script>
+    function TaskEditViewModel(updateAttachmentsAjax, taskId) {
+      this.taskId = taskId;
+      this.updateAttachmentsAjax = updateAttachmentsAjax;
+      this.attachments = ko.observableArray([]);
+      this.newAttachmentTitle = ko.observable();
+      this.newAttachmentUrl = ko.observable();
+      this.isInputValid = ko.computed(function() {
+        return this.newAttachmentTitle() && this.newAttachmentUrl() && this.newAttachmentUrl()
+          .match(/^(ht|f)tps?:\/\/[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/) !== null;
+      }, this);
+      this.deleteAttachment = function(attachment) {
+        var _this = this;
+        if (!confirm("Are you sure?"))
+          return;
+
+        if (updateAttachmentsAjax) {
+          $.post('<%= attachments_path %>' + '/' + attachment.id, { _method: 'delete' }, function() {
+            _this.onAttachmentDeleted(attachment);
+          });
+        } else {
+          this.onAttachmentDeleted(attachment);
+        }        
+      }.bind(this);
+      this.onAttachmentDeleted = function(attachment) {
+        this.attachments.remove(attachment);
+      }.bind(this);
+      this.addAttachment = function() {
+        var _this = this;
+        var newAttachment = { title: this.newAttachmentTitle(), url: this.newAttachmentUrl(), task_id: this.taskId };
+        if (updateAttachmentsAjax) {
+          $.post('<%= attachments_path %>', { attachment: newAttachment }, function(attachment) {
+            _this.onAttachmentAdded(attachment);
+          });
+        } else {
+          this.onAttachmentAdded(newAttachment);
+        }
+      }.bind(this);
+      this.onAttachmentAdded = function(attachment) {
+          this.attachments.push(attachment);
+          this.newAttachmentTitle("");
+          this.newAttachmentUrl("");
+      }.bind(this);
+    };
+    
+  </script>  
 </div>

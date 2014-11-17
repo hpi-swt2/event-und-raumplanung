@@ -1,6 +1,5 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
-  before_action :new_attachment, only: [:new, :edit]
 
   # GET /tasks
   # GET /tasks.json
@@ -68,12 +67,8 @@ class TasksController < ApplicationController
       @task = Task.find(params[:id])
     end
 
-    def new_attachment
-      @attachment = Attachment.new(task: @task)
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id)
+      params.require(:task).permit(:name, :description, :event_id, :attachments_attributes => [ :title, :url ])
     end
 end
