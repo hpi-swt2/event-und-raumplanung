@@ -1,62 +1,87 @@
-<%= form_for @task, :html => { :class => "form-horizontal task edit-task" } do |f| %>
+<div class="col-lg-8">
+  <%= form_for @task, :html => { :class => "form-horizontal task edit-task" } do |f| %>
 
-    <% if @task.errors.any? %>
-    <div id="error_expl" class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Task.model_name.human, :count => @task.errors.count %></h3>
+      <% if @task.errors.any? %>
+      <div id="error_expl" class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Task.model_name.human, :count => @task.errors.count %></h3>
+        </div>
+        <div class="panel-body">
+          <ul>
+          <% @task.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
       </div>
-      <div class="panel-body">
-        <ul>
-        <% @task.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
+    <% end %>
+
+    <div class="control-group">
+      <%= f.label :name, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :name, :class => 'form-control' %>
       </div>
+      <%= error_span(@task[:name]) %>
     </div>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :description, :class => 'form-control' %>
+      </div>
+      <%= error_span(@task[:description]) %>
+    </div>
+    <div class="control-group">
+      <%= f.label :event_id, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :event_id, :class => 'form-control' , :readonly => @event_field_readonly %>
+      </div>
+      <%= error_span(@task[:event_id]) %>
+    </div>
+    <% unless @task.new_record? %>
+      <div class="control-group">
+        <%= f.label :done, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.check_box :done, :class => 'form-control' %>
+        </div>
+        <%= error_span(@task[:done]) %>
+      </div>
+    <% end %>
+
+    <h4>Attachments</h4>
+    <ul data-bind="foreach: attachments">
+        <li>
+          <a data-bind="text: title, attr: { href: url }"></a>
+          <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
+          <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
+          <button data-bind="click: $parent.deleteAttachment">Delete</button>
+        </li>
+    </ul>
+
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              tasks_path, :class => 'btn btn-default' %>
+
   <% end %>
+</div>
 
-  <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
+<div class="col-lg-2">
+  <form data-bind="submit: addAttachment">
+    <div class="control-group">
+      <label class="control-label" for="attachment_title">Titel</label>
+      <div class="controls">
+        <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
+      </div>
+    </div>    
+    <div class="control-group">
+      <label class="control-label" for="attachment_url">URL</label>
+      <div class="controls">
+        <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
+      </div>
     </div>
-    <%= error_span(@task[:name]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :description, :class => 'form-control' %>
+    <div class="control-group">
+      <input type="submit" value="Add Attachment" class="btn" data-bind="enable: isInputValid" />
     </div>
-    <%= error_span(@task[:description]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :event_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :event_id, :class => 'form-control' %>
-    </div>
-    <%= error_span(@task[:event_id]) %>
-  </div>
-
-  <ul data-bind="foreach: attachments">
-      <li>
-        <a data-bind="text: title, attr: { href: url }"></a>
-        <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
-        <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
-        <button data-bind="click: $parent.deleteAttachment">Delete</button>
-      </li>
-  </ul>
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            tasks_path, :class => 'btn btn-default' %>
-
-<% end %>
-
-<form data-bind="submit: addAttachment">
-  <input type="text" data-bind="value: newAttachmentTitle" />
-  <input type="text" data-bind="value: newAttachmentUrl" />
-  <input type="submit" value="Add Attachment" data-bind="enable: isInputValid" />
-</form>
+  </form>
 
   <script>
     function TaskEditViewModel(updateAttachmentsAjax, taskId) {
@@ -102,6 +127,5 @@
           this.newAttachmentUrl("");
       }.bind(this);
     };
-    
-  </script>  
+  </script> 
 </div>

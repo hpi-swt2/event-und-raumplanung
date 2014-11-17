@@ -5,6 +5,10 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     @tasks = Task.all
+    @events = Event.all
+    @event_id = event_id
+    #puts "########## #{event_params[:event_id]}"
+    @tasks.where! event_id: event_id if event_id
   end
 
   # GET /tasks/1
@@ -15,6 +19,10 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    unless params[:event_id].blank?
+      @task.event_id = params[:event_id] 
+      @event_field_readonly = :true
+    end
   end
 
   # GET /tasks/1/edit
@@ -69,6 +77,12 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :done, :attachments_attributes => [ :title, :url ])
+    end
+    def event_id
+      if params[:event]
+        return params[:event][:event_id] unless params[:event][:event_id].empty?
+      end
+      nil
     end
 end

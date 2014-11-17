@@ -2,3 +2,23 @@
 // All this logic will automatically be available in application.js.
 
 //= require knockout
+
+$(document).ready(function()
+{
+	handleTaskCheckboxClick();
+});
+
+function handleTaskCheckboxClick()
+{
+	$(".task-done-checkbox").click(function(event)
+	{
+		var target = event.target;
+		var taskPath = $(target).attr('data-taskpath');
+		$.ajax({
+			url: taskPath,
+			type: 'PUT',
+			data: {task: {done: target.checked}},
+			dataType: 'json'
+		})
+	});
+}

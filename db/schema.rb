@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20141107165132) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.boolean  "done",        default: false
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
