@@ -12,7 +12,7 @@ notifications:
 deploy:
   provider: heroku
   api_key:
-    secure: 8eae5a00-c33d-4505-b6ff-2e0d8db4d9b8
-  app: event-und-raumplanung-biber
+    secure: WzFaSSXw6M7xCmEyfqf/Kgdik2pHtDtm/kli3E52Nsewl6i2CFA+G9Vpc/xDkkKQlokX2OnvGYqETx3jGCuvcZ75u89l8izKDPr7AP9/tz5Y491+JqZf7qiAAHCKaYmqafY8KeUNiS/7JyLoCXLM+HtIUvcdyTSh98M4Nnd0OBc=
+  app: event-und-raumplanung
   on:
-    branch: dev
+    repo: hpi-swt2/event-und-raumplanung
