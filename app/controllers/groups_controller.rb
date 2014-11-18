@@ -56,8 +56,12 @@ class GroupsController < ApplicationController
   end
 
   def assign_room
-    @group.rooms << @room
-    flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
+    if @room.group == nil  
+      @group.rooms << @room
+      flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
+    else
+      flash[:warning] = "Raum "+@room.name+" bereits an Gruppe "+@room.group.name+" vergeben."
+    end
     redirect_to manage_rooms_group_path(@group)
   end
 
