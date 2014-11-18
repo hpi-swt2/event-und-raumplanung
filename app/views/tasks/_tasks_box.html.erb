@@ -1,0 +1,18 @@
+<%- model_class = Task -%>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
+      <th class="col-sm-11"><%= model_class.human_attribute_name(:name) %></th>
+    </tr>
+  </thead>
+  <tbody>
+      <% tasks.each do |task| %>
+        <tr>
+          <td><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>"></td>
+          <td><%= link_to task.name, task_path(task) %></td>
+        </tr>
+      <% end %>
+  </tbody>
+</table>
+<%= link_to 'Hinzufügen', new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
