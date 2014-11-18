@@ -16,3 +16,7 @@ deploy:
   app: event-und-raumplanung
   on:
     repo: hpi-swt2/event-und-raumplanung
+  run:
+    - "pg:reset"
+    - "rake db:migrate"
+    - "rake db:seed"
