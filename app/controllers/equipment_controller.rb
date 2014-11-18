@@ -1,4 +1,5 @@
 class EquipmentController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_equipment, only: [:show, :edit, :update, :destroy]
 
   # GET /equipment
