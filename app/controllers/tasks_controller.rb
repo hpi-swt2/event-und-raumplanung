@@ -24,7 +24,13 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = Task.new(task_params)
+    create_params = task_params
+    if create_params[:user_id].blank?
+      create_params[:status] = "not_assigned"
+    else
+      create_params[:status] = "pending"
+    end
+    @task = Task.new(create_params)
 
     respond_to do |format|
       if @task.save
