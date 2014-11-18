@@ -11,7 +11,7 @@ FactoryGirl.define do
     end
 
     factory :unassigned_task do
-      status "not_assigned"
+        status "not_assigned"
     end
   end
 end
