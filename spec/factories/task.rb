@@ -4,6 +4,7 @@ FactoryGirl.define do
     description 'This is a task.'
     association :event_id, factory: :event
     association :user_id, factory: :user
+    status "not_assigned"
 
     factory :assigned_task do
       status "pending"
