@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20141108161444) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "bookings", force: true do |t|
     t.string   "name"
     t.string   "description"
@@ -24,8 +27,8 @@ ActiveRecord::Schema.define(version: 20141108161444) do
     t.datetime "updated_at"
   end
 
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id"
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -35,7 +38,7 @@ ActiveRecord::Schema.define(version: 20141108161444) do
     t.datetime "updated_at"
   end
 
-  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id"
+  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "name"
@@ -66,7 +69,7 @@ ActiveRecord::Schema.define(version: 20141108161444) do
     t.datetime "updated_at"
   end
 
-  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id"
+  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: ""
@@ -84,7 +87,7 @@ ActiveRecord::Schema.define(version: 20141108161444) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
