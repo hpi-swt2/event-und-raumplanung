@@ -1,7 +1,18 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create]
+  
+
+  def current_user
+    unless session[:user_id]
+      @current_user = User.create! email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
+      session[:user_id] = @current_user.id 
+    end
+    @current_user ||= User.find(session[:user_id])    
+  end
+
+
   # GET /events
   # GET /events.json
   def index
@@ -27,6 +38,7 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(event_params)
+    @event.user_id = current_user.id
 
     respond_to do |format|
       if @event.save
@@ -67,6 +79,14 @@ class EventsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
+    end
+
+    def owner?(event=@event)
+        event.user_id == current_user.id
+    end
+
+    def check_ownership
+        raise  User::NotAuthorized unless owner?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
