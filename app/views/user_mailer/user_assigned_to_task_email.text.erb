@@ -2,7 +2,7 @@ Hello <%= @user.email %>
 ===========================
 Someone assigned the task <%= @task.name %> to you
 
-Click here to accept: <%= link_to "Accept", task_url(@task)%>.
-Click here to decline: <%= link_to "Decline", task_url(@task) %>.
+Click here to accept: <%= link_to "Accept", accept_task_url(@task)%>.
+Click here to decline: <%= link_to "Decline", decline_task_url(@task) %>.
 
 Thanks and have a great day!

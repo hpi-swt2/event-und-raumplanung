@@ -25,6 +25,15 @@ class TasksControllerTest < ActionController::TestCase
     assert_redirected_to task_path(assigns(:task))
   end
 
+  test "should create attachments for new task" do
+    assert_difference('Attachment.count') do
+      post :create, task: { description: @task.description, event_id: @task.event_id, name: @task.name,
+                            attachments_attributes: [ { title: "Example", url: "http://example.com" } ] }
+    end
+
+    assert_redirected_to task_path(assigns(:task))
+  end
+
   test "should show task" do
     get :show, id: @task
     assert_response :success
@@ -55,6 +64,7 @@ class TasksControllerTest < ActionController::TestCase
   end
 
   test "should not send email if no user was assigned to task" do
+    empty_mailer_list
     post :create, task: { description: @task.description, event_id: @task.event_id, name: @task.name }
     assert ActionMailer::Base.deliveries.empty?, "email notification sent"
     empty_mailer_list

@@ -75,6 +75,9 @@ gem 'rails_12factor', group: :production
 # Send application errors to hosted service instead of email inbox.
 gem 'airbrake'
 
+# Library for data binding HTML Elements to Javascript Objects
+gem 'knockoutjs-rails'
+
 gem 'mocha'
 
 # creating navigations (with multiple levels)

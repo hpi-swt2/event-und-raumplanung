@@ -31,7 +31,7 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    create_params = task_params
+    create_params = task_params_with_attachments
     if create_params[:user_id].blank?
       create_params[:status] = "not_assigned"
     else
@@ -109,6 +109,9 @@ class TasksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done)
+    end
+    def task_params_with_attachments
+      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
     end
     def event_id
       if params[:event]

@@ -72,8 +72,8 @@ ActiveRecord::Schema.define(version: 20141114091730) do
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "done",        default: false
     t.integer  "user_id"
+    t.boolean  "done",        default: false
     t.string   "status"
   end
 
