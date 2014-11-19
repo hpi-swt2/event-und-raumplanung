@@ -26,7 +26,7 @@
 		<tr>
 			<td>Tables upon request<br>
 			<%= link_to t('.request', :default => t("helpers.links.request now")),
-              rooms_path, :class => 'btn btn-default'  %>
+              @room, method: :list, :class => 'btn btn-default btn-xs' %>
 			</td>
 		</tr>
 	</tbody>
@@ -34,4 +34,4 @@
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
-              edit_room_path(@room), :class => 'btn btn-default' %>
+              new_booking_path(:room => @room.id), :class => 'btn btn-default' %>
