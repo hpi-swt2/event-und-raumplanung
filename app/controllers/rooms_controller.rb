@@ -1,5 +1,5 @@
 class RoomsController < ApplicationController
-  before_action :set_room, only: [:show, :edit, :update, :destroy]
+  before_action :set_room, only: [:show, :edit, :update, :destroy, :details]
 
   # GET /rooms
   # GET /rooms.json
@@ -15,6 +15,15 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   def new
     @room = Room.new
+  end
+
+  def list
+    if !params[:room].nil? and !params[:room][:size].empty?
+      size = params[:room][:size]
+      @rooms = Room.where('size > ?', size)
+    else
+      @rooms = Room.all
+    end
   end
 
   # GET /rooms/1/edit
@@ -59,6 +68,10 @@ class RoomsController < ApplicationController
       format.html { redirect_to rooms_url, notice: t('notices.successful_destroy', :model => Room.model_name.human) }
       format.json { head :no_content }
     end
+  end
+  
+  def details
+	render action: 'details'
   end
 
   private
