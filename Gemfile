@@ -75,6 +75,11 @@ gem 'rails_12factor', group: :production
 # Send application errors to hosted service instead of email inbox.
 gem 'airbrake'
 
+# Library for data binding HTML Elements to Javascript Objects
+gem 'knockoutjs-rails'
+
+gem 'mocha'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
@@ -91,3 +96,8 @@ gem 'airbrake'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+group :test, :development  do 
+	gem 'rspec-rails'
+	gem 'capybara'
+	gem 'guard-rspec'
+end
