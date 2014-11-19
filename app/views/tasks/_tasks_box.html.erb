@@ -11,6 +11,7 @@
         <tr>
           <td><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>"></td>
           <td><%= link_to task.name, task_path(task) %></td>
+          <td class="<%= task.status %>"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (get_email task.user_id) %></td>
         </tr>
       <% end %>
   </tbody>

@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   resources :tasks
 
+  get 'tasks/:id/accept' => 'tasks#accept'
+  get 'tasks/:id/decline' => 'tasks#decline'
+
   resources :bookings
 
   resources :equipment
