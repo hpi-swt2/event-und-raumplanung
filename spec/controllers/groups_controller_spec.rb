@@ -156,4 +156,50 @@ RSpec.describe GroupsController, :type => :controller do
     end
   end
 
+  describe "GET assign_room" do
+    it "redirects to manage group path" do
+      group = create(:group)
+      room = create(:room)
+      get :assign_room, {:id => group.to_param, :room_id => room.to_param}, valid_session
+      expect(response).to redirect_to(manage_rooms_group_path(group))
+    end
+  end
+
+
+
+  describe "group room management: " do
+    let(:group1) { create :group, name: "group1"}
+    let(:group2) { create :group, name: "group2", id: "8"}
+    let(:room1) { create :room}
+    let(:room2) { create :room }
+
+    describe "assign a room" do
+      context "that is already assigned" do
+        before(:each) do
+          get :assign_room, {:id => group2, :room_id => room1.to_param}, valid_session
+        end
+        # it "does not assign a room" do
+        #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+        #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+        #   expect(room1.group).to eq (group2.id)
+        # end
+      end
+
+      context "that is not assigned yet" do
+        it "does assign a room" do
+          get :assign_room, {:id => group1, :room_id => room1}, valid_session
+          expect(room1.group).to eq (group1)
+        end
+      end
+      it "redirects to manage group path" do
+        get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+        expect(response).to redirect_to(manage_rooms_group_path(group1))
+      end
+
+
+    end
+  end
+
+
+
 end
