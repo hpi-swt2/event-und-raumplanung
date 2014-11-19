@@ -20,3 +20,4 @@ deploy:
     - "pg:reset"
     - "rake db:migrate"
     - "rake db:seed"
+    - restart
