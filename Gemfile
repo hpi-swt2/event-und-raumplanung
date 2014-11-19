@@ -75,6 +75,8 @@ gem 'rails_12factor', group: :production
 # Send application errors to hosted service instead of email inbox.
 gem 'airbrake'
 
+gem 'mocha'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation

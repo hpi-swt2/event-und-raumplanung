@@ -15,6 +15,17 @@ ActiveRecord::Schema.define(version: 20141114091730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
+
+  create_table "attachments", force: true do |t|
+    t.string   "title"
+    t.string   "url"
+    t.integer  "task_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
 
   create_table "bookings", force: true do |t|
     t.string   "name"
