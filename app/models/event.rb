@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
       errors.add(:end_date, "can't be in the past") if end_date && end_date < Date.today
     end
    def start_before_end_date
-      errors.add(:start_date, "start has to be before the end") if start_date && end_date && start_date < end_date
+      errors.add(:start_date, "start has to be before the end") if start_date && end_date && end_date < start_date
    end
 
 end

@@ -6,7 +6,7 @@ class EventsController < ApplicationController
 
   def current_user
     unless session[:user_id]
-      @current_user = User.create! email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
+      @current_user = User.new email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
       session[:user_id] = @current_user.id 
     end
     @current_user ||= User.find(session[:user_id])    
