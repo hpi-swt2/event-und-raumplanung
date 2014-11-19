@@ -3,6 +3,8 @@ require 'test_helper'
 class EquipmentControllerTest < ActionController::TestCase
   setup do
     @equipment = equipment(:one)
+    @user = create(:user)
+    sign_in @user
   end
 
   test "should get index" do

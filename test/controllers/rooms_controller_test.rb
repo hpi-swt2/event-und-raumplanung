@@ -3,6 +3,8 @@ require 'test_helper'
 class RoomsControllerTest < ActionController::TestCase
   setup do
     @room = rooms(:one)
+    @user = create(:user)
+    sign_in @user
   end
 
   test "should get index" do
