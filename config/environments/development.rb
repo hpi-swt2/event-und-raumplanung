@@ -38,4 +38,17 @@ Rails.application.configure do
   # Needed for Devise
   # In production, :host should be set to the actual host of your application.
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp-mail.outlook.com',
+    port:                 587,
+    user_name:            'event-und-raumplanung@outlook.com',
+    password:             'Test1234',
+    authentication:       'plain',
+    enable_starttls_auto: true  }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = {from: 'event-und-raumplanung@outlook.com'}
 end

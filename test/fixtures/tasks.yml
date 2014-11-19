@@ -4,9 +4,11 @@ one:
   id: 1
   name: MyString
   description: MyString
+  status: not_assigned
   event_id: 
 
 two:
   name: MyString
   description: MyString
+  status: not_assigned
   event_id: 

@@ -1,16 +1,17 @@
 <div class="col-lg-8">
   <%= form_for @task, :html => { :class => "form-horizontal task edit-task" } do |f| %>
-
-      <% if @task.errors.any? %>
+    <% if @task.errors.any? %>
       <div id="error_expl" class="panel panel-danger">
         <div class="panel-heading">
-          <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Task.model_name.human, :count => @task.errors.count %></h3>
+          <h3 class="panel-title">
+            <%= t 'errors.template.header.other', :model => Task.model_name.human, :count => @task.errors.count %>
+          </h3>
         </div>
         <div class="panel-body">
           <ul>
-          <% @task.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
+            <% @task.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
           </ul>
         </div>
       </div>
@@ -36,6 +37,13 @@
         <%= f.text_field :event_id, :class => 'form-control' , :readonly => @event_field_readonly %>
       </div>
       <%= error_span(@task[:event_id]) %>
+    </div>
+    <div class="control-group">
+        <%= f.label :user_id, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.collection_select :user_id, User.all, :id, :email, {include_blank: t("tasks.user.none")}, :class => 'form-control' %>
+        </div>
+        <%= error_span(@task[:user_id]) %>
     </div>
     <% unless @task.new_record? %>
       <div class="control-group">
