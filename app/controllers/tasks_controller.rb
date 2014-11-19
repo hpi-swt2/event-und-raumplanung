@@ -64,7 +64,7 @@ class TasksController < ApplicationController
       update_params[:status] = "pending"
     end
     respond_to do |format|
-      if @task.update_and_send_notification(task_params)
+      if @task.update_and_send_notification(update_params)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else

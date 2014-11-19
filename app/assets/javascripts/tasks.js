@@ -3,10 +3,11 @@
 
 //= require knockout
 
-$(document).ready(function()
+$(function()
 {
 	handleTaskCheckboxClick();
 });
+$(document).on('page:load', handleTaskCheckboxClick);
 
 function handleTaskCheckboxClick()
 {
