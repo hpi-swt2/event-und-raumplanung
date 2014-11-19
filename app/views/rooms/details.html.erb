@@ -29,6 +29,19 @@
               rooms_path, :class => 'btn btn-default'  %>
 			</td>
 		</tr>
+		<% @room.bookings.each do |booking| %>
+		<tr>
+			<td>
+				<% if(booking.start.to_date == Date.today) %>
+				<%= model_class.human_attribute_name(booking.name) %>
+			</td>
+			<td>
+				starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
+				ends at <%= model_class.human_attribute_name(booking.end.to_s(:time)) %>
+			<td>
+			<% end %>
+			<% end %>
+		</tr>
 	</tbody>
 </table>
 <%= link_to t('.back', :default => t("helpers.links.back")),
