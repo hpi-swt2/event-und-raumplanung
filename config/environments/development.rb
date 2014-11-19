@@ -48,7 +48,7 @@ Rails.application.configure do
     password:             'Test1234',
     authentication:       'plain',
     enable_starttls_auto: true  }
-  config.action_mailer.perform_deliveries = true
+  config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_options = {from: 'event-und-raumplanung@outlook.com'}
 end
