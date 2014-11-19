@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+
   get 'approveevents/list'
+  get 'approveevents/:date' => 'approveevents#list', as: 'approve_with_date'
+  get 'approveevents' => 'approveevents#list'
   get 'rooms/list'
   post 'rooms/list'
 

@@ -19,7 +19,7 @@
         </td>
         <td>
           	<%= link_to "Reject", event_path(event),
-                      :method => :delete, :class => 'btn btn-xs btn-danger' %>
+                      :class => 'btn btn-xs btn-danger' %>
             <%= link_to "Approve", event_path(event),
                       :class => 'btn btn-default btn-xs' %>
         </td>
@@ -29,12 +29,14 @@
 </table>
 
 <center>
-	<-- <%= @date.strftime '%A, %d/%m/%Y' %> -->
+  <%= link_to "<--", approve_with_date_path(@currentdate.yesterday) %>
+	<%= @currentdate.strftime '%A, %d/%m/%Y' %> 
+  <%= link_to "-->", approve_with_date_path(@currentdate.tomorrow) %>
 </center>
 
 <table class="table table-striped">
   <tbody>
-    <% @bookings.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day ).each do |booking| %>
+    <% @bookings.where('start BETWEEN ? AND ?', @currentdate.beginning_of_day, @currentdate.end_of_day ).each do |booking| %>
     	<% if booking.event.approved.nil? %>
 	      <tr>
 	        <td>
