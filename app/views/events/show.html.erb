@@ -4,12 +4,28 @@
 </div>
 
 <dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt>
+  <dd><%= @event.id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @event.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:beschreibung) %>:</strong></dt>
   <dd><%= @event.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:is_private) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:raum) %>:</strong></dt>
+  <dd><%= @event.room_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:teilnehmeranzahl) %>:</strong></dt>
+  <dd><%= @event.participant_count %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:privat) %>:</strong></dt>
   <dd><%= check_box_tag 'private', 'private', @event.is_private %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:startzeit) %>:</strong></dt>
+  <dd><%= @event.start_time %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:endzeit) %>:</strong></dt>
+  <dd><%= @event.end_time %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:erstellt_von) %>:</strong></dt>
+  <dd><%= @event.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:erstellt_am) %>:</strong></dt>
+  <dd><%= @event.created_at %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:aktualisiert_am) %>:</strong></dt>
+  <dd><%= @event.updated_at %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
