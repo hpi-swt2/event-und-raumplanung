@@ -17,15 +17,15 @@
   <dt><strong><%= model_class.human_attribute_name(:privat) %>:</strong></dt>
   <dd><%= check_box_tag 'private', 'private', @event.is_private %></dd>
   <dt><strong><%= model_class.human_attribute_name(:startzeit) %>:</strong></dt>
-  <dd><%= @event.start_time %></dd>
+  <dd><%= @event.start_date.strftime("%d.%m.%Y") %> <%= @event.start_time.strftime("%H:%M") %></dd>
   <dt><strong><%= model_class.human_attribute_name(:endzeit) %>:</strong></dt>
-  <dd><%= @event.end_time %></dd>
+  <dd><%= @event.end_date.strftime("%d.%m.%Y") %> <%= @event.end_time.strftime("%H:%M") %></dd>
   <dt><strong><%= model_class.human_attribute_name(:erstellt_von) %>:</strong></dt>
   <dd><%= @event.user_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:erstellt_am) %>:</strong></dt>
-  <dd><%= @event.created_at %></dd>
+  <dd><%= @event.created_at.strftime("%d.%m.%Y %T") %></dd>
   <dt><strong><%= model_class.human_attribute_name(:aktualisiert_am) %>:</strong></dt>
-  <dd><%= @event.updated_at %></dd>
+  <dd><%= @event.updated_at.strftime("%d.%m.%Y %T") %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
