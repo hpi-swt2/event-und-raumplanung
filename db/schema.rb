@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20141120115543) do
 
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
@@ -71,6 +70,7 @@ ActiveRecord::Schema.define(version: 20141120115543) do
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
+    t.string   "status",            default: "In Bearbeitung"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
