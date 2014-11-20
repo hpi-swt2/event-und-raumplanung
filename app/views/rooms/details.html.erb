@@ -1,6 +1,6 @@
 <%- model_class = Room -%>
 <div class="page-header"/>
-	<h1><%=t '.title', :default => [:'helpers.title.details', 'Details of %{model}'], :model => model_class.human_attribute_name(@room.name).camelize %></h1>
+	<h1><%=t '.title', :default => [:'helpers.title.details', 'Details of %{model}'], :model => @room.name %></h1>
 </div>
 <table class="table table-column">
 	<thead>
@@ -16,8 +16,8 @@
 				<tbody>
 					<% @room.equipment.each do |equipment| %>
 					<tr>
-						<td><%= model_class.human_attribute_name(equipment.name) %></td>
-						<td><%= model_class.human_attribute_name(equipment.description).upcase %></td>
+						<td><%= equipment.name %></td>
+						<td><%= equipment.description %></td>
 					</tr>
 					<% end %>
 				</tbody>
@@ -43,7 +43,7 @@
 			<tr>
 				<% if(booking.start.to_date == Date.today) %>
 					<td>
-						<%= model_class.human_attribute_name(booking.name).upcase %>
+						<%= booking.name %>
 					</td>
 					<td>
 						starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
