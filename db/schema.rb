@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141014105900) do
+ActiveRecord::Schema.define(version: 20141120115543) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "bookings", force: true do |t|
     t.string   "name"
@@ -24,8 +28,8 @@ ActiveRecord::Schema.define(version: 20141014105900) do
     t.datetime "updated_at"
   end
 
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id"
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -35,7 +39,23 @@ ActiveRecord::Schema.define(version: 20141014105900) do
     t.datetime "updated_at"
   end
 
-  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id"
+  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
+
+  create_table "event_templates", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "room_id"
+  end
+
+  add_index "event_templates", ["room_id"], name: "index_event_templates_on_room_id", using: :btree
+  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "name"
@@ -43,14 +63,28 @@ ActiveRecord::Schema.define(version: 20141014105900) do
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.integer  "user_id"
+    t.integer  "room_id"
+    t.boolean  "is_private"
+    t.string   "status",            default: "In Bearbeitung"
   end
+
+  add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "rooms", force: true do |t|
     t.string   "name"
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
+
+  add_index "rooms", ["event_id"], name: "index_rooms_on_event_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
@@ -60,7 +94,7 @@ ActiveRecord::Schema.define(version: 20141014105900) do
     t.datetime "updated_at"
   end
 
-  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id"
+  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -77,7 +111,7 @@ ActiveRecord::Schema.define(version: 20141014105900) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
