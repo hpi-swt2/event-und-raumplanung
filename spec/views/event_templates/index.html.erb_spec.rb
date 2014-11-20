@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "event_templates/index", :type => :view do
   before(:each) do
     assign(:event_templates, [
-      EventTemplate.create!(),
-      EventTemplate.create!()
+      FactoryGirl.create(:event_template),
+      FactoryGirl.create(:event_template)
     ])
   end
 
