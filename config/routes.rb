@@ -24,8 +24,6 @@ Rails.application.routes.draw do
 
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
-  get 'rooms/:id/details' => 'rooms#details'
-  post 'rooms/:id' => 'rooms#details'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

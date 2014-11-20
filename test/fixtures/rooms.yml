@@ -7,3 +7,7 @@ one:
 two:
   name: MyString
   size: 1
+
+three:
+  name: MyString
+  size: 10

@@ -1,5 +1,5 @@
 class RoomsController < ApplicationController
-  before_action :set_room, only: [:show, :edit, :update, :destroy, :details]
+  before_action :set_room, only: [:show, :edit, :update, :destroy]
 
   # GET /rooms
   # GET /rooms.json
@@ -18,12 +18,29 @@ class RoomsController < ApplicationController
   end
 
   def list
+    @categories = Equipment.group(:category).pluck(:category)
+    ## @properties = RoomProperty.group(:name).pluck(:name)
+    @empty = false;
+    @noSelection = false
+    rooms_ids = Room.all.pluck(:id)
+    if params.size <= 5
+        if params[:room].nil? or params[:room][:size].empty?
+	   @noSelection = true
+        end
+    end
     if !params[:room].nil? and !params[:room][:size].empty?
       size = params[:room][:size]
-      @rooms = Room.where('size > ?', size)
-    else
-      @rooms = Room.all
-    end
+      rooms_ids = rooms_ids & Room.where('size > ?', size).pluck(:id)
+     end
+     @categories.each do |category|
+     	if params.has_key?(category)
+	  rooms_ids = rooms_ids & Equipment.where(:category => category).pluck(:room_id)
+     	end
+     end
+     if rooms_ids.empty?
+	@empty =true
+     end
+     @rooms = Room.find(rooms_ids)
   end
 
   # GET /rooms/1/edit
@@ -68,10 +85,6 @@ class RoomsController < ApplicationController
       format.html { redirect_to rooms_url, notice: t('notices.successful_destroy', :model => Room.model_name.human) }
       format.json { head :no_content }
     end
-  end
-  
-  def details
-	render action: 'details'
   end
 
   private
