@@ -3,6 +3,8 @@ require 'test_helper'
 class RoomsControllerTest < ActionController::TestCase
   setup do
     @room = rooms(:one)
+    @user = create(:user)
+    sign_in @user
   end
 
   test "should get index" do
@@ -26,6 +28,11 @@ class RoomsControllerTest < ActionController::TestCase
 
   test "should show room" do
     get :show, id: @room
+    assert_response :success
+  end
+
+  test "should show room events" do
+    get :list_events, id: @room
     assert_response :success
   end
 

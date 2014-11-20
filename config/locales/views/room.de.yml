@@ -4,3 +4,7 @@ de:
   rooms:
     index:
       title: Raumübersicht
+    show:
+      no_upcoming_events: Keine anstehenden Events
+    events:
+      no_upcoming_events: Keine anstehenden Events

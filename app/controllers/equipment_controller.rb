@@ -1,4 +1,5 @@
 class EquipmentController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_equipment, only: [:show, :edit, :update, :destroy]
 
   # GET /equipment
@@ -69,6 +70,6 @@ class EquipmentController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def equipment_params
-      params.require(:equipment).permit(:name, :description, :room_id)
+      params.require(:equipment).permit(:name, :description, :room_id, :category)
     end
 end
