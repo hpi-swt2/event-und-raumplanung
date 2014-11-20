@@ -25,7 +25,7 @@ nix ausgewäht!
 <% @rooms.each do |room| %>
 <tr>
   <td align="middle"><%= room.id %></td>
-  <td><%= room.name %></td>
+  <td><%= link_to room.name, room, method: :details %></td>
   <td align="middle"><%=room.size %></td>
   <td>
   <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>

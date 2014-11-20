@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   get 'approveevents/list'
   get 'approveevents/' => 'approveevents#list'
   get 'rooms/list'
+  get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
+  post 'rooms/:id' => 'rooms#details'
 
   devise_for :users
 
