@@ -11,7 +11,11 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td><%= model_class.human_attribute_name(@room.size) %> people</td>			
+			<td><%= model_class.human_attribute_name(@room.size) %> people<br><br>
+				Tables upon request<br>
+				<%= link_to t('.request', :default => t("helpers.links.request now")),
+				@room, method: :list, :class => 'btn btn-default btn-xs' %>
+			</td>			
 			<td><table class="table table-column-group">
 				<tbody>
 					<% @room.equipment.each do |equipment| %>
@@ -23,22 +27,16 @@
 				</tbody>
 			</table></td>
 		</tr>
-		<tr>
-			<td>Tables upon request<br>
-			<%= link_to t('.request', :default => t("helpers.links.request now")),
-              @room, method: :list, :class => 'btn btn-default btn-xs' %>
-			</td>
-		</tr>
 	</tbody>
 </table>
 <table class="table table-column">
-<thead>
-	<tr>
-		<th>Event</th>
-		<th>Date</th>
-	</tr>
-</thead>
-<tbody>
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
 		<% @room.bookings.each do |booking| %>
 			<tr>
 				<% if(booking.start.to_date == Date.today) %>
