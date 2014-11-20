@@ -25,6 +25,8 @@ Live-System
 -----
 http://event-und-raumplanung.herokuapp.com/
 
+http://event-und-raumplanung-dev.herokuapp.com/ (dev branch)
+
 Setup
 -----
 Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen Maschine und Vagrant
