@@ -1,6 +1,6 @@
 class EventTemplatesController < ApplicationController
   include EventTemplatesHelper
-  before_action :set_event_template, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event]
+  before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
 
@@ -50,7 +50,7 @@ class EventTemplatesController < ApplicationController
   # POST /templates.json
   def create
     @event_template = EventTemplate.new(eventtemplate_params)
-    @event.user_id = current_user.id
+    @event_template.user_id = current_user.id
 
     respond_to do |format|
       if @event_template.save
@@ -93,18 +93,8 @@ class EventTemplatesController < ApplicationController
       @event_template = EventTemplate.find(params[:id])
     end
 
-    def owner?(event=@event)
-        event_template.user_id == current_user.id
-    end
-
-    def check_ownership
-        raise  User::NotAuthorized unless owner?
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def eventtemplate_params
       params.require(:event_template).permit(:name, :description, :start_date, :end_date, :start_time, :end_time)
     end
-
-
 end
