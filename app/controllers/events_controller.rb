@@ -1,15 +1,28 @@
 class EventsController < ApplicationController
-  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create]
-  
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template]
+
 
   def current_user
     unless session[:user_id]
       @current_user = User.new email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
-      session[:user_id] = @current_user.id 
+      session[:user_id] = @current_user.id
     end
-    @current_user ||= User.find(session[:user_id])    
+    @current_user ||= User.find(session[:user_id])
+  end
+
+  # GET /events/1/new_event_template
+  def new_event_template
+    @event_template = EventTemplate.new
+    @event_template.name = @event.name
+    @event_template.description = @event.description
+    @event_template.start_date = @event.start_date
+    @event_template.end_date = @event.end_date
+    @event_template.start_time = @event.start_time
+    @event_template.end_time = @event.end_time
+    @event_template.user_id = current_user.id
+    render "event_templates/new"
   end
 
 

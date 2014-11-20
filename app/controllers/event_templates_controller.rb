@@ -1,5 +1,15 @@
 class EventTemplatesController < ApplicationController
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
+  load_and_authorize_resource
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
+
+  def current_user
+    unless session[:user_id]
+      @current_user = User.new email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
+      session[:user_id] = @current_user.id
+    end
+    @current_user ||= User.find(session[:user_id])
+  end
 
   # GET /templates
   # GET /templates.json
@@ -26,6 +36,8 @@ class EventTemplatesController < ApplicationController
     @event.end_date = @event_template.end_date
     @event.start_time = @event_template.start_time
     @event.end_time = @event_template.end_time
+    @event.room_id = @event_template.room_id
+    @event.user_id = current_user.id
     render "events/new"
   end
 

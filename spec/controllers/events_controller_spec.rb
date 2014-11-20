@@ -21,21 +21,21 @@ require "cancan/matchers"
 
 RSpec.describe EventsController, :type => :controller do
   include Devise::TestHelpers
-  
+
   let(:current_user) {
   	@user = User.where(email:'test@test.de').first
-  	unless @user 
+  	unless @user
   	  @user = User.create! email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
-  	end 
+  	end
   	@user
   }
   # This should return the minimal set of attributes required to create a valid
   # Event. As you add validations to Event, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    {name:'Michas GB', 
-    description:'Coole Sache', 
-    participant_count: 2000, 
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
     start_date:'2020-08-23',
     end_date:'2020-08-23',
     start_time:'17:00',
@@ -47,17 +47,17 @@ RSpec.describe EventsController, :type => :controller do
 
   let(:invalid_attributes) {
     {
-    name:'Michas GB', 
+    name:'Michas GB',
     start_date:'2014-08-23',
     end_date:'2014-08-23',
     start_time:'17:00',
     end_time:'23:59'
 	}
   }
-  
+
    let(:invalid_participant_count) {
-    {name:'Michas GB', 
-   	participant_count:-100,    
+    {name:'Michas GB',
+   	participant_count:-100,
    	start_date:'2020-08-23',
     end_date:'2020-08-23'
     }
@@ -88,6 +88,22 @@ RSpec.describe EventsController, :type => :controller do
     it "assigns a new event as @event" do
       get :new, {}, valid_session
       expect(assigns(:event)).to be_a_new(Event)
+    end
+  end
+
+  describe "GET new_event_template" do
+    it "assigns a new event_template as @event_template" do
+      event = Event.create! valid_attributes
+      get :new_event_template, {:id => event.to_param}, valid_session
+      expect(assigns(:event_template).name).to eq event.name
+      expect(assigns(:event_template).description).to eq event.description
+      expect(assigns(:event_template).user_id).to eq event.user_id
+      expect(assigns(:event_template).room_id).to eq event.room_id
+      expect(assigns(:event_template).start_date).to eq event.start_date
+      expect(assigns(:event_template).start_time).to eq event.start_time
+      expect(assigns(:event_template).end_date).to eq event.end_date
+      expect(assigns(:event_template).end_time).to eq event.end_time
+      expect(response).to render_template("event_templates/new")
     end
   end
 
@@ -147,9 +163,9 @@ RSpec.describe EventsController, :type => :controller do
   describe "PUT update" do
     describe "with valid params" do
       let(:new_attributes) {
-        {name:'Michas GB 2', 
-        description:'Keine coole Sache', 
-        participant_count: 1, 
+        {name:'Michas GB 2',
+        description:'Keine coole Sache',
+        participant_count: 1,
         }
       }
 

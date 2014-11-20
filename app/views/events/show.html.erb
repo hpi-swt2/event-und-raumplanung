@@ -32,6 +32,8 @@
               events_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_event_path(@event), :class => 'btn btn-default' %>
+<%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
+                      new_event_template_from_event_path(@event), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               event_path(@event),
               :method => 'delete',

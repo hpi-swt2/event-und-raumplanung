@@ -20,7 +20,8 @@ Rails.application.routes.draw do
   root 'events#index'
 
 
-  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
+  get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

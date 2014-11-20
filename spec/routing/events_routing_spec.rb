@@ -31,5 +31,9 @@ RSpec.describe EventsController, :type => :routing do
       expect(:delete => "/events/1").to route_to("events#destroy", :id => "1")
     end
 
+    it "routes to #new_event_template" do
+      expect(:get => "/events/1/new_event_template").to route_to("events#new_event_template", :id => "1")
+    end
+
   end
 end
