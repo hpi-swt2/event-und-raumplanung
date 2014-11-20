@@ -17,6 +17,16 @@ ActiveRecord::Schema.define(version: 20141120115543) do
   enable_extension "plpgsql"
   enable_extension "hstore"
 
+  create_table "attachments", force: true do |t|
+    t.string   "title"
+    t.string   "url"
+    t.integer  "task_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
+
   create_table "bookings", force: true do |t|
     t.string   "name"
     t.string   "description"
@@ -98,9 +108,13 @@ ActiveRecord::Schema.define(version: 20141120115543) do
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "done",        default: false
+    t.integer  "user_id"
+    t.string   "status"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
+  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: ""

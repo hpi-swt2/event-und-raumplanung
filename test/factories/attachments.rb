@@ -1,8 +1,9 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :task do
-  	name "Task1"
-  	description "Task description"
+  factory :attachment do
+    title "MyString"
+    url "MyString"
+    task nil
   end
 end

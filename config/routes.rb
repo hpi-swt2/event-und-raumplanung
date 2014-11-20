@@ -3,9 +3,14 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
+  resources :attachments
+
   resources :rooms
 
   resources :tasks
+
+  get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
+  get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
 
   resources :bookings
 
