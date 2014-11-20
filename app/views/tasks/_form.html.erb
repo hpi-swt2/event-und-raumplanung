@@ -56,19 +56,16 @@
     <% end %>
 
     <h4>Attachments</h4>
-    <ul data-bind="foreach: attachments">
-        <li>
-          <a data-bind="text: title, attr: { href: url }"></a>
-          <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
-          <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
-          <button data-bind="click: $parent.deleteAttachment">Delete</button>
-        </li>
-    </ul>
+      <ul class="list-group" data-bind="foreach: attachments">
+        <a class="list-group-item" style="width:50%; display: inline-block" data-bind="text: title, attr: { href: url }"></a>
+        <button class="btn btn-danger" data-bind="click: $parent.deleteAttachment">Delete</button>
+        <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
+        <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
+      </ul>
 
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               tasks_path, :class => 'btn btn-default' %>
-
   <% end %>
 </div>
 
