@@ -91,3 +91,8 @@ gem 'airbrake'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+# use rspec for testing
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0'
+end
+
