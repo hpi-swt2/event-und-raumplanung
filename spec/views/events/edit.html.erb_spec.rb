@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "events/edit", :type => :view do
   before(:each) do
-    @event = assign(:event, Event.create!(name:"Test",participant_count:2))
+    @event = assign(:event, FactoryGirl.create(:event))
   end
 
   it "renders the edit event form" do

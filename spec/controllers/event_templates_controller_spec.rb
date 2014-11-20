@@ -7,8 +7,8 @@ RSpec.describe EventTemplatesController, :type => :controller do
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
-    start_date:'2020-08-23',
-    end_date:'2020-08-23',
+    start_date: Date.today + 1,
+    end_date: Date.today + 1,
     start_time:'17:00',
     end_time:'23:59',
     }
@@ -43,12 +43,11 @@ RSpec.describe EventTemplatesController, :type => :controller do
       get :new_event, {:id => event_template.to_param}
       expect(assigns(:event).name).to eq event_template.name
       expect(assigns(:event).description).to eq event_template.description
-      expect(assigns(:event).user_id).to eq event_template.user_id
       expect(assigns(:event).room_id).to eq event_template.room_id
       expect(assigns(:event).start_date).to eq event_template.start_date
-      expect(assigns(:event).start_time).to eq event_template.start_time
+      expect(assigns(:event).start_time.strftime('%H%M%S')).to eq event_template.start_time.strftime('%H%M%S')
       expect(assigns(:event).end_date).to eq event_template.end_date
-      expect(assigns(:event).end_time).to eq event_template.end_time
+      expect(assigns(:event).end_time.strftime('%H%M%S')).to eq event_template.end_time.strftime('%H%M%S')
       expect(response).to render_template("events/new")
     end
   end
