@@ -30,6 +30,13 @@
     <%= error_span(@event[:description]) %>
   </div>
   <div class="control-group">
+    <%= f.label :Räume, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :rooms, options_from_collection_for_select(Room.all, :id, :name), {}, { :class => 'selectpicker', :multiple =>'' }%>
+    </div>
+    <%= error_span(@event[:room]) %>
+  </div>
+  <div class="control-group">
     <%= f.label :Teilnehmerzahl, :class => 'control-label' %>
     <div class="controls">
       <%= f.number_field :participant_count, :class => 'form-control' %>
