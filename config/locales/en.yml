@@ -29,3 +29,5 @@ en:
       declined: declined
     user:
       none: None
+    attachments:
+      none: None

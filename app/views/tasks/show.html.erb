@@ -18,14 +18,16 @@
   <dd><%= @task.done %></dd>
 </dl>
 
-<div>
+<dl>
   <h2>Attachments</h2>
-  <ul>
-    <% @task.attachments.each do |attachment| %>
-      <li><%= link_to attachment.title, attachment.url%></td>
+    <% if @task.attachments.count() > 0 %>
+      <% @task.attachments.each do |attachment| %>
+        <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
+      <% end %>
+    <% else %>
+      <%= t("tasks.attachments.none") %>
     <% end %>
-  </ul>
-</div>
+</dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               tasks_path, :class => 'btn btn-default'  %>

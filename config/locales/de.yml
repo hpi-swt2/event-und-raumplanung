@@ -209,3 +209,5 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
+    attachments:
+      none: Keine Anhänge
