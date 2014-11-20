@@ -1,8 +1,8 @@
 <%- model_class = Room -%>
 <div class="page-header"/>
-	<h1><%=t '.title', :default => [:'helpers.title.details', 'Details of %{model}'], :model => model_class.human_attribute_name(@room.name) %></h1>
+	<h1><%=t '.title', :default => [:'helpers.title.details', 'Details of %{model}'], :model => @room.name %></h1>
 </div>
-<table class="table table-striped">
+<table class="table table-column">
 	<thead>
 		<tr>
 			<th>Capacity</th>
@@ -11,14 +11,48 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td><%= model_class.human_attribute_name(@room.size) %> people</td>
-			<td><% @room.equipment.each do |equipment| %>
-			<%= model_class.human_attribute_name(equipment) %>
-			<% end %></td>
+			<td><%= model_class.human_attribute_name(@room.size) %> people<br><br>
+				Tables upon request<br>
+				<%= link_to t('.request', :default => t("helpers.links.request now")),
+				@room, method: :list, :class => 'btn btn-default btn-xs' %>
+			</td>			
+			<td><table class="table table-column-group">
+				<tbody>
+					<% @room.equipment.each do |equipment| %>
+					<tr>
+						<td><%= equipment.name %></td>
+						<td><%= equipment.description %></td>
+					</tr>
+					<% end %>
+				</tbody>
+			</table></td>
 		</tr>
+	</tbody>
+</table>
+<table class="table table-column">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @room.bookings.each do |booking| %>
+			<tr>
+				<% if(booking.start.to_date == Date.today) %>
+					<td>
+						<%= booking.name %>
+					</td>
+					<td>
+						starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
+						ends at <%= model_class.human_attribute_name(booking.end.to_s(:time)) %>
+					<td>
+				<% end %>
+			</tr>
+		<% end %>
 	</tbody>
 </table>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
-              edit_room_path(@room), :class => 'btn btn-default' %>
+              new_booking_path(:room => @room.id), :class => 'btn btn-default' %>
