@@ -1,0 +1,7 @@
+one:
+  email: user@example.com
+  identity_url: "http://example.com/test.user00"
+
+two:
+  email: user2@example.com
+  identity_url: "http://example.com/test.user000"
