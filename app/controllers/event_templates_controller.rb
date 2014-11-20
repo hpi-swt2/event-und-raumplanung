@@ -1,4 +1,5 @@
 class EventTemplatesController < ApplicationController
+  include EventTemplatesHelper
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
@@ -95,4 +96,6 @@ class EventTemplatesController < ApplicationController
     def eventtemplate_params
       params.require(:event_template).permit(:name, :description, :start_date, :end_date, :start_time, :end_time)
     end
+
+
 end
