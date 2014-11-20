@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :user do
-    email 'user@example.org'
-    password '12345678'
+    sequence(:identity_url) { |n| "http://example.com/test.user#{n}" }
   end
 end

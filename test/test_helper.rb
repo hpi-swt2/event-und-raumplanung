@@ -12,7 +12,6 @@ require 'rails/test_help'
 require 'mocha/mini_test'
 
 class ActiveSupport::TestCase
-  include Devise::TestHelpers
   include FactoryGirl::Syntax::Methods
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
