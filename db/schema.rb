@@ -69,7 +69,6 @@ ActiveRecord::Schema.define(version: 20141120115543) do
     t.time     "end_time"
     t.integer  "user_id"
     t.integer  "room_id"
-    t.string   "status",            default: "In Bearbeitung"
     t.boolean  "is_private"
   end
 
