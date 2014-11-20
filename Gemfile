@@ -42,6 +42,11 @@ gem 'spring',        group: :development
 
 # authentification, see: https://github.com/plataformatec/devise
 gem 'devise'
+gem 'devise_openid_authenticatable' # https://github.com/nbudin/devise_openid_authenticatable
+gem 'rack-openid' # https://github.com/josh/rack-openid
+
+# testing framework, see: https://github.com/rspec/rspec-rails
+gem 'rspec-rails'
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
 gem 'factory_girl_rails'
@@ -90,7 +95,3 @@ gem 'airbrake'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
-group :development, :test do
- gem 'rspec-rails', '~> 3.1.0'
-end

@@ -10,6 +10,8 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
 class ActiveSupport::TestCase
+  include Devise::TestHelpers
+  include FactoryGirl::Syntax::Methods
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
   include Devise::TestHelpers
