@@ -29,6 +29,16 @@
               @room, method: :list, :class => 'btn btn-default btn-xs' %>
 			</td>
 		</tr>
+	</tbody>
+</table>
+<table class="table table-column">
+<thead>
+	<tr>
+		<th>Event</th>
+		<th>Date</th>
+	</tr>
+</thead>
+<tbody>
 		<% @room.bookings.each do |booking| %>
 			<tr>
 				<% if(booking.start.to_date == Date.today) %>
