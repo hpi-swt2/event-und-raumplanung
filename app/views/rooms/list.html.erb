@@ -1,6 +1,6 @@
 <h1>Räume</h1>
 <%= form_tag("/rooms/list", method: "get") do %>
-<%= label_tag(:size, "größer als:") %>
+<%= label_tag(:size, "gewünschte Raumgröße:") %>
 <%= number_field(:room, :size, in: 0.0..999999999, step: 1.0) %>
 <br>
 Equipment
@@ -21,12 +21,20 @@ keine Räume gefunden!
 nix ausgewäht!
 <% else %> 
 <table border=1px>
-<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th></tr>
+<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th><th>Equipment</th><th>Eigenschaften</th></tr>
 <% @rooms.each do |room| %>
 <tr>
   <td align="middle"><%= room.id %></td>
   <td><%= room.name %></td>
-  <td align="middle"><%=room.size %><br/></td>
+  <td align="middle"><%=room.size %></td>
+  <td>
+  <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
+  <% category_list.each do |item| %>
+  <%= item %>
+  <% end %>
+  </td>
+  <td>
+  </td>
 </tr>
 <% end %>
 </table>
