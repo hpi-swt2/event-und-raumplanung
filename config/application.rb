@@ -20,5 +20,10 @@ module EventUndRaumplanung
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'views', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'models', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :de
+    
+    config.generators do |g|
+       g.test_framework  :rspec, :fixture => true, :views => false
+       g.integration_tool :rspec, :fixture => true, :views => true
+    end
   end
 end

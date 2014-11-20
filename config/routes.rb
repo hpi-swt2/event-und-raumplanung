@@ -2,10 +2,15 @@ Rails.application.routes.draw do
   resources :groups
 
   devise_for :users, :controllers => {:sessions => "sessions"}
-  
+
+  resources :attachments
+
   resources :rooms
 
   resources :tasks
+
+  get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
+  get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
 
   resources :bookings
 
@@ -13,12 +18,17 @@ Rails.application.routes.draw do
 
   resources :events
 
+  resources :event_templates, :path => "templates"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'events#index'
 
+
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
+  get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
