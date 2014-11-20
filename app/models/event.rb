@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
+  has_many :rooms
 
   validates :name, presence: true
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0

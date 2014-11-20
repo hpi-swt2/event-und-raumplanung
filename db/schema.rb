@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141113112042) do
+ActiveRecord::Schema.define(version: 20141120115543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20141113112042) do
     t.time     "end_time"
     t.integer  "user_id"
     t.integer  "room_id"
+    t.string   "status",            default: "In Bearbeitung"
     t.boolean  "is_private"
   end
 
@@ -80,7 +81,10 @@ ActiveRecord::Schema.define(version: 20141113112042) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
+
+  add_index "rooms", ["event_id"], name: "index_rooms_on_event_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
