@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  get 'approveevents/list'
+  get 'approveevents/' => 'approveevents#list'
   get 'rooms/list'
   post 'rooms/list'
 
@@ -18,11 +21,8 @@ Rails.application.routes.draw do
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-
   # You can have the root of your site routed with "root"
   root 'events#index'
-  
-  
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/:id' => 'rooms#details'
