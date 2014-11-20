@@ -1,24 +1,42 @@
 <h1>Räume</h1>
-
 <%= form_tag("/rooms/list", method: "get") do %>
-<%= label_tag(:size, "größer als:") %>
-<%= number_field(:room, :size, in: 1.0..500.0, step: 1.0) %>
+<%= label_tag(:size, "gewünschte Raumgröße:") %>
+<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0) %>
 <br>
-<%= check_box_tag(:beamer) %>
-<%= label_tag(:beamer, "Beamer") %>
+Equipment
 <br>
-
-  <%= submit_tag("Search") %>
+<% @categories.each do |category| %>
+    <%= check_box_tag(category) %>
+    <%= label_tag(category, category) %>
 <% end %>
-
+<br>
+Eigenschaften
+<br>
+  <%= submit_tag("Suche") %>
+<% end %>
 <br><br>
+<% if @empty %>
+keine Räume gefunden!
+<%elsif @noSelection %>
+nix ausgewäht!
+<% else %> 
 <table border=1px>
-<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th></tr>
+<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th><th>Equipment</th><th>Eigenschaften</th></tr>
 <% @rooms.each do |room| %>
 <tr>
   <td align="middle"><%= room.id %></td>
   <td><%= room.name %></td>
-  <td align="middle"><%=room.size %><br/></td>
+  <td align="middle"><%=room.size %></td>
+  <td>
+  <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
+  <% category_list.each do |item| %>
+  <%= item %>
+  <% end %>
+  </td>
+  <td>
+  </td>
 </tr>
 <% end %>
 </table>
+<% end %>
+<br><br><br>
