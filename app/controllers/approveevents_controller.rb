@@ -13,57 +13,27 @@ class ApproveeventsController < ApplicationController
 	end
 
   def list
-		@events = Event.where(approved: nil)
-		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day,
-			@date.end_of_day).order(:start, :event_id)
-		check_data
+  		@events = Event.all
+  		@bookings = Booking.all
+  		check_data
+		@events = @events.where!(approved: nil)
+		@bookings = @bookings.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
   end
 
   def check_data
-		@events.each do |event|
-			if event.name.nil?
-				event.name = 'name'
-			end
-			if event.description.nil?
-				event.description = 'description'
-			end
-			if event.start_date.nil?
-				event.start_date = Date.today
-			end
-			if event.end_date.nil?
-				event.end_date = Date.today
-			end
-			if event.start_time.nil?
-				event.start_time = Time.current
-			end
-			if event.end_time.nil?
-				event.end_time = Time.current
-			end
-			if event.user.nil?
-				event.user = User.first
-			end
-		end
+  	@events.where(name: nil).update_all(:name => 'generated name')
+  	@events.where(description: nil).update_all(:description => 'generated description')
+  	@events.where(start_time: nil).update_all(:start_time => Time.current)
+  	@events.where(end_time: nil).update_all(:end_time => Time.current)
+   	@events.where(start_date: nil).update_all(:start_date => Date.today)
+  	@events.where(end_date: nil).update_all(:end_date => Date.today)
 
-		@bookings.each do |booking|
-			if @bookings.find(booking).name.nil?
-				@bookings.find(booking).name = 'name'
-			end
-			if @bookings.find(booking).description.nil?
-				@bookings.find(booking).description = 'description'
-			end
-			if @bookings.find(booking).start.nil?
-				@bookings.find(booking).start = DateTime.current
-			end
-			if @bookings.find(booking).end.nil?
-				@bookings.find(booking).end = DateTime.current
-			end
-			if @bookings.find(booking).room.nil?
-				@bookings.find(booking).room = Room.create(name: 'Raum')
-			end
-			if @bookings.find(booking).event.nil?
-				@bookings.find(booking).event = Event.first
-			end
-		end
+	@bookings.where(start: nil).update_all(:start => DateTime.current)
+	@bookings.where(end: nil).update_all(:end => DateTime.current)
+	@bookings.where(name: nil).update_all(:name => 'generated name')
+	@bookings.where(description: nil).update_all(:description => 'generated description')
+	@bookings.where(room_id: nil).update_all(:room_id => Room.first.id)
+	@bookings.where(event_id: nil).update_all(:event_id => Event.first.id)
   end
 
 end
