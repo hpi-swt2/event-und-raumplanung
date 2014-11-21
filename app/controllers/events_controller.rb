@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :approve, :decline]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :approve, :decline] #for testing/demonstration auth_check is skipped for approve and decline, should be removed in the future
   # GET /events
   # GET /events.json
   def index
