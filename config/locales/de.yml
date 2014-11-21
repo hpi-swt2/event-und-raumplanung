@@ -201,3 +201,13 @@ de:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
+  tasks:
+    status:
+      not_assigned: nicht zugewiesen
+      pending: ausstehend
+      accepted: bestätigt
+      declined: abgelehnt
+    user:
+      none: Keine Auswahl
+    attachments:
+      none: Keine Anhänge
