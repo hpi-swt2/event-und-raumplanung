@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template]
   before_action :authenticate_user!
   before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
   load_and_authorize_resource
@@ -7,6 +8,7 @@ class EventsController < ApplicationController
 
   def current_user
     unless session[:user_id]
+      @current_user = User.new email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
       @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
       session[:user_id] = @current_user.id
     end
@@ -25,6 +27,7 @@ class EventsController < ApplicationController
     @event_template.user_id = current_user.id
     render "event_templates/new"
   end
+
 
   # GET /events
   # GET /events.json
@@ -96,10 +99,6 @@ class EventsController < ApplicationController
 
     def owner?(event=@event)
         event.user_id == current_user.id
-    end
-
-    def check_ownership
-        raise  User::NotAuthorized unless owner?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

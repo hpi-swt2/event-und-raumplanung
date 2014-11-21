@@ -25,7 +25,7 @@
   <div class="control-group">
     <%= f.label :Beschreibung, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :description, :class => 'form-control' %>
+      <%= f.text_area :description, :class => 'form-control' %>
     </div>
     <%= error_span(@event[:description]) %>
   </div>
@@ -69,11 +69,7 @@
   </div>
   <div class="control-group">
     <%= f.label :Privat, :class => 'control-label' %>
-    <div class="row">
-      <div class="controls col-sm-6" align="left">
-        <%= f.check_box :is_private, :class => 'form-control' %>
-      </div>
-    </div>
+        <%= f.check_box :is_private %>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
