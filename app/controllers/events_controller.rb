@@ -1,11 +1,23 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :approve, :decline]
   # GET /events
   # GET /events.json
   def index
     @events = Event.all
+  end
+
+  def approve
+    puts "approve"
+    @event.update(approved: true)
+    redirect_to approveevents_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def decline
+    puts "decline"
+    @event.update(approved: false)
+    redirect_to approveevents_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   # GET /events/1

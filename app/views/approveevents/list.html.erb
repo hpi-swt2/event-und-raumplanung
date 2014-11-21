@@ -33,9 +33,11 @@
         	<% end %>
         </td>
         <td>
-        	<%= link_to "Decline", approveevents_path(date: @date, id: event, approved: false), 
+        	<%= link_to "Decline", decline_event_path(event, date: @date),
+                    :method => :decline, 
                     :class => 'btn btn-danger btn-xs' %>
-          <%= link_to "Approve", approveevents_path(date: @date, id: event, approved: true), 
+          <%= link_to "Approve", approve_event_path(event, date: @date),
+                  :method => :approve,  
                     :class => 'btn btn-success btn-xs' %>
         </td>
       </tr> 

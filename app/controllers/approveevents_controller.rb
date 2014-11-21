@@ -2,9 +2,6 @@ class ApproveeventsController < ApplicationController
 
 	before_action :read_and_exec_params
 	def read_and_exec_params
-		if params[:id] and params[:approved]
-			Event.find(params[:id]).update(approved: params[:approved])
-		end
 		if params[:date]
 			@date = params[:date].to_date
 		else	
@@ -13,15 +10,17 @@ class ApproveeventsController < ApplicationController
 	end
 
   def list
-  		@events = Event.all
   		@bookings = Booking.all
-  		check_data
-		@events = @events.where!(approved: nil)
-		@bookings = @bookings.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
+  		@events = Event.all
+  		check_data # data must be checked before selection criterea as events links to bookings which are filtered out
+  		@events = @events.where(approved: nil)
+  		@bookings.where!('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
   end
 
   def check_data
-  	@events.where(name: nil).update_all(:name => 'generated name')
+  	@events.where(name: nil).select(:id).each do |event_id|
+  		@events.find(event_id).name = 'generated name'  #unless event.update_attribute.nil?
+  	end
   	@events.where(description: nil).update_all(:description => 'generated description')
   	@events.where(start_time: nil).update_all(:start_time => Time.current)
   	@events.where(end_time: nil).update_all(:end_time => Time.current)
