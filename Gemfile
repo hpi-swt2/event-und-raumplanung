@@ -102,7 +102,6 @@ gem 'mocha'
 # gem 'debugger', group: [:development, :test]
 
 group :test, :development  do 
-	gem 'rspec-rails'
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
