@@ -77,7 +77,7 @@ describe TasksController, type: :controller do
     end
   
     it "updates a task" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, user_id: task.user_id, done: task.done }
       expect(response).to redirect_to task_path(assigns(:task))
     end
   
