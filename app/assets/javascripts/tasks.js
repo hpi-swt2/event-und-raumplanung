@@ -20,6 +20,6 @@ function handleTaskCheckboxClick()
 			type: 'PUT',
 			data: {task: {done: target.checked}},
 			dataType: 'json'
-		})
+		});
 	});
 }
