@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
-  get 'approveevents/list'
-  get 'approveevents/' => 'approveevents#list'
+  get 'events_approval/index'
+  get 'events_approval/' => 'events_approval#index'
+  post 'events/:id/approve' => 'events#approve', as: "approve_event"
+  post 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'rooms/list'
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
