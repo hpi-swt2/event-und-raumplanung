@@ -19,7 +19,7 @@ class RoomsController < ApplicationController
 
   def list
     @categories = Equipment.group(:category).pluck(:category)
-    ## @properties = RoomProperty.group(:name).pluck(:name)
+    @properties = RoomProperty.group(:name).pluck(:name)
     @empty = false;
     @noSelection = false
     rooms_ids = Room.all.pluck(:id)
@@ -30,15 +30,20 @@ class RoomsController < ApplicationController
     end
     if !params[:room].nil? and !params[:room][:size].empty?
       size = params[:room][:size]
-      rooms_ids = rooms_ids & Room.where('size > ?', size).pluck(:id)
+      rooms_ids = rooms_ids & Room.where('size >= ?', size).pluck(:id)
      end
      @categories.each do |category|
      	if params.has_key?(category)
 	  rooms_ids = rooms_ids & Equipment.where(:category => category).pluck(:room_id)
      	end
      end
+     @properties.each do |name|
+         if params.has_key?(name)
+             rooms_ids = rooms_ids & RoomProperty.where(:name => name).pluck(:room_id)
+         end
+     end
      if rooms_ids.empty?
-	@empty = true
+	 @empty = true
      end
      @rooms = Room.find(rooms_ids)
   end

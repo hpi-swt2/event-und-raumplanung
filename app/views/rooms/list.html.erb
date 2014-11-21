@@ -12,6 +12,11 @@ Equipment
 <br>
 Eigenschaften
 <br>
+<% @properties.each do |property| %>
+    <%= check_box_tag(property) %>
+    <%= label_tag(property, property) %>
+<% end %>
+<br>
   <%= submit_tag("Suche") %>
 <% end %>
 <br><br>
@@ -34,6 +39,10 @@ nix ausgewäht!
   <% end %>
   </td>
   <td>
+  <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
+  <% property_list.each do |item| %>
+  <%= item %>
+  <% end %>
   </td>
 </tr>
 <% end %>
