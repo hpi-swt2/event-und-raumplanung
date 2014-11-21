@@ -38,3 +38,4 @@
 
 # Ignore anvil files used by Travis
 .anvil/
+start.bat
