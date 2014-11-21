@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template]
 
@@ -96,10 +96,6 @@ class EventsController < ApplicationController
 
     def owner?(event=@event)
         event.user_id == current_user.id
-    end
-
-    def check_ownership
-        raise  User::NotAuthorized unless owner?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
