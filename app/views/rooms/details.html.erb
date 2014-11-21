@@ -53,6 +53,6 @@
 	</tbody>
 </table>
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              rooms_path, :class => 'btn btn-default'  %>
+              rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
               new_booking_path(:room => @room.id), :class => 'btn btn-default' %>
