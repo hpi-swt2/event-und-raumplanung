@@ -32,13 +32,7 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    create_params = task_params_with_attachments
-    if create_params[:user_id].blank?
-      create_params[:status] = "not_assigned"
-    else
-      create_params[:status] = "pending"
-    end
-    @task = Task.new(create_params)
+    @task = Task.new(set_status task_params)
 
     respond_to do |format|
       if @task.save
@@ -58,14 +52,8 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
-    update_params = task_params
-    if update_params[:user_id].blank?
-      update_params[:status] = "not_assigned"
-    elsif update_params[:user_id].to_i != @task.user_id.to_i
-      update_params[:status] = "pending"
-    end
     respond_to do |format|
-      if @task.update_and_send_notification(update_params)
+      if @task.update_and_send_notification(set_status task_params)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -111,13 +99,25 @@ class TasksController < ApplicationController
     def task_params
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done)
     end
+
     def task_params_with_attachments
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
     end
+
     def event_id
       if params[:event]
         return params[:event][:event_id] unless params[:event][:event_id].empty?
       end
       nil
+    end
+
+    def set_status(params)
+      updated_params = params
+      if updated_params[:user_id].blank?
+        updated_params[:status] = "not_assigned"
+      elsif updated_params[:user_id].to_i != @task.user_id.to_i
+        updated_params[:status] = "pending"
+      end
+      return updated_params
     end
 end
