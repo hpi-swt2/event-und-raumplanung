@@ -18,14 +18,14 @@
   <div class="control-group">
     <%= f.label :name, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
+      <%= f.text_field :name, :class => 'form-control', :maxlength=>"254" %>
     </div>
     <%= error_span(@event[:name]) %>
   </div>
   <div class="control-group">
     <%= f.label :Beschreibung, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :description, :class => 'form-control' %>
+      <%= f.text_area :description, :class => 'form-control' %>
     </div>
     <%= error_span(@event[:description]) %>
   </div>
@@ -68,12 +68,13 @@
     <%= error_span(@event[:end_date]) %> <%= error_span(@event[:end_time]) %>
   </div>
   <div class="control-group">
-    <%= f.label :Privat, :class => 'control-label' %>
+
     <div class="row">
-      <div class="controls col-sm-6" align="left">
-        <%= f.check_box :is_private, :class => 'form-control' %>
-      </div>
-    </div>
+      <div class="controls col-sm-12">
+      <%= f.label :Privat, :class => 'control-label' %>
+      <%= f.check_box :is_private %>
+      <div class="controls col-sm-12">
+   </div>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>

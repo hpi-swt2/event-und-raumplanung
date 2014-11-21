@@ -40,6 +40,11 @@ class EventsController < ApplicationController
   # GET /events/new
   def new
     @event = Event.new
+    time = Time.new.getlocal
+    @event.start_date = time.to_date
+    @event.end_date = time.to_date
+    @event.start_time = time.strftime("%H:%M")
+    @event.end_time = (time+(60*60)).strftime("%H:%M")
   end
 
   # GET /events/1/edit
