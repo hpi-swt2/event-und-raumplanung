@@ -18,6 +18,6 @@ class Task < ActiveRecord::Base
   end
 
   def send_notification
-	UserMailer.user_assigned_to_task_email(user, self).deliver
+	  UserMailer.user_assigned_to_task_email(user, self).deliver
   end
 end
