@@ -30,7 +30,7 @@ class RoomsController < ApplicationController
     end
     if !params[:room].nil? and !params[:room][:size].empty?
       size = params[:room][:size]
-      rooms_ids = rooms_ids & Room.where('size > ?', size).pluck(:id)
+      rooms_ids = rooms_ids & Room.where('size >= ?', size).pluck(:id)
      end
      @categories.each do |category|
      	if params.has_key?(category)
