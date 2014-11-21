@@ -20,7 +20,7 @@ class EquipmentControllerTest < ActionController::TestCase
 
   test "should create equipment" do
     assert_difference('Equipment.count') do
-      post :create, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id }
+      post :create, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id, category: @equipment.category }
     end
 
     assert_redirected_to equipment_path(assigns(:equipment))
@@ -37,7 +37,7 @@ class EquipmentControllerTest < ActionController::TestCase
   end
 
   test "should update equipment" do
-    patch :update, id: @equipment, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id }
+    patch :update, id: @equipment, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id, category: @equipment.category }
     assert_redirected_to equipment_path(assigns(:equipment))
   end
 

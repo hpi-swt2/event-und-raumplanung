@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141120115543) do
 
   add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
 
+
   create_table "bookings", force: true do |t|
     t.string   "name"
     t.string   "description"
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(version: 20141120115543) do
     t.integer  "room_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "category"
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
@@ -86,6 +88,12 @@ ActiveRecord::Schema.define(version: 20141120115543) do
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
+  create_table "room_properties", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+  
   create_table "groups", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
