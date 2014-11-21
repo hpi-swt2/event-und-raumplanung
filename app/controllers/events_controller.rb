@@ -1,5 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template]
+  before_action :authenticate_user!
+  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template]
 
@@ -7,6 +9,7 @@ class EventsController < ApplicationController
   def current_user
     unless session[:user_id]
       @current_user = User.new email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
+      @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
       session[:user_id] = @current_user.id
     end
     @current_user ||= User.find(session[:user_id])

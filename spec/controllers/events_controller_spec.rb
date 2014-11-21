@@ -22,16 +22,6 @@ require "cancan/matchers"
 RSpec.describe EventsController, :type => :controller do
   include Devise::TestHelpers
 
-  let(:current_user) {
-  	@user = User.where(email:'test@test.de').first
-  	unless @user
-  	  @user = User.create! email: 'test@test.de', password:'test1234' #Nur solange es keine Authentifikation gibt frag Micha
-  	end
-  	@user
-  }
-  # This should return the minimal set of attributes required to create a valid
-  # Event. As you add validations to Event, be sure to
-  # adjust the attributes here as well.
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -40,8 +30,7 @@ RSpec.describe EventsController, :type => :controller do
     end_date:'2020-08-23',
     start_time:'17:00',
     end_time:'23:59',
-    is_private: true,
-    user_id: current_user.id
+    is_private: true
     }
   }
 
@@ -63,10 +52,14 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # EventsController. Be sure to keep this updated too.
-  let(:valid_session) { {user_id:current_user.id} }
+  let(:valid_session) { {} }
+  let(:task) { create :task }
+  let(:user) { create :user }
+
+  before(:each) do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in user
+  end
 
   describe "GET index" do
     it "assigns all events as @events" do

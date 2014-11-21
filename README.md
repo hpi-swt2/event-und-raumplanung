@@ -6,6 +6,16 @@
 [![Open Issues](http://img.shields.io/github/issues/hpi-swt2/event-und-raumplanung.svg)](https://github.com/hpi-swt2/event-und-raumplanung/issues?q=is%3Aopen+is%3Aissue)
 [![License](http://img.shields.io/badge/license-AGPL-blue.svg)](https://github.com/hpi-swt2/event-und-raumplanung/blob/master/LICENSE)
 
+# Building
+Team      | master        | dev   | last
+--------- | ------------- | ----- | ---
+Upstream  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/hpi-swt2/event-und-raumplanung) | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/hpi-swt2/event-und-raumplanung) | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Axolotl   | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/rs22/event-und-raumplanung) | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/rs22/event-und-raumplanung) | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg)](https://travis-ci.org/rs22/event-und-raumplanung)
+Biber | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/Atyanar/event-und-raumplanung) | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/Atyanar/event-und-raumplanung) | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg)](https://travis-ci.org/Atyanar/event-und-raumplanung)
+Clownfish | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung) | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung) | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung)
+Dolphins  | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/SvenLehmann/event-und-raumplanung) | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/SvenLehmann/event-und-raumplanung) | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg)](https://travis-ci.org/SvenLehmann/event-und-raumplanung)
+Elch      | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/l--f/event-und-raumplanung) | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/l--f/event-und-raumplanung) | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg)](https://travis-ci.org/l--f/event-und-raumplanung)
+
 event-und-raumplanung
 =====================
 
@@ -14,6 +24,8 @@ Ein Tool das die interne Planung von Events verbessern soll und dabei besonderen
 Live-System
 -----
 http://event-und-raumplanung.herokuapp.com/
+
+http://event-und-raumplanung-dev.herokuapp.com/ (dev branch)
 
 Setup
 -----

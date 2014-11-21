@@ -1,10 +1,15 @@
 require 'rails_helper'
+require "cancan/matchers"
 
 RSpec.describe "Events", :type => :request do
-  describe "GET /events" do
-    it "works! (now write some real specs)" do
-      get events_path
-      expect(response).to have_http_status(200)
+
+  context "when user is not logged-in" do
+    describe "GET /events" do
+      it "should redirect to login" do
+        get events_path
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
+
   end
 end
