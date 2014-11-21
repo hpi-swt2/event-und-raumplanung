@@ -33,6 +33,8 @@ class Ability
     can [:update, :destroy, :edit], Event, :user_id => user.id
     if user.identity_url == load_admin
         can :manage, Group
+        can :manage, Room
+        can :manage, Equipment
     else
         can :read, Group
     end
