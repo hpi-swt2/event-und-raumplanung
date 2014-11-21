@@ -30,6 +30,8 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
     if user.identity_url == load_admin
         can :manage, Group
+        can :manage, Room
+        can :manage, Equipment
     else
         can :read, Group
     end

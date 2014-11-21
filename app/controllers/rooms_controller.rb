@@ -18,10 +18,12 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   def new
     @room = Room.new
+    authorize! :new, @room
   end
 
   # GET /rooms/1/edit
   def edit
+    authorize! :edit, @room
   end
 
   # GET /rooms/1/events
@@ -33,6 +35,7 @@ class RoomsController < ApplicationController
   # POST /rooms.json
   def create
     @room = Room.new(room_params)
+    authorize! :create, @room
 
     respond_to do |format|
       if @room.save
@@ -48,6 +51,8 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1
   # PATCH/PUT /rooms/1.json
   def update
+    authorize! :update, @room
+
     respond_to do |format|
       if @room.update(room_params)
         format.html { redirect_to rooms_path, notice: t('notices.successful_update', :model => Room.model_name.human) }
@@ -62,6 +67,7 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
+    authorize! :destroy, @room
     @room.destroy
     respond_to do |format|
       format.html { redirect_to rooms_url, notice: t('notices.successful_destroy', :model => Room.model_name.human) }

@@ -15,15 +15,12 @@ class EquipmentControllerTest < ActionController::TestCase
 
   test "should get new" do
     get :new
-    assert_response :success
+    assert_response :redirect
   end
 
   test "should create equipment" do
-    assert_difference('Equipment.count') do
-      post :create, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id, category: @equipment.category }
-    end
-
-    assert_redirected_to equipment_path(assigns(:equipment))
+    post :create, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id, category: @equipment.category }
+    assert_response :redirect
   end
 
   test "should show equipment" do
@@ -33,19 +30,16 @@ class EquipmentControllerTest < ActionController::TestCase
 
   test "should get edit" do
     get :edit, id: @equipment
-    assert_response :success
+    assert_response :redirect
   end
 
   test "should update equipment" do
     patch :update, id: @equipment, equipment: { description: @equipment.description, name: @equipment.name, room_id: @equipment.room_id, category: @equipment.category }
-    assert_redirected_to equipment_path(assigns(:equipment))
+    assert_response :redirect
   end
 
   test "should destroy equipment" do
-    assert_difference('Equipment.count', -1) do
-      delete :destroy, id: @equipment
-    end
-
-    assert_redirected_to equipment_index_path
+    delete :destroy, id: @equipment
+    assert_response :redirect  
   end
 end
