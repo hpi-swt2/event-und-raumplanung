@@ -11,13 +11,13 @@ class EventsController < ApplicationController
   def approve
     puts "approve"
     @event.update(approved: true)
-    redirect_to approveevents_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
     puts "decline"
     @event.update(approved: false)
-    redirect_to approveevents_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   # GET /events/1
