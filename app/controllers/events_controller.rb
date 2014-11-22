@@ -68,12 +68,27 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
-      if @event.update(event_params)
+      logger.info "XXX"
+      temp_event_params = event_params
+      temp = [] 
+      temp_event_params[:rooms].each do | room_id | 
+        begin 
+          room = Room.find(room_id)
+        rescue ActiveRecord::RecordNotFound  
+          next 
+        else  
+        temp << room
+      end 
+      end  
+      
+      temp_event_params[:rooms] = temp
+
+      if @event.update(temp_event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
-        format.json { render :show, status: :ok, location: @event }
+       # format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+       # format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -104,6 +119,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, rooms:[:id])
+      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, :rooms => [])
     end
 end
