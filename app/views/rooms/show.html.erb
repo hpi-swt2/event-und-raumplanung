@@ -36,28 +36,5 @@
                   room_events_path(@room), :class => 'btn btn-default' %>
   </div>
 
-  <% events = @room.upcoming_events %>
-  <% if events.size != 0 %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><%= Event.human_attribute_name(:name) %></th>
-          <th><%= Booking.human_attribute_name(:start) %></th>
-          <th><%= Booking.human_attribute_name(:end) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% events.take(maximum_events).each do |booking| %>
-          <tr>
-            <td><%= link_to booking.event.name, event_path(booking.event) %></td>
-            <td><%=l booking.start %></td>
-            <td><%=l booking.end %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% end %>
-  <% if events.size == 0 %>
-    <em><%=t '.no_upcoming_events' %></em>
-  <% end %>
+  <%= render :partial => 'upcoming_events' %>
 </div>

@@ -13,6 +13,7 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    @events = @room.upcoming_events.take(5)
   end
 
   # GET /rooms/new
@@ -28,6 +29,7 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1/events
   def list_events
+    @events = @room.upcoming_events
     render 'events'
   end
 

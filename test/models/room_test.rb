@@ -7,8 +7,6 @@ class RoomTest < ActiveSupport::TestCase
     assert_equal 0, room.upcoming_events.size
     event = FactoryGirl.create(:upcoming_event, :room_id => 42)
     assert_equal 1, room.upcoming_events.size
-    event2 = FactoryGirl.create(:past_event, :room_id => 42)
-    assert_equal 1, room.upcoming_events.size
   end
 
 end

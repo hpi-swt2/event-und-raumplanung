@@ -4,7 +4,7 @@ class Room < ActiveRecord::Base
   has_many :events
 
   def upcoming_events
-    return self.bookings.where(['start > ?', DateTime.now]).order('start asc')
+    return self.events.where(['start_date > ?', Date.today]).order('start_date asc')
   end
 
 end
