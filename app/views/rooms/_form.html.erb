@@ -32,7 +32,9 @@
   <div class="control-group">
     <%= f.label :properties, :class => 'control-label' %>
     <div class="controls">
-      <%= f.collection_check_boxes :property_ids, @properties, :id, :name %>
+      <%= f.collection_check_boxes :property_ids, @properties, :id, :name do |b| %>
+      <%= b.check_box + b.text %><br/>
+      <% end %>
     </div>
   </div>
 
