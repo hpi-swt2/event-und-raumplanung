@@ -98,6 +98,11 @@ ActiveRecord::Schema.define(version: 20141120115543) do
     t.datetime "updated_at"
   end
 
+  create_table "room_properties_rooms", force: true do |t|
+    t.integer "room_property_id"
+    t.integer "room_id"
+  end
+
   create_table "rooms", force: true do |t|
     t.string   "name"
     t.integer  "size"

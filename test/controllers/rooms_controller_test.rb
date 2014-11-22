@@ -40,7 +40,7 @@ class RoomsControllerTest < ActionController::TestCase
   end
 
   test "should update room" do
-    patch :update, id: @room, room: { name: @room.name, size: @room.size }
+    patch :update, id: @room, room: { name: @room.name, size: @room.size, property_ids: @room.property_ids }
     assert_response :redirect
   end
 
