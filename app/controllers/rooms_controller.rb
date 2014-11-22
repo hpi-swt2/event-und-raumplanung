@@ -2,6 +2,7 @@ class RoomsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_room, only: [:show, :edit, :update, :destroy, :list_events]
+  before_action :set_all_properties, only: [:edit, :new]
 
 
   # GET /rooms
@@ -83,8 +84,12 @@ class RoomsController < ApplicationController
       @room = Room.find(params[:id])
     end
 
+    def set_all_properties
+      @properties = RoomProperty.all
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def room_params
-      params.require(:room).permit(:name, :size)
+      params.require(:room).permit(:name, :size, :property_ids => [])
     end
 end

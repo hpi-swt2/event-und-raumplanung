@@ -16,7 +16,7 @@
         <td><%= link_to room.name, room_path(room) %></td>
         <td><%= room.size %></td>
         <td>
-          <%= link_to 'Anstehende ' + Event.model_name.human.pluralize.titleize,
+          <%= link_to t('.all_events'),
                       room_events_path(room), :class => 'btn btn-default btn-xs' %>
           
           <% if can? :edit, Room %>
