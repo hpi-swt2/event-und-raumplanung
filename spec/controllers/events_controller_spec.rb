@@ -33,6 +33,19 @@ RSpec.describe EventsController, :type => :controller do
     is_private: true
     }
   }
+ 
+ let(:valid_attributes_for_request) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    start_date:'2020-08-23',
+    end_date:'2020-08-23',
+    start_time:'17:00',
+    end_time:'23:59',
+    rooms: ["1", "2"], 
+    is_private: true
+    }
+  }
 
   let(:invalid_attributes) {
     {
@@ -44,11 +57,31 @@ RSpec.describe EventsController, :type => :controller do
 	}
   }
 
+  let(:invalid_attributes_for_request) {
+    {
+    name:'Michas GB',
+    start_date:'2014-08-23',
+    end_date:'2014-08-23',
+    start_time:'17:00',
+    end_time:'23:59', 
+    rooms:[]
+  }
+  }
+
    let(:invalid_participant_count) {
     {name:'Michas GB',
    	participant_count:-100,
    	start_date:'2020-08-23',
     end_date:'2020-08-23'
+    }
+  }
+
+  let(:invalid_participant_count_for_request) {
+    {name:'Michas GB',
+    participant_count:-100,
+    start_date:'2020-08-23',
+    end_date:'2020-08-23',
+    rooms: []
     }
   }
 
@@ -112,41 +145,41 @@ RSpec.describe EventsController, :type => :controller do
     describe "with valid params" do
       it "creates a new Event" do
         expect {
-          post :create, {:event => valid_attributes}, valid_session
+          post :create, {:event => valid_attributes_for_request}, valid_session
         }.to change(Event, :count).by(1)
       end
 
       it "assigns a newly created event as @event" do
-        post :create, {:event => valid_attributes}, valid_session
+        post :create, {:event => valid_attributes_for_request}, valid_session
         expect(assigns(:event)).to be_a(Event)
         expect(assigns(:event)).to be_persisted
       end
 
       it "redirects to the created event" do
-        post :create, {:event => valid_attributes}, valid_session
+        post :create, {:event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(Event.last)
       end
     end
 
     describe "with invalid dates" do
       it "assigns a newly created but unsaved event as @event" do
-        post :create, {:event => invalid_attributes}, valid_session
+        post :create, {:event => invalid_attributes_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:event => invalid_attributes}, valid_session
+        post :create, {:event => invalid_attributes_for_request}, valid_session
         expect(response).to render_template("new")
       end
     end
 	describe "with invalid participant count" do
       it "assigns a newly created but unsaved event as @event" do
-        post :create, {:event => invalid_participant_count}, valid_session
+        post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:event => invalid_participant_count}, valid_session
+        post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(response).to render_template("new")
       end
     end
@@ -159,6 +192,7 @@ RSpec.describe EventsController, :type => :controller do
         {name:'Michas GB 2',
         description:'Keine coole Sache',
         participant_count: 1,
+        rooms: []
         }
       }
 
@@ -173,13 +207,13 @@ RSpec.describe EventsController, :type => :controller do
 
       it "assigns the requested event as @event" do
         event = Event.create! valid_attributes
-        put :update, {:id => event.to_param, :event => valid_attributes}, valid_session
+        put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
         expect(assigns(:event)).to eq(event)
       end
 
       it "redirects to the event" do
         event = Event.create! valid_attributes
-        put :update, {:id => event.to_param, :event => valid_attributes}, valid_session
+        put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(event)
       end
     end
@@ -187,13 +221,13 @@ RSpec.describe EventsController, :type => :controller do
     describe "with invalid params" do
       it "assigns the event as @event" do
         event = Event.create! valid_attributes
-        put :update, {:id => event.to_param, :event => invalid_attributes}, valid_session
+        put :update, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
         expect(assigns(:event)).to eq(event)
       end
 
       it "re-renders the 'edit' template" do
         event = Event.create! valid_attributes
-        put :update, {:id => event.to_param, :event => invalid_attributes}, valid_session
+        put :update, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
         expect(response).to render_template("edit")
       end
     end
