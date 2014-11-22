@@ -11,6 +11,9 @@ class Event < ActiveRecord::Base
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
+
+accepts_nested_attributes_for :rooms 
+   
    def dates_cannot_be_in_the_past
 
       errors.add(:start_date, "can't be in the past") if start_date && start_date < Date.today
