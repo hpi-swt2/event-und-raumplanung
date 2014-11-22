@@ -55,7 +55,20 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
+    temp_event_params = event_params
+    temp = [] 
+    temp_event_params[:rooms].each do | room_id | 
+      begin 
+        room = Room.find(room_id)
+      rescue ActiveRecord::RecordNotFound  
+        next 
+      else  
+        temp << room
+      end 
+    end   
+      
+    temp_event_params[:rooms] = temp
+    @event = Event.new(temp_event_params)
     @event.user_id = current_user.id
 
     respond_to do |format|
@@ -83,7 +96,7 @@ class EventsController < ApplicationController
           next 
         else  
         temp << room
-      end 
+        end 
       end  
       
       temp_event_params[:rooms] = temp
