@@ -16,21 +16,30 @@
         <td><%= link_to room.name, room_path(room) %></td>
         <td><%= room.size %></td>
         <td>
-          <%= link_to 'Anstehende ' + Event.model_name.human.pluralize.titleize,
+          <%= link_to t('.all_events'),
                       room_events_path(room), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+          
+          <% if can? :edit, Room %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_room_path(room), :class => 'btn btn-default btn-xs' %>
+          <% end -%>
+
+          <% if can? :destroy, Room %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       room_path(room),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+          <% end -%>
+          
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<% if can? :new, Room %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_room_path,
             :class => 'btn btn-primary' %>
+<% end %>
