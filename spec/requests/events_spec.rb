@@ -13,3 +13,18 @@ RSpec.describe "Events", :type => :request do
 
   end
 end
+
+RSpec.describe "Events", :type => :request do 
+  it "lets only the event creator edit, update and delete his events" do 
+  	user = build(:user, :id => 1)
+    other_user = build(:user, :id => 2)
+    ability = Ability.new(user)
+    methods = [:edit, :update, :destroy]
+    own_event = build(:event, :user_id => 1)
+    other_event = build(:event, :user_id => 2)
+    methods.each { |method| 
+	  expect(ability).to be_able_to(method, own_event)
+	  expect(ability).to_not be_able_to(method, other_event)
+    }
+  end 
+end 
