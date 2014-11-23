@@ -1,33 +1,51 @@
 <%- model_class = Event -%>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
-<div class="row">
-  <div>
+<div class="well">
+  <div class="row">
+        <% puts @filterrific.inspect %>
     <%= form_for @filterrific do |f| %>
-    <div>
-      Search
-      <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-      <%= f.text_field(
-        :search_query,
-        class: 'filterrific-periodically-observed'
-      ) %>
-    </div>
-    <div>
-      Own?
-      <%= f.check_box(:own) %>
-    </div>
-    <div>
-      Sorted by
-      <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
-      <%# See below for the Student.options_for_sorted_by presenter method %>
-    </div>
-    <div>
-      <%= link_to(
-        'Reset filters',
-        reset_filterrific_events_path,
-      ) %>
-    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          Suche
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :search_query,
+            class: 'filterrific-periodically-observed form-control'
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          Nur eigene anzeigen
+          <%= f.check_box(:own) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          Sortiert bei
+          <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, {class: 'form-control'}) %>
+          <%# See below for the Student.options_for_sorted_by presenter method %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= link_to(
+            'Filter zurücksetzen',
+            reset_filterrific_events_path,
+          ) %>
+       </div>
+      </div>
+    </div> 
     <%# add an automated spinner to your form when the list is refreshed %>
     <%= render_filterrific_spinner %>
   <% end %>
@@ -38,7 +56,6 @@
   partial: 'events/list',
   locals: { events: @events,  model_class:  model_class }
 ) %>
-
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_event_path,
             :class => 'btn btn-primary' %>

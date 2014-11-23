@@ -4,6 +4,14 @@ require "cancan/matchers"
 RSpec.describe EventTemplatesController, :type => :controller do
   include Devise::TestHelpers
 
+  let(:task) { create :task }
+  let(:user) { create :user }
+
+  before(:each) do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in user
+  end
+
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -11,6 +19,7 @@ RSpec.describe EventTemplatesController, :type => :controller do
     end_date: Date.today + 1,
     start_time:'17:00',
     end_time:'23:59',
+    user_id: user.id
     }
   }
 

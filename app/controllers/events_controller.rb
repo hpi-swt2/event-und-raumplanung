@@ -5,7 +5,7 @@ class EventsController < ApplicationController
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
   def current_user_id
-    session[:user_id]
+    current_user.id
   end
 
   # GET /events/1/new_event_template
@@ -24,12 +24,19 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
+
+     
      @filterrific = Filterrific.new(
       Event,
       params[:filterrific] || session[:filterrific_events])
       @filterrific.select_options =   {
         sorted_by: Event.options_for_sorted_by
       }
+      @filterrific.own = if @filterrific.own == 1
+          current_user_id
+        else
+          nil
+        end
       @events = Event.filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_events] = @filterrific.to_hash
@@ -86,6 +93,7 @@ class EventsController < ApplicationController
       
     temp_event_params[:rooms] = temp
     @event = Event.new(temp_event_params)
+    @event.user_id = current_user_id
 
     respond_to do |format|
       if @event.save

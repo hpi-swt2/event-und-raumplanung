@@ -4,8 +4,8 @@ class EventTemplatesController < ApplicationController
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
 
-  def current_user
-    session[:user_id]
+  def current_user_id
+    current_user.id
   end
 
   # GET /templates
@@ -34,7 +34,6 @@ class EventTemplatesController < ApplicationController
     @event.start_time = @event_template.start_time
     @event.end_time = @event_template.end_time
     @event.room_id = @event_template.room_id
-    @event.user_id = current_user_id
     render "events/new"
   end
 

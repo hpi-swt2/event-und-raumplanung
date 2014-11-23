@@ -60,7 +60,7 @@ accepts_nested_attributes_for :rooms
   end
   }
   scope :own, lambda { |user_id|
-    where("user_id = ?",user_id)
+    where("user_id = ?",user_id) if user_id
   }
 
   def self.options_for_sorted_by
