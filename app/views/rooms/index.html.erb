@@ -5,34 +5,41 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:size) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @rooms.each do |room| %>
       <tr>
-        <td><%= link_to room.id, room_path(room) %></td>
-        <td><%= room.name %></td>
+        <td><%= link_to room.name, room_path(room) %></td>
         <td><%= room.size %></td>
-        <td><%=l room.created_at %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+          <%= link_to t('.all_events'),
+                      room_events_path(room), :class => 'btn btn-default btn-xs' %>
+          
+          <% if can? :edit, Room %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_room_path(room), :class => 'btn btn-default btn-xs' %>
+          <% end -%>
+
+          <% if can? :destroy, Room %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       room_path(room),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+          <% end -%>
+          
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<% if can? :new, Room %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_room_path,
             :class => 'btn btn-primary' %>
+<% end %>
