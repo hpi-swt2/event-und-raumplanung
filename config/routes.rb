@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   resources :events
 
+  resources :maps
+
   resources :event_templates, :path => "templates"
 
   # The priority is based upon order of creation: first created -> highest priority.
