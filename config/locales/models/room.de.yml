@@ -4,6 +4,7 @@ de:
   activerecord:
     models:
       room: 'Raum'
+      rooms: 'Räume'
     attributes:
       room:
         name: 'Name'

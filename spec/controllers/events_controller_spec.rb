@@ -52,7 +52,7 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
-  let(:valid_session) { {} }
+  let(:valid_session) { {user_id:1} }
   let(:task) { create :task }
   let(:user) { create :user }
 

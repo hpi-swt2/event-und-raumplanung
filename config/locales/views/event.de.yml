@@ -1,0 +1,6 @@
+de:
+  events:
+    index:
+      title: Eventübersicht
+      show_only_my_events: 'nur meine Events anzeigen'
+      filter: 'filtern'

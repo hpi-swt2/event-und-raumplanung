@@ -1,0 +1,17 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      event:'Event'
+    attributes:
+      event:
+        name: 'Name'
+        id: 'ID'
+        description: 'Beschreibung'
+        participant_count: 'Teilnehmeranzahl'
+        start_date: 'Startdatum'
+        end_date: 'Enddatum'
+        start_time: 'Startzeit'
+        end_time: 'Endzeit'
+        created_at: 'Erstellungsdatum'

@@ -1,16 +1,11 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
-
-  def current_user
-    unless session[:user_id]
-      @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
-      session[:user_id] = @current_user.id
-    end
-    @current_user ||= User.find(session[:user_id])
+  def current_user_id
+    session[:user_id]
   end
 
   # GET /events/1/new_event_template
@@ -22,15 +17,37 @@ class EventsController < ApplicationController
     @event_template.end_date = @event.end_date
     @event_template.start_time = @event.start_time
     @event_template.end_time = @event.end_time
-    @event_template.user_id = current_user.id
+    @event_template.user_id = current_user_id
     render "event_templates/new"
   end
 
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+     @filterrific = Filterrific.new(
+      Event,
+      params[:filterrific] || session[:filterrific_events])
+      @filterrific.select_options =   {
+        sorted_by: Event.options_for_sorted_by
+      }
+      @events = Event.filterrific_find(@filterrific).page(params[:page])
+
+      session[:filterrific_events] = @filterrific.to_hash
+
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_events] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
+  end
+
 
   # GET /events/1
   # GET /events/1.json
@@ -56,7 +73,7 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(event_params)
-    @event.user_id = current_user.id
+    @event.user_id = current_user_id
 
     respond_to do |format|
       if @event.save
@@ -99,16 +116,8 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
     end
 
-    def owner?(event=@event)
-        event.user_id == current_user.id
-    end
-
-    def check_ownership
-        raise  User::NotAuthorized unless owner?
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, rooms:[:id])
+      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, :show_only_my_events, rooms:[:id])
     end
 end
