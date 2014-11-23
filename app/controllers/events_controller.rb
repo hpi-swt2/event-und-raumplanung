@@ -72,8 +72,20 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
-    @event.user_id = current_user_id
+    temp_event_params = event_params
+    temp = [] 
+    temp_event_params[:rooms].each do | room_id | 
+      begin 
+        room = Room.find(room_id)
+      rescue ActiveRecord::RecordNotFound  
+        next 
+      else  
+        temp << room
+      end 
+    end   
+      
+    temp_event_params[:rooms] = temp
+    @event = Event.new(temp_event_params)
 
     respond_to do |format|
       if @event.save
@@ -90,12 +102,27 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
-      if @event.update(event_params)
+      logger.info "XXX"
+      temp_event_params = event_params
+      temp = [] 
+      temp_event_params[:rooms].each do | room_id | 
+        begin 
+          room = Room.find(room_id)
+        rescue ActiveRecord::RecordNotFound  
+          next 
+        else  
+        temp << room
+        end 
+      end  
+      
+      temp_event_params[:rooms] = temp
+
+      if @event.update(temp_event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
-        format.json { render :show, status: :ok, location: @event }
+       # format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+       # format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
   end
