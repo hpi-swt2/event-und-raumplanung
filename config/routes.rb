@@ -9,17 +9,30 @@ Rails.application.routes.draw do
   post 'rooms/list'
   post 'rooms/:id' => 'rooms#details'
 
-  devise_for :users
+  resources :groups
+
+  devise_for :users, :controllers => {:sessions => "sessions"}
+
+  resources :attachments
+
+  resources :room_properties
 
   resources :rooms
 
   resources :tasks
 
+  get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
+  get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
+
   resources :bookings
 
   resources :equipment
 
-  resources :events
+  resources :events do
+    get :reset_filterrific, on: :collection
+  end
+
+  resources :maps
 
   resources :event_templates, :path => "templates"
 
@@ -27,12 +40,20 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   # You can have the root of your site routed with "root"
   root 'events#index'
+<<<<<<< HEAD
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
+=======
+
+
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
+  get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
+>>>>>>> origin/dev
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase  
+  get 'rooms/:id/events' => 'rooms#list_events', as: :room_events
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

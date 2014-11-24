@@ -40,3 +40,7 @@
 
 # Ignore anvil files used by Travis
 .anvil/
+
+# Ignore IntelliJ files
+.idea/
+*.orig

@@ -1,0 +1,29 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      event:'Event'
+    attributes:
+      event:
+        name: 'Name'
+        id: 'ID'
+        description: 'Beschreibung'
+        rooms: 'Räume'
+        private: 'Privat'
+        user: 'Benutzer'
+        participant_count: 'Teilnehmeranzahl'
+        starts_at: 'beginnt am'
+        ends_at: 'endet am'
+        created_at: 'erstellt am'
+        updated_at: 'aktualisiert am'
+  sort_options:
+    sort_name : 'Name (a-z)'
+    sort_created_at_desc : 'Erstellungsdatum (neueste zuerst)'
+    sort_created_at_asc : 'Erstellungsdatum (älteste zuerst)'
+    sort_starts_at_desc : 'Startdatum (neueste zuerst)'
+    sort_starts_at_asc : 'Startdatum (älteste zuerst)'
+    sort_ends_at_desc : 'Enddatum (neueste zuerst)'
+    sort_ends_at_asc : 'Enddatum (älteste zuerst)'
+    sort_status : 'Status'
+

@@ -5,11 +5,9 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
+     <!-- <th><%= model_class.human_attribute_name(:id) %></th> don´t show the id-->
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:start_time) %></th>
-      <th><%= model_class.human_attribute_name(:end_time) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -17,11 +15,9 @@
   <tbody>
     <% @event_templates.each do |event_template| %>
       <tr>
-        <td><%= link_to event_template.id, event_template_path(event_template) %></td>
-        <td><%= event_template.name %></td>
-        <td><%= event_template.description %></td>
-        <td><%= event_template.start_date.to_s + event_template.start_time.to_s %> </td> <!-- TODO :) -->
-        <td><%= event_template.end_time   %> </td>
+        <!-- <td><%= link_to event_template.id, event_template_path(event_template) %></td> don´t show the id -->
+        <td><%= link_to event_template.name, event_template_path(event_template) %></td>
+        <td><%= trimDescription event_template.description %></td>
         <td><%= event_template.created_at.strftime('%d.%m.%Y') %></td>  
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

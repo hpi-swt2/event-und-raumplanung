@@ -42,6 +42,11 @@ gem 'spring',        group: :development
 
 # authentification, see: https://github.com/plataformatec/devise
 gem 'devise'
+gem 'devise_openid_authenticatable' # https://github.com/nbudin/devise_openid_authenticatable
+gem 'rack-openid' # https://github.com/josh/rack-openid
+
+# testing framework, see: https://github.com/rspec/rspec-rails
+gem 'rspec-rails'
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
 gem 'factory_girl_rails'
@@ -75,6 +80,18 @@ gem 'rails_12factor', group: :production
 # Send application errors to hosted service instead of email inbox.
 gem 'airbrake'
 
+# Library for data binding HTML Elements to Javascript Objects
+gem 'knockoutjs-rails'
+
+gem 'mocha'
+
+gem 'filterrific'
+
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
+gem 'date_time_attribute'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
@@ -91,8 +108,8 @@ gem 'airbrake'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-# use rspec for testing
-group :development, :test do
-  gem 'rspec-rails', '~> 3.0'
+group :test, :development  do 
+	gem 'capybara'
+	gem 'guard-rspec'
+	gem 'database_cleaner'
 end
-
