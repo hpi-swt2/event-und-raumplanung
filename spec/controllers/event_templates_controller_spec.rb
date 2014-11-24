@@ -15,8 +15,6 @@ RSpec.describe EventTemplatesController, :type => :controller do
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
-    starts_at: Time.new + 1,
-    ends_at: Time.new + 1,
     user_id: user.id
     }
   }
