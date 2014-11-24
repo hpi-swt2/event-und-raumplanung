@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
-  has_many :rooms, dependent: :nullify
+  has_and_belongs_to_many :rooms, dependent: :nullify
 
   validates :name, presence: true
   validates :start_date, presence: true
