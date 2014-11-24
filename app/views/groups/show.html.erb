@@ -8,12 +8,16 @@
   <dd><%= @group.name %></dd>
 </dl>
 
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
 <% if can? :update, @group %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
+<%= link_to 'Räume zuweisen', manage_rooms_group_path(@group) 
+#TODO Authenticate admin
+%> | 
 <% if can? :destroy, @group %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               group_path(@group),
