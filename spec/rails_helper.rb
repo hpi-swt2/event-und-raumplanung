@@ -58,5 +58,6 @@ RSpec.configure do |config|
 
   # Devise
   config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::TestHelpers, :type => :view
   config.include FactoryGirl::Syntax::Methods
 end

@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :user do
+  	identity_url "http://example.com/test.user"
   end
 end
