@@ -19,7 +19,9 @@ Rails.application.routes.draw do
 
   resources :equipment
 
-  resources :events
+  resources :events do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :maps
 

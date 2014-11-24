@@ -85,6 +85,11 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'filterrific'
+
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation

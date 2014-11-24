@@ -22,6 +22,11 @@ require "cancan/matchers"
 RSpec.describe EventsController, :type => :controller do
   include Devise::TestHelpers
 
+  let(:valid_session) {
+  }
+  let(:task) { create :task }
+  let(:user) { create :user }
+
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -30,7 +35,8 @@ RSpec.describe EventsController, :type => :controller do
     end_date:'2020-08-23',
     start_time:'17:00',
     end_time:'23:59',
-    is_private: true
+    is_private: true,
+    user_id: user.id
     }
   }
  
@@ -43,7 +49,8 @@ RSpec.describe EventsController, :type => :controller do
     start_time:'17:00',
     end_time:'23:59',
     rooms: ["1", "2"], 
-    is_private: true
+    is_private: true,
+    user_id: user.id
     }
   }
 
@@ -53,7 +60,8 @@ RSpec.describe EventsController, :type => :controller do
     start_date:'2014-08-23',
     end_date:'2014-08-23',
     start_time:'17:00',
-    end_time:'23:59'
+    end_time:'23:59',
+    user_id: user.id
 	}
   }
 
@@ -64,7 +72,8 @@ RSpec.describe EventsController, :type => :controller do
     end_date:'2014-08-23',
     start_time:'17:00',
     end_time:'23:59', 
-    rooms:[]
+    rooms:[],
+    user_id: user.id
   }
   }
 
@@ -72,7 +81,8 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
    	participant_count:-100,
    	start_date:'2020-08-23',
-    end_date:'2020-08-23'
+    end_date:'2020-08-23',
+    user_id: user.id
     }
   }
 
@@ -81,13 +91,12 @@ RSpec.describe EventsController, :type => :controller do
     participant_count:-100,
     start_date:'2020-08-23',
     end_date:'2020-08-23',
-    rooms: []
+    rooms: [],
+    user_id: user.id
     }
   }
 
-  let(:valid_session) { {} }
-  let(:task) { create :task }
-  let(:user) { create :user }
+
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -123,7 +132,7 @@ RSpec.describe EventsController, :type => :controller do
       get :new_event_template, {:id => event.to_param}, valid_session
       expect(assigns(:event_template).name).to eq event.name
       expect(assigns(:event_template).description).to eq event.description
-      expect(assigns(:event_template).user_id).to eq event.user_id
+      expect(assigns(:event_template).user_id).to eq user.id
       expect(assigns(:event_template).room_id).to eq event.room_id
       expect(assigns(:event_template).start_date).to eq event.start_date
       expect(assigns(:event_template).start_time).to eq event.start_time
@@ -203,6 +212,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(event.name).to eq 'Michas GB 2'
         expect(event.description).to eq 'Keine coole Sache'
         expect(event.participant_count).to be 1
+
       end
 
       it "assigns the requested event as @event" do
