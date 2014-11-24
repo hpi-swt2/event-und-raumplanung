@@ -69,7 +69,10 @@ ActiveRecord::Schema.define(version: 20141114091730) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
+
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id"
 
   create_table "tasks", force: true do |t|
     t.string   "name"

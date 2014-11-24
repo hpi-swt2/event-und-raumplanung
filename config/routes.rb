@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
-  resources :groups
+
+  resources :groups do
+    member do
+      get 'manage_rooms'
+      get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
+      get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+    end
+  end
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 

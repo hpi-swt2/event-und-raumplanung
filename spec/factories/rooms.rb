@@ -1,7 +1,8 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :group do
-    sequence(:name) { |n| "AGroup#{n}" }
+  factory :room do
+  	name "A 1.1"
+  	size 5
   end
 end
