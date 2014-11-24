@@ -27,13 +27,13 @@ class EventTemplatesController < ApplicationController
    # GET /templates/1/new_event
   def new_event
     @event = Event.new
+    time = Time.new.getlocal
+    time -= time.sec
+    time += time.min % 15
+    @event.starts_at = time
+    @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
     @event.description = @event_template.description
-    @event.start_date = @event_template.start_date
-    @event.end_date = @event_template.end_date
-    @event.start_time = @event_template.start_time
-    @event.end_time = @event_template.end_time
-    @event.room_id = @event_template.room_id
     render "events/new"
   end
 

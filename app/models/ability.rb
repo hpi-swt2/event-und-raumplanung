@@ -31,6 +31,7 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
     can [:update, :destroy, :edit], Event, :user_id => user.id
+    can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     if user.identity_url == load_admin
         can :manage, Group
     else

@@ -1,4 +1,5 @@
 <div id="filterrific_results">
+  <%= will_paginate @events, renderer: BootstrapPagination::Rails %>
   <div>
     <%= page_entries_info events %>
   </div>
@@ -6,22 +7,22 @@
   <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%= model_class.human_attribute_name(:status) %></th>
-      <th> user </th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th><%= model_class.human_attribute_name 'name' %></th>
+      <th><%= model_class.human_attribute_name 'description' %></th>
+      <th><%= model_class.human_attribute_name 'starts_at' %></th>
+      <th><%= model_class.human_attribute_name 'ends_at' %></th>
+      <th><%= model_class.human_attribute_name 'status' %></th>
+      <th><%= model_class.human_attribute_name 'user' %></th>
+      <th><%= t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @events.each do |event| %>
       <tr>
-        <td><%= link_to event.id, event_path(event) %></td>
-        <td><%= event.name %></td>
-        <td><%= event.description %></td>
-        <td><%=l event.created_at %></td>
+        <td><%= link_to event.name, event_path(event) %></td>
+        <td><%= trimDescription event.description %></td>
+        <td><%=l event.starts_at if event.starts_at  %></td>
+        <td><%=l event.ends_at if event.ends_at %></td>
         <td><%= event.status %></td>
         <td><%= event.user_id %></td>
         <td>
@@ -42,7 +43,7 @@
       </tr>
     <% end %>
   </tbody>
-</table>
+  </table>
+<%= will_paginate events, renderer: BootstrapPagination::Rails %>
 </div>
 
-<%= will_paginate events %>

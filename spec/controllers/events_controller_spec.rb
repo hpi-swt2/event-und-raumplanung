@@ -31,10 +31,10 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
     description:'Coole Sache',
     participant_count: 2000,
-    start_date:'2020-08-23',
-    end_date:'2020-08-23',
-    start_time:'17:00',
-    end_time:'23:59',
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
     is_private: true,
     user_id: user.id
     }
@@ -44,10 +44,10 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
     description:'Coole Sache',
     participant_count: 2000,
-    start_date:'2020-08-23',
-    end_date:'2020-08-23',
-    start_time:'17:00',
-    end_time:'23:59',
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
     rooms: ["1", "2"], 
     is_private: true,
     user_id: user.id
@@ -57,10 +57,10 @@ RSpec.describe EventsController, :type => :controller do
   let(:invalid_attributes) {
     {
     name:'Michas GB',
-    start_date:'2014-08-23',
-    end_date:'2014-08-23',
-    start_time:'17:00',
-    end_time:'23:59',
+    starts_at_date:'2014-08-23',
+    ends_at_date:'2014-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
     user_id: user.id
 	}
   }
@@ -68,10 +68,10 @@ RSpec.describe EventsController, :type => :controller do
   let(:invalid_attributes_for_request) {
     {
     name:'Michas GB',
-    start_date:'2014-08-23',
-    end_date:'2014-08-23',
-    start_time:'17:00',
-    end_time:'23:59', 
+    starts_at_date:'2014-08-23',
+    ends_at_date:'2014-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59', 
     rooms:[],
     user_id: user.id
   }
@@ -80,8 +80,8 @@ RSpec.describe EventsController, :type => :controller do
    let(:invalid_participant_count) {
     {name:'Michas GB',
    	participant_count:-100,
-   	start_date:'2020-08-23',
-    end_date:'2020-08-23',
+   	starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
     user_id: user.id
     }
   }
@@ -89,8 +89,8 @@ RSpec.describe EventsController, :type => :controller do
   let(:invalid_participant_count_for_request) {
     {name:'Michas GB',
     participant_count:-100,
-    start_date:'2020-08-23',
-    end_date:'2020-08-23',
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
     rooms: [],
     user_id: user.id
     }
@@ -134,10 +134,6 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event_template).description).to eq event.description
       expect(assigns(:event_template).user_id).to eq user.id
       expect(assigns(:event_template).room_id).to eq event.room_id
-      expect(assigns(:event_template).start_date).to eq event.start_date
-      expect(assigns(:event_template).start_time).to eq event.start_time
-      expect(assigns(:event_template).end_date).to eq event.end_date
-      expect(assigns(:event_template).end_time).to eq event.end_time
       expect(response).to render_template("event_templates/new")
     end
   end
