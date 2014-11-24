@@ -1,5 +1,6 @@
 class EventTemplatesController < ApplicationController
   include EventTemplatesHelper
+  before_action :authenticate_user!
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
