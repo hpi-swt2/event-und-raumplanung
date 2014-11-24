@@ -21,6 +21,7 @@ class EventsController < ApplicationController
   # GET /events.json
   def index
 
+     
      @filterrific = Filterrific.new(
       Event,
       params[:filterrific] || session[:filterrific_events])
@@ -32,7 +33,7 @@ class EventsController < ApplicationController
         else
           nil
         end
-      @events = Event.all_having_access(current_user_id).filterrific_find(@filterrific).page(params[:page])
+      @events = Event.filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_events] = @filterrific.to_hash
 

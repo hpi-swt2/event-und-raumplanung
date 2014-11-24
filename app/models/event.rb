@@ -67,10 +67,6 @@ class Event < ActiveRecord::Base
   scope :own, lambda { |user_id|
     where("user_id = ?",user_id) if user_id
   }
-  scope :all_having_access, lambda { |user_id|
-    where("user_id = ? OR is_private = false",user_id) if user_id
-  }
-
 
   def self.options_for_sorted_by
   [

@@ -11,7 +11,7 @@ class EventTemplatesController < ApplicationController
   # GET /templates
   # GET /templates.json
   def index
-    @event_templates = EventTemplate.from_user(current_user_id)
+    @event_templates = EventTemplate.all
   end
 
   # GET /templates/1
