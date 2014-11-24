@@ -162,10 +162,9 @@ RSpec.describe GroupsController, :type => :controller do
         delete :destroy, {:id => group.to_param}, valid_session
         expect(response).to redirect_to(groups_url)
       end
-    end
-  end
+    end  
 
-  describe "in group room management" do
+      describe "in group room management" do
     let(:group1) { create :group, name: "group1"}
     let(:group2) { create :group, name: "group2"}
     let(:room1) { create :room}
@@ -212,5 +211,9 @@ RSpec.describe GroupsController, :type => :controller do
 
     end
   end
+
+
+  end
+
 
 end
