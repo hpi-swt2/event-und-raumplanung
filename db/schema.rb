@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141124100249) do
+ActiveRecord::Schema.define(version: 20141124150448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -53,7 +54,7 @@ ActiveRecord::Schema.define(version: 20141124100249) do
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.date     "start_date"
     t.date     "end_date"
     t.time     "start_time"
@@ -73,14 +74,12 @@ ActiveRecord::Schema.define(version: 20141124100249) do
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.time     "start_time"
-    t.time     "end_time"
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
     t.string   "status",            default: "In Bearbeitung"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -113,7 +112,10 @@ ActiveRecord::Schema.define(version: 20141124100249) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
+
+  add_index "rooms", ["event_id"], name: "index_rooms_on_event_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
