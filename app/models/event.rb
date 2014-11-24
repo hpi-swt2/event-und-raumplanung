@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
       :sorted_by
     ]
   )
-
+  self.per_page = 12
   has_many :bookings
   has_many :tasks
   has_many :rooms, dependent: :nullify

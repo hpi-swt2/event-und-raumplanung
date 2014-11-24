@@ -5,7 +5,6 @@
 </div>
 <div class="well">
   <div class="row">
-        <% puts @filterrific.inspect %>
     <%= form_for @filterrific do |f| %>
     <div class="col-md-3">
       <div class="form-group">
@@ -51,6 +50,8 @@
   <% end %>
   </div>
 </div>
+
+<%= will_paginate @events %>
 
 <%= render(
   partial: 'events/list',
