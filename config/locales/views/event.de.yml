@@ -2,5 +2,14 @@ de:
   events:
     index:
       title: Eventübersicht
-      show_only_my_events: 'nur meine Events anzeigen'
-      filter: 'filtern'
+      only_show_own: 'nur meine Events anzeigen'
+      sorted_by: 'Sortiert bei'
+      reset_filter: 'Filter zurücksetzen'
+      search: 'Suche'
+      name: 'Name'
+      description: 'Beschreibung'
+      starts_at: 'Startet'
+      ends_at: 'Endet'
+      status: 'Status'
+      user: 'Benutzer'
+

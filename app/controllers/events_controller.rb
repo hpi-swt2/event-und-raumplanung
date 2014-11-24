@@ -13,10 +13,6 @@ class EventsController < ApplicationController
     @event_template = EventTemplate.new
     @event_template.name = @event.name
     @event_template.description = @event.description
-    @event_template.start_date = @event.start_date
-    @event_template.end_date = @event.end_date
-    @event_template.start_time = @event.start_time
-    @event_template.end_time = @event.end_time
     @event_template.user_id = current_user_id
     render "event_templates/new"
   end
@@ -59,16 +55,17 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    @user = User.find(@event.user_id).identity_url
   end
 
   # GET /events/new
   def new
     @event = Event.new
     time = Time.new.getlocal
-    @event.start_date = time.to_date
-    @event.end_date = time.to_date
-    @event.start_time = time.strftime("%H:%M")
-    @event.end_time = (time+(60*60)).strftime("%H:%M")
+    time -= time.sec
+    time += time.min % 15
+    @event.starts_at = time
+    @event.ends_at = (time+(60*60))
   end
 
   # GET /events/1/edit
@@ -110,7 +107,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
-      logger.info "XXX"
+
       temp_event_params = event_params
       temp = [] 
       temp_event_params[:rooms].each do | room_id | 
@@ -153,6 +150,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, :show_only_my_events, rooms:[:id])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, rooms:[:id])
     end
 end

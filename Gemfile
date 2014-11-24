@@ -90,6 +90,8 @@ gem 'filterrific'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 
+gem 'date_time_attribute'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
