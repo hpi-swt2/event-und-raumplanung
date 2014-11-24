@@ -9,4 +9,5 @@ de:
       room:
         name: 'Name'
         size: 'Größe'
+        properties: 'Eigenschaften'
         created_at: 'Erstellungsdatum'

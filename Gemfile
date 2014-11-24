@@ -45,6 +45,9 @@ gem 'devise'
 gem 'devise_openid_authenticatable' # https://github.com/nbudin/devise_openid_authenticatable
 gem 'rack-openid' # https://github.com/josh/rack-openid
 
+# testing framework, see: https://github.com/rspec/rspec-rails
+gem 'rspec-rails'
+
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
 gem 'factory_girl_rails'
 
@@ -105,8 +108,7 @@ gem 'date_time_attribute'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-group :test, :development  do
-	gem 'rspec-rails'
+group :test, :development  do 
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'

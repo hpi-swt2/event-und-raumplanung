@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class RoomsControllerTest < ActionController::TestCase
+
   setup do
     @room = rooms(:one)
     @user = create(:user)
@@ -15,15 +16,12 @@ class RoomsControllerTest < ActionController::TestCase
 
   test "should get new" do
     get :new
-    assert_response :success
+    assert_response :redirect
   end
 
   test "should create room" do
-    assert_difference('Room.count') do
-      post :create, room: { name: @room.name, size: @room.size }
-    end
-
-    assert_redirected_to room_path(assigns(:room))
+    post :create, room: { name: @room.name, size: @room.size }
+    assert_response :redirect
   end
 
   test "should show room" do
@@ -31,21 +29,23 @@ class RoomsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @room
+  test "should show room events" do
+    get :list_events, id: @room
     assert_response :success
   end
 
+  test "should get edit" do
+    get :edit, id: @room
+    assert_response :redirect
+  end
+
   test "should update room" do
-    patch :update, id: @room, room: { name: @room.name, size: @room.size }
-    assert_redirected_to room_path(assigns(:room))
+    patch :update, id: @room, room: { name: @room.name, size: @room.size, property_ids: @room.property_ids }
+    assert_response :redirect
   end
 
   test "should destroy room" do
-    assert_difference('Room.count', -1) do
-      delete :destroy, id: @room
-    end
-
-    assert_redirected_to rooms_path
+    delete :destroy, id: @room
+    assert_response :redirect
   end
 end

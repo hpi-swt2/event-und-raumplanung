@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
+
   resources :groups
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   resources :attachments
+
+  resources :room_properties
 
   resources :rooms
 
@@ -20,6 +23,8 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
+  resources :maps
+
   resources :event_templates, :path => "templates"
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -35,7 +40,8 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase  
+  get 'rooms/:id/events' => 'rooms#list_events', as: :room_events
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

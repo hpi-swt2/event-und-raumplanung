@@ -1,0 +1,16 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.upcoming-events h2 {
+    display: inline;
+}
+
+.upcoming-events a {
+    float:right;
+}
+
+tr[data-link]:hover {
+    cursor: pointer;
+}
