@@ -6,6 +6,17 @@
 [![Open Issues](http://img.shields.io/github/issues/hpi-swt2/event-und-raumplanung.svg)](https://github.com/hpi-swt2/event-und-raumplanung/issues?q=is%3Aopen+is%3Aissue)
 [![License](http://img.shields.io/badge/license-AGPL-blue.svg)](https://github.com/hpi-swt2/event-und-raumplanung/blob/master/LICENSE)
 
+# Building
+Branch      | Status
+----------- | ----------
+master  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+dev  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Axolotl  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Axolotl)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Biber  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Biber)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Clownfish  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Clownfish)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Dolphins  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Dolphins)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Elch  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Elch)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+
 event-und-raumplanung
 =====================
 
@@ -14,6 +25,8 @@ Ein Tool das die interne Planung von Events verbessern soll und dabei besonderen
 Live-System
 -----
 http://event-und-raumplanung.herokuapp.com/
+
+http://event-und-raumplanung-dev.herokuapp.com/ (dev branch)
 
 Setup
 -----
