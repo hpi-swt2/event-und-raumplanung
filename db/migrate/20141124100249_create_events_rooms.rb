@@ -4,7 +4,5 @@ class CreateEventsRooms < ActiveRecord::Migration
       t.belongs_to :event
       t.belongs_to :room
     end
-
-    remove_reference :rooms, :event
   end
 end
