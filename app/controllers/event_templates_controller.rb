@@ -1,15 +1,12 @@
 class EventTemplatesController < ApplicationController
   include EventTemplatesHelper
+  before_action :authenticate_user!
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
 
-  def current_user
-    unless session[:user_id]
-      @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
-      session[:user_id] = @current_user.id
-    end
-    @current_user ||= User.find(session[:user_id])
+  def current_user_id
+    current_user.id
   end
 
   # GET /templates
@@ -31,14 +28,13 @@ class EventTemplatesController < ApplicationController
    # GET /templates/1/new_event
   def new_event
     @event = Event.new
+    time = Time.new.getlocal
+    time -= time.sec
+    time += time.min % 15
+    @event.starts_at = time
+    @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
     @event.description = @event_template.description
-    @event.start_date = @event_template.start_date
-    @event.end_date = @event_template.end_date
-    @event.start_time = @event_template.start_time
-    @event.end_time = @event_template.end_time
-    @event.room_id = @event_template.room_id
-    @event.user_id = current_user.id
     render "events/new"
   end
 
@@ -50,7 +46,7 @@ class EventTemplatesController < ApplicationController
   # POST /templates.json
   def create
     @event_template = EventTemplate.new(eventtemplate_params)
-    @event_template.user_id = current_user.id
+    @event_template.user_id = current_user_id
 
     respond_to do |format|
       if @event_template.save

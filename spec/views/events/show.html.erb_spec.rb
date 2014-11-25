@@ -4,9 +4,9 @@ RSpec.describe "events/show", :type => :view do
   before(:each) do
     @event = assign(:event, Event.create!(name:"Testeventname", description: "description of the testevent", participant_count:87,
                                           created_at: DateTime.new(2000,02,25,4,5,6), updated_at: DateTime.new(2001,03,20,5,6,7),
-                                          start_date: Date.new(2050, 05, 03), start_time: DateTime.new(2050, 05, 03, 15, 00),
-                                          end_date: Date.new(2050,05, 04), end_time: DateTime.new(2050,05, 04, 16,45),
-                                          user_id: 42, room_id:1, is_private: true))
+                                          starts_at: DateTime.new(2050, 05, 03, 15, 00),
+                                          ends_at:  DateTime.new(2050,05, 04, 16,45),
+                                          user_id: 42, is_private: true))
   end
 
   it "renders attributes in <p>" do
@@ -20,13 +20,9 @@ RSpec.describe "events/show", :type => :view do
     expect(rendered).to include(@event.participant_count.to_s)
     expect(rendered).to include(@event.created_at.strftime("%d.%m.%Y %T"))
     expect(rendered).to include(@event.updated_at.strftime("%d.%m.%Y %T"))
-    expect(rendered).to include(@event.start_date.strftime("%d.%m.%Y"))
-    expect(rendered).to include(@event.end_date.strftime("%d.%m.%Y"))
-    expect(rendered).to include(@event.start_time.strftime("%H:%M"))
-    expect(rendered).to include(@event.end_time.strftime("%H:%M"))
-    expect(rendered).to include(@event.user_id.to_s)
-    expect(rendered).to include(@event.room_id.to_s)
-    expect(rendered).to include("<input checked=\"checked\" id=\"private\" name=\"private\" type=\"checkbox\" value=\"private\" />")
+    expect(rendered).to include(@event.starts_at.strftime("%d.%m.%Y"))
+    expect(rendered).to include(@event.ends_at.strftime("%d.%m.%Y"))
+    expect(rendered).to include("<input checked=\"checked\" disabled=\"disabled\" id=\"private\" name=\"private\" type=\"checkbox\" value=\"private\" />")
   end
 
 end

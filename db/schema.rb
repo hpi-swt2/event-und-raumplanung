@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20141125121159) do
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.date     "start_date"
     t.date     "end_date"
     t.time     "start_time"
@@ -74,14 +74,12 @@ ActiveRecord::Schema.define(version: 20141125121159) do
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.time     "start_time"
-    t.time     "end_time"
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
     t.string   "status",            default: "In Bearbeitung"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree

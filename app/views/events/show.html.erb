@@ -8,27 +8,27 @@
   <dd><%= @event.id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @event.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:beschreibung) %>:</strong></dt>
-  <dd><%= @event.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:raum) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= raw nl2br h @event.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:rooms) %>:</strong></dt>
   <dd><%= concat_rooms(@event) %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:teilnehmeranzahl) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:participant_count) %>:</strong></dt>
   <dd><%= @event.participant_count %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:privat) %>:</strong></dt>
-  <dd><%= check_box_tag 'private', 'private', @event.is_private %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:startzeit) %>:</strong></dt>
-  <% if @event.start_date and @event.start_time %> 
-    <dd><%= @event.start_date.strftime("%d.%m.%Y") %> <%= @event.start_time.strftime("%H:%M") %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:private) %>:</strong></dt>
+  <dd><%= check_box_tag 'private', 'private', @event.is_private, disabled: :disabled %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:starts_at) %>:</strong></dt>
+  <% if @event.starts_at %> 
+    <dd><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></dd>
   <% end %> 
-  <dt><strong><%= model_class.human_attribute_name(:endzeit) %>:</strong></dt>
-  <% if  @event.end_date and @event.end_time %> 
-  <dd><%= @event.end_date.strftime("%d.%m.%Y") %> <%= @event.end_time.strftime("%H:%M") %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:ends_at) %>:</strong></dt>
+  <% if  @event.ends_at%> 
+  <dd><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></dd>
   <% end %>
-  <dt><strong><%= model_class.human_attribute_name(:erstellt_von) %>:</strong></dt>
-  <dd><%= @event.user_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:erstellt_am) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:user) %>:</strong></dt>
+  <dd><%= @user %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:created_at) %>:</strong></dt>
   <dd><%= @event.created_at.strftime("%d.%m.%Y %T") %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:aktualisiert_am) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:updated_at) %>:</strong></dt>
   <dd><%= @event.updated_at.strftime("%d.%m.%Y %T") %></dd>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
   <dd><%= @event.status %></dd>
