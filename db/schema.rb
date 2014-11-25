@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20141114091730) do
     t.integer  "group_id"
   end
 
-  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id"
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
