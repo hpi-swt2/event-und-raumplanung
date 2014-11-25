@@ -3,16 +3,16 @@
     <thead>
       <tr>
         <th><%= Event.human_attribute_name(:name) %></th>
-        <th><%= Event.human_attribute_name(:start_date) %></th>
-        <th><%= Event.human_attribute_name(:end_date) %></th>
+        <th><%= Event.human_attribute_name(:starts_at) %></th>
+        <th><%= Event.human_attribute_name(:ends_at) %></th>
       </tr>
     </thead>
     <tbody>
       <% @events.each do |event| %>
         <tr>
           <td><%= link_to event.name, event_path(event) %></td>
-          <td><%=l event.start_date %></td>
-          <td><%=l event.end_date %></td>
+          <td><%=l event.starts_at %></td>
+          <td><%=l event.ends_at %></td>
         </tr>
       <% end %>
     </tbody>

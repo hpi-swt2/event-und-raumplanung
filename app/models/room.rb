@@ -5,7 +5,7 @@ class Room < ActiveRecord::Base
   has_and_belongs_to_many :events
 
   def upcoming_events
-    return self.events.where(['end_date >= ?', Date.today]).order('start_date asc')
+    return self.events.where(['ends_at >= ?', Date.today]).order('starts_at asc')
   end
 
   def list_properties

@@ -112,4 +112,6 @@ group :test, :development  do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
+	gem 'rails-dev-tweaks'
 end
+
