@@ -4,8 +4,10 @@ de:
   activerecord:
     models:
       room: 'Raum'
+      rooms: 'Räume'
     attributes:
       room:
         name: 'Name'
         size: 'Größe'
+        properties: 'Eigenschaften'
         created_at: 'Erstellungsdatum'
