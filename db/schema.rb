@@ -11,7 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20141124150448) do
 
   # These are extensions that must be enabled in order to support this database
@@ -38,8 +37,8 @@ ActiveRecord::Schema.define(version: 20141124150448) do
     t.datetime "updated_at"
   end
 
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id"
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -76,22 +75,15 @@ ActiveRecord::Schema.define(version: 20141124150448) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "room_id"
-    t.boolean  "approved"
     t.boolean  "is_private"
+    t.boolean  "approved"
     t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
   end
 
-  add_index "events", ["room_id"], name: "index_events_on_room_id"
-  add_index "events", ["user_id"], name: "index_events_on_user_id"
-
-  create_table "room_properties", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "room_id"
-  end
+  add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "events_rooms", force: true do |t|
     t.integer "event_id"
@@ -108,6 +100,7 @@ ActiveRecord::Schema.define(version: 20141124150448) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "room_id"
   end
 
   create_table "room_properties_rooms", force: true do |t|

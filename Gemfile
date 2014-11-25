@@ -49,7 +49,7 @@ gem 'rack-openid' # https://github.com/josh/rack-openid
 gem 'rspec-rails'
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
-gem 'factory_girl_rails'
+gem 'factory_girl_rails', :require => false
 
 # better error pages, see: https://github.com/charliesome/better_errors
 gem 'better_errors', group: :development

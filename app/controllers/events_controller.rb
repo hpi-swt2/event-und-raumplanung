@@ -52,7 +52,6 @@ class EventsController < ApplicationController
     redirect_to action: :index
   end
 
-<<<<<<< HEAD
   def approve
     puts "approve"
     @event.update(approved: true)
@@ -64,8 +63,6 @@ class EventsController < ApplicationController
     @event.update(approved: false)
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
-=======
->>>>>>> origin/dev
 
   # GET /events/1
   # GET /events/1.json

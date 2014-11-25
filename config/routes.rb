@@ -40,14 +40,10 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   # You can have the root of your site routed with "root"
   root 'events#index'
-<<<<<<< HEAD
-  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template 
-=======
-
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
->>>>>>> origin/dev
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
