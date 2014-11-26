@@ -13,38 +13,38 @@ class GroupsController < ApplicationController
   end
 
   def assign_user
-    authorize! :update, @group
+    authorize! :update, Group
 
     @group.users << @user
     redirect_to edit_group_path(@group)
   end
 
   def unassign_user
-    authorize! :update, @group
+    authorize! :update, Group
 
     @group.users.delete(@user)
     redirect_to edit_group_path(@group)
   end
 
   def new
-    @group = Group.new
-
     # Only authorized users can create a group (ability.rb)
-    authorize! :new, @group
+    authorize! :new, Group
+
+    @group = Group.new    
   end
 
   def edit
-    @users = User.all
-
     # Only authorized users can edit groups (ability.rb)
-    authorize! :update, @group
+    authorize! :update, Group
+
+    @users = User.all
   end
 
   def create
-    @group = Group.new(group_params)
-
     # Only authorized users can create a group (ability.rb)
-    authorize! :create, @group
+    authorize! :create, Group
+
+    @group = Group.new(group_params)
 
     respond_to do |format|
       if @group.save
@@ -59,7 +59,7 @@ class GroupsController < ApplicationController
 
   def update
     # Only authorized users can update groups (ability.rb)
-    authorize! :update, @group
+    authorize! :update, Group
 
     respond_to do |format|
       if @group.update(group_params)
@@ -74,7 +74,7 @@ class GroupsController < ApplicationController
 
   def destroy
     # Only authorized users can delete a group (ability.rb)
-    authorize! :destroy, @group
+    authorize! :destroy, Group
 
     @group.destroy
     respond_to do |format|
