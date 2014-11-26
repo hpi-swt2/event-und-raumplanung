@@ -30,15 +30,22 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+
+    # Only authorized users can create a group (ability.rb)
     authorize! :new, @group
   end
 
   def edit
     @users = User.all
+
+    # Only authorized users can edit groups (ability.rb)
+    authorize! :update, @group
   end
 
   def create
     @group = Group.new(group_params)
+
+    # Only authorized users can create a group (ability.rb)
     authorize! :create, @group
 
     respond_to do |format|
@@ -53,6 +60,7 @@ class GroupsController < ApplicationController
   end
 
   def update
+    # Only authorized users can update groups (ability.rb)
     authorize! :update, @group
 
     respond_to do |format|
@@ -67,6 +75,7 @@ class GroupsController < ApplicationController
   end
 
   def destroy
+    # Only authorized users can delete a group (ability.rb)
     authorize! :destroy, @group
 
     @group.destroy
