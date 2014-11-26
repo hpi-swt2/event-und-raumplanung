@@ -22,7 +22,9 @@ equipment = Equipment.create(id: 6, name: 'Beamer HD 12424424', description: 'Ei
 
 #
 # Create Event
-#
-# Booking
+event = Event.create(name: "Weihnachtsfeier", description: "Details zur Weihnachtsfeier 2015", participant_count: 10, is_private: false, approved: nil, status: "In Bearbeitung", created_at: "2015-11-20 12:20:20",)
 
-Booking.create([{ name: 'HCI II', description: 'Vorlesung', start: DateTime.now, end: DateTime.now.advance(hours: 3), room: room }, { name: 'HCI II', description: 'Vorlesung', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room }])
+#
+# createBooking
+
+booking = Booking.create([{ name: 'HCI II', description: 'Vorlesung', start: DateTime.now, end: DateTime.now.advance(hours: 3), room: room }, { name: 'HCI II', description: 'Vorlesung', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room }])
