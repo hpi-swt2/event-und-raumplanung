@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-<h3><%= User.model_name.human.pluralize %></h3>
+<h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
 
 <table class="table table-striped">
   <thead>
@@ -20,16 +20,18 @@
         <td><%= user.identity_url %></td>
         <td>
           <% if @group.users.include? user %>
-            <%= 'zugewiesen' %>
+            <%=t '.assigned', :default => t("groups.edit.assigned") %>
           <% else %>
-            <%= 'entfernt' %>
+            <%=t '.unassigned', :default => t("groups.edit.unassigned") %>
           <% end %>
         </td>
         <td>
           <% if @group.users.include? user %>
-            <%= link_to 'entfernen', unassign_user_group_path(@group, user) %>
+            <%= link_to 'entfernen', unassign_user_group_path(@group, user),
+                    :class => 'btn btn-default btn-xs' %>
           <% else %>
-            <%= link_to 'zuweisen', assign_user_group_path(@group, user) %>
+            <%= link_to 'zuweisen', assign_user_group_path(@group, user),
+                    :class => 'btn btn-default btn-xs' %>
           <% end %>
         </td>
       </tr>
