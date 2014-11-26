@@ -4,7 +4,9 @@ RSpec.describe "groups/show", :type => :view do
   let(:user) { create :user }
   
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: 'groupName',
+    }
   }
   
   before(:each) do
@@ -12,6 +14,7 @@ RSpec.describe "groups/show", :type => :view do
     sign_in user
 
     @group = Group.create! valid_attributes
+    @users = User.all
   end
 
   it "renders attributes in <p>" do
