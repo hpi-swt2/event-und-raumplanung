@@ -40,9 +40,10 @@
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-<%= link_to 'Räume zuweisen', manage_rooms_group_path(@group) 
-#TODO Authenticate admin
-%> | 
+<% if can? :update, @group %>
+  <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
+              manage_rooms_group_path(@group), :class => 'btn btn-default' %>
+<% end %>
 <% if can? :destroy, @group %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               group_path(@group),
