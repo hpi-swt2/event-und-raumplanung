@@ -34,6 +34,7 @@ class EventsController < ApplicationController
         else
           nil
         end
+      @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_events] = @filterrific.to_hash

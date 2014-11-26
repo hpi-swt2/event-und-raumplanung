@@ -9,6 +9,7 @@ class Event < ActiveRecord::Base
     filter_names: [
       :search_query,
       :own,
+      :room_ids,
       :sorted_by
     ]
   )
@@ -62,6 +63,9 @@ class Event < ActiveRecord::Base
   else
     raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
   end
+  }
+  scope :room_ids, lambda { |room_ids|
+    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
   }
   scope :own, lambda { |user_id|
     where("user_id = ?",user_id) if user_id
