@@ -8,6 +8,31 @@
   <dd><%= @group.name %></dd>
 </dl>
 
+<h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= User.human_attribute_name(:identity_url) %></th>
+      <th><%=t '.status', :default => t("helpers.status") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.identity_url %></td>
+        <td>
+          <% if @group.users.include? user %>
+            <%=t '.assigned', :default => t("groups.show.assigned") %>
+          <% else %>
+            <%=t '.unassigned', :default => t("groups.show.unassigned") %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
@@ -15,9 +40,10 @@
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-<%= link_to 'Räume zuweisen', manage_rooms_group_path(@group) 
-#TODO Authenticate admin
-%> | 
+<% if can? :update, @group %>
+  <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
+              manage_rooms_group_path(@group), :class => 'btn btn-default' %>
+<% end %>
 <% if can? :destroy, @group %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               group_path(@group),

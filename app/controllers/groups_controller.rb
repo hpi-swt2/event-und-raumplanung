@@ -1,26 +1,50 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user]
   before_action :set_room, only: [:assign_room ,:unassign_room]
+  before_action :set_user, only: [:assign_user, :unassign_user]
 
   def index
     @groups = Group.all
   end
 
   def show
+    @users = User.all
+  end
+
+  def assign_user
+    authorize! :update, Group
+
+    @group.users << @user
+    redirect_to edit_group_path(@group)
+  end
+
+  def unassign_user
+    authorize! :update, Group
+
+    @group.users.delete(@user)
+    redirect_to edit_group_path(@group)
   end
 
   def new
-    @group = Group.new
-    authorize! :new, @group
+    # Only authorized users can create a group (ability.rb)
+    authorize! :new, Group
+
+    @group = Group.new    
   end
 
   def edit
+    # Only authorized users can edit groups (ability.rb)
+    authorize! :update, Group
+
+    @users = User.all
   end
 
   def create
+    # Only authorized users can create a group (ability.rb)
+    authorize! :create, Group
+
     @group = Group.new(group_params)
-    authorize! :create, @group
 
     respond_to do |format|
       if @group.save
@@ -34,7 +58,8 @@ class GroupsController < ApplicationController
   end
 
   def update
-    authorize! :update, @group
+    # Only authorized users can update groups (ability.rb)
+    authorize! :update, Group
 
     respond_to do |format|
       if @group.update(group_params)
@@ -48,7 +73,8 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    authorize! :destroy, @group
+    # Only authorized users can delete a group (ability.rb)
+    authorize! :destroy, Group
 
     @group.destroy
     respond_to do |format|
@@ -77,10 +103,13 @@ class GroupsController < ApplicationController
     redirect_to manage_rooms_group_path(@group)
   end
 
-
   private
     def set_group
       @group = Group.find(params[:id])
+    end
+
+    def set_user
+      @user = User.find(params[:user_id])
     end
 
     def group_params
