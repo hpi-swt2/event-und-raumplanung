@@ -21,6 +21,15 @@ class Event < ActiveRecord::Base
   date_time_attribute :starts_at
   date_time_attribute :ends_at
 
+  attr_accessor :starts_at
+  attr_accessor :ends_at
+
+  attr_accessor :start_date
+  attr_accessor :start_time 
+
+  attr_accessor :end_date
+  attr_accessor :end_time
+
   validates :name, presence: true
   validates :starts_at, presence: true
   validates :ends_at, presence: true
