@@ -7,7 +7,6 @@ class Event < ActiveRecord::Base
   filterrific(
     default_settings: { sorted_by: 'created_at_desc' },
     filter_names: [
-      :sorted_by,
       :search_query,
       :own,
       :sorted_by
@@ -52,9 +51,9 @@ class Event < ActiveRecord::Base
     case sort_option.to_s
     when /^created_at_/
       order("events.created_at #{ direction }")
-    when /^start_at_/
+    when /^starts_at_/
       order("events.starts_at #{ direction }")
-    when /^end_at_/
+    when /^ends_at_/
       order("events.ends_at #{ direction }")
     when /^name_/
       order("LOWER(events.name) #{ direction }")
