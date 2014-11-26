@@ -8,7 +8,7 @@ RSpec.describe "groups/show", :type => :view do
       name: 'groupName',
     }
   }
-  
+
   before(:each) do
   	@request.env["devise.mapping"] = Devise.mappings[:user]
     sign_in user
@@ -19,6 +19,6 @@ RSpec.describe "groups/show", :type => :view do
 
   it "renders attributes in <p>" do
     render
-    # expect(rendered).to match(/Name/)
+    expect(rendered).to match(/Name/)
   end
 end
