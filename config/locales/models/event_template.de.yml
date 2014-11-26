@@ -1,0 +1,14 @@
+de:
+  activerecord:
+    models:
+      event_template:'Eventvorlage'
+    attributes:
+      event_template:
+        name: 'Name'
+        id: 'ID'
+        description: 'Beschreibung'
+        rooms: 'Räume'
+        user: 'Benutzer'
+        participant_count: 'Teilnehmeranzahl'   
+        created_at: 'erstellt am'
+        updated_at: 'aktualisiert am'

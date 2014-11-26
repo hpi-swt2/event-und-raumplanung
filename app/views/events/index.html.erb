@@ -38,14 +38,13 @@
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
-          <%= link_to(
-             (t '.reset_filter'),
-            reset_filterrific_events_path
-          ) %>
+          <%= t '.filtered_by_rooms' %>
+           <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :id => 'selectpicker', :multiple =>'' }%>
+       <script> $('#selectpicker').selectpicker(); </script>
        </div>
       </div>
     </div> 
-    <%# add an automated spinner to your form when the list is refreshed %>
+    <%= link_to( (t '.reset_filter'), reset_filterrific_events_path) %>
     <%= render_filterrific_spinner %>
   <% end %>
   </div>
