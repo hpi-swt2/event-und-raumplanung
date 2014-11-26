@@ -16,7 +16,6 @@ class GroupsController < ApplicationController
     authorize! :update, @group
 
     @group.users << @user
-    @user.groups << @group
     redirect_to edit_group_path(@group)
   end
 
@@ -24,7 +23,6 @@ class GroupsController < ApplicationController
     authorize! :update, @group
 
     @group.users.delete(@user)
-    @user.groups.delete(@group)
     redirect_to edit_group_path(@group)
   end
 
