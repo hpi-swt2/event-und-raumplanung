@@ -1,0 +1,51 @@
+<h1>Räume</h1>
+<%= form_tag("/rooms/list", method: "get") do %>
+<%= label_tag(:size, "gewünschte Raumgröße:") %>
+<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0) %>
+<br>
+Equipment
+<br>
+<% @categories.each do |category| %>
+    <%= check_box_tag(category) %>
+    <%= label_tag(category, category) %>
+<% end %>
+<br>
+Eigenschaften
+<br>
+<% @properties.each do |property| %>
+    <%= check_box_tag(property) %>
+    <%= label_tag(property, property) %>
+<% end %>
+<br>
+  <%= submit_tag("Suche") %>
+<% end %>
+<br><br>
+<% if @empty %>
+keine Räume gefunden!
+<%elsif @noSelection %>
+nix ausgewäht!
+<% else %> 
+<table border=1px>
+<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th><th>Equipment</th><th>Eigenschaften</th></tr>
+<% @rooms.each do |room| %>
+<tr>
+  <td align="middle"><%= room.id %></td>
+  <td><%= link_to room.name, room, method: :details %></td>
+  <td align="middle"><%=room.size %></td>
+  <td>
+  <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
+  <% category_list.each do |item| %>
+  <%= item %>
+  <% end %>
+  </td>
+  <td>
+  <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
+  <% property_list.each do |item| %>
+  <%= item %>
+  <% end %>
+  </td>
+</tr>
+<% end %>
+</table>
+<% end %>
+<br><br><br>

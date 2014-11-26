@@ -8,9 +8,12 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:category) %></th>
       <th><%= model_class.human_attribute_name(:room_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% if can? :destroy, Equipment %>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -19,22 +22,30 @@
         <td><%= link_to equipment.id, equipment_path(equipment) %></td>
         <td><%= equipment.name %></td>
         <td><%= equipment.description %></td>
+        <td><%= equipment.category %></td>
         <td><%= equipment.room_id %></td>
         <td><%=l equipment.created_at %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+          <% if can? :edit, Equipment %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_equipment_path(equipment), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          <% end %>
+
+          <% if can? :destroy, Equipment %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       equipment_path(equipment),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<% if can? :new, Equipment %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_equipment_path,
             :class => 'btn btn-primary' %>
+<% end %>

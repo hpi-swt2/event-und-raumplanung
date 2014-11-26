@@ -49,7 +49,7 @@ gem 'rack-openid' # https://github.com/josh/rack-openid
 gem 'rspec-rails'
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
-gem 'factory_girl_rails'
+gem 'factory_girl_rails', :require => false
 
 # better error pages, see: https://github.com/charliesome/better_errors
 gem 'better_errors', group: :development
@@ -85,6 +85,13 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'filterrific'
+
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
+gem 'date_time_attribute'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
@@ -105,4 +112,6 @@ group :test, :development  do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
+	gem 'rails-dev-tweaks'
 end
+
