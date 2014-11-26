@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141125121159) do
+ActiveRecord::Schema.define(version: 20141126122452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -81,6 +80,10 @@ ActiveRecord::Schema.define(version: 20141125121159) do
     t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
+    t.date     "start_date"
+    t.time     "start_time"
+    t.date     "end_date"
+    t.time     "end_time"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
