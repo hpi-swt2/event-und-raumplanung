@@ -67,7 +67,6 @@ class EventTemplatesController < ApplicationController
   # POST /templates
   # POST /templates.json
   def create
-    puts eventtemplate_params.inspect
     @event_template = EventTemplate.new(eventtemplate_params)
     @event_template.user_id = current_user_id
 
