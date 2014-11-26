@@ -5,3 +5,11 @@ de:
     index:
       title: Gruppenübersicht
       all_events: Alle Gruppen
+    show:
+      assign_room: Raum zuweisen
+      assigned: zugewiesen
+      unassigned: entfernt
+    edit:
+      assign_room: Raum zuweisen
+      assigned: zugewiesen
+      unassigned: entfernt
