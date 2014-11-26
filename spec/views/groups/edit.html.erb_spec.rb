@@ -7,7 +7,7 @@ RSpec.describe "groups/edit", :type => :view do
   }
 
   before(:each) do
-    @group = Group.create! valid_attributes
+    @group = Group.build valid_attributes
   end
 
   it "renders the edit group form" do
