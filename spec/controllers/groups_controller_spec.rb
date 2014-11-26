@@ -43,14 +43,26 @@ RSpec.describe GroupsController, :type => :controller do
 
   context "when user is logged-in" do
     let(:user) { create :user }
+    let(:adminUser) { create :adminUser }
 
-    before(:each) do
+    before(:each, :isAdmin => false) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
     end
 
+    before(:each, :isAdmin => true) do
+      @request.env["devise.mapping"] = Devise.mappings[:adminUser]
+      sign_in adminUser
+    end
+
     describe "GET index" do
-      it "assigns all groups as @groups" do
+      it "assigns all groups as @groups as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :index, {}, valid_session
+        expect(assigns(:groups)).to eq([group])
+      end
+
+      it "assigns all groups as @groups as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         get :index, {}, valid_session
         expect(assigns(:groups)).to eq([group])
@@ -58,7 +70,13 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET show" do
-      it "assigns the requested group as @group" do
+      it "assigns the requested group as @group as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :show, {:id => group.to_param}, valid_session
+        expect(assigns(:group)).to eq(group)
+      end
+
+      it "assigns the requested group as @group as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         get :show, {:id => group.to_param}, valid_session
         expect(assigns(:group)).to eq(group)
@@ -66,138 +84,25 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET new" do
-      it "redirects to the root path" do
+      it "redirects to the root path as normal user", :isAdmin => false do
         get :new, {}, valid_session
         expect(response).to redirect_to(root_path)
       end
-    end
 
-    describe "GET edit" do
-      it "redirects to the root path" do
-        group = Group.create! valid_attributes
-        get :edit, {:id => group.to_param}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    describe "GET assign_user" do
-      it "redirects to the root path" do
-        group = Group.create! valid_attributes
-        get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    describe "GET unassign_user" do
-      it "redirects to the root path" do
-        group = Group.create! valid_attributes
-        get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    describe "POST create" do
-      it "redirects to the root path" do
-        post :create, {:group => valid_attributes}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    describe "PUT update" do
-      it "redirects to the root path" do
-        group = Group.create! valid_attributes
-        put :update, {:id => group.to_param, :group => valid_attributes}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    describe "DELETE destroy" do
-      it "redirects to the root path" do
-        group = Group.create! valid_attributes
-        delete :destroy, {:id => group.to_param}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-    end  
-
-    describe "in group room management" do
-      let(:group1) { create :group, name: "group1"}
-      let(:group2) { create :group, name: "group2"}
-      let(:room1) { create :room}
-      let(:room2) { create :room }
-
-      # group1 = create(:group, name: "Group1")
-      # group2 = create(:group, name: "Group2")
-      # room1 = create(:room)
-      # room2 = create(:room)
-
-      describe "assigning a room" do
-        context "that is already assigned" do
-          before(:each) do
-            get :assign_room, {:id => group2, :room => room1.to_param}, valid_session
-          end
-          # it "does not assign a room" do
-          #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   expect(room1.group).to eq (group2.id)
-          # end
-        end
-
-        context "that is not assigned yet" do
-          it "assigns the room" do
-            # puts group1.inspect
-            # room1.group = group1
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-            # puts group1.reload.inspect
-            # puts Room.find(room1.id).inspect
-            # puts flash.inspect
-            # puts response.body
-
-            # RELOAD!! as room1 is just a local variable, get actual information from DB
-            expect(room1.reload.group_id).to eq (group1.id)
-          end
-        end
-
-        it "redirects to manage group path" do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          expect(response).to redirect_to(manage_rooms_group_path(group1))
-        end
-      end
-    end
-  end
-
-  context "when user is logged-in as admin" do
-    let(:user) { create :adminUser }
-
-    before(:each) do
-      @request.env["devise.mapping"] = Devise.mappings[:user]
-      sign_in user
-    end
-
-    describe "GET index" do
-      it "assigns all groups as @groups" do
-        group = Group.create! valid_attributes
-        get :index, {}, valid_session
-        expect(assigns(:groups)).to eq([group])
-      end
-    end
-
-    describe "GET show" do
-      it "assigns the requested group as @group" do
-        group = Group.create! valid_attributes
-        get :show, {:id => group.to_param}, valid_session
-        expect(assigns(:group)).to eq(group)
-      end
-    end
-
-    describe "GET new" do
-      it "assigns a new group as @group" do
+      it "assigns a new group as @group as admin", :isAdmin => true do
         get :new, {:group => valid_attributes}, valid_session
         expect(assigns(:group)).to be_a(Group)
       end
     end
 
     describe "GET edit" do
-      it "assigns the requested group as @group" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :edit, {:id => group.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "assigns the requested group as @group as admin", :isAdmin => true  do
         group = Group.create! valid_attributes
         get :edit, {:id => group.to_param}, valid_session
         expect(assigns(:group)).to eq(group)
@@ -205,7 +110,13 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET assign_user" do
-      it "assigns user to group" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "assigns user to group as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
         expect(group.users.first).to eq(user)
@@ -216,7 +127,13 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET unassign_user" do
-      it "unassigns user to group" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "unassigns user to group as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         group.users << user
         get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
@@ -226,7 +143,12 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "POST create" do
-      describe "with valid params" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        post :create, {:group => valid_attributes}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      describe "with valid params as admin", :isAdmin => true do
         it "creates a new Group" do
           expect {
             post :create, {:group => valid_attributes}, valid_session
@@ -245,7 +167,7 @@ RSpec.describe GroupsController, :type => :controller do
         end
       end
 
-      describe "with invalid params" do
+      describe "with invalid params as admin", :isAdmin => true do
         it "assigns a newly created but unsaved group as @group" do
           post :create, {:group => invalid_attributes}, valid_session
           expect(assigns(:group)).to be_a_new(Group)
@@ -259,7 +181,13 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "PUT update" do
-      describe "with valid params" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        put :update, {:id => group.to_param, :group => valid_attributes}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      describe "with valid params as admin", :isAdmin => true do
         let(:new_attributes) {
           {
             name: "anotherGroupName"
@@ -286,7 +214,7 @@ RSpec.describe GroupsController, :type => :controller do
         end
       end
 
-      describe "with invalid params" do
+      describe "with invalid params as admin", :isAdmin => true do
         it "assigns the group as @group" do
           group = Group.create! valid_attributes
           put :update, {:id => group.to_param, :group => invalid_attributes}, valid_session
@@ -302,14 +230,20 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "DELETE destroy" do
-      it "destroys the requested group" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        delete :destroy, {:id => group.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "destroys the requested group as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         expect {
           delete :destroy, {:id => group.to_param}, valid_session
         }.to change(Group, :count).by(-1)
       end
 
-      it "redirects to the groups list" do
+      it "redirects to the groups list as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         delete :destroy, {:id => group.to_param}, valid_session
         expect(response).to redirect_to(groups_url)
@@ -340,6 +274,53 @@ RSpec.describe GroupsController, :type => :controller do
         end
 
         context "that is not assigned yet" do
+          it "assigns the room as normal user", :isAdmin => false do
+            # puts group1.inspect
+            # room1.group = group1
+            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+            # puts group1.reload.inspect
+            # puts Room.find(room1.id).inspect
+            # puts flash.inspect
+            # puts response.body
+
+            # RELOAD!! as room1 is just a local variable, get actual information from DB
+            expect(room1.reload.group_id).to eq (group1.id)
+          end
+        end
+
+        it "redirects to manage group path as normal user", :isAdmin => false do
+          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+          expect(response).to redirect_to(manage_rooms_group_path(group1))
+        end
+      end
+    end
+  end
+
+  /
+    describe "in group room management" do
+      let(:group1) { create :group, name: "group1"}
+      let(:group2) { create :group, name: "group2"}
+      let(:room1) { create :room}
+      let(:room2) { create :room }
+
+      # group1 = create(:group, name: "Group1")
+      # group2 = create(:group, name: "Group2")
+      # room1 = create(:room)
+      # room2 = create(:room)
+
+      describe "assigning a room" do
+        context "that is already assigned" do
+          before(:each) do
+            get :assign_room, {:id => group2, :room => room1.to_param}, valid_session
+          end
+          # it "does not assign a room" do
+          #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+          #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+          #   expect(room1.group).to eq (group2.id)
+          # end
+        end
+
+        context "that is not assigned yet" do
           it "assigns the room" do
             # puts group1.inspect
             # room1.group = group1
@@ -360,6 +341,6 @@ RSpec.describe GroupsController, :type => :controller do
         end
       end
     end
-  end
+  end/
 
 end
