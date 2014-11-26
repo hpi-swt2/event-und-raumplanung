@@ -134,6 +134,10 @@ de:
       create: ! '%{model} erstellen'
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
+    links: 
+      sugguest: ! 'Erneut vorschlagen'
+    titles: 
+      sugguest: 'Event erneut vorschlagen' 
   number:
     currency:
       format:
@@ -201,6 +205,7 @@ de:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
+    successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
   tasks:
     status:
       not_assigned: nicht zugewiesen

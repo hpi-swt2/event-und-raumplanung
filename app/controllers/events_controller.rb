@@ -73,6 +73,21 @@ class EventsController < ApplicationController
     #authorize! :edit, @event
   end
 
+  def sugguest 
+  end 
+
+  def create_suggestion
+    
+    logger.info "XXX"
+    logger.info @event.id 
+    logger.info params
+    if event_params
+    respond_to do |format|
+      format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
+      format.json { render :show, status: :created, location: @event }
+    end
+  end 
+  end 
   # POST /events
   # POST /events.json
   def create
