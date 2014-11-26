@@ -132,7 +132,8 @@ RSpec.describe EventsController, :type => :controller do
       get :new_event_template, {:id => event.to_param}, valid_session
       expect(assigns(:event_template).name).to eq event.name
       expect(assigns(:event_template).description).to eq event.description
-      expect(assigns(:event_template).user_id).to eq user.id
+      expect(assigns(:event_template).participant_count).to eq event.participant_count
+      expect(assigns(:event_template).rooms).to eq user.rooms
       expect(response).to render_template("event_templates/new")
     end
   end

@@ -13,7 +13,8 @@ class EventsController < ApplicationController
     @event_template = EventTemplate.new
     @event_template.name = @event.name
     @event_template.description = @event.description
-    @event_template.user_id = current_user_id
+    @event_template.participant_count = @event.participant_count
+    @event_template.rooms = @event.rooms
     render "event_templates/new"
   end
 
