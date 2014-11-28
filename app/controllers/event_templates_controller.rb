@@ -1,22 +1,40 @@
 class EventTemplatesController < ApplicationController
   include EventTemplatesHelper
+  before_action :authenticate_user!
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
 
-  def current_user
-    unless session[:user_id]
-      @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
-      session[:user_id] = @current_user.id
-    end
-    @current_user ||= User.find(session[:user_id])
+  def current_user_id
+    current_user.id
   end
 
   # GET /templates
   # GET /templates.json
   def index
-    @event_templates = EventTemplate.all
+    @filterrific = Filterrific.new(
+      Event,
+      params[:filterrific] || session[:filterrific_event_templates])
+      @filterrific.select_options =   {
+        sorted_by: EventTemplate.options_for_sorted_by
+      }
+      
+      @event_templates = EventTemplate.only_from(current_user_id).filterrific_find(@filterrific).page(params[:page])
+
+      session[:filterrific_event_templates] = @filterrific.to_hash
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_event_templates] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
+  end
+
 
   # GET /templates/1
   # GET /templates/1.json
@@ -31,14 +49,14 @@ class EventTemplatesController < ApplicationController
    # GET /templates/1/new_event
   def new_event
     @event = Event.new
+    time = Time.new.getlocal
+    time -= time.sec
+    time += time.min % 15
+    @event.starts_at = time
+    @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
     @event.description = @event_template.description
-    @event.start_date = @event_template.start_date
-    @event.end_date = @event_template.end_date
-    @event.start_time = @event_template.start_time
-    @event.end_time = @event_template.end_time
-    @event.room_id = @event_template.room_id
-    @event.user_id = current_user.id
+    @event.rooms = @event_template.rooms
     render "events/new"
   end
 
@@ -50,7 +68,7 @@ class EventTemplatesController < ApplicationController
   # POST /templates.json
   def create
     @event_template = EventTemplate.new(eventtemplate_params)
-    @event_template.user_id = current_user.id
+    @event_template.user_id = current_user_id
 
     respond_to do |format|
       if @event_template.save
@@ -95,6 +113,6 @@ class EventTemplatesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def eventtemplate_params
-      params.require(:event_template).permit(:name, :description, :start_date, :end_date, :start_time, :end_time)
+      params.require(:event_template).permit(:name, :description, :participant_count, :room_ids => [])
     end
 end

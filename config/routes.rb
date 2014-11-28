@@ -19,11 +19,18 @@ Rails.application.routes.draw do
 
   resources :equipment
 
-  resources :events
+  resources :events do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :maps
 
   resources :event_templates, :path => "templates"
+  resources :event_templates do
+    get :reset_filterrific, on: :collection
+  end
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
