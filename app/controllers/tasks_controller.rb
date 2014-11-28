@@ -113,10 +113,18 @@ class TasksController < ApplicationController
 
     def set_status(params)
       updated_params = params
-      if updated_params[:user_id].blank?
-        updated_params[:status] = "not_assigned"
-      elsif updated_params[:user_id].to_i != @task.user_id.to_i
-        updated_params[:status] = "pending"
+      if !@task
+        if updated_params[:user_id].blank?
+          updated_params[:status] = "not_assigned"
+        else
+          updated_params[:status] = "pending"
+        end
+      else
+        if updated_params[:user_id].blank?
+          updated_params[:status] = "not_assigned"
+        elsif updated_params[:user_id].to_i != @task.user_id.to_i
+          updated_params[:status] = "pending"
+        end
       end
       return updated_params
     end

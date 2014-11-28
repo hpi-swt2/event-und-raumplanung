@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'events#index'
+  root 'dashboard#index'
 
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
