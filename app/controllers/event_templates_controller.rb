@@ -12,8 +12,29 @@ class EventTemplatesController < ApplicationController
   # GET /templates
   # GET /templates.json
   def index
-    @event_templates = EventTemplate.all
+    @filterrific = Filterrific.new(
+      Event,
+      params[:filterrific] || session[:filterrific_event_templates])
+      @filterrific.select_options =   {
+        sorted_by: EventTemplate.options_for_sorted_by
+      }
+      
+      @event_templates = EventTemplate.only_from(current_user_id).filterrific_find(@filterrific).page(params[:page])
+
+      session[:filterrific_event_templates] = @filterrific.to_hash
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_event_templates] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
+  end
+
 
   # GET /templates/1
   # GET /templates/1.json
@@ -35,6 +56,7 @@ class EventTemplatesController < ApplicationController
     @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
     @event.description = @event_template.description
+    @event.rooms = @event_template.rooms
     render "events/new"
   end
 
@@ -91,6 +113,6 @@ class EventTemplatesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def eventtemplate_params
-      params.require(:event_template).permit(:name, :description, :start_date, :end_date, :start_time, :end_time)
+      params.require(:event_template).permit(:name, :description, :participant_count, :room_ids => [])
     end
 end
