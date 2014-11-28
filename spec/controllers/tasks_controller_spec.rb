@@ -45,10 +45,25 @@ describe TasksController, type: :controller do
   context "when user is logged-in" do
     let(:task) { create :task }
     let(:user) { create :user }
+    let(:anotherUser) { create :user }
+    let(:valid_attributes) {
+      {
+        description: "description", 
+        name: "Test"
+      }
+    }
+    let(:valid_attributes_with_user) {
+      {
+        description: "description", 
+        name: "Test", 
+        user_id: user.id
+      }
+    }
   
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
+      ActionMailer::Base.deliveries.clear
     end
   
     it "renders the index template" do
@@ -63,6 +78,11 @@ describe TasksController, type: :controller do
   
     it "creates task" do
       expect { post :create, task: { description: "description", name: "Test" } }.to change { Task.count }.by(1)
+      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "creates task with attachments" do
+      expect { post :create, task: { description: "description", name: "Test", attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}.to change { Attachment.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
   
@@ -85,6 +105,35 @@ describe TasksController, type: :controller do
       taskToDelete = create(:task)
       expect { delete :destroy, id: taskToDelete }.to change { Task.count }.by(-1)
       expect(response).to redirect_to tasks_path
+    end
+
+    it "sends an email if a user is assigned to a new task" do
+      post :create, { :task => valid_attributes_with_user }
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+
+    it "doesn't send an email if no user was assigned to a new task" do
+      post :create, task: { description: "description", name: "Test" }
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it "sends two emails if another user is assigned to task" do
+      task = Task.create! valid_attributes_with_user
+      
+      patch :update, id: task.to_param, task: { user_id: anotherUser.id }
+      expect(ActionMailer::Base.deliveries.count).to eq(2)
+    end
+
+    it "sends an email if a user is assigned to an existing task" do
+      task = Task.create! valid_attributes
+      patch :update, id: task.to_param, task: { user_id: anotherUser.id }
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+
+    it "sends an email if the assignment of an existing task is removed" do
+      task = Task.create! valid_attributes_with_user
+      patch :update, id: task.to_param, task: { user_id: nil }
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
   end
 end

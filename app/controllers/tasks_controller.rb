@@ -32,7 +32,7 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = Task.new(set_status task_params)
+    @task = Task.new(set_status task_params_with_attachments)
 
     respond_to do |format|
       if @task.save
