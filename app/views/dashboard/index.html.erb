@@ -1,3 +1,4 @@
 <div class="page-header">
-	<h1><%= t('Dashbaord') %></h1>
+	<h1><%= t('Dashboard') %></h1>
 </div>
+<%= render partial: 'tasks_list', locals: {my_tasks: @my_tasks, my_events: @my_events, event_ids: @event_ids} %>

@@ -201,6 +201,7 @@ de:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
+ 
   tasks:
     status:
       not_assigned: nicht zugewiesen
@@ -227,3 +228,6 @@ de:
         zero: Kein(e) %{model} gefunden
     page_gap: "&hellip;"
     previous_label: "← Vorige"
+
+  dashboard:
+    my_tasks: Meine Aufgaben

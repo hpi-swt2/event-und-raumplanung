@@ -31,3 +31,6 @@ en:
       none: None
     attachments:
       none: None
+
+  dashboard:
+    my_tasks: My Tasks
