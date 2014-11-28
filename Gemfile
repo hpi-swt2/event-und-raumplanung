@@ -85,6 +85,8 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'fullcalendar-rails', '~> 2.0.2.0'
+gem 'momentjs-rails'
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
