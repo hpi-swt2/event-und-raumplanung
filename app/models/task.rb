@@ -3,6 +3,7 @@ class Task < ActiveRecord::Base
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
   belongs_to :user
+  validates_presence_of :name
 
   def update_and_send_notification(task_params, assigner)
     previousUser = user

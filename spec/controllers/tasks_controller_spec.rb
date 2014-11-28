@@ -48,14 +48,16 @@ describe TasksController, type: :controller do
     let(:anotherUser) { create :user }
     let(:valid_attributes) {
       {
-        description: "description", 
-        name: "Test"
+        name: "Test",
+        done: false,
+        description: "description"
       }
     }
     let(:valid_attributes_with_user) {
       {
-        description: "description", 
-        name: "Test", 
+        name: "Test",
+        done: false,
+        description: "description",
         user_id: user.id
       }
     }
@@ -70,6 +72,11 @@ describe TasksController, type: :controller do
       get :index
       expect(response).to render_template("index")
     end
+
+    it "loads the events in order to filter tasks" do
+      get :index
+      expect(assigns(:events)).not_to be_nil
+    end
   
     it "gets new" do
       get :new
@@ -81,9 +88,20 @@ describe TasksController, type: :controller do
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
+    it "creates task that are marked as undone" do
+      post :create, task: { description: "description", name: "Test", done: true }
+      expect(assigns(:task).done).to be false
+    end
+
     it "creates task with attachments" do
       expect { post :create, task: { description: "description", name: "Test", attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}.to change { Attachment.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "sets the event for a new task that should belong to the event" do
+      get :new, event_id: 1
+      expect(assigns(:task).event_id).to eq(1)
+      expect(assigns(:event_field_readonly)).to be(:true)
     end
   
     it "shows a task" do
@@ -105,6 +123,18 @@ describe TasksController, type: :controller do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, user_id: task.user_id, done: task.done }
       expect(response).to redirect_to task_path(assigns(:task))
     end
+
+    it "marks a task as done" do
+      task.done = false
+      xhr :put, :update, id: task, task: { done: true }
+      expect(assigns(:task).done).to be true
+    end
+
+    it "marks a task as undone" do
+      task.done = true
+      xhr :put, :update, id: task, task: { done: false }
+      expect(assigns(:task).done).to be false
+    end
   
     it "destroys a task" do
       taskToDelete = create(:task)
@@ -123,8 +153,7 @@ describe TasksController, type: :controller do
     end
 
     it "sends two emails if another user is assigned to task" do
-      task = Task.create! valid_attributes_with_user
-      
+      task = Task.create! valid_attributes_with_user      
       patch :update, id: task.to_param, task: { user_id: anotherUser.id }
       expect(ActionMailer::Base.deliveries.count).to eq(2)
     end
