@@ -1,0 +1,53 @@
+<%- model_class = EventTemplate -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<div class="well">
+  <div class="row">
+    <%= form_for @filterrific do |f| %>
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.search' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :search_query,
+            class: 'filterrific-periodically-observed form-control'
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.sorted_by' %>
+          <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, {class: 'form-control'}) %>
+          <%# See below for the Student.options_for_sorted_by presenter method %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= link_to(
+             (t '.reset_filter'),
+            reset_filterrific_event_templates_path
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <%# add an automated spinner to your form when the list is refreshed %>
+    <%= render_filterrific_spinner %>
+  <% end %>
+  </div>
+</div>
+
+<%= render(
+  partial: 'event_templates/list',
+  locals: { event_templates: @event_templates,  model_class:  model_class }
+) %>
+<div class="clear"></div>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_event_template_path,
+            :class => 'btn btn-primary' %>

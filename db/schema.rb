@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141114091730) do
+ActiveRecord::Schema.define(version: 20141126141428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,22 +46,64 @@ ActiveRecord::Schema.define(version: 20141114091730) do
     t.integer  "room_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "category"
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
+  create_table "event_templates", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "participant_count"
+  end
+
+  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
+
+  create_table "event_templates_rooms", force: true do |t|
+    t.integer "event_template_id"
+    t.integer "room_id"
+  end
+
   create_table "events", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "room_id"
+    t.boolean  "is_private"
+    t.string   "status",            default: "In Bearbeitung"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+  end
+
+  add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
+
+  create_table "events_rooms", force: true do |t|
+    t.integer "event_id"
+    t.integer "room_id"
   end
 
   create_table "groups", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "room_properties", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "room_properties_rooms", force: true do |t|
+    t.integer "room_property_id"
+    t.integer "room_id"
   end
 
   create_table "rooms", force: true do |t|

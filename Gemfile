@@ -85,6 +85,13 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'filterrific'
+
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
+gem 'date_time_attribute'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
@@ -105,4 +112,5 @@ group :test, :development  do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
+	gem 'rails-dev-tweaks'
 end

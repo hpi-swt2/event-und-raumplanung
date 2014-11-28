@@ -1,38 +1,60 @@
 <%- model_class = Event -%>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @events.each do |event| %>
-      <tr>
-        <td><%= link_to event.id, event_path(event) %></td>
-        <td><%= event.name %></td>
-        <td><%= event.description %></td>
-        <td><%=l event.created_at %></td>
-        <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_event_path(event), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      event_path(event),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="well">
+  <div class="row">
+    <%= form_for @filterrific do |f| %>
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.search' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :search_query,
+            class: 'filterrific-periodically-observed form-control'
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.only_show_own' %>
+          <%= f.check_box(:own) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.sorted_by' %>
+          <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, {class: 'form-control'}) %>
+          <%# See below for the Student.options_for_sorted_by presenter method %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.filtered_by_rooms' %>
+           <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :id => 'selectpicker', :multiple =>'' }%>
+       <script> $('#selectpicker').selectpicker(); </script>
+       </div>
+      </div>
+    </div> 
+    <%= link_to( (t '.reset_filter'), reset_filterrific_events_path) %>
+    <%= render_filterrific_spinner %>
+  <% end %>
+  </div>
+</div>
 
+<%= render(
+  partial: 'events/list',
+  locals: { events: @events,  model_class:  model_class }
+) %>
+<div class="clear"></div>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_event_path,
             :class => 'btn btn-primary' %>

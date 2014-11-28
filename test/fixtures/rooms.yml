@@ -3,7 +3,9 @@
 one:
   name: MyString
   size: 1
+  properties: []
 
 two:
   name: MyString
   size: 1
+  properties: []

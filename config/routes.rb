@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
+
   resources :groups
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   resources :attachments
 
-  
+  resources :room_properties
+
   resources :rooms
 
   resources :tasks
@@ -17,7 +19,18 @@ Rails.application.routes.draw do
 
   resources :equipment
 
-  resources :events
+  resources :events do
+    get :reset_filterrific, on: :collection
+  end
+
+  resources :maps
+
+  resources :event_templates, :path => "templates"
+  resources :event_templates do
+    get :reset_filterrific, on: :collection
+  end
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -25,11 +38,15 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'events#index'
 
+
+  get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
+  get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase  
+  get 'rooms/:id/events' => 'rooms#list_events', as: :room_events
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

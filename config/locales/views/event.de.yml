@@ -1,0 +1,16 @@
+de:
+  events:
+    index:
+      title: Eventübersicht
+      only_show_own: 'nur meine Events anzeigen'
+      sorted_by: 'Sortiert nach'
+      reset_filter: 'Filter zurücksetzen'
+      filtered_by_rooms: 'Nach Räumen filtern'
+      search: 'Suche'
+      name: 'Name'
+      description: 'Beschreibung'
+      starts_at: 'Startet'
+      ends_at: 'Endet'
+      status: 'Status'
+      user: 'Benutzer'
+

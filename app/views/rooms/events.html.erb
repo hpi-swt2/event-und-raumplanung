@@ -1,0 +1,9 @@
+<%- model_class = Room -%>
+<div class="page-header">
+  <h1>Anstehende <%=t '.title', :default => Event.model_name.human.pluralize.titleize %> in <%= @room.name %></h1>
+</div>
+
+<%= render :partial => 'upcoming_events' %>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              room_path(@room), :class => 'btn btn-default'  %>

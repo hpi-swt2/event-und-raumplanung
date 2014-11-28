@@ -6,4 +6,8 @@ FactoryGirl.define do
     url "MyString"
     task nil
   end
+  factory :admin do
+  	identity_url "http://example.com/test.admin"
+  end
+  
 end
