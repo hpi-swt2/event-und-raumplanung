@@ -4,9 +4,22 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+    <p>English version below</p>
+    <h1>Hallo <%= @user.email %></h1>
+    <p>
+      <%= @assigner.email %> hat Ihnen den Task <%= link_to @task.name, task_url(@task) %> zugewiesen
+    </p>
+    <p>
+      Hier klicken, um die Zuweisung zu akzeptieren: <%= link_to "Akzeptieren", accept_task_url(@task) %>. <br/>
+      Hier klicken, um die Zuweisung zu abzulehnen: <%= link_to "Ablehnen", decline_task_url(@task) %>. <br/>
+    </p>
+    <p>Einen schönen Tag!</p>
+    
+    <hr/>
+
     <h1>Hello <%= @user.email %></h1>
     <p>
-      <%= @assigner.email %> assigned the task <%= @task.name %> to you
+      <%= @assigner.email %> assigned the task <%= link_to @task.name, task_url(@task) %> to you
     </p>
     <p>
       Click here to accept: <%= link_to "Accept", accept_task_url(@task) %>. <br/>

@@ -1,3 +1,17 @@
+English version below
+
+Hallo <%= @user.email %>
+===========================
+<%= @assigner.email %> hat Ihnen den Task <%= @task.name %> zugeordnet
+
+Rufen Sie diese Seite auf, um den Task anzusehen: <%= task_url(@task)%>.
+Rufen Sie diese Seite auf, um die Zuordnung zu akzeptieren: <%= accept_task_url(@task)%>.
+Rufen Sie diese Seite auf, um die Zuordnung abzulehnen: <%= decline_task_url(@task) %>.
+
+Einen schönen Tag!
+
+============================================
+
 Hello <%= @user.email %>
 ===========================
 <%= @assigner.email %> assigned the task <%= @task.name %> to you

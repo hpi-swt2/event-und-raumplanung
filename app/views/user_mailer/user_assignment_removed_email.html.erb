@@ -4,6 +4,15 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+    <p>English version below</p>
+
+    <h1>Hallo <%= @user.email %></h1>
+    <p>
+      <%= @assigner.email %> hat Ihre Zuordnung zum Task <%= link_to @task.name, task_url(@task) %> gelöscht.
+    </p>
+    <p>Einen schönen Tag!</p>
+    <hr/>
+
     <h1>Hello <%= @user.email %></h1>
     <p>
       <%= @assigner.email %> removed your assignment to the task <%= link_to @task.name, task_url(@task) %>

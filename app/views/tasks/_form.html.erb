@@ -55,7 +55,7 @@
       </div>
     <% end %>
 
-    <h4>Attachments</h4>
+    <h4><%= t('.attachments') %></h4>
       <ul class="list-group" data-bind="foreach: attachments">
         <a class="list-group-item" style="width:50%; display: inline-block" data-bind="text: title, attr: { href: url }"></a>
         <button class="btn btn-danger" data-bind="click: $parent.deleteAttachment">Delete</button>
@@ -84,7 +84,7 @@
       </div>
     </div>
     <div class="control-group">
-      <input type="submit" value="Add Attachment" class="btn" data-bind="enable: isInputValid" />
+      <input type="submit" value="<%= t('.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
     </div>
   </form>
 </div>

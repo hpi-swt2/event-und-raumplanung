@@ -211,6 +211,9 @@ de:
       none: Keine Auswahl
     attachments:
       none: Keine Anhänge
+    form:
+      add_attachment: 'Anhang hinzufügen'
+      attachments: 'Anhänge'
 
   will_paginate:
     next_label: Weiter →
