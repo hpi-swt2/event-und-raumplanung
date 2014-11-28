@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hello <%= @user.email %></h1>
+    <p>
+      <%= @assigner.email %> removed your assignment to the task <%= link_to @task.name, task_url(@task) %>
+    </p>
+    <p>Thanks and have a great day!</p>
+  </body>
+</html>

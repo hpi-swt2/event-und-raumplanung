@@ -4,20 +4,30 @@ class Task < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   belongs_to :user
 
-  def update_and_send_notification(task_params)
-	  assign_attributes(task_params)
-	  if valid?
-	    if user_id_changed? and user_id?
-			send_notification
-	    end
-	    save
-	    return true
-	  else
-	    return false
-	  end
+  def update_and_send_notification(task_params, assigner)
+    previousUser = user
+    assign_attributes(task_params)
+    if valid?
+      if user_id_changed?
+        unless previousUser.nil?
+          send_notification_to_previously_assigned_user(previousUser, assigner)
+        end
+        if user_id?
+      	  send_notification_to_assigned_user(assigner)
+        end
+      end
+      save
+      return true
+    else
+      return false
+    end
   end
 
-  def send_notification
-	  UserMailer.user_assigned_to_task_email(user, self).deliver
+  def send_notification_to_assigned_user(assigner)
+    UserMailer.user_assigned_to_task_email(assigner, self).deliver
+  end
+
+  def send_notification_to_previously_assigned_user(previousUser, assigner)
+    UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver
   end
 end
