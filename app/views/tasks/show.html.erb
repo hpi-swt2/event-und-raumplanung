@@ -11,7 +11,7 @@
   <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
   <dd><%= @task.event_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @task.user.identity_url %></dd>
+  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t("tasks.user.none")  %><% end %></dd>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
   <dd class="<%= @task.status %>"><%= t("tasks.status." + @task.status)%></dd>
   <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
