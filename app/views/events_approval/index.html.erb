@@ -43,11 +43,16 @@
 <br><br>
 <h4>Approved Bookings</h4>
 <center>
-  <%= link_to "<--", events_approval_path(date: @date.yesterday) %>
-	<%= @date.strftime '%A, %d/%m/%y' %> 
-  <%= link_to "-->", events_approval_path(date: @date.tomorrow) %>
+<table>
+<td><%= link_to "<--", events_approval_path(date: @date.yesterday) %></td>
+<td>
+<%= form_tag("events_approval", method: "get", :name => "datePicker") do %>
+<%= select_date(@date, {}, :onchange => ("javascript: document.datePicker.submit();")) %>
+<% end %>
+</td>
+<td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
+</table>
 </center>
-
 <% bookings_exist = false %>
 <table class="table table-striped">
   <tbody>
