@@ -1,4 +1,5 @@
 <%- model_class = Event -%>
+<% return_url = request.env['PATH_INFO'] %>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -16,7 +17,7 @@
                 <tbody>
                 <% @events.each do |event| %>
                     <tr>
-                        <td><%= link_to event.name, event_path(event) %></td>
+                        <td><%= link_to event.name, event_path(event, return_url: return_url) %></td>
                         <td><%=l event.starts_at if event.starts_at  %></td>
                     </tr>
                 <% end %>

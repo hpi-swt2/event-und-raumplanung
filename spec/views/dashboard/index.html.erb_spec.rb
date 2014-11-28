@@ -3,12 +3,11 @@ require 'rails_helper'
 RSpec.describe "dashboard/index", :type => :view do
 	let(:user) { create :user }
 	before(:each) do
-        6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s) }
 		login_as user, scope: :user
 		visit '/'
 	end
 
-	describe 'My Tasks partial' do
+	describe 'My tasks partial' do
 		let(:other_user) { create :user }
 		let(:event) { create :event }
 		let(:past_event) { create :event, name: 'Past Event', starts_at: Date.today - 2, ends_at: Date.today - 2 }
@@ -35,10 +34,20 @@ RSpec.describe "dashboard/index", :type => :view do
 		end
 	end
 
-  describe "Events partial" do
-    it "renders the event overview" do
-      page.should have_content('Eventname1')
-      page.should have_content('Eventname2')
+  describe 'Events partial' do
+
+    before(:each) do
+      6.times { |i| FactoryGirl.create(:upcoming_event, name: "Eventname"+i.to_s) }
+    end
+
+    it 'renders the event overview' do
+      page.should have_content 'Anstehende Events'
+      page.should have_content 'Eventname0'
+      page.should have_content 'Eventname1'
+      page.should have_content 'Eventname2'
+      page.should have_content 'Eventname3'
+      page.should have_content 'Eventname4'
+      page.should_not have_content 'Eventname5'
     end
   end
 end
