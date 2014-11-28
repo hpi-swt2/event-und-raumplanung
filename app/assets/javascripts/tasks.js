@@ -15,10 +15,11 @@ function handleTaskCheckboxClick()
 	{
 		var target = event.target;
 		var taskPath = $(target).attr('data-taskpath');
+        var taskUserId = $(target).attr('data-user_id');
 		$.ajax({
 			url: taskPath,
 			type: 'PUT',
-			data: {task: {done: target.checked}},
+			data: {task: {done: target.checked, user_id: taskUserId}},
 			dataType: 'json'
 		});
 	});

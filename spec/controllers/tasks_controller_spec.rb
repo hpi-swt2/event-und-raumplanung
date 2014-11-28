@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe TasksController, type: :controller do
+RSpec.describe TasksController, type: :controller do
   describe "GET accept" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
