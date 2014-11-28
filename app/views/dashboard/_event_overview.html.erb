@@ -7,22 +7,14 @@
     </div>
     <div class="panel-body">
         <% if !@events.empty? %>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th><%= model_class.human_attribute_name 'name' %></th>
-                    <th><%= model_class.human_attribute_name 'starts_at' %></th>
-                </tr>
-                </thead>
-                <tbody>
+            <ul class="list-group">
                 <% @events.each do |event| %>
-                    <tr>
-                        <td><%= link_to event.name, event_path(event, return_url: return_url) %></td>
-                        <td><%=l event.starts_at if event.starts_at  %></td>
-                    </tr>
+                    <li class="list-group-item">
+                        <%= link_to event.name, event_path(event, return_url: return_url) %>
+                        (<%= event.starts_at.strftime("%A, %d.%m.%Y, %H:%M") if event.starts_at %>)
+                    </li>
                 <% end %>
-                </tbody>
-            </table>
+            </ul>
         <% else %>
             <%= t('dashboard.no_events') %>
         <% end %>
