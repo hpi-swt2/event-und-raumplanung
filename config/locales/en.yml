@@ -34,3 +34,4 @@ en:
   dashboard:
     title: Dashboard
     upcoming_events: Next events
+    no_events: No upcoming events

@@ -216,6 +216,7 @@ de:
   dashboard:
     title: Dashboard
     upcoming_events: Anstehende Events
+    no_events: Keine anstehenden Events
 
   will_paginate:
     next_label: Weiter →
