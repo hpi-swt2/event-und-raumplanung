@@ -12,6 +12,9 @@
       <tr>
         <td>
           Max Mustermann requests
+          <% if event.is_important %>
+            <font color="#FF0000"> - important - </font>
+          <% end %>
           <br>
         	<%= link_to event.name, event_path(event) %> -
         	<%= event.description %>
