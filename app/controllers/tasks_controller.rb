@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
+  before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
   # GET /tasks.json
@@ -93,6 +94,10 @@ class TasksController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])
+    end
+
+    def set_return_url
+      @return_url = params[:return_url]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

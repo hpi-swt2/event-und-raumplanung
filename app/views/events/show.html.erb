@@ -34,6 +34,10 @@
   <dd><%= @event.status %></dd>
 </dl>
 
+<h4><%= t '.tasks' %></h4>
+<% @event_id = @event.id %>
+<%= render(partial: '/tasks/tasks_box', locals: { tasks: @event.tasks })%>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               events_path, :class => 'btn btn-default'  %>
 <% if can? :edit, @event %> 

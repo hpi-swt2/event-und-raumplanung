@@ -65,7 +65,7 @@
 
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-              tasks_path, :class => 'btn btn-default' %>
+              @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
   <% end %>
 </div>
 
