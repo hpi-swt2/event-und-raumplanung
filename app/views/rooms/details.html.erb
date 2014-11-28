@@ -5,17 +5,22 @@
 <table class="table table-column">
 	<thead>
 		<tr>
-			<th>Capacity</th>
+			<th>Properties</th>
 			<th>Equipment</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td><%= model_class.human_attribute_name(@room.size) %> people<br><br>
+			<td>Suitable for <%= model_class.human_attribute_name(@room.size) %> people
+				<% properties = RoomProperty.where(:room_id => @room.id) %>
+				<% properties.each do |property| %>
+				<br><%= property.name %>
+				<% end %>
+				<br><br>
 				Tables upon request<br>
 				<%= link_to t('.request', :default => t("helpers.links.request now")),
-				@room, method: :list, :class => 'btn btn-default btn-xs' %>
-			</td>			
+				@room, method: :list, :class => 'btn btn-default btn-xs' %>	
+			</td>
 			<td><table class="table table-column-group">
 				<tbody>
 					<% @room.equipment.each do |equipment| %>
@@ -23,7 +28,7 @@
 						<td><%= equipment.name %></td>
 						<td><%= equipment.description %></td>
 					</tr>
-					<% end %>
+					<% end %> 
 				</tbody>
 			</table></td>
 		</tr>
@@ -55,4 +60,4 @@
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
-              new_booking_path(:room => @room.id), :class => 'btn btn-default' %>
+              new_booking_path(@room), :class => 'btn btn-default' %>
