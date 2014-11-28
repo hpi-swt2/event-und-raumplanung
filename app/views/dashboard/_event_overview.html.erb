@@ -1,0 +1,18 @@
+<%- model_class = Event -%>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th><%= model_class.human_attribute_name 'name' %></th>
+        <th><%= model_class.human_attribute_name 'starts_at' %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @events.each do |event| %>
+        <tr>
+            <td><%= link_to event.name, event_path(event) %></td>
+            <td><%=l event.starts_at if event.starts_at  %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>

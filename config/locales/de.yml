@@ -201,6 +201,7 @@ de:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
+
   tasks:
     status:
       not_assigned: nicht zugewiesen
@@ -211,6 +212,10 @@ de:
       none: Keine Auswahl
     attachments:
       none: Keine Anhänge
+
+  dashboard:
+    title: Dashboard
+    upcoming_events: Anstehende Events
 
   will_paginate:
     next_label: Weiter →
