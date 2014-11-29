@@ -79,8 +79,11 @@ class EventsController < ApplicationController
   def create_suggestion
     
     logger.info "XXX"
-    logger.info @event.id 
-    logger.info params
+    logger.info @event.id
+    logger.info @event.starts_at_date
+    @event.rooms.each { |room| logger.info room}
+
+    Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, @event.rooms[0])
     if event_params
     respond_to do |format|
       format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }

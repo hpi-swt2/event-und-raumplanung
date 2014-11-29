@@ -89,5 +89,9 @@ class Event < ActiveRecord::Base
   ]
   end
 
-
+  def self.checkVacancy(startDateTime, endDateTime, rooms)
+      event =  self.find_by_starts_at_and_ends_at(startDateTime, endDateTime)
+      logger.info event.id 
+      logger.info startDateTime
+  end 
 end
