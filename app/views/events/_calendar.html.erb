@@ -1,6 +1,3 @@
-
-<!--use <%= render "calendar" %> to integrate this partial into your html.erb file-->
-
 <div id="calendar"></div>
 
 
@@ -12,7 +9,13 @@
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
-			theme: true
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2014-11-30'
+				}
+			],
+			theme: false
 		});
 	});
 </script>
