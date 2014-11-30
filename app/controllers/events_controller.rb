@@ -23,21 +23,7 @@ class EventsController < ApplicationController
   def index
 
      
-     @filterrific = Filterrific.new(
-      Event,
-      params[:filterrific] || session[:filterrific_events])
-      @filterrific.select_options =   {
-        sorted_by: Event.options_for_sorted_by
-      }
-      @filterrific.own = if @filterrific.own == 1
-          current_user_id
-        else
-          nil
-        end
-      @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
-      @events = Event.filterrific_find(@filterrific).page(params[:page])
-
-      session[:filterrific_events] = @filterrific.to_hash
+     @events = Event.filterrific_find(@filterrific).page(params[:page])
 
 
     respond_to do |format|

@@ -10,7 +10,13 @@ class Event < ActiveRecord::Base
       :search_query,
       :own,
       :room_ids,
-      :sorted_by
+      :sorted_by,
+      :starts_after,
+      :starts_before,
+      :ends_after,
+      :ends_before,
+      :participants_gte,
+      :participants_lte
     ]
   )
   self.per_page = 12
@@ -69,6 +75,24 @@ class Event < ActiveRecord::Base
   }
   scope :own, lambda { |user_id|
     where("user_id = ?",user_id) if user_id
+  }
+  scope :starts_after, lambda { |ref_date|
+    where('starts_at >= ?', ref_date)
+  }
+  scope :starts_before, lambda { |ref_date|
+    where('starts_at <= ?', ref_date)
+  }
+  scope :ends_after, lambda { |ref_date|
+    where('ends_at >= ?', ref_date)
+  }
+  scope :ends_before, lambda { |ref_date|
+    where('ends_at <= ?', ref_date)
+  }
+  scope :participants_gte, lambda { |count|
+    where('participant_count >= ?', count)
+  }
+  scope :participants_lte, lambda { |count|
+    where('participant_count <= ?', count)
   }
 
   def self.options_for_sorted_by

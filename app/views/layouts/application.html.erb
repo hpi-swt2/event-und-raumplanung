@@ -61,6 +61,18 @@
             <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>
+          <div class="nav navbar-nav navbar-right">
+            <%= form_for @filterrific, url: events_path, html: {class: "navbar-form"} do |f| %>
+              <div class="form-group">
+                <%= f.text_field(
+                  :search_query,
+                  :placeholder => "Search for " + Event.model_name.human.pluralize,
+                  class: 'filterrific-periodically-observed form-control'
+                ) %>
+                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
