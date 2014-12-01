@@ -1,0 +1,34 @@
+<!---  use
+            render 'calendar'
+       inside ruby tags to display the calendar on any page
+ --->
+
+<div id="calendar"></div>
+
+<% @calevents = Event.all %>
+
+<%= debug current_user %>
+
+<script>
+	$(document).ready(function(){
+		$("#calendar").fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			events: [
+                <% @calevents.each do |each| %>
+				{
+					title: '<%= each.name %>',
+					start: '<%= each.start_date %>'
+                    <% if each.status === 'In Bearbeitung' %>
+                        , color: 'red'
+                    <% end %>
+				},
+                <% end %>
+			],
+			theme: false
+		});
+	});
+</script>

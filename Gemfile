@@ -85,6 +85,7 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+<<<<<<< HEAD
 gem 'filterrific'
 
 gem 'will_paginate'
@@ -92,6 +93,10 @@ gem 'will_paginate-bootstrap'
 
 gem 'date_time_attribute'
 
+=======
+gem 'fullcalendar-rails', '~> 2.0.2.0'
+gem 'momentjs-rails'
+>>>>>>> f92e301ca0f1e5e004eee2661e9d1db115869540
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
