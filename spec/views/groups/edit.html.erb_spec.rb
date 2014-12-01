@@ -1,10 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe "groups/edit", :type => :view do
+  let(:user) { create :user }
+  
+  let(:valid_attributes) {
+    {
+      name: 'groupName',
+    }
+  }
+
   before(:each) do
-    @group = assign(:group, Group.create!(
-      :name => "MyString"
-    ))
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in user
+
+    @group = Group.create! valid_attributes
+    @users = User.all
   end
 
   it "renders the edit group form" do
