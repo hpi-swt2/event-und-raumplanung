@@ -43,7 +43,6 @@ RSpec.describe "dashboard/index", :type => :view do
     #end
 
     it 'renders the event overview' do
-      pending
       #page.should have_content 'Anstehende Events'
       #page.should have_content 'Eventname0'
       #page.should have_content 'Eventname1'
