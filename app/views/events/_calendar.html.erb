@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!---  use
             render 'calendar'
        inside ruby tags to display the calendar on any page
@@ -8,6 +9,10 @@
 <% @calevents = Event.all %>
 
 <%= debug current_user %>
+=======
+<div id="calendar"></div>
+
+>>>>>>> dev
 
 <script>
 	$(document).ready(function(){
@@ -18,6 +23,7 @@
 				right: 'month,agendaWeek,agendaDay'
 			},
 			events: [
+<<<<<<< HEAD
                 <% @calevents.each do |each| %>
 				{
 					title: '<%= each.name %>',
@@ -27,6 +33,12 @@
                     <% end %>
 				},
                 <% end %>
+=======
+				{
+					title: 'Birthday',
+					start: '2014-12-11'
+				}
+>>>>>>> dev
 			],
 			theme: false
 		});

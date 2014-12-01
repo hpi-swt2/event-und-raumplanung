@@ -16,9 +16,6 @@
 //= require turbolinks
 //= require bootstrap-select
 //= require_tree .
-<<<<<<< HEAD
-//= require filterrific/filterrific-jquery
-=======
 //= require fullcalendar
 //= require moment
->>>>>>> f92e301ca0f1e5e004eee2661e9d1db115869540
+//= require filterrific/filterrific-jquery
