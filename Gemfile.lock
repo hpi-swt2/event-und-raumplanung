@@ -258,8 +258,8 @@ DEPENDENCIES
   devise
   devise_openid_authenticatable
   factory_girl_rails
-  fullcalendar-rails (~> 2.0.2.0)
   filterrific
+  fullcalendar-rails (~> 2.0.2.0)
   guard-rspec
   jbuilder (~> 2.0)
   jquery-rails

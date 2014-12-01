@@ -4,7 +4,6 @@
 
 
 #
-<<<<<<< HEAD
 # Create Rooms
 room = Room.create(id: 1, name: 'H-E.1', size: 30)
 room = Room.create(id: 2, name: 'H-E.2', size: 30)
@@ -34,30 +33,3 @@ event = Event.create(name: "Tribute von Panem", description: "Details zum Event 
 # createBooking
 booking = Booking.create([{ name: 'HCI II', description: 'Vorlesung', start: DateTime.now, end: DateTime.now.advance(hours: 3), room: room }, { name: 'HCI II', description: 'Vorlesung', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room }])
 booking = Booking.create(name: 'Connect Club Treffen', description: 'Clubtreffen', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room)
-=======
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
-Event.create([
-  { name: 'Mathe 1',
-    start_date: '2014-12-02',
-    status: 'In Bearbeitung',
-    user_id: ''},
-  { name: 'TI',
-    start_date: '2014-12-05',
-    status: 'In Bearbeitung',
-    user_id: ''},
-  { name: 'SSK',
-    start_date: '2014-12-15',
-    status: 'In Bearbeitung',
-    user_id: ''},
-  { name: 'Scrum Meeting',
-    start_date: '2014-12-10',
-    status: 'Approved',
-    user_id: ''},
-  { name: 'Mathe 1',
-    start_date: '2014-12-12',
-    status: 'Approved',
-    user_id: ''}
-])
->>>>>>> f92e301ca0f1e5e004eee2661e9d1db115869540

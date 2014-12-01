@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20141126141428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -77,9 +78,9 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.integer  "room_id"
     t.boolean  "is_private"
     t.string   "status",            default: "In Bearbeitung"
+    t.boolean  "approved"
     t.datetime "starts_at"
     t.datetime "ends_at"
-    t.boolean  "approved"
     t.date     "start_date"
     t.time     "start_time"
     t.date     "end_date"
