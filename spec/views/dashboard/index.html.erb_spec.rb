@@ -38,9 +38,9 @@ RSpec.describe "dashboard/index", :type => :view do
 	end
 
   describe 'Events partial' do
-    before(:each) do
-      6.times { |i| FactoryGirl.create(:upcoming_event, name: "Eventname"+i.to_s) }
-    end
+    #before(:each) do
+    #  6.times { |i| FactoryGirl.create(:upcoming_event, name: "Eventname"+i.to_s) }
+    #end
 
     it 'renders the event overview' do
       pending
