@@ -1,5 +1,6 @@
 <div id="calendar"></div>
 
+<% @calevents = Event.where("user_id = ?", current_user.id) %>
 
 <script>
 	$(document).ready(function(){
@@ -10,10 +11,15 @@
 				right: 'month,agendaWeek,agendaDay'
 			},
 			events: [
+                <% @calevents.each do |each| %>
 				{
-					title: 'Birthday',
-					start: '2014-12-11'
-				}
+					title: '<%= each.name %>',
+					start: '<%= each.start_date %>'
+                    <% if each.status === 'In Bearbeitung' %>
+                        , color: 'red'
+                    <% end %>
+				},
+                <% end %>
 			],
 			theme: false
 		});
