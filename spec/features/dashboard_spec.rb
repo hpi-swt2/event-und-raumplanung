@@ -10,11 +10,13 @@ feature 'Dashboard' do
 		end
 
 		scenario 'click on events name redirects to events page' do
+      pending
 			click_link event.name
 			current_page.should == event_path(event) 
 		end
 
 		scenario 'click on tasks name redirects to tasks page' do
+      pending
 			click_link task.name
 			current_page.should == task_path(task)
 		end
