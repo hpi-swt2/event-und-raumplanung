@@ -1,6 +1,13 @@
+<!---  use
+            render 'calendar'
+       inside ruby tags to display the calendar on any page
+ --->
+
 <div id="calendar"></div>
 
-<% @calevents = Event.where("user_id = ?", current_user.id) %>
+<% @calevents = Event.all %>
+
+<%= debug current_user %>
 
 <script>
 	$(document).ready(function(){
