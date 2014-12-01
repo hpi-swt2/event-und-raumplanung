@@ -9,3 +9,8 @@ two:
   name: MyString
   size: 1
   properties: []
+
+three:
+  name: MyString
+  size: 10
+  properties: []

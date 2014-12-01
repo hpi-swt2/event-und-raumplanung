@@ -28,6 +28,9 @@ http://event-und-raumplanung.herokuapp.com/
 
 http://event-und-raumplanung-dev.herokuapp.com/ (dev branch)
 
+Fehleranalyse:
+http://swt2-2014-errbit.herokuapp.com
+
 Setup
 -----
 Es gibt zwei Möglichkeiten das Projekt aufzusetzen. Einmal mit einer virtuellen Maschine und Vagrant
