@@ -1,3 +1,4 @@
 admin:
-  identity_url: http://example.com/test.admin
+  username: test_admin
   password: test_admin
+identity_url: https://openid.hpi.uni-potsdam.de/
