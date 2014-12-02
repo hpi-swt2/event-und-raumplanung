@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
 
+  resources :groups do
+    member do
+      get 'manage_rooms'
+      get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
+      get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      get 'assign_user/:user_id', :action => 'assign_user', :as => 'assign_user'
+      get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
+    end
+  end
+
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
@@ -8,8 +18,6 @@ Rails.application.routes.draw do
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
   post 'rooms/:id' => 'rooms#details'
-
-  resources :groups
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
