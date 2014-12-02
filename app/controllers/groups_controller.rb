@@ -84,10 +84,14 @@ class GroupsController < ApplicationController
   end
 
   def manage_rooms
+    authorize! :update, Group
+    
     @unassigned_rooms = Room.where(:group_id => nil)
   end
 
   def assign_room
+    authorize! :update, Group
+
     if @room.group == nil  
       @group.rooms << @room
       flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
@@ -98,6 +102,8 @@ class GroupsController < ApplicationController
   end
 
   def unassign_room
+    authorize! :update, Group
+
     @group.rooms.delete(@room)
     flash[:notice] = "Raum "+@room.name+" erfolgreich gelöscht."
     redirect_to manage_rooms_group_path(@group)
