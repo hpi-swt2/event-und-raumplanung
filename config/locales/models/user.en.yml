@@ -1,15 +1,15 @@
 # ruby encoding: utf-8
 
-de:
+en:
   activerecord:
     models:
       user:
-        one: Benutzer
-        other: Benutzer
+        one: User
+        other: Users
     attributes:
       user:
-        username: Benutzername
+        username: Username
         email: E-Mail
         status: Status
         identity_url: Identity url
-        encrypted_password: Passwort
+        encrypted_password: Password

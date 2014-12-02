@@ -44,7 +44,13 @@ de:
     sessions:
       signed_in: "Erfolgreich angemeldet."
       signed_out: "Erfolgreich abgemeldet."
+      sign_out: ausloggen
+      already_signed_out: "Bereits ausgeloggt."
+      status_missing: "Bitte gib deinen Benutzerstatus an."
+      status_changed: "Benutzerstatus geändert!"
       admin_password: "Admin-Passwort eingeben."
+      status_student: "Student"
+      status_staff: "Mitarbeiter"
     unlocks:
       send_instructions: "Du erhältst in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren können."
       send_paranoid_instructions: "Falls Deine E-Mail-Adresse in unserer Datenbank existiert erhältst Du in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren kannst."
