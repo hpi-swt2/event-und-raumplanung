@@ -22,14 +22,6 @@ class Event < ActiveRecord::Base
   date_time_attribute :starts_at
   date_time_attribute :ends_at
 
-  attr_accessor :starts_at
-  attr_accessor :ends_at
-
-  attr_accessor :start_date
-  attr_accessor :start_time 
-
-  attr_accessor :end_date
-  attr_accessor :end_time
 
   validates :name, presence: true
   validates :starts_at, presence: true
@@ -94,8 +86,12 @@ class Event < ActiveRecord::Base
   end
 
   def self.checkVacancy(startDateTime, endDateTime, rooms)
-      event =  self.find_by_starts_at_and_ends_at(startDateTime, endDateTime)
-      logger.info event.id 
-      logger.info startDateTime
-  end 
+    event =  self.find_by_starts_at_and_ends_at(startDateTime, endDateTime)
+    if event
+      return false          
+    else 
+      return true 
+   #   logger.info startDateTime
+  end
+  end  
 end

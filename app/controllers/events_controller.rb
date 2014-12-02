@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :new_event_template, :sugguest]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
@@ -79,18 +79,18 @@ class EventsController < ApplicationController
   end 
 
   def create_suggestion
+    @event = Event.new(event_params)
+    @event.user_id = current_user_id
+    logger.info @event.inspect
     
-    logger.info "XXX"
-    logger.info @event.id
-    logger.info @event.starts_at_date
-    @event.rooms.each { |room| logger.info room}
-
-    Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, @event.rooms[0])
-    if event_params
     respond_to do |format|
+      if Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, params[:event][:room_ids])
       format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
       format.json { render :show, status: :created, location: @event }
-    end
+      else 
+      format.html { redirect_to @event, alert: t('alert.successful_sugguest_conflict', :model => Event.model_name.human)  }
+      format.json { render json: @event.errors, status: :unprocessable_entity }
+    end  
   end 
   end 
   # POST /events
@@ -98,6 +98,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.user_id = current_user_id
+    logger.info @event.inspect
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }

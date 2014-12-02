@@ -19,12 +19,33 @@
     </div>
   <% end %>
 
+<div class="control-group">
+    <%= f.label model_class.human_attribute_name(:name), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'form-control', :maxlength=>"254", :readonly => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:description), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'form-control', :readonly => true %>
+    </div>
+  </div>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :rooms, options_from_collection_for_select(Room.all, :id, :name), {}, { :class => 'selectpicker', :multiple =>'' }%>
+      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
     </div>
+    <script>
+    $('#selectpicker').selectpicker();
+    </script>
     <%= error_span(@event[:rooms]) %>
+  </div>
+    <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :participant_count, :class => 'form-control', :readonly => true %>
+    </div>
   </div>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
@@ -34,7 +55,7 @@
          <%= error_span(@event[:starts_at_date]) %>
       </div>
       <div class="controls col-sm-6">
-        <%= f.time_field :starts_at_time, :class => 'form-control' %>
+        <%= f.time_field :starts_at_time, :class => 'form-control', value: @event.starts_at_time.strftime('%H:%M') %>
         <%= error_span(@event[:starts_at_time]) %>
       </div>
     </div>
@@ -48,11 +69,10 @@
         <%= error_span(@event[:ends_at_date]) %>
       </div>
       <div class="controls col-sm-6">
-        <%= f.time_field :ends_at_time, :class => 'form-control' %>
+        <%= f.time_field :ends_at_time, :class => 'form-control', value: @event.ends_at_time.strftime('%H:%M') %>
         <%= error_span(@event[:ends_at_time]) %>
       </div>
     </div>
-     
   </div>
  
   <%= f.submit t('.sugguest', :default => t("helpers.links.sugguest")), :class => 'btn btn-primary' %>
