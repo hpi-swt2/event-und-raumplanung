@@ -92,7 +92,13 @@ class Event < ActiveRecord::Base
     if events.empty?
       return true
     else 
-      return false
+      rooms_count = self.rooms.size
+      events.each do | event |
+        if (self.rooms - event.rooms).size < rooms_count
+          return false
+        end 
+      end 
     end
+    return true 
   end  
 end
