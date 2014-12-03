@@ -57,7 +57,7 @@
 <table class="table table-striped">
   <tbody>
     <% @bookings.each do |booking| %>
-      <% if !booking.event.approved.nil? and booking.event.approved %>
+      <% if booking.event.status == 'approved' %>
         <% bookings_exist = true %>
         <tr>
           <td>

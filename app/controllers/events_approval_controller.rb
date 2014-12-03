@@ -18,7 +18,7 @@ class EventsApprovalController < ApplicationController
 		@bookings = Booking.all
 		@events = Event.all
 		check_data # data must be checked before selection criterea as events links to bookings which are filtered out
-		@events.where!(approved: nil)
+		@events = @events.where.not({status: ['approved', 'declined']})
 		@bookings.where!('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
   end
 
