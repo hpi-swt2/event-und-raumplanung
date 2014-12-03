@@ -28,14 +28,14 @@ class RoomsController < ApplicationController
     @empty = false;
     @noSelection = false
     rooms_ids = Room.all.pluck(:id)
-    if params.size <= 5
+    if params.size <= 4
         if params[:room].nil? or params[:room][:size].empty?
 	   @noSelection = true
         end
     end
     if !params[:room].nil? and !params[:room][:size].empty?
-      size = params[:room][:size]
-      rooms_ids = rooms_ids & Room.where('size >= ?', size).pluck(:id)
+      @size = params[:room][:size]
+      rooms_ids = rooms_ids & Room.where('size >= ?', @size).pluck(:id)
      end
      @categories.each do |category|
      	if params.has_key?(category)

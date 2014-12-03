@@ -1,23 +1,32 @@
 <h1>Räume</h1>
-<%= form_tag("/rooms/list", method: "get") do %>
+<%= form_tag("/rooms/list", method: "get", :name => "list", :ID => 1, :remote => true) do %>
 <%= label_tag(:size, "gewünschte Raumgröße:") %>
-<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0) %>
+<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :onchange => ("javascript: document.list.submit();")) %>
 <br>
 Equipment
 <br>
 <% @categories.each do |category| %>
-    <%= check_box_tag(category) %>
-    <%= label_tag(category, category) %>
+<% if params.has_key?(category) %>
+<%= check_box_tag(category,true, true, :onclick => "javascript: document.list.submit();") %>
+<% else %>
+<%= check_box_tag(category,true, false, :onclick => "javascript: document.list.submit();") %>
+<% end %>
+<%= label_tag(category, category) %>
+
 <% end %>
 <br>
 Eigenschaften
 <br>
 <% @properties.each do |property| %>
-    <%= check_box_tag(property) %>
-    <%= label_tag(property, property) %>
+<% if params.has_key?(property) %>
+<%= check_box_tag(property, true, true, :onclick => "javascript: document.list.submit();") %>
+<% else %>
+<%= check_box_tag(property, true, false, :onclick => "javascript: document.list.submit();") %>
+<% end %>
+<%= label_tag(property, property) %>
 <% end %>
 <br>
-  <%= submit_tag("Suche") %>
+  
 <% end %>
 <br><br>
 <% if @empty %>
