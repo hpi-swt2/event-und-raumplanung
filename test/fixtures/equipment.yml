@@ -3,9 +3,10 @@
 one:
   name: MyString
   description: MyString
-  room_id: 
-
+  room: three
+  category: Beamer
 two:
   name: MyString
   description: MyString
-  room_id: 
+  room: one
+  category: WLAN
