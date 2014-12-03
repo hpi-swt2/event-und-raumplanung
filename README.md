@@ -7,14 +7,15 @@
 [![License](http://img.shields.io/badge/license-AGPL-blue.svg)](https://github.com/hpi-swt2/event-und-raumplanung/blob/master/LICENSE)
 
 # Building
-Team      | master        | dev   | last
---------- | ------------- | ----- | ---
-Upstream  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/hpi-swt2/event-und-raumplanung) | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/hpi-swt2/event-und-raumplanung) | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
-Axolotl   | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/rs22/event-und-raumplanung) | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/rs22/event-und-raumplanung) | [![Build Status](https://travis-ci.org/rs22/event-und-raumplanung.svg)](https://travis-ci.org/rs22/event-und-raumplanung)
-Biber | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/Atyanar/event-und-raumplanung) | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/Atyanar/event-und-raumplanung) | [![Build Status](https://travis-ci.org/Atyanar/event-und-raumplanung.svg)](https://travis-ci.org/Atyanar/event-und-raumplanung)
-Clownfish | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung) | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung) | [![Build Status](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung.svg)](https://travis-ci.org/DasDingGehtNicht/event-und-raumplanung)
-Dolphins  | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/SvenLehmann/event-und-raumplanung) | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/SvenLehmann/event-und-raumplanung) | [![Build Status](https://travis-ci.org/SvenLehmann/event-und-raumplanung.svg)](https://travis-ci.org/SvenLehmann/event-und-raumplanung)
-Elch      | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/l--f/event-und-raumplanung) | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/l--f/event-und-raumplanung) | [![Build Status](https://travis-ci.org/l--f/event-und-raumplanung.svg)](https://travis-ci.org/l--f/event-und-raumplanung)
+Branch      | Status
+----------- | ----------
+master  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=master)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+dev  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=dev)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Axolotl  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Axolotl)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Biber  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Biber)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Clownfish  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Clownfish)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Dolphins  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Dolphins)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
+Elch  | [![Build Status](https://travis-ci.org/hpi-swt2/event-und-raumplanung.svg?branch=Elch)](https://travis-ci.org/hpi-swt2/event-und-raumplanung)
 
 event-und-raumplanung
 =====================
@@ -26,6 +27,9 @@ Live-System
 http://event-und-raumplanung.herokuapp.com/
 
 http://event-und-raumplanung-dev.herokuapp.com/ (dev branch)
+
+Fehleranalyse:
+http://swt2-2014-errbit.herokuapp.com
 
 Setup
 -----
