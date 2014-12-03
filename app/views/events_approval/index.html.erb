@@ -3,18 +3,23 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th></th>
       <th>Event</th>
       <th>Bookings</th>
     </tr>
   </thead> 
   <tbody>
     <% @events.each do |event| %>
-      <tr>
-        <td>
+      <tr> 
+        <% if event.is_important %>            
+            <td>
+              <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) %>            
+            </td>
+        <% else %>
+            <td></td>
+        <% end %>         
+        <td>          
           Max Mustermann requests
-          <% if event.is_important %>
-            <font color="#FF0000"> - important - </font>
-          <% end %>
           <br>
         	<%= link_to event.name, event_path(event) %> -
         	<%= event.description %>
