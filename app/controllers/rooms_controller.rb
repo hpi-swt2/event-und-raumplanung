@@ -59,7 +59,6 @@ class RoomsController < ApplicationController
     @available_equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
       nil, @room.id).group(:category).count
     @assigned_equipment = Equipment.all.where("room_id = '?'", @room.id).group(:category).count
-    @assigned_equipment.inspect
     authorize! :edit, @room
   end
 
@@ -90,6 +89,32 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1.json
   def update
     authorize! :update, @room
+    equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
+      nil, @room.id).group(:category).count
+    assigned_equipment = Equipment.all.where("room_id = '?'", @room.id).group(:category).count
+    equipment.each do |category, count|
+      key = category+'_equipment_count'
+      count = params[key]
+      if assigned_equipment[category] != nil
+        count = count.to_i - assigned_equipment[category]
+      else
+        count = count.to_i
+      end
+      if count>0 
+        for number in 1..count do
+          new_equipment = Equipment.where('room_id IS ? and category=?', nil, category).first
+          new_equipment.room_id = @room.id
+          new_equipment.save
+        end
+      elsif count<0
+        for number in count..-1 do
+          new_equipment = Equipment.where('room_id=? and category=?', @room.id, category).first
+          new_equipment.room_id = nil
+          new_equipment.save
+        end
+      end
+    end
+
 
     respond_to do |format|
       if @room.update(room_params)

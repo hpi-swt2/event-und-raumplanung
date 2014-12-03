@@ -55,7 +55,7 @@
             <% if @assigned_equipment.has_key?(category) %>
               <% existing_count = @assigned_equipment[category] %>
             <% end %>
-            <td><%= number_field_tag 'equipment_count', existing_count, in: 0.0..count %></td>
+            <td><%= number_field_tag category+'_equipment_count', existing_count, in: 0.0..count %></td>
             <td><%= count %></td>
         </tr>
       <% end %>
