@@ -96,7 +96,7 @@ class EventsController < ApplicationController
     logger.info @event.inspect
     respond_to do |format|
       if @event.save 
-        if Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, params[:event][:room_ids])
+        if @event.checkVacancy
           format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
           format.json { render :show, status: :created, location: @event }
         else

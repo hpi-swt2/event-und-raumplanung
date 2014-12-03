@@ -32,8 +32,8 @@ class Event < ActiveRecord::Base
 
   
    def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past") if starts_at && starts_at < Date.today
-      errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
+      errors.add(:starts_at, "can't be in the past") if starts_at < Date.today
+      errors.add(:ends_at, "can't be in the past") if ends_at < Date.today
     end
    def start_before_end_date
       errors.add(:starts_at, "start has to be before the end") if starts_at && starts_at && ends_at < starts_at
@@ -85,14 +85,14 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def self.checkVacancy(startDateTime, endDateTime, rooms)
-    #event =  self.find_by_starts_at_and_ends_at(startDateTime, endDateTime)
-    #if event
-    #  return false          
-    #else 
-    #  return true 
-   #   logger.info startDateTime
-#  end
+  def checkVacancy() 
+    logger.info self.starts_at 
+    logger.info self.ends_at   
+    events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at}).where.not(:id => self.id)
+    if events.empty?
       return true
+    else 
+      return false
+    end
   end  
 end
