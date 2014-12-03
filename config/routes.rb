@@ -43,7 +43,7 @@ Rails.application.routes.draw do
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
-  patch '/create_suggestion/:id' => 'events#create_suggestion', as: :create_suggestion
+  patch 'events/:id/sugguest' => 'events#create_suggestion', as: :create_suggestion
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
