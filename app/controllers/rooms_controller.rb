@@ -19,6 +19,7 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   def new
     @room = Room.new
+    @available_equipment = Equipment.all.where(room_id: nil).group(:category).count
     authorize! :new, @room
   end
 
@@ -30,7 +31,7 @@ class RoomsController < ApplicationController
     rooms_ids = Room.all.pluck(:id)
     if params.size <= 5
         if params[:room].nil? or params[:room][:size].empty?
-	   @noSelection = true
+     @noSelection = true
         end
     end
     if !params[:room].nil? and !params[:room][:size].empty?
@@ -38,9 +39,9 @@ class RoomsController < ApplicationController
       rooms_ids = rooms_ids & Room.where('size >= ?', size).pluck(:id)
      end
      @categories.each do |category|
-     	if params.has_key?(category)
-	  rooms_ids = rooms_ids & Equipment.where(:category => category).pluck(:room_id)
-     	end
+      if params.has_key?(category)
+    rooms_ids = rooms_ids & Equipment.where(:category => category).pluck(:room_id)
+      end
      end
      @properties.each do |name|
          if params.has_key?(name)
@@ -48,13 +49,17 @@ class RoomsController < ApplicationController
          end
      end
      if rooms_ids.empty?
-	 @empty = true
+   @empty = true
      end
      @rooms = Room.find(rooms_ids)
   end
 
   # GET /rooms/1/edit
   def edit
+    @available_equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
+      nil, @room.id).group(:category).count
+    @assigned_equipment = Equipment.all.where("room_id = '?'", @room.id).group(:category).count
+    @assigned_equipment.inspect
     authorize! :edit, @room
   end
 
@@ -109,7 +114,7 @@ class RoomsController < ApplicationController
   end
   
   def details
-	render action: 'details'
+  render action: 'details'
   end
 
   private

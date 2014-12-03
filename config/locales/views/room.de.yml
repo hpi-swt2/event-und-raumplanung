@@ -12,3 +12,5 @@ de:
       no_properties: Keine speziellen Eigenschaften
     events:
       no_upcoming_events: Keine anstehenden Events
+    equipment:
+      available: vorhanden

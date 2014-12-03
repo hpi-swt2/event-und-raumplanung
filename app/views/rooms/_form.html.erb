@@ -37,6 +37,31 @@
       <% end %>
     </div>
   </div>
+  <div class="control-group">
+    <%= f.label :equipment, :class => 'control-label' %>
+    <table class="tabel tabel-striped">
+    <thead>
+    <tr>
+      <th><%= Equipment.human_attribute_name(:category) %></th>
+      <th>Vorhanden</th>
+      <th>Maximale Anzahl</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% @available_equipment.each do |category, count| %>
+        <tr>
+            <td><%= category%></td>
+            <% existing_count = 0 %>
+            <% if @assigned_equipment.has_key?(category) %>
+              <% existing_count = @assigned_equipment[category] %>
+            <% end %>
+            <td><%= number_field_tag 'equipment_count', existing_count, in: 0.0..count %></td>
+            <td><%= count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    </table>
+  </div>
 
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
