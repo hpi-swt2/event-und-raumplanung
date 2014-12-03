@@ -82,16 +82,20 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     @event.user_id = current_user_id
     logger.info @event.inspect
-    
     respond_to do |format|
-      if Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, params[:event][:room_ids])
-      format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
-      format.json { render :show, status: :created, location: @event }
-      else 
-      format.html { redirect_to @event, alert: t('alert.successful_sugguest_conflict', :model => Event.model_name.human)  }
-      format.json { render json: @event.errors, status: :unprocessable_entity }
-    end  
-  end 
+      if @event.save 
+        if Event.checkVacancy(@event.starts_at_date, @event.ends_at_time, params[:event][:room_ids])
+          format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
+          format.json { render :show, status: :created, location: @event }
+        else
+          format.html { redirect_to @event, alert: t('alert.successful_sugguest_conflict', :model => Event.model_name.human)  }
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end 
+      else
+        format.html { render :sugguest }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end 
   end 
   # POST /events
   # POST /events.json
