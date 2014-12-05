@@ -3,13 +3,14 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user]
   before_action :set_room, only: [:assign_room ,:unassign_room]
   before_action :set_user, only: [:assign_user, :unassign_user, :promote_user, :degrade_user]
+  before_action :get_user_roles, only: [:show, :edit]
 
   def index
     @groups = Group.all
   end
 
   def show
-    @users = User.all
+
   end
 
   def assign_user
@@ -36,8 +37,6 @@ class GroupsController < ApplicationController
   def edit
     # Only authorized users can edit groups (ability.rb)
     authorize! :update, Group
-
-    @users = User.all
   end
 
   def create
@@ -140,7 +139,10 @@ class GroupsController < ApplicationController
     def set_room
       @room = Room.find(params[:room_id])
     end
-    def is_group_leader
-      return current_user.membership.find_by(:group,@group).isLeader
+    def get_user_roles
+      @users = User.all
+      @leaders = @users.select{|u| u.is_leader_of_group(@group.id)}
+      @members = @users.select{|u| u.is_member_of_group(@group.id) && u.is_leader_of_group(@group.id) == false}
+      @nonmembers = @users.select{|u| u.is_member_of_group(@group.id) == false}
     end
 end

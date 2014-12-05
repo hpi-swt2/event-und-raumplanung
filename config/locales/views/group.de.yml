@@ -17,5 +17,7 @@ de:
       assigned: zugewiesen
       unassigned: entfernt
       user_overview: Benutzerübersicht
+      unassign: Aus Gruppe entfernen
+      assign: Gruppe zuweisen
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen

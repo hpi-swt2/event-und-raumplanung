@@ -15,28 +15,25 @@
   </thead>
 
   <tbody>
-    <% @users.each do |user| %>
+    <% @leaders.each do |user| %>
       <tr>
         <td><%= user.identity_url %></td>
-        <td>
-          <% if @group.users.include? user %>
-            <%=t '.assigned', :default => t("groups.edit.assigned") %>
-          <% else %>
-            <%=t '.unassigned', :default => t("groups.edit.unassigned") %>
-          <% end %>
-        </td>
-        <td>
-          <% if @group.users.include? user %>
-            <%= link_to 'entfernen', unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-            <% if user.is_leader_of_group(@group.id) %>
-              <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-            <% else %>
-              <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-            <% end %>
-          <% else %>
-            <%= link_to 'zuweisen', assign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-          <% end %>
-        </td>
+        <td><%=t '.assigned', :default => t("groups.edit.assigned") %></td>
+        <td><%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %><%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-primary btn-xs' %></td>
+      </tr>
+    <% end %>
+    <% @members.each do |user| %>
+      <tr>
+        <td><%= user.identity_url %></td>
+        <td><%=t '.assigned', :default => t("groups.edit.assigned") %></td>
+        <td><%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %><%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %></td>
+      </tr>
+    <% end %>
+    <% @nonmembers.each do |user| %>
+      <tr>
+        <td><%= user.identity_url %></td>
+        <td><%=t '.unassigned', :default => t("groups.edit.unassigned") %></td>
+        <td><%= link_to 'zuweisen', assign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %> </td>
       </tr>
     <% end %>
   </tbody>

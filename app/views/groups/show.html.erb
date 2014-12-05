@@ -19,28 +19,21 @@
   </thead>
 
   <tbody>
-    <% @users.each do |user| %>
+    <% @leaders.each do |user| %>
       <tr>
         <td><%= user.identity_url %></td>
         <td>
-          <% if @group.users.include? user %>
-            <!-- <%=t '.assigned', :default => t("groups.show.assigned") %> -->
-            <% if user.is_leader_of_group(@group.id) %>
               <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
-            <% else %>
-              <span class="label label-default"><%=t '.member', :default => t("groups.show.member") %></span>
-            <% end %>
-          <% else %>
-            <!-- <%=t '.unassigned', :default => t("groups.show.unassigned") %> -->
-          <% end %>
         </td>
+      </tr>
+    <% end %>
 
+    <% @members.each do |user| %>
+      <tr>
+        <td><%= user.identity_url %></td>
         <td>
-        <% if @group.users.include? user %>
-          
-        <% else %>
-          <td> </td>
-        <% end %>
+              <span class="label label-default"><%=t '.member', :default => t("groups.show.member") %></span>
+        </td>
       </tr>
     <% end %>
   </tbody>
