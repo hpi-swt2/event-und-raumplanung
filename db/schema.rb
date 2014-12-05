@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126141428) do
+ActiveRecord::Schema.define(version: 20141205131556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -39,6 +40,14 @@ ActiveRecord::Schema.define(version: 20141126141428) do
 
   add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
+
+  create_table "comments", force: true do |t|
+    t.integer  "user_id"
+    t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "task_id"
+  end
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -76,8 +85,8 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
-    t.boolean  "approved"
     t.string   "status",            default: "In Bearbeitung"
+    t.boolean  "approved"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.date     "start_date"

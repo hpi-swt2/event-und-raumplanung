@@ -1,0 +1,15 @@
+.commentsContainer {
+    padding: 10px;
+    margin: 10px 0px 10px 0px;
+    border: solid 1px black;
+    border-radius: 15px;
+}
+
+.commentAuthor {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.commentTimestamp {
+    text-align: right;
+}

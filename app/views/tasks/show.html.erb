@@ -29,14 +29,6 @@
     <% end %>
 </dl>
 
-<div class="comments">
-  <h2>Kommentare</h2>
-
-
-  <% Comments.where(task_id: @task.name).each do |comment| %>
-    <%= render :partial => 'comments_container', :locals => {:comment => comment} %>
-  <% end %>
-</div>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               tasks_path, :class => 'btn btn-default'  %>
@@ -47,3 +39,13 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+
+
+<br />
+<h2>Kommentare</h2>
+
+<div class="commentsContainer">
+  <% Comments.where(task_id: 1).each do |comment| %>
+      <%= render :partial => 'comments_container', :locals => {:comment => comment} %>
+  <% end %>
+</div>

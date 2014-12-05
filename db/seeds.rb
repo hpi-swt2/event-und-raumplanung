@@ -33,3 +33,16 @@ event = Event.create(name: "Tribute von Panem", description: "Details zum Event 
 # createBooking
 booking = Booking.create([{ name: 'HCI II', description: 'Vorlesung', start: DateTime.now, end: DateTime.now.advance(hours: 3), room: room }, { name: 'HCI II', description: 'Vorlesung', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room }])
 booking = Booking.create(name: 'Connect Club Treffen', description: 'Clubtreffen', start: DateTime.now.advance(days: 2), end: DateTime.now.advance(days: 2, hours: 3), room: room)
+
+
+#
+# create Task
+task = Task.create(id: 1, name: "Pizza Bestellen", description: "10 Pizzen von Call a Pizza bestlelen", event_id: "1", created_at: "2014-12-26 11:46:01", done: false, user_id: 1, status: "In Bearbeitung")
+
+#
+# create Comments
+comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", task_id: 1)
+
+#
+# create User
+user = User.create(id: 1, email: "test@example.wtf", identity_url: "http:\\identity.com")

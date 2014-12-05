@@ -1,11 +1,11 @@
 <div class="commentContainer">
-  <div class="commentTitle">
-    <%= comment.author %>
+  <div class="commentAuthor">
+    <%= User.where(id: comment.user_id).first.email %>
   </div>
   <div class="commentContent">
-    <%= comment.context %>
+    <%= comment.content %>
   </div>
   <div class="commentTimestamp">
-    <%= comment.timestamp %>
+    <%= comment.created_at %>
   </div>
 </div>
