@@ -116,5 +116,6 @@ group :test, :development  do
 	gem 'guard-rspec'
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
+	gem 'timecop'
 end
 

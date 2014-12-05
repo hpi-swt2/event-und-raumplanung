@@ -1,5 +1,5 @@
 <div class="page-header">
 	<h1><%= t('dashboard.title') %></h1>
-
-    <%= render "event_overview" %>
 </div>
+<%= render "event_overview" %>
+<%= render partial: 'tasks_list', locals: {my_accepted_tasks: @my_accepted_tasks, my_pending_tasks: @my_pending_tasks, my_accepted_events: @my_accepted_events, my_pending_events: @my_pending_events} %>

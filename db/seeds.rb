@@ -7,6 +7,19 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+event = Event.create({name: 'Eventname',
+					description: 'A description',
+					starts_at: Date.today + 1,
+					ends_at: Date.today + 1,
+					participant_count: 12,
+					user_id: 1})
+
+Task.create({name: 'A pending Task', 
+			description: 'This is a pending task.',
+			event_id: event.id,
+			user_id: 1,
+			status: 'pending'})
+
 Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
 
 # Create Rooms
