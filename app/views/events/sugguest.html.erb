@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => [:'helpers.titles.sugguest', 'Sugguest %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-<%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch",  :html => { :class => "form-horizontal event" } do |f| %>
+<%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch",  :html => { :class => "form-horizontal event", :id => "sugguest-form" } do |f| %>
     <% if @event.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
