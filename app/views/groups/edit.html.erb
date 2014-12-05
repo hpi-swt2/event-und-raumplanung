@@ -27,11 +27,14 @@
         </td>
         <td>
           <% if @group.users.include? user %>
-            <%= link_to 'entfernen', unassign_user_group_path(@group, user),
-                    :class => 'btn btn-default btn-xs' %>
+            <%= link_to 'entfernen', unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
+            <% if user.is_leader_of_group(@group.id) %>
+              <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
+            <% else %>
+              <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
+            <% end %>
           <% else %>
-            <%= link_to 'zuweisen', assign_user_group_path(@group, user),
-                    :class => 'btn btn-default btn-xs' %>
+            <%= link_to 'zuweisen', assign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
           <% end %>
         </td>
       </tr>

@@ -1,8 +1,8 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user]
   before_action :set_room, only: [:assign_room ,:unassign_room]
-  before_action :set_user, only: [:assign_user, :unassign_user]
+  before_action :set_user, only: [:assign_user, :unassign_user, :promote_user, :degrade_user]
 
   def index
     @groups = Group.all
@@ -109,6 +109,22 @@ class GroupsController < ApplicationController
     redirect_to manage_rooms_group_path(@group)
   end
 
+  def promote_user
+    # authorize! :update, Group
+    mem = @user.memberships.select{|membership| membership.group_id == @group.id}.first
+    mem.isLeader = true
+    mem.save()
+    redirect_to edit_group_path(@group)
+  end
+
+  def degrade_user
+    # authorize! :update, Group
+    mem = @user.memberships.select{|membership| membership.group_id == @group.id}.first
+    mem.isLeader = false
+    mem.save()
+    redirect_to edit_group_path(@group)
+  end
+
   private
     def set_group
       @group = Group.find(params[:id])
@@ -123,5 +139,8 @@ class GroupsController < ApplicationController
     end
     def set_room
       @room = Room.find(params[:room_id])
+    end
+    def is_group_leader
+      return current_user.membership.find_by(:group,@group).isLeader
     end
 end
