@@ -3,3 +3,12 @@
 </div>
 <%= render "event_overview" %>
 <%= render partial: 'tasks_list', locals: {my_accepted_tasks: @my_accepted_tasks, my_pending_tasks: @my_pending_tasks, my_accepted_events: @my_accepted_events, my_pending_events: @my_pending_events} %>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= t('dashboard.calendar') %></h3>
+    </div>
+    <div class="panel-body">
+		<%= render 'events/calendar' %>
+    </div>
+</div>
