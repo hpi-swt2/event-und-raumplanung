@@ -236,3 +236,6 @@ de:
         zero: Kein(e) %{model} gefunden
     page_gap: "&hellip;"
     previous_label: "← Vorige"
+
+  dashboard:
+    my_tasks: Meine Aufgaben

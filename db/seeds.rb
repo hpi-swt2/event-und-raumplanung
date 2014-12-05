@@ -6,4 +6,18 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
+user = User.create({identity_url: 'http://example.com/test.user', 
+					email: 'test.user@example.com'})
+
+event = Event.create({name: 'Eventname',
+					description: 'A description',
+					starts_at: Date.today + 1,
+					ends_at: Date.today + 1,
+					participant_count: 12,
+					user_id: user.id})
+
+Task.create({name: 'A Task', 
+			description: 'This is a task.',
+			event_id: event.id,
+			user_id: user.id,
+			status: 'pending'})
