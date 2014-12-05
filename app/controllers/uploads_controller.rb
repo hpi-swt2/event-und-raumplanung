@@ -1,18 +1,8 @@
 class UploadsController < ApplicationController
   before_action :set_upload, only: [:show, :edit, :update, :destroy]
 
-  def index
-    @uploads = Upload.all
-  end
-
-  def show
-  end
-
   def new
     @upload = Upload.new
-  end
-
-  def edit
   end
 
   def create
