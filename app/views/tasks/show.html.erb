@@ -11,9 +11,9 @@
   <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
   <dd><%= @task.event_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t("tasks.user.none")  %><% end %></dd>
+  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t('tasks.user.none')  %><% end %></dd>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-  <dd class="<%= @task.status %>"><%= t("tasks.status." + @task.status)%></dd>
+  <dd class="<%= @task.status %>"><%= t('tasks.status.' + @task.status)%></dd>
   <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
   <dd><%= @task.done %></dd>
 </dl>
@@ -25,7 +25,7 @@
         <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
       <% end %>
     <% else %>
-      <%= t("tasks.attachments.none") %>
+      <%= t('tasks.attachments.none') %>
     <% end %>
 </dl>
 <%= link_to t('.back', :default => t("helpers.links.back")),
