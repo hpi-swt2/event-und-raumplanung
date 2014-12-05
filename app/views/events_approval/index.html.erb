@@ -1,0 +1,75 @@
+<h1>EventsApproval#index</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Bookings</th>
+    </tr>
+  </thead> 
+  <tbody>
+    <% @events.each do |event| %>
+      <tr>
+        <td>
+          Max Mustermann requests
+          <br>
+        	<%= link_to event.name, event_path(event) %> -
+        	<%= event.description %>
+          (<%= event.participant_count %>)
+        </td>
+        <td>
+        	<% event.bookings.each do |booking| %>
+            <%= link_to booking.name, booking_path(booking) %>, <%= booking.description %>
+            <br>
+            <%= booking.start.strftime '%A, %d/%m/%y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>,
+
+       			<%= link_to booking.room.name, booking.room %>
+            <% if event.bookings.last != booking %>
+        		  <hr style="margin:0; padding:0;">
+            <% end %>  
+        	<% end %>
+        </td>
+        <td>
+        	<%= link_to "Decline", decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
+          <%= link_to "Approve", approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+        </td>
+      </tr> 
+    <% end %>
+  </tbody>
+</table>
+<% if @events.count == 0 %>
+  No open events.
+<% end %>
+<br><br>
+<h4>Approved Bookings</h4>
+<center>
+  <%= link_to "<--", events_approval_path(date: @date.yesterday) %>
+	<%= @date.strftime '%A, %d/%m/%y' %> 
+  <%= link_to "-->", events_approval_path(date: @date.tomorrow) %>
+</center>
+
+<% bookings_exist = false %>
+<table class="table table-striped">
+  <tbody>
+    <% @bookings.each do |booking| %>
+      <% if !booking.event.approved.nil? and booking.event.approved %>
+        <% bookings_exist = true %>
+        <tr>
+          <td>
+          	<%= link_to booking.name, booking_path(booking) %>
+            Max Mustermann, <%= link_to booking.event.name, event_path(booking.event) %>),
+            <%= booking.event.description %>,
+          	<%= booking.description %>
+            <br>
+            <%= booking.start.strftime '%H:%M' %> - <%=booking.end.strftime '%H:%M' %>,
+            <%= link_to booking.room.name, booking.room %>
+            (<%= booking.event.participant_count %>)
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<% if !bookings_exist %>
+  <center>No approved bookings.</center>
+<% end %>

@@ -1,6 +1,8 @@
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
+require 'factory_girl_rails'
+
 # SimpleCov.start must be issued before any application code is required
 require 'simplecov'
 SimpleCov.start
