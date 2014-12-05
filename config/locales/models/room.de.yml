@@ -11,3 +11,7 @@ de:
         size: 'Größe'
         properties: 'Eigenschaften'
         created_at: 'Erstellungsdatum'
+        equipment: 'Ausstattung'
+        category: 'Kategorie'
+        available: 'Vorhanden'
+        max_count: 'Maximale Anzahl'

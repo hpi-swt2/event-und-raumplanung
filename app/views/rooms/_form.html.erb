@@ -37,14 +37,15 @@
       <% end %>
     </div>
   </div>
+  <br></br>
   <div class="control-group">
     <%= f.label :equipment, :class => 'control-label' %>
-    <table class="tabel tabel-striped">
+    <table class="table table-column">
     <thead>
     <tr>
-      <th><%= Equipment.human_attribute_name(:category) %></th>
-      <th>Vorhanden</th>
-      <th>Maximale Anzahl</th>
+      <th><%= f.label :category, :class => 'control-label' %></th>
+      <th><%= f.label :available, :class => 'control-label' %></th>
+      <th><%= f.label :max_count, :class => 'control-label' %></th>
     </tr>
     </thead>
     <tbody>
