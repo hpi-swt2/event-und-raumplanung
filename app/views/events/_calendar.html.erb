@@ -1,5 +1,12 @@
-<div id="calendar"></div>
 
+<!---  use
+            render 'calendar'
+       inside ruby tags to display the calendar on any page
+-->
+
+<% @calevents = Event.all %>
+
+<div id="calendar"></div>
 
 <script>
 	$(document).ready(function(){
@@ -10,10 +17,20 @@
 				right: 'month,agendaWeek,agendaDay'
 			},
 			events: [
-				{
-					title: 'All Day Event',
-					start: '2014-11-30'
-				}
+                <% @calevents.each do |each| %>
+					
+					<% if each.user_id === current_user.id %>
+					{
+						title: '<%= each.name %>',
+						start: '<%= each.starts_at %>'
+                    
+                    	<% unless each.approved? %>
+                        	, color: 'red'
+                    	<% end %>
+					
+					},
+					<% end %>
+                <% end %>
 			],
 			theme: false
 		});
