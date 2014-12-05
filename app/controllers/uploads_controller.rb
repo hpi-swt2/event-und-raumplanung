@@ -20,21 +20,12 @@ class UploadsController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @upload.update(upload_params)
-        format.html { redirect_to @upload, notice: t('notices.successful_update', :model => Upload.model_name.human) }
-        format.json { render :show, status: :ok, location: @upload }
-      else
-        format.html { render :edit }
-        format.json { render json: @upload.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   def destroy
     @upload.destroy
     respond_to do |format|
-      format.html { redirect_to uploads_url, notice: t('notices.successful_destroy', :model => Upload.model_name.human) }
+      format.html { redirect_to edit_task_path @upload.task_id }
       format.json { head :no_content }
     end
   end

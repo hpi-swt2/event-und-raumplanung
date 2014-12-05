@@ -18,24 +18,23 @@
   <dd><%= @task.done %></dd>
 </dl>
 <dl>
-    <h2>Uploads</h2>
-    <% if @task.uploads.count() > 0 %>
-        <% @task.uploads.each do |upload| %>
-            <%= link_to upload.file_file_name, "../files/" + upload.id.to_s + "/" + upload.file_file_name , :class => 'list-group-item' %>
-        <% end %>
-    <% else %>
-        <%= t('tasks.attachments.none') %>
-    <% end %>
-</dl>
-<dl>
-  <h2>Attachments</h2>
-    <% if @task.attachments.count() > 0 %>
-      <% @task.attachments.each do |attachment| %>
-        <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
+  <h3><%= t('.attachments') %></h3>
+  <h4>Files</h4>
+  <% if @task.uploads.count() > 0 %>
+      <% @task.uploads.each do |upload| %>
+          <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item' %>
       <% end %>
-    <% else %>
+  <% else %>
       <%= t('tasks.attachments.none') %>
+  <% end %>
+  <h4>Links</h4>
+  <% if @task.attachments.count() > 0 %>
+    <% @task.attachments.each do |attachment| %>
+      <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
     <% end %>
+  <% else %>
+    <%= t('tasks.attachments.none') %>
+  <% end %>
 </dl>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default'  %>
