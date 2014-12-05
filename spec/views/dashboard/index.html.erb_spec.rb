@@ -12,7 +12,7 @@ RSpec.describe "dashboard/index", :type => :view do
 		let!(:event) { create :event, user_id: user.id }
 		#let(:past_event) { create :event, name: 'Past Event', starts_at: Date.today - 2, ends_at: Date.today - 2, user_id: user.id}
 		let!(:task) { create :assigned_task, event_id: event.id, user_id: user.id, status: 'accepted' }
-		let!(:pending_task) { create :assigned_task, name: 'Pending Task' event_id: event.id, user_id: user.id }
+		let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, user_id: user.id }
 		#let(:past_task) { create :assigned_task, name: "Past Task", event_id: past_event.id, user_id: user.id }
 		let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, user_id: other_user.id }
 
