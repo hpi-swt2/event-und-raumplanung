@@ -19,18 +19,18 @@
 </dl>
 <dl>
   <h3><%= t('.attachments') %></h3>
-  <h4>Files</h4>
-  <% if @task.uploads.count() > 0 %>
+  <% if has_attached_items? @task %>
+    <% if @task.uploads.count() > 0 %>
+      <h4>Files</h4>
       <% @task.uploads.each do |upload| %>
           <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item' %>
       <% end %>
-  <% else %>
-      <%= t('tasks.attachments.none') %>
-  <% end %>
-  <h4>Links</h4>
-  <% if @task.attachments.count() > 0 %>
-    <% @task.attachments.each do |attachment| %>
-      <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
+    <% end %>
+    <% if @task.attachments.count() > 0 %>
+    <h4>Links</h4>
+        <% @task.attachments.each do |attachment| %>
+            <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
+        <% end %>
     <% end %>
   <% else %>
     <%= t('tasks.attachments.none') %>

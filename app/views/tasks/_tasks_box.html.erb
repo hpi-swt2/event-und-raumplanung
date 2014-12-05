@@ -1,23 +1,25 @@
 <%- model_class = Task -%>
 <% return_url = request.env['PATH_INFO'] %>
-<table class="table table-striped">
-  <thead>
+<table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
+    <thead>
     <tr>
-      <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
-      <th class="col-sm-1"><%= model_class.human_attribute_name(:attachments) %></th>
-      <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
-      <th class="col-sm-5"></th>
+        <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
+        <th class="col-sm-1"></th>
+        <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
+        <th class="col-sm-5"></th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <% tasks.each do |task| %>
-      <tr>
-        <td><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user_id="<%= task.user_id %>"></td>
-        <td><%= task.attachments.count() > 0 ? "Yes" : "No" %></td>
-        <td><%= link_to task.name, task_path(task, return_url: return_url) %></td>
-        <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (task.user.identity_url) %></td>
-      </tr>
+        <tr data-item-id=<%= "#{task.id}" %> class="item">
+            <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user_id="<%= task.user_id %>"></td>
+            <td class="col-sm-1">
+                <span class="glyphicon glyphicon-paperclip <%= (has_attached_items? task) ? "" : "hidden" %>" aria-hidden="true"></span>
+            </td>
+            <td class="col-sm-5"><%= link_to task.name, task_path(task, return_url: return_url) %></td>
+            <td class="<%= task.status %> text-right col-sm-5"><%= (task.user_id.blank?) ? t('tasks.status.not_assigned') : (task.user.identity_url) %></td>
+        </tr>
     <% end %>
-  </tbody>
+    </tbody>
 </table>
-<%= link_to 'Hinzufügen', new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>
+<%= link_to t('helpers.links.new'), new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>
