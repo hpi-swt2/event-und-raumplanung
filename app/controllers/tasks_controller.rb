@@ -15,6 +15,7 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+
   end
 
   # GET /tasks/new
@@ -79,7 +80,12 @@ class TasksController < ApplicationController
       @task.status = "accepted"
       @task.save
     end
-    redirect_to @task
+    
+    respond_to do |format| 
+      format.html { redirect_to @task }
+      format.json { render json: @task }
+    end
+
   end
 
   def decline
@@ -97,7 +103,8 @@ class TasksController < ApplicationController
     end
 
     def set_return_url
-      @return_url = params[:return_url]
+      @return_url = tasks_path
+      @return_url = root_path if URI(request.referer).path == root_path
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
