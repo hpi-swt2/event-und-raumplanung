@@ -17,9 +17,9 @@
           <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
         </td>
         <td><%= link_to task.name, task_path(task, return_url: return_url) %></td>
-        <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (task.user.identity_url) %></td>
+        <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t('tasks.status.not_assigned') : (task.user.identity_url) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<%= link_to 'Hinzufügen', new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>
+<%= link_to t('helpers.links.new'), new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>
