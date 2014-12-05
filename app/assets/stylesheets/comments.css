@@ -3,6 +3,8 @@
     margin: 10px 0px 10px 0px;
     border: solid 1px black;
     border-radius: 15px;
+    overflow: auto;
+    max-height: 300px;
 }
 
 .commentAuthor {
