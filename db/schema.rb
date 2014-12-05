@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126141428) do
+ActiveRecord::Schema.define(version: 20141126122452) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -21,7 +24,7 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.datetime "updated_at"
   end
 
-  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id"
+  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
 
   create_table "bookings", force: true do |t|
     t.string   "name"
@@ -34,8 +37,8 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.datetime "updated_at"
   end
 
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id"
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -46,45 +49,45 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.string   "category"
   end
 
-  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id"
+  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.time     "start_time"
+    t.time     "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "participant_count"
+    t.integer  "room_id"
   end
 
+  add_index "event_templates", ["room_id"], name: "index_event_templates_on_room_id", using: :btree
   add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
-
-  create_table "event_templates_rooms", force: true do |t|
-    t.integer "event_template_id"
-    t.integer "room_id"
-  end
 
   create_table "events", force: true do |t|
     t.string   "name"
-    t.text     "description",       limit: 255
+    t.text     "description"
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
+    t.boolean  "approved"
     t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
-    t.boolean  "approved"
     t.date     "start_date"
     t.time     "start_time"
     t.date     "end_date"
     t.time     "end_time"
   end
 
-  add_index "events", ["room_id"], name: "index_events_on_room_id"
-  add_index "events", ["user_id"], name: "index_events_on_user_id"
+  add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "events_rooms", force: true do |t|
     t.integer "event_id"
@@ -127,8 +130,8 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.string   "status"
   end
 
-  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id"
-  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id"
+  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
+  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: ""
@@ -146,7 +149,7 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
