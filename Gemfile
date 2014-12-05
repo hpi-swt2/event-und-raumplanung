@@ -113,5 +113,6 @@ group :test, :development  do
 	gem 'guard-rspec'
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
+	gem 'rack_session_access'
 end
 
