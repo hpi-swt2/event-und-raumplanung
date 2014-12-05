@@ -1,5 +1,5 @@
 <div class="col-lg-8">
-  <%= form_for @task, :html => { :class => "form-horizontal task edit-task" } do |f| %>
+  <%= form_for @task, :html => { :class => "form-horizontal task edit-task", :multipart => true } do |f| %>
     <% if @task.errors.any? %>
       <div id="error_expl" class="panel panel-danger">
         <div class="panel-heading">
@@ -54,8 +54,15 @@
         <%= error_span(@task[:done]) %>
       </div>
     <% end %>
+    <div class="control-group">
+      <%= f.label :uploads, :class => 'control-label' %>
+        <div class="controls">
+          <%= file_field_tag "uploads[]", type: :file, multiple: true %>
+        </div>
+    </div>
 
-    <h4><%= t('.attachments') %></h4>
+
+        <h4><%= t('.attachments') %></h4>
       <ul class="list-group" data-bind="foreach: attachments">
         <a class="list-group-item" style="width:50%; display: inline-block" data-bind="text: title, attr: { href: url }"></a>
         <button class="btn btn-danger" data-bind="click: $parent.deleteAttachment">Delete</button>

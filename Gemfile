@@ -92,6 +92,8 @@ gem 'will_paginate-bootstrap'
 
 gem 'date_time_attribute'
 
+gem 'paperclip', '~> 4.2'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation

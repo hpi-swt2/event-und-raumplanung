@@ -17,7 +17,16 @@
   <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
   <dd><%= @task.done %></dd>
 </dl>
-
+<dl>
+    <h2>Uploads</h2>
+    <% if @task.uploads.count() > 0 %>
+        <% @task.uploads.each do |upload| %>
+            <%= link_to upload.file_file_name, "../files/" + upload.id.to_s + "/" + upload.file_file_name , :class => 'list-group-item' %>
+        <% end %>
+    <% else %>
+        <%= t('tasks.attachments.none') %>
+    <% end %>
+</dl>
 <dl>
   <h2>Attachments</h2>
     <% if @task.attachments.count() > 0 %>
@@ -25,7 +34,7 @@
         <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
       <% end %>
     <% else %>
-      <%= t("tasks.attachments.none") %>
+      <%= t('tasks.attachments.none') %>
     <% end %>
 </dl>
 <%= link_to t('.back', :default => t("helpers.links.back")),
