@@ -19,11 +19,11 @@
         </td>
         <td>
         	<% event.bookings.each do |booking| %>
-            <%= link_to booking.name, booking_path(booking) %>, <%= booking.description %>
+            <%= link_to booking.name, booking_path(booking) %>,
+            <%= booking.description %>
             <br>
-            <%= booking.start.strftime '%A, %d/%m/%y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>,
-
-       			<%= link_to booking.room.name, booking.room %>
+            <%= timeslot_with_date_as_string(booking) %>,
+       			<%= link_to booking.room.name, booking.room unless booking.room.nil?%>
             <% if event.bookings.last != booking %>
         		  <hr style="margin:0; padding:0;">
             <% end %>  
@@ -57,17 +57,18 @@
 <table class="table table-striped">
   <tbody>
     <% @bookings.each do |booking| %>
-      <% if booking.event.status == 'approved' %>
+      <% if !booking.event.nil? and booking.event.status == 'approved' %>
         <% bookings_exist = true %>
         <tr>
           <td>
-          	<%= link_to booking.name, booking_path(booking) %>
-            Max Mustermann, <%= link_to booking.event.name, event_path(booking.event) %>),
+          	<%= link_to booking.name, booking_path(booking) %>,
+            <%= 'User ' + booking.event.user_id.to_s %>,
+            <%= link_to booking.event.name, event_path(booking.event) %>,
             <%= booking.event.description %>,
           	<%= booking.description %>
             <br>
-            <%= booking.start.strftime '%H:%M' %> - <%=booking.end.strftime '%H:%M' %>,
-            <%= link_to booking.room.name, booking.room %>
+            <%= timeslot_as_string(booking) %>,
+            <%= link_to booking.room.name, booking.room unless booking.room.nil? %>
             (<%= booking.event.participant_count %>)
           </td>
         </tr>
