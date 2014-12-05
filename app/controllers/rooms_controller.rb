@@ -3,6 +3,7 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_room, only: [:show, :edit, :update, :destroy, :details, :list_events]
   before_action :set_all_properties, only: [:edit, :new]
+  before_action :set_equipment, only: [:edit, :new, :update]
 
   # GET /rooms
   # GET /rooms.json
@@ -19,7 +20,6 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   def new
     @room = Room.new
-    @available_equipment = Equipment.all.where(room_id: nil).group(:category).count
     authorize! :new, @room
   end
 
@@ -56,9 +56,6 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1/edit
   def edit
-    @available_equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
-      nil, @room.id).group(:category).count
-    @assigned_equipment = Equipment.all.where("room_id = '?'", @room.id).group(:category).count
     authorize! :edit, @room
   end
 
@@ -89,14 +86,14 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1.json
   def update
     authorize! :update, @room
-    equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
-      nil, @room.id).group(:category).count
-    assigned_equipment = Equipment.all.where("room_id = '?'", @room.id).group(:category).count
-    equipment.each do |category, count|
+    #equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
+    #  nil, @room.id).group(:category).count
+    #assigned_equipment = Equipment.all.where(room_id: @room.id).group(:category).count
+    @available_equipment.each do |category, count|
       key = category+'_equipment_count'
       count = params[key]
-      if assigned_equipment[category] != nil
-        count = count.to_i - assigned_equipment[category]
+      if @assigned_equipment[category] != nil
+        count = count.to_i - @assigned_equipment[category]
       else
         count = count.to_i
       end
@@ -150,6 +147,18 @@ class RoomsController < ApplicationController
 
     def set_all_properties
       @properties = RoomProperty.all
+    end
+    
+    def set_equipment
+      if @room
+        @available_equipment = Equipment.all.where("room_id IS ? or room_id = '?'", 
+          nil, @room.id).group(:category).count
+        @assigned_equipment = Equipment.all.where(room_id: @room.id).group(:category).count
+      else
+        @available_equipment = Equipment.all.where("room_id IS ?", 
+          nil).group(:category).count
+        @assigned_equipment = {}
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
