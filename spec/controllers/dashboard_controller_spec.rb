@@ -26,14 +26,12 @@ RSpec.describe DashboardController, type: :controller do
 
   describe "GET index" do
     it "assigns upcoming event to @events" do
-      pending
       event = Event.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:events)).to eq([event])
     end
 
     it "assigns max 5 upcoming events as @events" do
-      pending
       6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s) }
       get :index, {}, valid_session
       expect(assigns(:events).size).to eq(5)
