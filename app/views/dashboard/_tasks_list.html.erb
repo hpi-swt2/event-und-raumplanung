@@ -3,40 +3,52 @@
 		<h3 class="panel-title"><%= t('dashboard.my_tasks') %></h3>
 	</div>
 	<div class="panel-body">
-		<% my_accepted_events.each do |event| %>
-			<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
-			<ul class="list-unstyled task-list-list">
-				<% my_accepted_tasks.where(event_id: event.id).each do |task| %>
-					<li>
-	         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>">
-	        				<%= link_to task.name, task_path(task) %>
-	        			</input>
-	        		</li>
-	        	<% end %>
-			</ul>
+		<% unless my_accepted_events.blank? %>
+			<% my_accepted_events.each do |event| %>
+				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
+				<ul class="list-unstyled task-list-list">
+					<% my_accepted_tasks.where(event_id: event.id).each do |task| %>
+						<li>
+		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>">
+		        				<%= link_to task.name, task_path(task) %>
+		        			</input>
+		        		</li>
+		        	<% end %>
+				</ul>
+			<% end %>
+		<% else %>
+			<p>
+				<%= t('dashboard.no_tasks') %>
+			</p>
 		<% end %>
 	</div>
 	<div class="panel-body tasks-pending-panel-body">
 		<h4><%= t('dashboard.pending_tasks') %></h4> 
-		<% my_pending_events.each do |event| %>
-			<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
-			<table class="pending-tasks-table">
-				<% my_pending_tasks.where(event_id: event.id).each do |task| %>
-					<tr>
-						<td>
-	        				<%= link_to task.name, task_path(task) %>
-	        			</td>
-	        			<td>
-	        				<button class="btn btn-xs btn-success task-action" data-path="<%= accept_task_path(task) %>" >
-	        					<span class="glyphicon glyphicon-ok"></span>
-	        				</button>
-	        				<button class="btn btn-xs btn-danger task-action" data-path="<%= decline_task_path(task) %>" >
-	        					<span class="glyphicon glyphicon-remove"></span>
-	        				</button>
-	        			</td>
-	        		</tr>
-	        	<% end %>
-			</table>
+		<% unless my_pending_events.blank? %>
+			<% my_pending_events.each do |event| %>
+				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
+				<table class="pending-tasks-table">
+					<% my_pending_tasks.where(event_id: event.id).each do |task| %>
+						<tr>
+							<td>
+		        				<%= link_to task.name, task_path(task) %>
+		        			</td>
+		        			<td>
+		        				<button class="btn btn-xs btn-success task-action" data-path="<%= accept_task_path(task) %>" >
+		        					<span class="glyphicon glyphicon-ok"></span>
+		        				</button>
+		        				<button class="btn btn-xs btn-danger task-action" data-path="<%= decline_task_path(task) %>" >
+		        					<span class="glyphicon glyphicon-remove"></span>
+		        				</button>
+		        			</td>
+		        		</tr>
+		        	<% end %>
+				</table>
+			<% end %>
+		<% else %>
+			<p>
+				<%= t('dashboard.no_pending_tasks') %>
+			</p>
 		<% end %>
 	</div>
 </div>

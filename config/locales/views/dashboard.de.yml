@@ -5,3 +5,5 @@ de:
     no_events: Keine anstehenden Events
     my_tasks: Meine Aufgaben
     pending_tasks: Ausstehende Aufgaben
+    no_tasks: Sie haben keine Aufgaben.
+    no_pending_tasks: Sie haben keine ausstehenden Aufgaben.
