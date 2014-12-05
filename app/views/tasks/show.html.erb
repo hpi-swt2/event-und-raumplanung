@@ -29,6 +29,15 @@
     <% end %>
 </dl>
 
+<div class="comments">
+  <h2>Kommentare</h2>
+
+
+  <% Comments.where(task_id: @task.name).each do |comment| %>
+    <%= render :partial => 'comments_container', :locals => {:comment => comment} %>
+  <% end %>
+</div>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               tasks_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
