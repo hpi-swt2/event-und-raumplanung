@@ -3,7 +3,9 @@
 de:
   activerecord:
     models:
-      room: 'Raum'
+      room:
+        one: 'Raum'
+        other: 'Räume'
     attributes:
       room:
         name: 'Name'

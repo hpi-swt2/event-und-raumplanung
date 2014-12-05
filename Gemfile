@@ -30,6 +30,7 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -49,7 +50,7 @@ gem 'rack-openid' # https://github.com/josh/rack-openid
 gem 'rspec-rails'
 
 # fixtures replacement, see: https://github.com/thoughtbot/factory_girl_rails
-gem 'factory_girl_rails'
+gem 'factory_girl_rails', :require => false
 
 # better error pages, see: https://github.com/charliesome/better_errors
 gem 'better_errors', group: :development
@@ -87,6 +88,16 @@ gem 'mocha'
 
 gem 'fullcalendar-rails', '~> 2.0.2.0'
 gem 'momentjs-rails'
+
+gem 'filterrific'
+
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
+gem 'date_time_attribute'
+
+gem 'ranked-model'
+
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
 # gem simple-navigation
@@ -107,4 +118,6 @@ group :test, :development  do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
+	gem 'rails-dev-tweaks'
 end
+

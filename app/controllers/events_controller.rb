@@ -1,16 +1,13 @@
 class EventsController < ApplicationController
+
   before_action :authenticate_user!
-  before_action :set_event, :check_ownership, only: [:show, :edit, :update, :destroy, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
+  before_action :set_return_url, only: [:show, :new, :edit]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
-
-  def current_user
-    unless session[:user_id]
-      @current_user = User.new email: 'test@test.de' #Nur solange es keine Authentifikation gibt frag Micha
-      session[:user_id] = @current_user.id
-    end
-    @current_user ||= User.find(session[:user_id])
+  def current_user_id
+    current_user.id
   end
 
   # GET /events/1/new_event_template
@@ -18,28 +15,73 @@ class EventsController < ApplicationController
     @event_template = EventTemplate.new
     @event_template.name = @event.name
     @event_template.description = @event.description
-    @event_template.start_date = @event.start_date
-    @event_template.end_date = @event.end_date
-    @event_template.start_time = @event.start_time
-    @event_template.end_time = @event.end_time
-    @event_template.user_id = current_user.id
+    @event_template.participant_count = @event.participant_count
+    @event_template.rooms = @event.rooms
     render "event_templates/new"
   end
 
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+
+     
+     @filterrific = Filterrific.new(
+      Event,
+      params[:filterrific] || session[:filterrific_events])
+      @filterrific.select_options =   {
+        sorted_by: Event.options_for_sorted_by
+      }
+      @filterrific.own = if @filterrific.own == 1
+          current_user_id
+        else
+          nil
+        end
+      @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
+      @events = Event.filterrific_find(@filterrific).page(params[:page])
+
+      session[:filterrific_events] = @filterrific.to_hash
+
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_events] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
+  end
+
+  def approve
+    puts "approve"
+    @event.update(approved: true)
+    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def decline
+    puts "decline"
+    @event.update(approved: false)
+    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   # GET /events/1
   # GET /events/1.json
   def show
+    @user = User.find(@event.user_id).identity_url
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
   def new
     @event = Event.new
+    time = Time.new.getlocal
+    time -= time.sec
+    time += time.min % 15
+    @event.starts_at = time
+    @event.ends_at = (time+(60*60))
   end
 
   # GET /events/1/edit
@@ -51,8 +93,7 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(event_params)
-    @event.user_id = current_user.id
-
+    @event.user_id = current_user_id
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
@@ -67,13 +108,13 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    respond_to do |format|
+      respond_to do |format|
       if @event.update(event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
-        format.json { render :show, status: :ok, location: @event }
+       # format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+       # format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -94,16 +135,13 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
     end
 
-    def owner?(event=@event)
-        event.user_id == current_user.id
-    end
-
-    def check_ownership
-        raise  User::NotAuthorized unless owner?
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :start_date, :end_date, :start_time, :end_time, :is_private, rooms:[:id])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
     end
+
+    def set_return_url
+      @return_url = params[:return_url]
+    end
+
 end

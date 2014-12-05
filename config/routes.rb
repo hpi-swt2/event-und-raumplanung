@@ -1,6 +1,23 @@
 Rails.application.routes.draw do
 
-  resources :groups
+  resources :groups do
+    member do
+      get 'manage_rooms'
+      get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
+      get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      get 'assign_user/:user_id', :action => 'assign_user', :as => 'assign_user'
+      get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
+    end
+  end
+
+  get 'events_approval/index'
+  get 'events_approval/' => 'events_approval#index'
+  post 'events/:id/approve' => 'events#approve', as: "approve_event"
+  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+  get 'rooms/list'
+  get 'rooms/:id/details' => 'rooms#details'
+  post 'rooms/list'
+  post 'rooms/:id' => 'rooms#details'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
@@ -10,7 +27,9 @@ Rails.application.routes.draw do
 
   resources :rooms
 
-  resources :tasks
+  resources :tasks do
+    post :update_task_order, on: :collection
+  end
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
@@ -19,21 +38,27 @@ Rails.application.routes.draw do
 
   resources :equipment
 
-  resources :events
+  resources :events do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :maps
 
   resources :event_templates, :path => "templates"
+  resources :event_templates do
+    get :reset_filterrific, on: :collection
+  end
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-
   # You can have the root of your site routed with "root"
-  root 'events#index'
-
+  root 'dashboard#index'
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
