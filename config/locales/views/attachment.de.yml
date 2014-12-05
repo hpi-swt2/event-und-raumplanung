@@ -2,8 +2,8 @@ de:
   tasks:
     attachments:
       none: Keine Anhänge
-    form:
       add_attachment: 'Anhang hinzufügen'
+    form:
       attachments: 'Anhänge'
     show:
       attachments: 'Anhänge'

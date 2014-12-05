@@ -7,6 +7,7 @@ RSpec.describe "events/show", :type => :view do
                                           starts_at: DateTime.new(2050, 05, 03, 15, 00),
                                           ends_at:  DateTime.new(2050,05, 04, 16,45),
                                           user_id: 42, is_private: true))
+    @tasks = []
   end
 
   it "renders attributes in <p>" do

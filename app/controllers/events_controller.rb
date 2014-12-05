@@ -71,6 +71,7 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
