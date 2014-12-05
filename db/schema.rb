@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126141428) do
+ActiveRecord::Schema.define(version: 20141126122452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,17 +53,19 @@ ActiveRecord::Schema.define(version: 20141126141428) do
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
-    t.text     "description"    t.datetime "created_at"
+    t.text     "description"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "participant_count"
+    t.integer  "room_id"
   end
 
-  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id"
-  create_table "event_templates_rooms", force: true do |t|
-    t.integer "event_template_id"
-    t.integer "room_id"
-  end
+  add_index "event_templates", ["room_id"], name: "index_event_templates_on_room_id", using: :btree
+  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "name"
@@ -74,9 +76,10 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
-    t.string   "status",                        default: "In Bearbeitung"    t.datetime "starts_at"
-    t.datetime "ends_at"
     t.boolean  "approved"
+    t.string   "status",            default: "In Bearbeitung"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.date     "start_date"
     t.time     "start_time"
     t.date     "end_date"

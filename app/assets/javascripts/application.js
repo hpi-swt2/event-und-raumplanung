@@ -18,3 +18,4 @@
 //= require_tree .
 //= require filterrific/filterrific-jquery
 //= require moment
+//= require fullcalendar
