@@ -10,6 +10,8 @@ de:
       assigned: zugewiesen
       unassigned: entfernt
       user_overview: Benutzerübersicht
+      member: Mitglied
+      leader: Gruppenleiter
     edit:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen

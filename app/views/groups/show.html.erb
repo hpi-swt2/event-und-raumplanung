@@ -2,7 +2,7 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
 </div>
-
+<h1><%= current_user.memberships.select{ |group_id| group_id == @group.id }.inspect %></h1>
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @group.name %></dd>
@@ -13,8 +13,8 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= User.human_attribute_name(:identity_url) %></th>
-      <th><%=t '.status', :default => t("helpers.status") %></th>
+      <th><%= User.human_attribute_name(:identity_url) %> </th>
+      <th><%=t '.status', :default => t("helpers.status") %> </th>
     </tr>
   </thead>
 
@@ -24,11 +24,23 @@
         <td><%= user.identity_url %></td>
         <td>
           <% if @group.users.include? user %>
-            <%=t '.assigned', :default => t("groups.show.assigned") %>
+            <!-- <%=t '.assigned', :default => t("groups.show.assigned") %> -->
+            <% if user.is_leader_of_group(@group.id) %>
+              <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
+            <% else %>
+              <span class="label label-default"><%=t '.member', :default => t("groups.show.member") %></span>
+            <% end %>
           <% else %>
-            <%=t '.unassigned', :default => t("groups.show.unassigned") %>
+            <!-- <%=t '.unassigned', :default => t("groups.show.unassigned") %> -->
           <% end %>
         </td>
+
+        <td>
+        <% if @group.users.include? user %>
+          
+        <% else %>
+          <td> </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
