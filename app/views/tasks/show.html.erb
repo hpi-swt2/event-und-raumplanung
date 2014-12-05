@@ -19,7 +19,7 @@
 </dl>
 
 <dl>
-  <h2>Attachments</h2>
+  <h2><%= t('.attachments') %></h2>
     <% if @task.attachments.count() > 0 %>
       <% @task.attachments.each do |attachment| %>
         <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>

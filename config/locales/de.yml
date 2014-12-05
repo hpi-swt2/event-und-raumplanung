@@ -210,11 +210,6 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
-    attachments:
-      none: Keine Anhänge
-    form:
-      add_attachment: 'Anhang hinzufügen'
-      attachments: 'Anhänge'
 
   dashboard:
     title: Dashboard
