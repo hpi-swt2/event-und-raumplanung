@@ -85,20 +85,24 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def checkVacancy() 
+  def checkVacancy(id, rooms) 
+    logger.info id
     logger.info self.starts_at 
-    logger.info self.ends_at   
-    events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at}).where.not(:id => self.id)
+    logger.info self.ends_at  
+    logger.info rooms 
+    rooms = rooms.collect{|i| i.to_i}
+    events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at})
     if events.empty?
+      logger.info "XX"
       return true
     else 
-      rooms_count = self.rooms.size
+      rooms_count = rooms.size
       events.each do | event |
-        if (self.rooms - event.rooms).size < rooms_count
-          return false
+        if (rooms - event.rooms.pluck(:id)).size < rooms_count
+           return false
         end 
       end 
     end
-    return true 
+    return true  
   end  
 end

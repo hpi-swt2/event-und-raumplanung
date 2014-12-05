@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
+
   resources :events do
     get :reset_filterrific, on: :collection
   end
@@ -51,6 +53,7 @@ Rails.application.routes.draw do
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
   patch 'events/:id/sugguest' => 'events#create_suggestion', as: :create_suggestion
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

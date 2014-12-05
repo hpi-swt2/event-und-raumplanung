@@ -1,12 +1,24 @@
 class EventsController < ApplicationController
-
+  skip_filter :verify_authenticity_token, :check_vacancy
+ # skip_filter :authenticate_user, :check_vacancy
+  skip_before_filter :authenticate_user!
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
-
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy]
+  after_filter :flash_to_headers, :only => :check_vacancy
+  
   def current_user_id
     current_user.id
+  end
+
+   def flash_to_headers
+    if request.xhr?
+      #avoiding XSS injections via flash
+      flash_json = Hash[flash.map{|k,v| [k,ERB::Util.h(v)] }].to_json
+      response.headers['X-Flash-Messages'] = flash_json
+      flash.discard
+    end
   end
 
   # GET /events/1/new_event_template
@@ -66,6 +78,23 @@ class EventsController < ApplicationController
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
+  def check_vacancy
+    checked_params = event_params  
+
+    @event = Event.new(event_params.except(:event_id))
+    @event.user_id = current_user_id
+    
+    if @event.checkVacancy event_params[:event_id], event_params[:room_ids]
+      flash[:error] = "Vacant"
+    else
+      flash[:error] = "Not available"
+    end 
+    logger.info @event.inspect
+     respond_to do |format|
+       format.json { render :json => {status: false}} 
+  end 
+    #render :json => {status: false} 
+  end 
   # GET /events/1
   # GET /events/1.json
   def show
@@ -158,6 +187,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
     end
 end
