@@ -10,13 +10,13 @@ feature 'Dashboard' do
 		end
 
 		scenario 'click on events name redirects to events page' do
-      pending
+			skip
 			click_link event.name
 			current_path.should == event_path(event) 
 		end
 
 		scenario 'click on tasks name redirects to tasks page' do
-      pending
+			skip
 			click_link task.name
 			current_path.should == task_path(task)
 		end

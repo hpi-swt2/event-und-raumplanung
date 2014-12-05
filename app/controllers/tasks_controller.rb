@@ -113,7 +113,7 @@ class TasksController < ApplicationController
 
     def set_return_url
       @return_url = tasks_path
-      @return_url = root_path if URI(request.referer).path == root_path
+      @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
