@@ -135,6 +135,13 @@ RSpec.describe TasksController, type: :controller do
       xhr :put, :update, id: task, task: { done: false }
       expect(assigns(:task).done).to be false
     end
+
+    it "sets the task position" do
+      firstTask = create(:task)
+      secondTask = create(:task)
+      xhr :post, :update_task_order, task: { task_id: secondTask.id, task_order_position: 0 }
+      expect(Task.rank(:task_order).first).to eq secondTask
+    end
   
     it "destroys a task" do
       taskToDelete = create(:task)

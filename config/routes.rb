@@ -27,7 +27,9 @@ Rails.application.routes.draw do
 
   resources :rooms
 
-  resources :tasks
+  resources :tasks do
+    post :update_task_order, on: :collection
+  end
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
