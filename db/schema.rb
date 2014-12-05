@@ -79,6 +79,11 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
+    t.boolean  "approved"
+    t.date     "start_date"
+    t.time     "start_time"
+    t.date     "end_date"
+    t.time     "end_time"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -95,10 +100,16 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.datetime "updated_at"
   end
 
+  create_table "groups_users", id: false, force: true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
+  end
+
   create_table "room_properties", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "room_id"
   end
 
   create_table "room_properties_rooms", force: true do |t|
@@ -111,7 +122,10 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
+
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
