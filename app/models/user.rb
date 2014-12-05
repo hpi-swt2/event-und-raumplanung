@@ -15,6 +15,9 @@ class User < ActiveRecord::Base
   def self.openid_required_fields
     ["http://axschema.org/contact/email"]
   end 
+  def is_leader_of_group (groupID)
+    return self.memberships.select{|membership| membership.group_id == groupID}.first.isLeader
+  end
     
   def openid_fields=(fields)
     logger.info "OPENID FIELDS: #{fields.inspect}"
