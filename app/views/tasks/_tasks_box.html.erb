@@ -4,8 +4,9 @@
     <tr>
       <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
       <th class="col-sm-1"><%= model_class.human_attribute_name(:attachments) %></th>
-      <th class="col-sm-8"><%= model_class.human_attribute_name(:name) %></th>
-      <th class="col-sm-2"></th>
+      <th class="col-sm-6"><%= model_class.human_attribute_name(:name) %></th>
+      <th class="col-sm-2"><%= model_class.human_attribute_name(:user) %></th>
+      <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
           <td><%= task.attachments.count() > 0 ? "Yes" : "No" %></td>
           <td><%= link_to task.name, task_path(task) %></td>
           <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (get_email task.user_id) %></td>
+          <td><%= task.deadline %></td>
         </tr>
       <% end %>
   </tbody>

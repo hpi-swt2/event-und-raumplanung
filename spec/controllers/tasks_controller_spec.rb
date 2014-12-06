@@ -6,7 +6,7 @@ describe TasksController, type: :controller do
     let(:user) { FactoryGirl.create(:user) }
     let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, user_id: user.id }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
-
+    
     before(:each) { sign_in user }
 
     it 'should change tasks status of assigned task to accepted' do

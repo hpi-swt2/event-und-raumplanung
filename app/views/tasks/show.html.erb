@@ -12,6 +12,10 @@
   <dd><%= @task.event_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
   <dd><%= @task.user_id %></dd>
+  <% if  @task.deadline%> 
+  <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
+  <dd><%= @task.deadline.strftime("%d.%m.%Y") %></dd>
+  <% end %>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
   <dd class="<%= @task.status %>"><%= t("tasks.status." + @task.status)%></dd>
   <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
