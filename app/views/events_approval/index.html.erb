@@ -22,7 +22,7 @@
     <% @events.each do |event| %>
       <tr>
         <td>
-          Max Mustermann requests
+          User <%= event.user_id.to_s %> requests
           <br>
         	<%= link_to event.name, event_path(event) %> -
         	<%= event.description %>
@@ -73,7 +73,7 @@
         <tr>
           <td>
           	<%= link_to booking.name, booking_path(booking) %>,
-            <%= 'User ' + booking.event.user_id.to_s %>,
+            User <%= booking.event.user_id.to_s %>,
             <%= link_to booking.event.name, event_path(booking.event) %>,
             <%= booking.event.description %>,
           	<%= booking.description %>
