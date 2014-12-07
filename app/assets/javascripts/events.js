@@ -37,13 +37,16 @@ function checkVacancy(e) {
 			dataType: 'html',
 			beforeSend: function(xhr) {
 			 	xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));}, 
-			// success:(function(data){
-			// 	var data = JSON.parse(data);
+			 success:(function(data){
+			 	var btn = $("#submit_suggestion")
+			 	btn.before("<div class='alert fade in alert-success'>Erfolgreich abgemeldet.</div>");
+			 //	var data = JSON.parse(data);
 			// 	if(data['status']){ 
 			// 		alert('true'); 
 			// 	}
 			// 	else 
 			// 		alert('false');
+		})
 			// })
 		}); 
 }; 

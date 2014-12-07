@@ -84,16 +84,19 @@ class EventsController < ApplicationController
     @event = Event.new(event_params.except(:event_id))
     @event.user_id = current_user_id
     
-    if @event.checkVacancy event_params[:event_id], event_params[:room_ids]
-      flash[:error] = "Vacant"
-    else
-      flash[:error] = "Not available"
+    conflicting_events = @event.checkVacancy event_params[:event_id], event_params[:room_ids]
+
+    respond_to do |format|
+      if conflicting_events.empty? 
+        flash[:error] = "Vacant"
+        format.json { render :json => {status: true}}
+      else 
+        flash[:error] = "Not available"
+        msg = Hash[conflicting_events.map { |event| [event.id, {"starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
+        msg[:status]= false
+        format.json { render :json => msg}
+      end 
     end 
-    logger.info @event.inspect
-     respond_to do |format|
-       format.json { render :json => {status: false}} 
-  end 
-    #render :json => {status: false} 
   end 
   # GET /events/1
   # GET /events/1.json
