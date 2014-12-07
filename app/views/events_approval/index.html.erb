@@ -1,5 +1,16 @@
 <h1>Approve Events</h1>
 
+<% if not @user_is_admin %>
+  <div style="border-color:#FF0000; border-width:2px; border-style:solid; padding:4px">
+    To approve and decline events, you need to be an admin. Make yourself an admin by replacing <br>
+    identity_url: http://example.com/test.admin <br>
+    with your identity url <br>
+    identity_url: https://openid.hpi.uni-potsdam.de/user/forename.surname <br>
+    in the config file <br>
+    event-und-raumplanung/config/config.yml <br>
+  </div>
+<%end%>
+
 <table class="table table-striped">
   <thead>
     <tr>
