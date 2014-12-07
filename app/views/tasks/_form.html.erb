@@ -1,5 +1,5 @@
 <div class="col-lg-8">
-  <%= form_for @task, :html => { :class => 'form-horizontal task edit-task', :multipart => true } do |f| %>
+  <%= form_for @task, :html => { :class => 'form-horizontal task edit-task task_form', :multipart => true } do |f| %>
     <% if @task.errors.any? %>
       <div id="error_expl" class="panel panel-danger">
         <div class="panel-heading">
@@ -54,53 +54,53 @@
         <%= error_span(@task[:done]) %>
       </div>
     <% end %>
-    <div class="control-group">
-        <%= f.label :uploads, :class => 'control-label' %>
-        <div class="controls">
-            <%= file_field_tag "uploads[]", type: :file, multiple: true %>
-        </div>
-    </div>
 
     <h3><%= t('.attachments') %></h3>
     <h4>Files</h4>
+    <div class="control-group" id="upload_div">
+        <%= f.label :uploads, :class => 'control-label' %>
+        <div class="controls">
+            <%= file_field_tag "uploads[]", type: :file, multiple: true, class: "btn btn-default btn-file" %>
+        </div>
+    </div>
+
+
         <ul class="list-group">
             <% if @task.uploads.count() > 0 %>
                 <% @task.uploads.each do |upload| %>
-                    <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name) , :class => 'list-group-item', :style => "width:50%; display: inline-block;" %>
+                    <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name) , :class => 'list-group-item', :style => "width:90%; display: inline-block;" %>
                     <%= link_to 'Delete', upload, :class => 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %>
                 <% end %>
             <% end %>
         </ul>
+  <% end %>
     <h4>Links</h4>
+        <form id="attachment_form" data-bind="submit: addAttachment">
+            <div class="control-group">
+                <label class="control-label" for="attachment_title">Titel</label>
+                <div class="controls">
+                    <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
+                </div>
+            </div>
+            <div class="control-group">
+            <label class="control-label" for="attachment_url">URL</label>
+                <div class="controls">
+                    <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
+                </div>
+            </div>
+            <div class="control-group">
+                <input type="submit" value="<%= t('.add_attachment') %>" class="btn" id="attachment_form_submit" data-bind="enable: isInputValid"/>
+            </div>
+        </form>
+
         <ul class="list-group" data-bind="foreach: attachments">
-            <a class="list-group-item" style="width:50%; display: inline-block" data-bind="text: title, attr: { href: url }"></a>
+            <a class="list-group-item" style="width:90%; display: inline-block" data-bind="text: title, attr: { href: url }"></a>
             <button class="btn btn-danger" data-bind="click: $parent.deleteAttachment">Delete</button>
             <input name="task[attachments_attributes][][title]" type="hidden" data-bind="value: title" />
             <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
         </ul>
 
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= submit_tag t('submit'), class: 'btn btn-primary form_submit task_form_submit' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
-  <% end %>
-</div>
-
-<div class="col-lg-2">
-  <form data-bind="submit: addAttachment">
-    <div class="control-group">
-      <label class="control-label" for="attachment_title">Titel</label>
-      <div class="controls">
-        <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
-      </div>
-    </div>    
-    <div class="control-group">
-      <label class="control-label" for="attachment_url">URL</label>
-      <div class="controls">
-        <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
-      </div>
-    </div>
-    <div class="control-group">
-      <input type="submit" value="<%= t('.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
-    </div>
-  </form>
 </div>

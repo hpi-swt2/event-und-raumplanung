@@ -14,3 +14,17 @@
 .declined {
     color: red;
 }
+
+#attachment_form{
+    margin-top: 10px;
+    margin-bottom:  20px;
+}
+
+#attachment_form_submit {
+    margin-top: 10px;
+}
+
+#upload_div {
+    margin-top: 10px;
+    margin-bottom:  20px;
+}
