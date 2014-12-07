@@ -16,7 +16,11 @@
           <td><%= task.attachments.count() > 0 ? "Yes" : "No" %></td>
           <td><%= link_to task.name, task_path(task) %></td>
           <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (get_email task.user_id) %></td>
-          <td><%= task.deadline %></td>
+          <% if  task.deadline %> 
+            <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
+          <% else %>
+           <td></td>
+          <% end %>
         </tr>
       <% end %>
   </tbody>

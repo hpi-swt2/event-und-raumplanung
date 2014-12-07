@@ -109,10 +109,10 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done)
+      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline)
     end
     def task_params_with_attachments
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline, :attachments_attributes => [ :title, :url ])
     end
     def event_id
       if params[:event]
