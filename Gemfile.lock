@@ -85,6 +85,7 @@ GEM
     filterrific (1.4.2)
       rails (>= 3.1.0)
     formatador (0.2.5)
+    fullcalendar-rails (2.0.2.0)
     guard (2.8.2)
       formatador (>= 0.2.4)
       listen (~> 2.7)
@@ -123,6 +124,8 @@ GEM
     minitest (5.4.2)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
+    momentjs-rails (2.8.3)
+      railties (>= 3.1)
     multi_json (1.10.1)
     newrelic_rpm (3.9.5.251)
     nokogiri (1.6.4.1)
@@ -259,6 +262,7 @@ DEPENDENCIES
   devise
   devise_openid_authenticatable
   factory_girl_rails
+  fullcalendar-rails (~> 2.0.2.0)
   filterrific
   guard-rspec
   jbuilder (~> 2.0)
@@ -266,6 +270,7 @@ DEPENDENCIES
   jquery-ui-rails
   knockoutjs-rails
   mocha
+  momentjs-rails
   newrelic_rpm
   pg
   pry
