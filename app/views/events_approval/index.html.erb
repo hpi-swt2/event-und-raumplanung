@@ -34,7 +34,7 @@
             <%= booking.description %>
             <br>
             <%= timeslot_with_date_as_string(booking) %>,
-       			<%= link_to booking.room.name, booking.room unless booking.room.nil?%>
+       			<%= link_to booking.room.name, room_events_path(booking.room) unless booking.room.nil?%>
             <% if event.bookings.last != booking %>
         		  <hr style="margin:0; padding:0;">
             <% end %>  
@@ -79,7 +79,7 @@
           	<%= booking.description %>
             <br>
             <%= timeslot_as_string(booking) %>,
-            <%= link_to booking.room.name, booking.room unless booking.room.nil? %>
+            <%= link_to booking.room.name, room_events_path(booking.room) unless booking.room.nil? %>
             (<%= booking.event.participant_count %>)
           </td>
         </tr>
