@@ -3,9 +3,9 @@ class EventsController < ApplicationController
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template, :new_event_suggestion]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion]
   after_filter :flash_to_headers, :only => :check_vacancy
   
   def current_user_id
@@ -29,6 +29,14 @@ class EventsController < ApplicationController
     @event_template.participant_count = @event.participant_count
     @event_template.rooms = @event.rooms
     render "event_templates/new"
+  end
+
+  def new_event_suggestion
+    @event_suggestion = EventSuggestion.new
+    @event_suggestion.starts_at = @event.starts_at
+    @event_suggestion.ends_at = @event.ends_at
+    @event_suggestion.rooms = @event.rooms
+    render "event_suggestions/new"
   end
 
   # GET /events

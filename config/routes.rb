@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :event_suggestions
+
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
@@ -50,6 +52,7 @@ Rails.application.routes.draw do
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
+  get 'events/:id/new_event_suggestion' => 'events#new_event_suggestion', as: :new_event_suggestion_from_event
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
   patch 'events/:id/sugguest' => 'events#create_suggestion', as: :create_suggestion
