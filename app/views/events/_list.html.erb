@@ -42,13 +42,10 @@
                       :class => 'btn btn-xs btn-danger' %>
         <% end %> 
         <% if can? :sugguest, event%>
-         <%= link_to t('.sugguest', :default => t("helpers.links.sugguest")),
-                      sugguest_event_path(event),
-                      :class => 'btn btn-xs btn-warning' %>
-        <% end %> 
         <%= link_to t('.sugguest', :default => t("helpers.links.sugguest")),
                       new_event_suggestion_from_event_path(event),
                       :class => 'btn btn-xs btn-warning' %>
+                      <% end %> 
         </td>
       </tr>
     <% end %>

@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208100208) do
+ActiveRecord::Schema.define(version: 20141208125025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -52,13 +53,21 @@ ActiveRecord::Schema.define(version: 20141208100208) do
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
   create_table "event_suggestions", force: true do |t|
-    t.string   "starts_at"
-    t.string   "datetime"
-    t.string   "ends_at"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.string   "status"
-    t.integer  "room_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "room_id"
+    t.integer  "user_id"
+  end
+
+  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
+  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
+
+  create_table "event_suggestions_rooms", force: true do |t|
+    t.integer "event_suggestion_id"
+    t.integer "room_id"
   end
 
   create_table "event_templates", force: true do |t|
@@ -86,10 +95,10 @@ ActiveRecord::Schema.define(version: 20141208100208) do
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
+    t.boolean  "approved"
     t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
-    t.boolean  "approved"
     t.date     "start_date"
     t.time     "start_time"
     t.date     "end_date"
@@ -127,7 +136,10 @@ ActiveRecord::Schema.define(version: 20141208100208) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_suggestion_id"
   end
+
+  add_index "rooms", ["event_suggestion_id"], name: "index_rooms_on_event_suggestion_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
