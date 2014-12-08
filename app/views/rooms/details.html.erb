@@ -52,6 +52,56 @@
 		<% end %>
 	</tbody>
 </table>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<% event=Event.find(1)
+   user = User.find(event.user_id).identity_url
+%> <!-- Todo: integrate with calender -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"><%= event.name %></h4>
+      </div>
+      <div class="modal-body">
+        <dl class="dl-horizontal">
+          <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt>
+          <dd><%= link_to event.id, event_path(event) %></dd>
+          <dt><strong><%= model_class.human_attribute_name(:rooms) %>:</strong></dt>
+          <dd><%= concat_rooms(event) %></dd>
+          <dt><strong><%= model_class.human_attribute_name(:participant_count) %>:</strong></dt>
+          <dd><%= event.participant_count %></dd>
+          <dt><strong><%= model_class.human_attribute_name(:starts_at) %>:</strong></dt>
+          <% if event.starts_at %>
+              <dd><%= event.starts_at.strftime("%d.%m.%Y - %H:%M") %></dd>
+          <% end %>
+          <dt><strong><%= model_class.human_attribute_name(:ends_at) %>:</strong></dt>
+          <% if  event.ends_at%>
+              <dd><%= event.ends_at.strftime("%d.%m.%Y - %H:%M") %></dd>
+          <% end %>
+          <dt><strong><%= model_class.human_attribute_name(:user) %>:</strong></dt>
+          <dd><%= user %></dd>
+          <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
+          <dd><%= event.status %></dd>
+        </dl>
+        <form role="form">
+          <div class="form-group">
+            <label for="name">Message for event creator</label>
+            <textarea class="form-control" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <%= link_to "Decline", decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-s' %>
+        <%= link_to "Approve", approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-s' %>
+      </div>
+    </div>
+  </div>
+</div>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
