@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :uploads
+  resources :uploads, :only => [:new, :create, :destroy]
 
   resources :groups do
     member do
