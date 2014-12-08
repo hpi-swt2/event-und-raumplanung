@@ -53,12 +53,10 @@
         <%= error_span(@task[:done]) %>
       </div>
     <% end %>
-  <% end %>
 
     <h3><%= t('.attachments') %></h3>
     <h4>Files</h4>
     <div class="control-group" id="upload_div">
-        <%= f.label :uploads, :class => 'control-label' %>
         <div class="controls">
             <%= file_field_tag "uploads[]", type: :file, multiple: true, class: "btn btn-default btn-file" %>
         </div>
