@@ -59,7 +59,7 @@
     <h4><%= t('tasks.form.files') %></h4>
     <div class="control-group" id="upload_div">
         <div class="controls">
-            <%= file_field_tag "uploads[]", type: :file, multiple: true, class: "btn btn-default btn-file" %>
+            <%= file_field_tag "uploads[]", :type => :file, :multiple => true, :class => 'btn btn-default btn-file' %>
         </div>
     </div>
     <% end %>
