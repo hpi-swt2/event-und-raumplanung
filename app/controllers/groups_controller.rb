@@ -9,7 +9,7 @@ class GroupsController < ApplicationController
   end
 
   def show
-    @users = User.all
+    @users = @group.users
   end
 
   def assign_user
@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
     # Only authorized users can edit groups (ability.rb)
     authorize! :update, Group
 
-    @users = User.all
+    @users = @group.users
   end
 
   def create
@@ -109,7 +109,7 @@ class GroupsController < ApplicationController
     end
 
     def set_user
-      @user = User.find(params[:user_id])
+      @user = User.find_by_email(params["User"]["email"])
     end
 
     def group_params
