@@ -37,7 +37,7 @@
 
 <h4><%= t '.tasks' %></h4>
 <% @event_id = @event.id %>
-<%= render(partial: '/tasks/tasks_box', locals: { tasks: @event.tasks })%>
+<%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks })%>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>

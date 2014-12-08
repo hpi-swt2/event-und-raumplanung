@@ -1,15 +1,15 @@
 <%- model_class = Task -%>
 <% return_url = request.env['PATH_INFO'] %>
 <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
-    <thead>
+  <thead>
     <tr>
-        <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
-        <th class="col-sm-1"></th>
-        <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
-        <th class="col-sm-5"></th>
+      <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
+      <th class="col-sm-1"></th>
+      <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
+      <th class="col-sm-5"></th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     <% tasks.each do |task| %>
         <tr data-item-id=<%= "#{task.id}" %> class="item">
             <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user_id="<%= task.user_id %>"></td>
@@ -20,6 +20,6 @@
             <td class="<%= task.status %> text-right col-sm-5"><%= (task.user_id.blank?) ? t('tasks.status.not_assigned') : (task.user.identity_url) %></td>
         </tr>
     <% end %>
-    </tbody>
+  </tbody>
 </table>
 <%= link_to t('helpers.links.new'), new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>

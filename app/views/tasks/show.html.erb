@@ -11,12 +11,13 @@
   <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
   <dd><%= @task.event_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t("tasks.user.none")  %><% end %></dd>
+  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t('tasks.user.none')  %><% end %></dd>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-  <dd class="<%= @task.status %>"><%= t("tasks.status." + @task.status)%></dd>
+  <dd class="<%= @task.status %>"><%= t('tasks.status.' + @task.status)%></dd>
   <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
   <dd><%= @task.done %></dd>
 </dl>
+
 <dl>
   <h3><%= t('.attachments') %></h3>
   <% if has_attached_items? @task %>
@@ -25,6 +26,8 @@
       <% @task.uploads.each do |upload| %>
           <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item' %>
       <% end %>
+    <% else %>
+      <%= t("tasks.attachments.none") %>
     <% end %>
     <% if @task.attachments.count() > 0 %>
     <h4>Links</h4>
@@ -37,7 +40,7 @@
   <% end %>
 </dl>
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default'  %>
+              @return_url, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_task_path(@task, return_url: request.env['PATH_INFO']), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

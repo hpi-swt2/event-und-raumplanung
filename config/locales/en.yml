@@ -21,18 +21,3 @@
 
 en:
   submit: Submit
-  tasks:
-    status:
-      not_assigned: not assigned
-      pending: pending
-      accepted: accepted
-      declined: declined
-    user:
-      none: None
-    attachments:
-      none: None
-
-  dashboard:
-    title: Dashboard
-    upcoming_events: Next events
-    no_events: No upcoming events

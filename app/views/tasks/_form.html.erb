@@ -16,6 +16,7 @@
         </div>
       </div>
     <% end %>
+
     <div class="control-group">
       <%= f.label :name, :class => 'control-label' %>
       <div class="controls">
@@ -40,7 +41,7 @@
     <div class="control-group">
         <%= f.label :user_id, :class => 'control-label' %>
         <div class="controls">
-          <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t("tasks.user.none")}, :class => 'form-control' %>
+          <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none')}, :class => 'form-control' %>
         </div>
         <%= error_span(@task[:user_id]) %>
     </div>
@@ -86,7 +87,7 @@
             </div>
         </div>
         <div class="control-group">
-            <input type="submit" value="<%= t('.add_attachment') %>" class="btn" id="attachment_form_submit" data-bind="enable: isInputValid"/>
+            <input type="submit" value="<%= t('tasks.attachments.add_attachment') %>" class="btn" id="attachment_form_submit" data-bind="enable: isInputValid"/>
         </div>
     </form>
     <ul class="list-group" data-bind="foreach: attachments">

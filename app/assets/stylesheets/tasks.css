@@ -15,6 +15,10 @@
     color: red;
 }
 
+.task-done-checkbox {
+	vertical-align: top;
+}
+
 #attachment_form{
     margin-top: 10px;
     margin-bottom:  20px;

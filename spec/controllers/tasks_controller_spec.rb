@@ -109,9 +109,10 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to be_success
     end
 
-    it "sets the return url correctly" do
-      get :show, id: task, return_url: '/some/url'
-      expect(assigns(:return_url)).to eq('/some/url')
+    it "sets the return url when coming from root" do
+      request.env["HTTP_REFERER"] = "http://event-und-raumplanung.herokuap.com/"
+      get :show, id: task
+      expect(assigns(:return_url)).to eq('/')
     end
   
     it "edits a task" do
@@ -134,6 +135,13 @@ RSpec.describe TasksController, type: :controller do
       task.done = true
       xhr :put, :update, id: task, task: { done: false }
       expect(assigns(:task).done).to be false
+    end
+
+    it "sets the task position" do
+      firstTask = create(:task)
+      secondTask = create(:task)
+      xhr :post, :update_task_order, task: { task_id: secondTask.id, task_order_position: 0 }
+      expect(Task.rank(:task_order).first).to eq secondTask
     end
   
     it "destroys a task" do

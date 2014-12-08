@@ -1,4 +1,6 @@
 class Task < ActiveRecord::Base
+  include RankedModel
+
   belongs_to :event
   belongs_to :user
   has_many :attachments, inverse_of: :task
@@ -6,6 +8,7 @@ class Task < ActiveRecord::Base
   has_many :uploads, :dependent => :destroy
   accepts_nested_attributes_for :uploads
   validates_presence_of :name
+  ranks :task_order
 
   def update_and_send_notification(task_params, assigner)
     previousUser = user

@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141205084022) do
+ActiveRecord::Schema.define(version: 20141205103749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -77,8 +78,13 @@ ActiveRecord::Schema.define(version: 20141205084022) do
     t.integer  "room_id"
     t.boolean  "is_private"
     t.string   "status",            default: "In Bearbeitung"
+    t.boolean  "approved"
     t.datetime "starts_at"
     t.datetime "ends_at"
+    t.date     "start_date"
+    t.time     "start_time"
+    t.date     "end_date"
+    t.time     "end_time"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -95,10 +101,16 @@ ActiveRecord::Schema.define(version: 20141205084022) do
     t.datetime "updated_at"
   end
 
+  create_table "groups_users", id: false, force: true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
+  end
+
   create_table "room_properties", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "room_id"
   end
 
   create_table "room_properties_rooms", force: true do |t|
@@ -111,7 +123,10 @@ ActiveRecord::Schema.define(version: 20141205084022) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
+
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
@@ -122,21 +137,11 @@ ActiveRecord::Schema.define(version: 20141205084022) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.integer  "task_order"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
-
-  create_table "uploads", force: true do |t|
-    t.integer  "task_id"
-    t.string   "task_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
-  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: ""

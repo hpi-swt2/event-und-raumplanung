@@ -15,6 +15,7 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+
   end
 
   # GET /tasks/new
@@ -72,6 +73,15 @@ class TasksController < ApplicationController
     end
   end
 
+  def update_task_order
+    @task = Task.find(task_update_order_params[:task_id])
+    @task.task_order_position = task_update_order_params[:task_order_position]
+    @task.save
+
+    render nothing: true # this is a POST action, updates sent via AJAX, no view rendered
+  end
+
+
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
@@ -87,7 +97,12 @@ class TasksController < ApplicationController
       @task.status = "accepted"
       @task.save
     end
-    redirect_to @task
+    
+    respond_to do |format| 
+      format.html { redirect_to @task }
+      format.json { render json: @task }
+    end
+
   end
 
   def decline
@@ -105,7 +120,8 @@ class TasksController < ApplicationController
     end
 
     def set_return_url
-      @return_url = params[:return_url]
+      @return_url = tasks_path
+      @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -115,6 +131,10 @@ class TasksController < ApplicationController
 
     def task_params_with_attachments
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
+    end
+
+    def task_update_order_params
+      params.require(:task).permit(:task_id, :task_order_position)
     end
 
     def event_id
