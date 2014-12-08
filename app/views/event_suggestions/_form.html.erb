@@ -1,4 +1,4 @@
-<%= form_for(@event_suggestion) do |f| %>
+<%= form_for @event_suggestion, :html => {:id => "sugguest-form" } do |f| %>
   <% if @event_suggestion.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">

@@ -85,8 +85,7 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def checkVacancy(id, rooms) 
-    logger.info id
+  def checkVacancy(rooms) 
     logger.info self.starts_at 
     logger.info self.ends_at  
     logger.info rooms 

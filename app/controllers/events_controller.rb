@@ -3,9 +3,9 @@ class EventsController < ApplicationController
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template, :new_event_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
   after_filter :flash_to_headers, :only => :check_vacancy
   
   def current_user_id
@@ -88,11 +88,11 @@ class EventsController < ApplicationController
 
   def check_vacancy
     checked_params = event_params  
-
-    @event = Event.new(event_params.except(:event_id))
+    
+    @event = Event.new(event_params)
     @event.user_id = current_user_id
     
-    conflicting_events = @event.checkVacancy event_params[:event_id], event_params[:room_ids]
+    conflicting_events = @event.checkVacancy event_params[:room_ids]
 
     respond_to do |format|
       if conflicting_events.empty? 
