@@ -62,7 +62,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right" style="height: 50px;">
             <% if user_signed_in? %>
-            <li><a><%= @current_user.username %></a></li>
+            <li><a><%= @current_user.email %></a></li>
             <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>

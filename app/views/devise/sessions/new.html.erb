@@ -6,16 +6,9 @@
       	  <%= f.label User.human_attribute_name(:encrypted_password), :class => 'control-label' %>
       	  <%= f.password_field :encrypted_password, autofocus: true, :class => 'form-control' %>
       	<% else %>
-	      <%= f.label User.human_attribute_name(:username), :class => 'control-label' %>
-	      <%= f.text_field :username, autofocus: true, :class => 'form-control' %>
-	      <%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>
-
-	      <%= f.label User.human_attribute_name(:status), :class => 'control-label' %>
-	      <br>
-	      <%= radio_button_tag(:status, "student") %>
-		  <%= label_tag(:status_student, t('devise.sessions.status_student')) %>
-		  <%= radio_button_tag(:status, "staff") %>
-		  <%= label_tag(:status_staff, t('devise.sessions.status_staff')) %>
+	      <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
+	      <%= f.text_field :email, autofocus: true, :class => 'form-control' %>
+	      <%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>	  
     	<% end %>
   <div><%= f.submit "Log in", :class => 'btn btn-primary' %></div>
 <% end %>

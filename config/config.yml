@@ -1,4 +1,6 @@
 admin:
+  email: test_admin
   username: test_admin
   password: test_admin
 identity_url: https://openid.hpi.uni-potsdam.de/
+domains: {"student.hpi.uni-potsdam.de","hpi.uni-potsdam.de","hpi.de","student.hpi.de"}
