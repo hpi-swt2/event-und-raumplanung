@@ -1,25 +1,30 @@
-<h1>EventsApproval#index</h1>
+<h1><%=t '.title' %></h1>
+<% if not @user_is_admin %>
+  <div style="border-color:#FF0000; border-width:2px; border-style:solid; padding:4px">
+    To approve and decline events, you need to be an admin. Make yourself an admin by replacing <br>
+    identity_url: http://example.com/test.admin <br>
+    with your identity url <br>
+    identity_url: https://openid.hpi.uni-potsdam.de/user/forename.surname <br>
+    in the config file <br>
+    event-und-raumplanung/config/config.yml <br>
+  </div>
+<%end%>
 
 <table class="table table-striped">
   <thead>
     <tr>
       <th></th>
-      <th>Event</th>
-      <th>Bookings</th>
+      <th><%=t '.event' %></th>
+      <th><%=t '.bookings' %></th>
     </tr>
   </thead> 
   <tbody>
     <% @events.each do |event| %>
-      <tr> 
-        <% if event.is_important %>            
-            <td>
-              <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) %>            
-            </td>
-        <% else %>
-            <td></td>
-        <% end %>         
+        <td>        
+        <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>            
+        </td>
         <td>          
-          Max Mustermann requests
+          <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
           <br>
         	<%= link_to event.name, event_path(event) %> -
         	<%= event.description %>
@@ -27,55 +32,54 @@
         </td>
         <td>
         	<% event.bookings.each do |booking| %>
-            <%= link_to booking.name, booking_path(booking) %>, <%= booking.description %>
+            <%= link_to booking.name, booking_path(booking) %>,
+            <%= booking.description %>
             <br>
-            <%= booking.start.strftime '%A, %d/%m/%y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>,
-
-       			<%= link_to booking.room.name, booking.room %>
+            <%= timeslot_with_date_as_string(booking) %>,
+       			<%= link_to booking.room.name, room_events_path(booking.room) unless booking.room.nil?%>
             <% if event.bookings.last != booking %>
         		  <hr style="margin:0; padding:0;">
             <% end %>  
         	<% end %>
         </td>
         <td>
-        	<%= link_to "Decline", decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
-          <%= link_to "Approve", approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+        	<%= link_to t('.decline'), decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
+          <%= link_to t('.approve'), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
         </td>
       </tr> 
     <% end %>
   </tbody>
 </table>
-<% if @events.count == 0 %>
-  No open events.
-<% end %>
+<%= t('.no_open_events') unless @events.count > 0 %>
 <br><br>
-<h4>Approved Bookings</h4>
+<h4><%=t '.approved_bookings' %></h4>
 <center>
-<table>
-<td><%= link_to "<--", events_approval_path(date: @date.yesterday) %></td>
-<td>
-<%= form_tag("events_approval", method: "get", :name => "datePicker") do %>
-<%= select_date(@date, {}, :onchange => ("javascript: document.datePicker.submit();")) %>
-<% end %>
-</td>
-<td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
-</table>
+  <table>
+    <td><%= link_to "<--", events_approval_path(date: @date.yesterday) %></td>
+    <td>
+      <%= form_tag("events_approval", method: "get", :name => "datePicker") do %>
+        <%= select_date(@date, {}, :onchange => ("javascript: document.datePicker.submit();")) %>
+      <% end %>
+    </td>
+    <td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
+  </table>
 </center>
 <% bookings_exist = false %>
 <table class="table table-striped">
   <tbody>
     <% @bookings.each do |booking| %>
-      <% if !booking.event.approved.nil? and booking.event.approved %>
+      <% if !booking.event.nil? and booking.event.status == 'approved' %>
         <% bookings_exist = true %>
         <tr>
           <td>
-          	<%= link_to booking.name, booking_path(booking) %>
-            Max Mustermann, <%= link_to booking.event.name, event_path(booking.event) %>),
+          	<%= link_to booking.name, booking_path(booking) %>,
+            <%= t('.user') + ' ' + booking.event.user_id.to_s %>,
+            <%= link_to booking.event.name, event_path(booking.event) %>,
             <%= booking.event.description %>,
           	<%= booking.description %>
             <br>
-            <%= booking.start.strftime '%H:%M' %> - <%=booking.end.strftime '%H:%M' %>,
-            <%= link_to booking.room.name, booking.room %>
+            <%= timeslot_as_string(booking) %>,
+            <%= link_to booking.room.name, room_events_path(booking.room) unless booking.room.nil? %>
             (<%= booking.event.participant_count %>)
           </td>
         </tr>
@@ -83,6 +87,4 @@
     <% end %>
   </tbody>
 </table>
-<% if !bookings_exist %>
-  <center>No approved bookings.</center>
-<% end %>
+<%= t('.no_approved_bookings') unless bookings_exist %>
