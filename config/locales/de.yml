@@ -208,6 +208,7 @@ de:
     successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
   alert: 
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
+    conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
   tasks:
     status:
       not_assigned: nicht zugewiesen
