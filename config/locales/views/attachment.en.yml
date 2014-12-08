@@ -2,8 +2,11 @@ en:
   tasks:
     attachments:
       none: No Attachments
+      title: Title
+      url: URL
     form:
       add_attachment: 'Add Attachment'
       attachments: 'Attachments'
+      files: Files
     show:
       attachments: 'Attachments'

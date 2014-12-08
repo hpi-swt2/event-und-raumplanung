@@ -1,5 +1,7 @@
 de:
   submit: Absenden
+  delete: Löschen
+  Cancel: Abbrechen
   date:
     abbr_day_names:
     - So
