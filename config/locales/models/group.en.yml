@@ -1,11 +1,11 @@
 # ruby encoding: utf-8
 
-de:
+en:
   activerecord:
     models:
       group:
-        one: Gruppe
-        other: Gruppen
+        one: Group
+        other: Groups
     attributes:
       group:
         name: Name
