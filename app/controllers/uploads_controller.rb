@@ -1,5 +1,6 @@
 class UploadsController < ApplicationController
-  before_action :set_upload, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :set_upload, only: [:show, :edit, :destroy]
 
   def new
     @upload = Upload.new
