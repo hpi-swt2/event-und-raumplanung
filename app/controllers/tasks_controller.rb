@@ -85,6 +85,10 @@ class TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
+    if @task.uploads
+      @task.uploads.each { |upload|
+        upload.destroy }
+    end
     @task.destroy
     respond_to do |format|
       format.html { redirect_to tasks_url, notice: t('notices.successful_destroy', :model => Task.model_name.human) }

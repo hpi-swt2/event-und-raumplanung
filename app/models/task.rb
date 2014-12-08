@@ -5,7 +5,7 @@ class Task < ActiveRecord::Base
   belongs_to :user
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
-  has_many :uploads, :dependent => :destroy
+  has_many :uploads
   accepts_nested_attributes_for :uploads
   validates_presence_of :name
   ranks :task_order
