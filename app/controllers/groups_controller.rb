@@ -9,7 +9,7 @@ class GroupsController < ApplicationController
   end
 
   def show
-    @users = @group.users
+    @users = @group.users 
   end
 
   def assign_user
