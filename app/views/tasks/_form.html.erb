@@ -59,15 +59,17 @@
     <h4><%= t('tasks.form.files') %></h4>
     <div class="control-group" id="upload_div">
         <div class="controls">
-            <%= file_field_tag "uploads[]", :type => :file, :multiple => true, :class => 'btn btn-default btn-file' %>
+            <%= file_field_tag "uploads[]", :type => :file, :onchange => "upload();", :class => 'btn btn-default btn-file' %>
         </div>
     </div>
     <% end %>
-    <ul class="list-group">
+    <ul id="list_uploads" class="list-group">
         <% if @task.uploads.count() > 0 %>
             <% @task.uploads.each do |upload| %>
-                <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name) , :class => 'list-group-item', :style => "width:85%; display: inline-block;" %>
-                <%= link_to t('delete'), upload, :class => 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %>
+                <div>
+                <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item', :style => "width:85%; display: inline-block;" %>
+                <%= link_to t('delete'), upload, :remote => true, :onclick => "this.parentNode.remove();", :class => 'btn btn-danger', :method => :delete %>
+                </div>
             <% end %>
         <% end %>
     </ul>

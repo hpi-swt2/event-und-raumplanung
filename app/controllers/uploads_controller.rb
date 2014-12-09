@@ -12,10 +12,7 @@ class UploadsController < ApplicationController
 
   def destroy
     @upload.destroy
-    respond_to do |format|
-      format.html { redirect_to edit_task_path @upload.task_id }
-      format.json { head :no_content }
-    end
+    render nothing: true
   end
 
   private

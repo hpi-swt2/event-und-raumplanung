@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   post 'rooms/list'
   post 'rooms/:id' => 'rooms#details'
 
+  post 'tasks/upload_file' => 'tasks#upload_file'
+
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   resources :attachments

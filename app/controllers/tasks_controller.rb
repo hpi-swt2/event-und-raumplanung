@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline, :upload_file]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
@@ -111,6 +111,17 @@ class TasksController < ApplicationController
       @task.save
     end
     redirect_to @task
+  end
+
+  def upload_file
+    if params[:uploads]
+        @task.uploads.create(:file => params[:uploads])
+    end
+
+    respond_to do |format|
+      format.html { render :nothing => true } # render no html
+      format.json { render json: @task.uploads }
+    end
   end
 
   private
