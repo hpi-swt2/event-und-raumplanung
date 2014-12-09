@@ -64,13 +64,19 @@ class SessionsController < Devise::SessionsController
           flash[:notice] = "";
           redirect_to root_path
       else
-
+        
         # Devise specfic code (just take a look at the gems create method)
         self.resource = warden.authenticate!(auth_options)
         set_flash_message(:notice, :signed_in) if is_flashing_format?
         sign_in(resource_name, resource)
         yield resource if block_given?
         #check if the user has registered with a different email in the past
+        if session[:email].split('@').last.split('.').first == 'student'
+          @user.student = true
+        else
+          @user.student = false
+        end
+        
         if(@user.email != nil and @user.email != session[:email] and @user.email != '')
           flash[:error] = t('devise.sessions.email_invalid') 
           flash[:notice] = "";

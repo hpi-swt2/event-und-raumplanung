@@ -60,9 +60,13 @@
              <li><%= link_to "Filtering", "rooms/list" %></li>
             <li><%= link_to "Process Requests", "events_approval/" %></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right" style="height: 50px;">
+          <ul class="nav navbar-nav navbar-right " style="height: 50px;">
             <% if user_signed_in? %>
-            <li><a><%= @current_user.email %></a></li>
+              <% if @current_user.student? %>
+                <li><a><%= @current_user.username + " (" + t("application.student") + ")" %></a></li>
+              <% else %>
+                <li><a><%= @current_user.username + " (" + t("application.staff") + ")" %></a></li>
+              <% end %>
             <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>
