@@ -1,6 +1,5 @@
 class SessionsController < Devise::SessionsController
-  before_action :check_openid_provider, only: :create
-
+  
   def new
     # Needed as attribute for admin password input
     if params.include?("admin")
@@ -113,12 +112,5 @@ class SessionsController < Devise::SessionsController
   def build_name_from_email(email)
     # Create the user email from given name and status
     email.split('@').first
-  end
-
-
-  def check_openid_provider
-    #if not params["user"]["identity_url"].start_with?("https://openid.hpi.uni-potsdam.de/user/")
-    ##  redirect_to new_user_session_path, alert: "You can only login with a valid HPI OpenID!"
-    ##end
   end
 end
