@@ -7,7 +7,7 @@
 			<% my_accepted_events.each do |event| %>
 				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
 				<ul class="list-unstyled task-list-list">
-					<% my_accepted_tasks.where(event_id: event.id).each do |task| %>
+					<% my_accepted_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
 						<li>
 		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>">
 		        				<%= link_to task.name, task_path(task) %>
@@ -28,7 +28,7 @@
 			<% my_pending_events.each do |event| %>
 				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
 				<table class="pending-tasks-table">
-					<% my_pending_tasks.where(event_id: event.id).each do |task| %>
+					<% my_pending_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
 						<tr>
 							<td>
 		        				<%= link_to task.name, task_path(task) %>
