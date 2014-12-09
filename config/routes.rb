@@ -2,10 +2,7 @@ Rails.application.routes.draw do
 
   resources :event_suggestions
 
-  get 'events_approval/index'
-  get 'events_approval/' => 'events_approval#index'
-  post 'events/:id/approve' => 'events#approve', as: "approve_event"
-  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+
   get 'rooms/list'
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
@@ -57,6 +54,10 @@ Rails.application.routes.draw do
 
   patch 'events/:id/sugguest' => 'events#create_suggestion', as: :create_suggestion
 
+  get 'events_approval/index'
+  get 'events_approval/' => 'events_approval#index'
+  get 'events/:id/approve' => 'events#approve', as: "approve_event"
+  get 'events/:id/decline' => 'events#decline', as: "decline_event"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

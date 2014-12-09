@@ -2,6 +2,8 @@
 // All this logic will automatically be available in application.js.
 EVENT_URL = '/events/'
 SUGGEST_URL = '/new_event_suggestion'
+DECLINE_URL = '/decline'
+
 $(document).ready(function() { 
 	$(".decline-btn").click(function(e) { 
 		e.preventDefault(); 
@@ -15,11 +17,12 @@ $(document).ready(function() {
 				 	xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));}, 
 				 success:(function(data){
 					// alert("success");
+					insertDeclineLink(data["id"]);
 					insertSuggestLink(data["id"]);  
 					insertEventIntoModal(data); 
 					$('#myModal').modal('toggle');
 		})}); 
-});
+});	
 });
 
 function insertEventIntoModal(data) { 
@@ -39,6 +42,10 @@ function insertEventIntoModal(data) {
 
 function insertSuggestLink(id) { 
 	$(".suggest-btn").attr("href", EVENT_URL + id + SUGGEST_URL); 
+}
+
+function insertDeclineLink(id) { 
+	$(".modal-decline-btn").attr("href", EVENT_URL + id + DECLINE_URL); 
 }
 
 function getRoomNames(rooms) { 
