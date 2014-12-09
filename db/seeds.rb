@@ -7,16 +7,42 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-event = Event.create({name: 'Eventname',
-					description: 'A description',
+event = Event.create({name: 'Klubtreffen',
+					description: 'Klubtreffen des PR-Klubs',
 					starts_at: Date.today + 1,
 					ends_at: Date.today + 1,
 					participant_count: 12,
 					user_id: 1})
 
+another_event = Event.create({name: 'Vorlesung',
+					description: 'A description',
+					starts_at: Date.today + 1,
+					ends_at: Date.today + 1,
+					participant_count: 80,
+					user_id: 1})
+
+Task.create({name: 'An accepted Task', 
+			description: 'This is an accepted task.',
+			event_id: event.id,
+			user_id: 1,
+			status: 'accepted'})
+
+Task.create({name: 'Another accepted Task', 
+			description: 'This is a accepted task which is already done.',
+			event_id: another_event.id,
+			user_id: 1,
+			status: 'accepted',
+			done: true })
+
 Task.create({name: 'A pending Task', 
 			description: 'This is a pending task.',
 			event_id: event.id,
+			user_id: 1,
+			status: 'pending'})
+
+Task.create({name: 'A second pending Task', 
+			description: 'This is another pending task.',
+			event_id: another_event.id,
 			user_id: 1,
 			status: 'pending'})
 
