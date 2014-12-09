@@ -17,3 +17,4 @@
 //= require bootstrap-select
 //= require_tree .
 //= require filterrific/filterrific-jquery
+//= require recurring_select

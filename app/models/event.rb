@@ -30,13 +30,23 @@ class Event < ActiveRecord::Base
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
   
-   def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past") if starts_at && starts_at < Date.today
-      errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
-    end
-   def start_before_end_date
-      errors.add(:starts_at, "start has to be before the end") if starts_at && starts_at && ends_at < starts_at
-   end
+  def dates_cannot_be_in_the_past
+    errors.add(:starts_at, "can't be in the past") if starts_at && starts_at < Date.today
+    errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
+  end
+
+  def start_before_end_date
+    errors.add(:starts_at, "start has to be before the end") if starts_at && starts_at && ends_at < starts_at
+  end
+
+  def schedule
+    IceCube::Schedule.from_yaml(self[:schedule]) if self[:schedule]
+  end
+
+  def occurence_rule
+    schedule = self.schedule
+    schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
+  end
   
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
@@ -82,6 +92,14 @@ class Event < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_ends_at_asc'), 'ends_at_asc'],
     [(I18n.t 'sort_options.sort_status'), 'status_asc']
   ]
+  end
+
+  def pretty_schedule
+    if self.occurence_rule.nil?
+      I18n.t 'events.show.schedule_not_recurring'
+    else
+      self.occurence_rule.to_s
+    end
   end
 
 

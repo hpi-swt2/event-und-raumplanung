@@ -1,0 +1,5 @@
+de:
+  events:
+    show:
+      schedule_not_recurring: 'Once'
+

@@ -90,8 +90,9 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
+    @event = Event.new(params_without_occurence_rule event_params)
     @event.user_id = current_user_id
+    @event.schedule = create_yaml_schedule(@event, event_params[:occurence_rule])
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
@@ -106,8 +107,9 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-      respond_to do |format|
-      if @event.update(event_params)
+    @event.schedule = update_yaml_schedule(@event.schedule, event_params[:occurence_rule])
+    respond_to do |format|
+      if @event.update(params_without_occurence_rule event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
       else
@@ -135,6 +137,24 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :occurence_rule, :schedule, :room_ids => [])
+    end
+
+    def params_without_occurence_rule(params)
+      params.reject {|k,v| k == "occurence_rule"}
+    end
+
+    def create_yaml_schedule(event, dirty_rule)
+      schedule = IceCube::Schedule.new(event.starts_at, end_time: event.ends_at)
+      schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+      schedule.to_yaml
+    end
+
+    def update_yaml_schedule(schedule, dirty_rule)
+      if !schedule.nil?
+        schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
+        schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+        schedule.to_yaml
+      end
     end
 end
