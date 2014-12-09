@@ -90,17 +90,21 @@ class Event < ActiveRecord::Base
     logger.info self.ends_at  
     logger.info rooms 
     colliding_events = []
-    rooms = rooms.collect{|i| i.to_i}
+    if !rooms.nil? 
+      rooms = rooms.collect{|i| i.to_i}
+    end  
     events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at})
     if events.empty?
       logger.info "XX"
       return colliding_events
     else 
-      rooms_count = rooms.size
-      events.each do | event |
-        if (rooms - event.rooms.pluck(:id)).size < rooms_count
-           colliding_events.push(event)
-        end 
+      if !rooms.nil? 
+        rooms_count = rooms.size
+        events.each do | event |
+          if (rooms - event.rooms.pluck(:id)).size < rooms_count
+             colliding_events.push(event)
+          end 
+        end
       end 
     end
     return colliding_events   
