@@ -41,11 +41,11 @@
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
-<% if can? :update, @group %>
+<% if can? :edit, @group %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-<% if can? :update, @group %>
+<% if can? :manage_rooms, @group %>
   <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
               manage_rooms_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
