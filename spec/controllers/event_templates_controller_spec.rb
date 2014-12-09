@@ -15,7 +15,8 @@ RSpec.describe EventTemplatesController, :type => :controller do
   let(:valid_attributes) {
     {name:'Michas GB',
     description:'Coole Sache',
-    user_id: user.id
+    user_id: user.id,
+    participant_count: 1
     }
   }
 
