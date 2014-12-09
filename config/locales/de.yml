@@ -135,9 +135,11 @@ de:
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
     links: 
-      sugguest: ! 'Erneut vorschlagen'
+      suggest: ! 'Alternative vorschlagen'
+      decline: ! 'Ablehnen'
+      approve: ! 'Akzeptieren'
     titles: 
-      sugguest: 'Event erneut vorschlagen' 
+      suggest: 'Event erneut vorschlagen' 
   number:
     currency:
       format:

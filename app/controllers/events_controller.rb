@@ -110,6 +110,7 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
+    logger.info @event.rooms.inspect
   end
 
   # GET /events/new
