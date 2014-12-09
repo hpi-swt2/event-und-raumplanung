@@ -93,7 +93,7 @@ class EventsController < ApplicationController
     @event.user_id = current_user_id
     
     conflicting_events = @event.checkVacancy event_params[:room_ids]
-
+   
     respond_to do |format|
       if conflicting_events.empty? 
         flash[:error] = "Vacant"
@@ -106,6 +106,7 @@ class EventsController < ApplicationController
       end 
     end 
   end 
+
   # GET /events/1
   # GET /events/1.json
   def show
@@ -156,8 +157,13 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     @event.user_id = current_user_id
     logger.info @event.inspect
+
     respond_to do |format|
       if @event.save
+        conflicting_events = @event.checkVacancy event_params[:room_ids]
+        if conflicting_events.size > 1 ## this event is also in the returned list
+          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
+        end
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
         format.json { render :show, status: :created, location: @event }
       else
@@ -172,6 +178,10 @@ class EventsController < ApplicationController
   def update
       respond_to do |format|
       if @event.update(event_params)
+        conflicting_events = @event.checkVacancy event_params[:room_ids]
+        if conflicting_events.size > 1 ## this event is also in the returned list
+          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
+        end
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
       else
