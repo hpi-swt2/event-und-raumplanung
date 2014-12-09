@@ -2,6 +2,7 @@ class EventsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template, :index_toggle_favorite , :show_toggle_favorite]
+  before_action :set_return_url, only: [:show, :new, :edit]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :index_toggle_favorite, :show_toggle_favorite, :reset_filterrific]
 
@@ -84,6 +85,7 @@ class EventsController < ApplicationController
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
     @user = User.find(@event.user_id).identity_url
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
@@ -167,4 +169,8 @@ class EventsController < ApplicationController
         end
       end
   end
+
+    def set_return_url
+      @return_url = params[:return_url]
+    end
 end

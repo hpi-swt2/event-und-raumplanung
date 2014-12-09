@@ -23,7 +23,7 @@
         <td><%= link_to event.name, event_path(event) %></td>
         <td><%= trimDescription event.description %></td>
         <td><%= event.rooms.map(&:name).to_sentence %></td>
-        <td><%=l event.starts_at if event.starts_at  %> / <BR>
+        <td><%=l event.starts_at if event.starts_at  %> / <br />
         <%=l event.ends_at if event.ends_at %></td>
         <td><%= event.status %></td>
         <td><%= event.user_id %></td>

@@ -8,7 +8,8 @@ RSpec.describe "events/show", :type => :view do
                                           ends_at:  DateTime.new(2050,05, 04, 16,45),
                                           user_id: 42, is_private: true))
     @favorite = Favorite.where('user_id = 42 AND favorites.is_favorite=true AND event_id = ?',@event.id);
-    #@favorite = assign(:favorite, Favorite.create!(event_id: 1, user_id: 42, is_favorite: true))
+
+    @tasks = []
   end
 
   it "renders attributes in <p>" do

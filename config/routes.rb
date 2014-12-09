@@ -27,7 +27,9 @@ Rails.application.routes.draw do
 
   resources :rooms
 
-  resources :tasks
+  resources :tasks do
+    post :update_task_order, on: :collection
+  end
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
@@ -52,7 +54,7 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   # You can have the root of your site routed with "root"
-  root 'events#index'
+  root 'dashboard#index'
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
