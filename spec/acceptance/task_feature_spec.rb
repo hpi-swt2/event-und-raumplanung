@@ -1,7 +1,7 @@
 require 'spec_helper'
 include RequestHelpers
 
-feature "Task" do
+RSpec.feature "Task" do
     background do
 	    @user = FactoryGirl.create :user, email: 'jack@daniels.com'
     end
@@ -13,17 +13,22 @@ feature "Task" do
 
     let!(:authed_user) { create_logged_in_user }
 
-	scenario "create Task" do
-		# @todo
-  		page.visit "/tasks"
-		page.click_button "approve"
-		page.should have_content("Successfully added.")
-	end
+    scenario "create Task" do
+  		page.visit "/tasks/new"
+		#page.click_button "Hinzufügen"
+		page.fill_in "task_name", with: "Acceptance Tests schreiben"
+		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben."
+		#expect(page).to have_select("drop_down_id", options: [item1.name, item2.name])
+		
+		#Attachment doesnt provide any IDs..
+		<<-DOC
+		page.fill_in "attachment_title", with: "Picture"
+		page.fill_in "attachment_url", with: "http://zlomenymec.pise.cz/img/264331.jpg"		
+		page.click_button "Add Attachment"
+		page.should have_content("Picture")
+		DOC
 
-	scenario "Reject an unprocessed Event" do
-		# @todo
-  		page.visit "/tasks"
-		page.click_button "reject"
-		page.should have_content("Successfully rejected.")
-	end
+		page.click_button "Task erstellen"
+		page.should have_content("Task wurde erfolgreich erstellt.")
+    end
 end
