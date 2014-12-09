@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20141205103749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -77,8 +76,8 @@ ActiveRecord::Schema.define(version: 20141205103749) do
     t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private"
-    t.string   "status",            default: "In Bearbeitung"
     t.boolean  "approved"
+    t.string   "status",            default: "In Bearbeitung"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.date     "start_date"
@@ -94,6 +93,17 @@ ActiveRecord::Schema.define(version: 20141205103749) do
     t.integer "event_id"
     t.integer "room_id"
   end
+
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.boolean  "is_favorite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "groups", force: true do |t|
     t.string   "name"

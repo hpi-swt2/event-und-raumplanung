@@ -1,10 +1,10 @@
 class EventsController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :index_toggle_favorite, :show_toggle_favorite, :reset_filterrific]
 
   def current_user_id
     current_user.id
@@ -18,6 +18,18 @@ class EventsController < ApplicationController
     @event_template.participant_count = @event.participant_count
     @event_template.rooms = @event.rooms
     render "event_templates/new"
+  end
+
+  #GET /events/1/index_toggle_favorite
+  def index_toggle_favorite
+    toggle_favorite
+    redirect_to events_url
+  end
+
+  #GET /events/1/show_toggle_favorite
+  def show_toggle_favorite
+    toggle_favorite
+    redirect_to event_url
   end
 
   # GET /events
@@ -38,7 +50,8 @@ class EventsController < ApplicationController
         end
       @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
-
+      @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
+      puts @favorites
       session[:filterrific_events] = @filterrific.to_hash
 
 
@@ -70,6 +83,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
     @user = User.find(@event.user_id).identity_url
     @tasks = @event.tasks.rank(:task_order)
   end
@@ -140,8 +154,23 @@ class EventsController < ApplicationController
       params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
     end
 
+    def toggle_favorite
+
+      favorite = Favorite.where('user_id = ? AND event_id = ?',current_user_id,@event.id);
+      if favorite.empty?
+        Favorite.create(:user_id => current_user_id, :event_id => @event.id, :is_favorite => true)
+      else
+        if favorite.last().is_favorite?
+          favorite.last().is_favorite = false
+          favorite.last().save();
+        else
+          favorite.last().is_favorite = true
+          favorite.last().save();
+        end
+      end
+  end
+
     def set_return_url
       @return_url = params[:return_url]
     end
-
 end
