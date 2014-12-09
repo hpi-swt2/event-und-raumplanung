@@ -7,5 +7,6 @@ FactoryGirl.define do
 
   factory :adminUser, :class => User do |adminUser|
   	adminUser.identity_url "test_admin"
+    adminUser.email "test_admin@example.com"
   end
 end

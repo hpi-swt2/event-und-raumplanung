@@ -1,13 +1,8 @@
 class SessionsController < Devise::SessionsController
-  
+
   def new
     # Needed as attribute for admin password input
-    if params.include?("admin")
-      @admin = true
-    else
-      @admin = false
-    end
-
+    @admin = params.include?("admin")
     super 
   end
 
