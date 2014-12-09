@@ -19,22 +19,17 @@ class EventsController < ApplicationController
     render "event_templates/new"
   end
 
-  #GET /events/1/index_toggle/favorite
+  #GET /events/1/index_toggle_favorite
   def index_toggle_favorite
-    puts "______FROM_INDEX______"
     toggle_favorite
     redirect_to events_url
   end
 
-  #GET /events/1/show_toggle/favorite
+  #GET /events/1/show_toggle_favorite
   def show_toggle_favorite
-    puts "______FROM_SHOW______"
     toggle_favorite
     redirect_to event_url
   end
-  # GET /...
-
-
 
   # GET /events
   # GET /events.json
@@ -88,11 +83,6 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
-    puts "DEBUG_________"
-    puts @event.id
-    puts @favorite
-    puts @favorite.empty?
-    puts "DEBUG_________"
     @user = User.find(@event.user_id).identity_url
   end
 
