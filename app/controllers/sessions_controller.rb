@@ -32,13 +32,11 @@ class SessionsController < Devise::SessionsController
       # Check correctness of the admin password
       if(params["user"]["encrypted_password"] == adminConf["password"])
         # Check if admin user is already existing
-        if User.all.find_by_identity_url(adminConf["email"])
-          @user = User.all.find_by_identity_url(adminConf["email"])
+        if User.all.find_by_email(adminConf["email"])
+          @user = User.all.find_by_email(adminConf["email"])
           sign_in @user
         else
-          @user = User.build_from_identity_url(adminConf["email"])
-          @user.username = adminConf["username"]
-          @user.email = adminConf["email"];
+          @user = User.new(:username => adminConf["username"], :email => adminConf["email"])
           @user.save
           sign_in @user
         end
