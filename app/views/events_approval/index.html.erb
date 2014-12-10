@@ -13,22 +13,22 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th></th>
       <th><%=t '.event' %></th>
+      <th></th>
       <th><%=t '.bookings' %></th>
     </tr>
   </thead> 
   <tbody>
     <% @events.each do |event| %>
-        <td>        
-        <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>            
-        </td>
         <td>          
           <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
           <br>
         	<%= link_to event.name, event_path(event) %> -
         	<%= event.description %>
           (<%= event.participant_count %>)
+        </td>
+        <td>        
+          <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>            
         </td>
         <td>
         	<% event.bookings.each do |booking| %>
