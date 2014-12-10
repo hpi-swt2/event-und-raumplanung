@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.time     "start_time"
     t.date     "end_date"
     t.time     "end_time"
+    t.boolean  "is_important"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -136,6 +137,7 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.integer  "task_order"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree

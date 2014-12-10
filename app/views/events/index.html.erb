@@ -50,11 +50,10 @@
   </div>
 </div>
 
-<%= render(
-  partial: 'events/list',
-  locals: { events: @events,  model_class:  model_class }
-) %>
+<%= render(partial: 'events/list', locals: { events: @events,  model_class:  model_class }) %>
+
 <div class="clear"></div>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_event_path,
             :class => 'btn btn-primary' %>
+

@@ -1,0 +1,22 @@
+<%- model_class = Event -%>
+<% return_url = request.env['PATH_INFO'] %>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= t('dashboard.upcoming_events') %></h3>
+    </div>
+    <div class="panel-body">
+        <% if !@events.empty? %>
+            <ul class="list-group">
+                <% @events.each do |event| %>
+                    <li class="list-group-item">
+                        <%= link_to event.name, event_path(event) %>
+                        (<%= event.starts_at.strftime("%A, %d.%m.%Y, %H:%M") if event.starts_at %>)
+                    </li>
+                <% end %>
+            </ul>
+        <% else %>
+            <%= t('dashboard.no_events') %>
+        <% end %>
+    </div>
+</div>

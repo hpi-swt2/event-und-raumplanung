@@ -36,6 +36,7 @@ class Ability
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
+        can :manage, Event
     else
         can :read, Group
     end
