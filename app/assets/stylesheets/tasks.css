@@ -14,3 +14,7 @@
 .declined {
     color: red;
 }
+
+.task-done-checkbox {
+	vertical-align: top;
+}

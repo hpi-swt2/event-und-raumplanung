@@ -1,35 +1,33 @@
 class EventsApprovalController < ApplicationController
 
-	before_action :read_and_exec_params
-	def read_and_exec_params
-		if params[:date]
-			@date = params[:date].to_date
-		else	
-			@date = Date.today
-		end
-	end
+  before_action :authenticate_user!
+  load_and_authorize_resource
+  skip_load_and_authorize_resource :only =>[:index] #this line needs to be removed in the future as only admins should be able to view this page
 
   def index
-		@bookings = Booking.all
-		@events = Event.all
-		check_data # data must be checked before selection criterea as events links to bookings which are filtered out
-		@events.where!(approved: nil)
-		@bookings.where!('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
+    read_and_exec_params
+    check_admin_status
+		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
+		@events = Event.where.not({status: ['approved', 'declined']})
   end
 
-  def check_data # the validation of the data should move to the model in the future
-	@events.where(name: nil).update_all(:name => '')
-	@events.where(description: nil).update_all(:description => '')
-	@events.where(start_time: nil).update_all(:start_time => Time.new)
-	@events.where(end_time: nil).update_all(:end_time => Time.new)
-	@events.where(start_date: nil).update_all(:start_date => Date.new)
-	@events.where(end_date: nil).update_all(:end_date => Date.new)
+  private
+    def read_and_exec_params
+      if params[:date]
+        if params[:date].is_a?(Hash)
+          @date = (params[:date][:year]+ '-' + params[:date][:month] + '-' + params[:date][:day]).to_date
+        else
+          @date = params[:date].to_date
+        end
+      else    
+        @date = Date.today
+      end
+    end
 
-	@bookings.where(start: nil).update_all(:start => DateTime.new)
-	@bookings.where(end: nil).update_all(:end => DateTime.new)
-	@bookings.where(name: nil).update_all(:name => '')
-	@bookings.where(description: nil).update_all(:description => '')
-	@bookings.where(room_id: nil).update_all(:room_id => Room.first.id)
-	@bookings.where(event_id: nil).update_all(:event_id => Event.first.id)
-  end
+    def check_admin_status
+      config = YAML.load_file(Rails.root.join('config', 'config.yml'))
+      admin_identity = config['admin']['identity_url']
+      @user_is_admin = (current_user.identity_url == admin_identity)
+    end
+
 end
