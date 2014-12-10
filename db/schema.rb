@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20141205103749) do
     t.time     "start_time"
     t.date     "end_date"
     t.time     "end_time"
+    t.boolean  "is_important"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree

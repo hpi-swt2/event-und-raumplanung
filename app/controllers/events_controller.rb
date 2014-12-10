@@ -1,8 +1,10 @@
 class EventsController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template, :index_toggle_favorite , :show_toggle_favorite]
+
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
+
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :index_toggle_favorite, :show_toggle_favorite, :reset_filterrific]
 
@@ -69,14 +71,12 @@ class EventsController < ApplicationController
   end
 
   def approve
-    puts "approve"
-    @event.update(approved: true)
+    @event.update(status: 'approved')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
-    puts "decline"
-    @event.update(approved: false)
+    @event.update(status: 'declined')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
@@ -151,7 +151,7 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
     end
 
     def toggle_favorite

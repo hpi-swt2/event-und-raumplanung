@@ -109,9 +109,10 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to be_success
     end
 
-    it "sets the return url correctly" do
-      get :show, id: task, return_url: '/some/url'
-      expect(assigns(:return_url)).to eq('/some/url')
+    it "sets the return url when coming from root" do
+      request.env["HTTP_REFERER"] = "http://event-und-raumplanung.herokuap.com/"
+      get :show, id: task
+      expect(assigns(:return_url)).to eq('/')
     end
   
     it "edits a task" do
