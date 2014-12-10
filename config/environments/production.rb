@@ -76,19 +76,18 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'event-und-raumplanung.herokuapp.com', port: 80 }
+  config.action_mailer.default_url_options = { host: ENV['HEROKU_HOSTNAME'], port: 80 }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address        => 'smtp.sendgrid.net',
-    :port           => '587',
-    :authentication => :plain,
-    :user_name      => ENV['SENDGRID_USERNAME'],
-    :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'heroku.com',
-    :enable_starttls_auto => true
+    address:              'smtp.gmail.com',
+    port:                 587,
+    user_name:            'hpiswt2eur@gmail.com',
+    password:             ENV['HEROKU_SMTP_PASSWORD'],
+    authentication:       'plain',
+    enable_starttls_auto: true
   }
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: ENV['SENDGRID_USERNAME']}
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_options = {from: 'hpiswt2eur@gmail.com'}
 end
