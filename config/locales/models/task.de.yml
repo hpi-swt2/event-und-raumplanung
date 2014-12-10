@@ -1,0 +1,16 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      task:
+        one: 'Aufgabe'
+        other: 'Aufgaben'
+    attributes:
+      task:
+        name: 'Name'
+        description: 'Beschreibung'
+        user: 'Benutzer'
+        event: 'Event'
+        status: 'Status'
+        done: 'Erledigt'
