@@ -77,9 +77,13 @@
   <div class="control-group">
 
     <div class="row">
-      <div class="controls col-sm-12">
+      <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
       <%= f.check_box :is_private %>
+      </div>
+      <div class="controls col-sm-6">
+      <%= f.label model_class.human_attribute_name(:Important), :class => 'control-label' %>
+      <%= f.check_box :is_important %>
       </div>
    </div>
   </div>
