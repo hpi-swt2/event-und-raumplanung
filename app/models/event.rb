@@ -124,5 +124,3 @@ class Event < ActiveRecord::Base
     return colliding_events   
   end  
 end
-
-
