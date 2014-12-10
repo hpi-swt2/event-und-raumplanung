@@ -45,12 +45,11 @@ Rails.application.configure do
     :address        => 'smtp.sendgrid.net',
     :port           => '587',
     :authentication => :plain,
-    :user_name      => ENV['SENDGRID_USERNAME'],
-    :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'heroku.com',
+    :user_name      => 'event-und-raumplanung@outlook.com',
+    :password       => 'Test1234',
     :enable_starttls_auto => true
   }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: ENV['SENDGRID_USERNAME']}
+  config.action_mailer.default_options = {from: 'event-und-raumplanung@outlook.com'}
 end
