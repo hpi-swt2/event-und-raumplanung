@@ -122,6 +122,8 @@ de:
       too_long: ist zu lang (mehr als %{count} Zeichen)
       too_short: ist zu kurz (weniger als %{count} Zeichen)
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
+      date_in_the_past: kann nicht in der Vergangenheit liegen
+      start_date_not_before_end_date: muss vor dem Endzeitpunkt liegen
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
       header:
@@ -135,9 +137,11 @@ de:
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
     links: 
-      sugguest: ! 'Erneut vorschlagen'
+      suggest: ! 'Alternative vorschlagen'
+      decline: ! 'Ablehnen'
+      approve: ! 'Akzeptieren'
     titles: 
-      sugguest: 'Event erneut vorschlagen' 
+      suggest: 'Alternative vorschlagen' 
   number:
     currency:
       format:
@@ -201,6 +205,8 @@ de:
       long: ! '%A, %d. %B %Y, %H:%M Uhr'
       short: ! '%d. %B, %H:%M Uhr'
     pm: nachmittags
+    starts_at: Startzeitpunkt
+    ends_at: Endzeitpunkt
   notices:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
@@ -208,6 +214,7 @@ de:
     successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
   alert: 
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
+    conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
   tasks:
     status:
       not_assigned: nicht zugewiesen
