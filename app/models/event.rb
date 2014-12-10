@@ -7,9 +7,9 @@ class Event < ActiveRecord::Base
   filterrific(
     default_settings: { sorted_by: 'created_at_desc' },
     filter_names: [
-      :sorted_by,
       :search_query,
       :own,
+      :room_ids,
       :sorted_by
     ]
   )
@@ -31,7 +31,7 @@ class Event < ActiveRecord::Base
 
   
    def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past") if starts_at && starts_at < Date.today
+      errors.add(:starts_at, "can't be in the past #{Date.today}") if starts_at && starts_at < Date.today
       errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
     end
    def start_before_end_date
@@ -52,9 +52,9 @@ class Event < ActiveRecord::Base
     case sort_option.to_s
     when /^created_at_/
       order("events.created_at #{ direction }")
-    when /^start_at_/
+    when /^starts_at_/
       order("events.starts_at #{ direction }")
-    when /^end_at_/
+    when /^ends_at_/
       order("events.ends_at #{ direction }")
     when /^name_/
       order("LOWER(events.name) #{ direction }")
@@ -63,6 +63,9 @@ class Event < ActiveRecord::Base
   else
     raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
   end
+  }
+  scope :room_ids, lambda { |room_ids|
+    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
   }
   scope :own, lambda { |user_id|
     where("user_id = ?",user_id) if user_id

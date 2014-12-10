@@ -2,6 +2,8 @@ class EventsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template]
+  before_action :set_return_url, only: [:show, :new, :edit]
+
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
@@ -14,7 +16,8 @@ class EventsController < ApplicationController
     @event_template = EventTemplate.new
     @event_template.name = @event.name
     @event_template.description = @event.description
-    @event_template.user_id = current_user_id
+    @event_template.participant_count = @event.participant_count
+    @event_template.rooms = @event.rooms
     render "event_templates/new"
   end
 
@@ -34,6 +37,7 @@ class EventsController < ApplicationController
         else
           nil
         end
+      @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_events] = @filterrific.to_hash
@@ -66,6 +70,7 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
@@ -86,22 +91,8 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    temp_event_params = event_params
-    temp = [] 
-    temp_event_params[:rooms].each do | room_id | 
-      begin 
-        room = Room.find(room_id)
-      rescue ActiveRecord::RecordNotFound  
-        next 
-      else  
-        temp << room
-      end 
-    end   
-      
-    temp_event_params[:rooms] = temp
-    @event = Event.new(temp_event_params)
+    @event = Event.new(event_params)
     @event.user_id = current_user_id
-
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
@@ -116,23 +107,8 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    respond_to do |format|
-
-      temp_event_params = event_params
-      temp = [] 
-      temp_event_params[:rooms].each do | room_id | 
-        begin 
-          room = Room.find(room_id)
-        rescue ActiveRecord::RecordNotFound  
-          next 
-        else  
-        temp << room
-        end 
-      end  
-      
-      temp_event_params[:rooms] = temp
-
-      if @event.update(temp_event_params)
+      respond_to do |format|
+      if @event.update(event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
       else
@@ -160,6 +136,11 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :rooms => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
     end
+
+    def set_return_url
+      @return_url = params[:return_url]
+    end
+
 end

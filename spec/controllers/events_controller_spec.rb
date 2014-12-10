@@ -117,6 +117,21 @@ RSpec.describe EventsController, :type => :controller do
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:event)).to eq(event)
     end
+
+    it "assigns the tasks of the requested event as @tasks ordered by rank" do
+      event = Event.create! valid_attributes
+      firstTask = create(:task)
+      firstTask.event = event
+      firstTask.save
+
+      secondTask = create(:task)
+      secondTask.event = event
+      secondTask.task_order_position = 0
+      secondTask.save
+
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:tasks)).to eq [secondTask, firstTask]
+    end
   end
 
   describe "GET new" do
@@ -132,7 +147,8 @@ RSpec.describe EventsController, :type => :controller do
       get :new_event_template, {:id => event.to_param}, valid_session
       expect(assigns(:event_template).name).to eq event.name
       expect(assigns(:event_template).description).to eq event.description
-      expect(assigns(:event_template).user_id).to eq user.id
+      expect(assigns(:event_template).participant_count).to eq event.participant_count
+      expect(assigns(:event_template).rooms).to eq event.rooms
       expect(response).to render_template("event_templates/new")
     end
   end

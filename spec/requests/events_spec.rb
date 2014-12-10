@@ -27,7 +27,7 @@ RSpec.describe "Events", :type => :request do
 
   it "only admin users can approve and decline events" do
     normal_user = build(:user) 
-    admin = FactoryGirl.build(:admin_user)
+    admin = FactoryGirl.build(:adminUser)
     normal_user_ability = Ability.new(normal_user)
     admin_ability = Ability.new(admin)
     methods = [:approve, :decline]

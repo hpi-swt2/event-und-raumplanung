@@ -1,0 +1,9 @@
+de:
+  tasks:
+    status:
+      not_assigned: nicht zugewiesen
+      pending: ausstehend
+      accepted: bestätigt
+      declined: abgelehnt
+    user:
+      none: Keine Auswahl

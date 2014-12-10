@@ -1,0 +1,9 @@
+en:
+  tasks:
+    attachments:
+      none: No Attachments
+    form:
+      add_attachment: 'Add Attachment'
+      attachments: 'Attachments'
+    show:
+      attachments: 'Attachments'
