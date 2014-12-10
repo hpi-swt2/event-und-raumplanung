@@ -56,6 +56,7 @@ class EventsController < ApplicationController
 
   def approve
     puts "approve"
+    puts 'message: ' + params[:message]
     @event.update(approved: true)
     if params[:message] == nil or params[:message].strip.empty?
       UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
