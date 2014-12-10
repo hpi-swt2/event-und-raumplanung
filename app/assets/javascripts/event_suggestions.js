@@ -3,7 +3,8 @@
 EVENT_URL = '/events/'
 SUGGEST_URL = '/new_event_suggestion'
 
-$(document).ready(function() { 
+var ready; 
+ready = function() { 
 	var typingTimer; 
 	var doneTypingInterval = 1000; 
 	$('#sugguest-form input').change(function() { 
@@ -22,9 +23,8 @@ $(document).ready(function() {
 //   if(flash.warning) { $('.notice').html('<div class="alert fade in alert-warning"><button class="close" data-dismiss="alert">×</button>' + flash.warning + '</div>');}
 //   if(flash.error) { /* code to display the 'error' flash */ alert("aa"); }
 // }); 
-}); 
 
-function checkVacancy(e) { 
+	function checkVacancy(e) { 
 		rooms = []
 		$("#selectpicker option:selected").each(function(){ rooms.push($(this).val());}); 
 		
@@ -59,9 +59,9 @@ function checkVacancy(e) {
 		})
 			// })
 		}); 
-}; 
-
-function flashWarning(data) { 
+	}; 
+	
+	function flashWarning(data) { 
 	messages = [] 
 	for(var i in data) {
 		if(isNum(i)) {  
@@ -106,9 +106,9 @@ function flashWarning(data) {
 	} 
 	 
 	$(".notice").html(output); 
-}
-
-function convertUTCDateToLocalDate(date) {
+	}
+	
+	function convertUTCDateToLocalDate(date) {
     var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
 
     var offset = date.getTimezoneOffset() / 60;
@@ -117,34 +117,36 @@ function convertUTCDateToLocalDate(date) {
     newDate.setHours(hours - offset);
 
     return newDate;   
-}
-function isNum(val) { 
-	return /^\d+$/.test(val);
-} 
-
-function isSameDay(startDate, endDate) { 
+	}
+	function isNum(val) { 
+		return /^\d+$/.test(val);
+	} 
+	
+	function isSameDay(startDate, endDate) { 
 	if(startDate.getDate() == endDate.getDate() && startDate.getMonth() == endDate.getMonth()) { 
 		return true; 
 	}
 	else { 
 		return false; 
 	}
-}
-
-function getTime(date) { 
-	var hours = date.getHours(); 
-	var mins = date.getMinutes(); 
+	}
 	
-	var hourOutput = ((hours < 10) ? "0" + hours : hours);
-	var minOutput = ((mins < 10) ? "0" + mins : mins);(hours < 10 ); 
-	return hourOutput + ":" + minOutput + " Uhr" 
-
-}
-
-function suggestionLink(id) { 
-	return "<br/><a target='_blank' href=" + EVENT_URL + id + SUGGEST_URL +"> Alternative für Event " + id + " vorschlagen</a>"; 
-}
-
-function clearFlash() { 
-	$(".notice").html(""); 
-}
+	function getTime(date) { 
+		var hours = date.getHours(); 
+		var mins = date.getMinutes(); 
+	
+		var hourOutput = ((hours < 10) ? "0" + hours : hours);
+		var minOutput = ((mins < 10) ? "0" + mins : mins);(hours < 10 ); 
+		return hourOutput + ":" + minOutput + " Uhr" 
+	}
+	
+	function suggestionLink(id) { 
+		return "<br/><a target='_blank' href=" + EVENT_URL + id + SUGGEST_URL +"> Alternative für Event " + id + " vorschlagen</a>"; 
+	}
+	
+	function clearFlash() { 
+		$(".notice").html(""); 
+	}
+}; 
+$(document).ready(ready);
+$(document).on('page:load', ready);
