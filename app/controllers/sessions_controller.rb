@@ -89,11 +89,12 @@ class SessionsController < Devise::SessionsController
 
           @user.save
 
-          # Clear the session variable
+          
           
 
           respond_with resource, location: after_sign_in_path_for(resource)
         end
+        # Clear the session variable
         session[:email] = nil
       end
     end
