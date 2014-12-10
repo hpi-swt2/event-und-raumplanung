@@ -1,4 +1,5 @@
 <%- model_class = Event -%>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
 </div>
@@ -34,8 +35,12 @@
   <dd><%= @event.status %></dd>
 </dl>
 
+<h4><%= t '.tasks' %></h4>
+<% @event_id = @event.id %>
+<%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks })%>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              events_path, :class => 'btn btn-default'  %>
+              @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
 <% if can? :edit, @event %> 
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
                 edit_event_path(@event), :class => 'btn btn-default' %>

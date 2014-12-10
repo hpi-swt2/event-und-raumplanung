@@ -2,6 +2,7 @@ class EventsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
+  before_action :set_return_url, only: [:show, :new, :edit]
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
@@ -70,6 +71,7 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
@@ -137,4 +139,9 @@ class EventsController < ApplicationController
     def event_params
       params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
     end
+
+    def set_return_url
+      @return_url = params[:return_url]
+    end
+
 end

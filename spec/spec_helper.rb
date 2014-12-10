@@ -2,6 +2,8 @@ require 'simplecov'
 SimpleCov.start 'rails'
 
 require 'rails_helper'
+require 'capybara/rails'
+require 'capybara/rspec'
 require 'helpers/user_helper_spec'
 require 'factory_girl_rails'
 
@@ -25,6 +27,9 @@ require "rack_session_access/capybara"
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'database_cleaner'
 
+include Warden::Test::Helpers
+Warden.test_mode!
+
 RSpec.configure do |config|
 
   config.before(:suite) do
@@ -36,6 +41,7 @@ RSpec.configure do |config|
 
   config.include Devise::TestHelpers, type: :controller
   config.include UserHelper
+  config.include Capybara::DSL
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
