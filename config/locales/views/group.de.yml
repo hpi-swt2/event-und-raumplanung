@@ -4,7 +4,7 @@ de:
   groups:
     index:
       title: Gruppenübersicht
-      all_events: Alle Gruppen
+      all_groups: Alle Gruppen
     show:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
