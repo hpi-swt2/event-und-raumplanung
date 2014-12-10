@@ -8,7 +8,7 @@ class EventsApprovalController < ApplicationController
     read_and_exec_params
     check_admin_status
     @events = Event.open.order(:starts_at)
-		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).approved.order(:start, :event_id)
+		@bookings = Booking.start_at_day(@date).approved.order(:start, :event_id)
   end
 
   private
