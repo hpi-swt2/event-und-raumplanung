@@ -31,13 +31,13 @@ class Event < ActiveRecord::Base
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
   
-   def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past") if starts_at < Date.today
-      errors.add(:ends_at, "can't be in the past") if ends_at < Date.today
-    end
-   def start_before_end_date
-      errors.add(:starts_at, "start has to be before the end") if starts_at && starts_at && ends_at < starts_at
-   end
+  def dates_cannot_be_in_the_past
+    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at < Date.today
+    errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at < Date.today
+  end
+  def start_before_end_date
+    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
+  end
   
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.

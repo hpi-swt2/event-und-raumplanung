@@ -4,9 +4,17 @@ EVENT_URL = '/events/'
 SUGGEST_URL = '/new_event_suggestion'
 
 $(document).ready(function() { 
-	$('#sugguest-form input').change(checkVacancy);
-	$('#sugguest-form #selectpicker').change(checkVacancy);
+	var typingTimer; 
+	var doneTypingInterval = 1000; 
+	$('#sugguest-form input').change(function() { 
+		clearTimeout(typingTimer); 
+		typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
+	});
 
+	$('#sugguest-form #selectpicker').change(function() { 
+		clearTimeout(typingTimer); 
+		typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
+	});
 // $(document).ajaxComplete(function(event, request) { 
 // var flash = $.parseJSON(request.getResponseHeader('X-Flash-Messages'));
 //   if(!flash) return;
@@ -17,7 +25,6 @@ $(document).ready(function() {
 }); 
 
 function checkVacancy(e) { 
-		e.preventDefault();
 		rooms = []
 		$("#selectpicker option:selected").each(function(){ rooms.push($(this).val());}); 
 		
