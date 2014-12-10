@@ -93,6 +93,7 @@ class Event < ActiveRecord::Base
     unless rooms.nil? 
       rooms = rooms.collect{|i| i.to_i}
     end  
+    ## TODO remove declined events
     events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at})
     if events.empty?
       logger.info "XX"
@@ -110,3 +111,5 @@ class Event < ActiveRecord::Base
     return colliding_events   
   end  
 end
+
+
