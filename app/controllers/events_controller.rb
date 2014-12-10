@@ -94,10 +94,10 @@ class EventsController < ApplicationController
    
     respond_to do |format|
       if conflicting_events.empty? 
-        flash[:error] = "Vacant"
+        flash[:notice] = "Vacant"
         format.json { render :json => {status: true}}
       else 
-        flash[:error] = "Not available"
+        flash[:warning] = "Not available"
         msg = Hash[conflicting_events.map { |event| [event.id, {"starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
         msg[:status]= false
         format.json { render :json => msg}

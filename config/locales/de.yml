@@ -139,7 +139,7 @@ de:
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
     titles: 
-      suggest: 'Event erneut vorschlagen' 
+      suggest: 'Alternative vorschlagen' 
   number:
     currency:
       format:
