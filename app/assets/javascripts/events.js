@@ -95,7 +95,7 @@ ready = function() {
 	 		var ends_at_time = getTime(ends_at); 
 
 	 		time_msg += " von " + starts_at_time + " bis " + ends_at_time; 
-	 		msg = "Ihre Alternative konfligiert mit dem Event " + i + " stattfindend " + " " + time_msg + " " + room_msg; 
+	 		msg = "Ihre Alternative konfligiert mit dem Event &rdquo;" + data[i]["event_name"] + "&rdquo; stattfindend " + " " + time_msg + " " + room_msg; 
 	 		msg += suggestionLink(i);
 			messages.push(msg)
 		}

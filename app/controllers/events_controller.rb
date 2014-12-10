@@ -98,7 +98,11 @@ class EventsController < ApplicationController
         format.json { render :json => {status: true}}
       else 
         flash[:warning] = "Not available"
-        msg = Hash[conflicting_events.map { |event| [event.id, {"starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
+
+        msg = Hash[conflicting_events.map { |event| 
+          eventname = @event.id
+          eventname = event.name if (event.user_id == current_user_id || !event.is_private)
+          [event.id, {"event_name" => eventname,  "starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
         msg[:status]= false
         format.json { render :json => msg}
       end 
@@ -177,6 +181,8 @@ class EventsController < ApplicationController
       respond_to do |format|
       if @event.update(event_params)
         conflicting_events = @event.checkVacancy event_params[:room_ids]
+        logger.info "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        logger.info conflicting_events.inspect
         if conflicting_events.size > 1 ## this event is also in the returned list
           format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
         end
