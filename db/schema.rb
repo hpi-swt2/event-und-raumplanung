@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126122452) do
+ActiveRecord::Schema.define(version: 20141205103749) do
+
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +85,7 @@ ActiveRecord::Schema.define(version: 20141126122452) do
     t.time     "start_time"
     t.date     "end_date"
     t.time     "end_time"
+    t.boolean  "is_important"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -98,6 +100,11 @@ ActiveRecord::Schema.define(version: 20141126122452) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "groups_users", id: false, force: true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
   end
 
   create_table "room_properties", force: true do |t|
@@ -117,7 +124,10 @@ ActiveRecord::Schema.define(version: 20141126122452) do
     t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
+
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "name"
@@ -128,6 +138,7 @@ ActiveRecord::Schema.define(version: 20141126122452) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.integer  "task_order"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree

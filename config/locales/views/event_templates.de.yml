@@ -1,0 +1,10 @@
+de:
+  event_templates:
+    index:
+      title: Eventvorlagen
+      sorted_by: 'Sortiert bei'
+      reset_filter: 'Filter zurücksetzen'
+      search: 'Suche'
+      name: 'Name'
+      description: 'Beschreibung'
+      rooms: 'Räume'

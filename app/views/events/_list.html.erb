@@ -9,8 +9,9 @@
     <tr>
       <th><%= model_class.human_attribute_name 'name' %></th>
       <th><%= model_class.human_attribute_name 'description' %></th>
-      <th><%= model_class.human_attribute_name 'starts_at' %></th>
-      <th><%= model_class.human_attribute_name 'ends_at' %></th>
+      <th><%= model_class.human_attribute_name 'rooms' %></th>
+      <th><%= model_class.human_attribute_name 'starts_at' %> / 
+          <%= model_class.human_attribute_name 'ends_at' %></th>
       <th><%= model_class.human_attribute_name 'status' %></th>
       <th><%= model_class.human_attribute_name 'user' %></th>
       <th><%= t '.actions', :default => t("helpers.actions") %></th>
@@ -21,8 +22,9 @@
       <tr>
         <td><%= link_to event.name, event_path(event) %></td>
         <td><%= trimDescription event.description %></td>
-        <td><%=l event.starts_at if event.starts_at  %></td>
-        <td><%=l event.ends_at if event.ends_at %></td>
+        <td><%= event.rooms.map(&:name).to_sentence %></td>
+        <td><%=l event.starts_at if event.starts_at  %> / <br />
+        <%=l event.ends_at if event.ends_at %></td>
         <td><%= event.status %></td>
         <td><%= event.user_id %></td>
         <td>

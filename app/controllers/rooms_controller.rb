@@ -30,7 +30,7 @@ class RoomsController < ApplicationController
     rooms_ids = Room.all.pluck(:id)
     if params.size <= 4
         if params[:room].nil? or params[:room][:size].empty?
-	   @noSelection = true
+	        @noSelection = true
         end
     end
     if !params[:room].nil? and !params[:room][:size].empty?

@@ -32,8 +32,11 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :rooms, options_from_collection_for_select(Room.all, :id, :name), {}, { :class => 'selectpicker', :multiple =>'' }%>
+      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
     </div>
+    <script>
+    $('#selectpicker').selectpicker();
+    </script>
     <%= error_span(@event[:rooms]) %>
   </div>
   <div class="control-group">
@@ -51,7 +54,7 @@
          <%= error_span(@event[:starts_at_date]) %>
       </div>
       <div class="controls col-sm-6">
-        <%= f.time_field :starts_at_time, :class => 'form-control' %>
+        <%= f.time_field :starts_at_time, :class => 'form-control', value: @event.starts_at_time.strftime('%H:%M') %>
         <%= error_span(@event[:starts_at_time]) %>
       </div>
     </div>
@@ -65,7 +68,7 @@
         <%= error_span(@event[:ends_at_date]) %>
       </div>
       <div class="controls col-sm-6">
-        <%= f.time_field :ends_at_time, :class => 'form-control' %>
+        <%= f.time_field :ends_at_time, :class => 'form-control', value: @event.ends_at_time.strftime('%H:%M') %>
         <%= error_span(@event[:ends_at_time]) %>
       </div>
     </div>
@@ -74,9 +77,13 @@
   <div class="control-group">
 
     <div class="row">
-      <div class="controls col-sm-12">
+      <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
       <%= f.check_box :is_private %>
+      </div>
+      <div class="controls col-sm-6">
+      <%= f.label model_class.human_attribute_name(:Important), :class => 'control-label' %>
+      <%= f.check_box :is_important %>
       </div>
    </div>
   </div>

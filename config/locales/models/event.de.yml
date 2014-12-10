@@ -3,7 +3,9 @@
 de:
   activerecord:
     models:
-      event:'Event'
+      event:
+        one: 'Event'
+        other: 'Events'
     attributes:
       event:
         name: 'Name'

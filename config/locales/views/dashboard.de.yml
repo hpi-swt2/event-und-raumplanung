@@ -1,0 +1,10 @@
+de:
+  dashboard:
+    title: Dashboard
+    upcoming_events: Anstehende Events
+    no_events: Keine anstehenden Events
+    my_tasks: Meine Aufgaben
+    pending_tasks: Ausstehende Aufgaben
+    calendar: Kalender
+    no_tasks: Sie haben keine Aufgaben.
+    no_pending_tasks: Sie haben keine ausstehenden Aufgaben.
