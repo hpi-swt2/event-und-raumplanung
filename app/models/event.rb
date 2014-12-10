@@ -73,7 +73,7 @@ class Event < ActiveRecord::Base
   }
 
   scope :other_to, lambda { |event_id|
-    where("event_id <> ?",event_id) if event_id
+    where("id <> ?",event_id) if event_id
   }
 
   scope :not_approved, lambda { 
