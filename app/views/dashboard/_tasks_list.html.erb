@@ -9,7 +9,7 @@
 				<ul class="list-unstyled task-list-list">
 					<% my_accepted_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
 						<li>
-		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>">
+		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>"  data-user-id="<%= task.user_id %>">
 		        				<%= link_to task.name, task_path(task) %>
 		        			</input>
 		        		</li>
@@ -22,8 +22,13 @@
 			</p>
 		<% end %>
 	</div>
-	<div class="panel-body tasks-pending-panel-body">
-		<h4><%= t('dashboard.pending_tasks') %></h4> 
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><%= t('dashboard.accept_tasks') %></h3>
+	</div>
+	<div class="panel-body">
 		<% unless my_pending_events.blank? %>
 			<% my_pending_events.each do |event| %>
 				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>

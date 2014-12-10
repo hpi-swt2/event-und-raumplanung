@@ -5,6 +5,7 @@ de:
     no_events: Keine anstehenden Events
     my_tasks: Meine Aufgaben
     pending_tasks: Ausstehende Aufgaben
-    calendar: Kalender
-    no_tasks: Sie haben keine Aufgaben.
+    accept_tasks: Aufgaben akzeptieren
+    no_tasks: Sie haben momentan keine Aufgaben.
     no_pending_tasks: Sie haben keine ausstehenden Aufgaben.
+    calendar: Kalender
