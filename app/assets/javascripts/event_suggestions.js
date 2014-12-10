@@ -1,6 +1,7 @@
 // // Place all the behaviors and hooks related to the matching controller here.
 // // All this logic will automatically be available in application.js.
-
+EVENT_URL = '/events/'
+SUGGEST_URL = '/new_event_suggestion'
 
 $(document).ready(function() { 
 	$('#sugguest-form input').change(checkVacancy);
@@ -40,6 +41,8 @@ function checkVacancy(e) {
 			 	if (!data["status"]) { 
 			 		flashWarning(data); 
 			 	}
+			 	else 
+			 		clearFlash(); 
 			 //	var data = JSON.parse(data);
 			// 	if(data['status']){ 
 			// 		alert('true'); 
@@ -85,7 +88,8 @@ function flashWarning(data) {
 	 		var ends_at_time = getTime(ends_at); 
 
 	 		time_msg += " von " + starts_at_time + " bis " + ends_at_time; 
-	 		msg = "Ihre Alternative konfligiert mit dem Event " + i + " stattfindend " + " " + time_msg + " " + room_msg
+	 		msg = "Ihre Alternative konfligiert mit dem Event " + i + " stattfindend " + " " + time_msg + " " + room_msg; 
+	 		msg += suggestionLink(i);
 			messages.push(msg)
 		}
 	} 
@@ -128,4 +132,12 @@ function getTime(date) {
 	var minOutput = ((mins < 10) ? "0" + mins : mins);(hours < 10 ); 
 	return hourOutput + ":" + minOutput + " Uhr" 
 
+}
+
+function suggestionLink(id) { 
+	return "<br/><a target='_blank' href=" + EVENT_URL + id + SUGGEST_URL +"> Alternative für Event " + id + " vorschlagen</a>"; 
+}
+
+function clearFlash() { 
+	$(".notice").html(""); 
 }
