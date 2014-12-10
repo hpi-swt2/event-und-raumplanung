@@ -7,8 +7,8 @@ class EventsApprovalController < ApplicationController
   def index
     read_and_exec_params
     check_admin_status
-		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
-		@events = Event.where.not({status: ['approved', 'declined']})
+    @events = Event.open.order(:starts_at)
+		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).approved.order(:start, :event_id)
   end
 
   private

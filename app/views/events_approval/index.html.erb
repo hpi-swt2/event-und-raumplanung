@@ -50,7 +50,7 @@
     <% end %>
   </tbody>
 </table>
-<%= t('.no_open_events') unless @events.count > 0 %>
+<%= t('.no_open_events') unless @events.exists? %>
 <br><br>
 <h4><%=t '.approved_bookings' %></h4>
 <center>
@@ -64,27 +64,23 @@
     <td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
   </table>
 </center>
-<% bookings_exist = false %>
 <table class="table table-striped">
   <tbody>
     <% @bookings.each do |booking| %>
-      <% if !booking.event.nil? and booking.event.status == 'approved' %>
-        <% bookings_exist = true %>
-        <tr>
-          <td>
-          	<%= link_to booking.name, booking_path(booking) %>,
-            <%= t('.user') + ' ' + booking.event.user_id.to_s %>,
-            <%= link_to booking.event.name, event_path(booking.event) %>,
-            <%= booking.event.description %>,
-          	<%= booking.description %>
-            <br>
-            <%= timeslot_as_string(booking) %>,
-            <%= link_to booking.room.name, booking.room unless booking.room.nil? %>
-            (<%= booking.event.participant_count %>)
-          </td>
-        </tr>
-      <% end %>
+      <tr>
+        <td>
+        	<%= link_to booking.name, booking_path(booking) %>,
+          <%= t('.user') + ' ' + booking.event.user_id.to_s %>,
+          <%= link_to booking.event.name, event_path(booking.event) %>,
+          <%= booking.event.description %>,
+        	<%= booking.description %>
+          <br>
+          <%= timeslot_as_string(booking) %>,
+          <%= link_to booking.room.name, booking.room unless booking.room.nil? %>
+          (<%= booking.event.participant_count %>)
+        </td>
+      </tr>
     <% end %>
   </tbody>
 </table>
-<%= t('.no_approved_bookings') unless bookings_exist %>
+<%= t('.no_approved_bookings') unless @bookings.exists? %>
