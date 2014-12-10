@@ -10,7 +10,8 @@ class Task < ActiveRecord::Base
 
   def update_and_send_notification(task_params, assigner)
     previousUser = user
-    assign_attributes(task_params)
+    updated_attributes = attributes.merge task_params
+    assign_attributes(updated_attributes)
     if valid?
       if user_id_changed?
         unless previousUser.nil?
