@@ -101,6 +101,20 @@ class TasksController < ApplicationController
     redirect_to @task
   end
 
+  def create_comment
+    @comment = Comments.new(params)
+    respod_to do |format|
+      if @comment.save
+        format.html { redirect_to @comment, notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  helper_method :create_comment
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
