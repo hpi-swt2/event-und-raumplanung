@@ -10,7 +10,7 @@
             <ul class="list-group">
                 <% @events.each do |event| %>
                     <li class="list-group-item">
-                        <%= link_to event.name, event_path(event, return_url: return_url) %>
+                        <%= link_to event.name, event_path(event) %>
                         (<%= event.starts_at.strftime("%A, %d.%m.%Y, %H:%M") if event.starts_at %>)
                     </li>
                 <% end %>

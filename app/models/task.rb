@@ -6,7 +6,7 @@ class Task < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   belongs_to :user
   validates_presence_of :name
-  ranks :task_order
+  ranks :task_order, :with_same => :event_id
 
   def update_and_send_notification(task_params, assigner)
     previousUser = user
