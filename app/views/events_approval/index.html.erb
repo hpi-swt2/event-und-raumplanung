@@ -31,7 +31,20 @@
         </td>
         <td>
         	<%= link_to "Decline", decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
+
+<% if false %>
           <%= link_to "Approve", approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+<% end %>
+
+          <% if can? :approve, Room %>
+          <%= link_to t('.approve', :default => t("helpers.links.approve")),
+                      approve_event_path(event, date: @date),
+                      :method => :approve,
+                      :data => { :confirm => t('.approve', :default => t("helpers.links.approve", :default => 'Decline all conflicting Events?')) },
+                      :class => 'btn btn-xs btn-success' %>
+          <% end -%>
+
+
         </td>
       </tr> 
     <% end %>
