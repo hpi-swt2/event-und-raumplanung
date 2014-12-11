@@ -6,9 +6,13 @@ var ready;
 ready = function() { 
 	var typingTimer; 
 	var doneTypingInterval = 1000; 
+
 	$('.room_input').change(function() { 
-		// clearTimeout(typingTimer); 
-		// typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
+		clearTimeout(typingTimer); 
+		typingTimer = setTimeout(getValidRooms, doneTypingInterval); 	
+	});
+
+	function getValidRooms(){
 		equipment_ids = []; 
 		$(".equipment:checked").each(function(){ equipment_ids.push($(this).attr('id'))});
 		var data = {}
@@ -48,7 +52,7 @@ ready = function() {
 			 	$(".selectpicker.dropdown-menu").html(msg)
 			 })
 		}); 
-	}); 
+	 } 
 }
 $(document).ready(ready);
 $(document).on('page:load', ready);
