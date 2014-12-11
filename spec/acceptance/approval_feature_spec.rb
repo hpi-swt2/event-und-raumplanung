@@ -12,35 +12,53 @@ RSpec.feature "Event approval" do
     end
 
     let!(:authed_user) { create_logged_in_user }
-
-	scenario "Approve an unprocessed Event" do	
-  		page.visit "/event_approval"
+<<-DOC  
+	scenario "Approve an unprocessed Event" do
+		page.visit "/events_approval"
+		have_text("EventsApproval#index")
+		have_text("Sommerfest")
 		#page.click_button "Approve"
 		#page.find_field("Approve").click		
-		page.find_link("Approve").click		
-		page.should have_content("Successfully added.")
-		puts page.body
+		#page.find_link("Approve").click
+		#page.find('a[data-method="approve"]').first(:link, "Approve").click
+		#page.find('a[class="btn btn-success btn-xs"]').click	
+		#page.click_link("Approve", :match => :first)	
+		#page.find('a[href="/events/2/decline?date=2014-12-10/"').click
+		#page.find('a[data-method="approve"]').both.click
+		#within 'a[data-method="approve"]' do
+		#	firt(:link, "Approve").click
+		#end
+		#page.driver.headers = { 'ACCEPT-LANGUAGE' => 'en' }
+		page.first(:link, "Approve").click
+		page.should have_content("Successfully added.")		
 	end
 
+
 	scenario "Reject an unprocessed Event" do
-  		page.visit "/event_approval"
+  		page.visit "/events_approval"
 		#page.click_button "Reject"
-		page.find("btn-success btn-xs").first.click
+		#page.find("btn-success btn-xs").first.click
+		page.first(:link, "Decline").click		
 		page.should have_content("Successfully rejected.")
 		puts page.body
 	end
 
+
 	scenario "View details for Room" do
-  		page.visit "/event_approval"
-		#page.find('a', :text => "room").click
-		page.find_link("room").click	
-		page.should have_content("Anstehende Events")
+  		page.visit "/events_approval"
+		page.click_link("room", :match => :first).click
+		#page.find_link("room").click	
+		page.should have_content("Raum")
+		page.should have_content("Keine speziellen Eigenschaften")
 	end
+DOC
 
 	scenario "View details for Event" do
-  		page.visit "/event_approval"
-		page.find_link("Tribute von Panem").click
-		page.should have_content("Details zum Event Tribute von Panem 2015")
+  		page.visit "/events_approval"
+		page.first(:link, "Sommerfest").click
+		page.should have_content("Event")
+		page.should have_content("Details zur Sommerfest 2015")
 	end
+
 end
 
