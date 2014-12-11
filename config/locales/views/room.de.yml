@@ -19,3 +19,15 @@ de:
       people: Personen
       table_information: Tische auf Anfrage
       table_request: Tische anfragen
+    list:
+      room_selection: Raumauswahl
+      requested_size: gewünschte Raumgröße
+      necessary_equipment: Notwendige Ausstattung
+      necessary_properties: Notwenige Eigenschaften
+      no_rooms_found: Keine passenden Räume gefunden
+      no_selection: Noch keine Suchkriterien eingegeben
+      room_id: Raum ID
+      room_name: Raumname
+      room_size: maximale Personenzahl
+      equipment: Ausstattung
+      properties: Eigenschaften

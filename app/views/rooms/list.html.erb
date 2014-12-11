@@ -1,9 +1,9 @@
-<h1>Räume</h1>
+<h1><%= t'.room_selection' %></h1>
 <%= form_tag("/rooms/list", method: "get", :name => "list", :ID => 1, :remote => true) do %>
-<%= label_tag(:size, "gewünschte Raumgröße:") %>
+<%= label_tag(:size, 'gewünschte Raumgröße') %>
 <%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :onchange => ("javascript: document.list.submit();")) %>
 <br>
-Equipment
+<%= t'.necessary_equipment' %>
 <br>
 <% @categories.each do |category| %>
 <% if params.has_key?(category) %>
@@ -15,7 +15,7 @@ Equipment
 
 <% end %>
 <br>
-Eigenschaften
+<%= t'.necessary_properties' %>
 <br>
 <% @properties.each do |property| %>
 <% if params.has_key?(property) %>
@@ -30,31 +30,37 @@ Eigenschaften
 <% end %>
 <br><br>
 <% if @empty %>
-keine Räume gefunden!
+<%= t'.no_rooms_found' %>
 <%elsif @noSelection %>
-nix ausgewählt!
+<%= t'.no_selection' %>
 <% else %> 
 <table border=1px>
-<tr><th>Raum ID </th><th>Raum Name </th><th>Raum Größe</th><th>Equipment</th><th>Eigenschaften</th></tr>
-<% @rooms.each do |room| %>
-<tr>
-  <td align="middle"><%= room.id %></td>
-  <td><%= link_to room.name, room, method: :details %></td>
-  <td align="middle"><%=room.size %></td>
-  <td>
-  <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
-  <% category_list.each do |item| %>
-  <%= item %>
-  <% end %>
-  </td>
-  <td>
-  <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
-  <% property_list.each do |item| %>
-  <%= item %>
-  <% end %>
-  </td>
-</tr>
-<% end %>
+    <tr>
+        <th><%= t'.room_id' %></th>
+        <th><%= t'.room_name' %></th>
+        <th><%= t'.room_size' %></th>
+        <th><%= t'.equipment' %></th>
+        <th><%= t'.properties' %></th>
+    </tr>
+    <% @rooms.each do |room| %>
+    <tr>
+      <td align="middle"><%= room.id %></td>
+      <td><%= link_to room.name, room, method: :details %></td>
+      <td align="middle"><%=room.size %></td>
+      <td>
+      <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
+      <% category_list.each do |item| %>
+      <%= item %>
+      <% end %>
+      </td>
+      <td>
+      <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
+      <% property_list.each do |item| %>
+      <%= item %>
+      <% end %>
+      </td>
+    </tr>
+    <% end %>
 </table>
 <% end %>
 <br><br><br>
