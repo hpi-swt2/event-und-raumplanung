@@ -1,13 +1,13 @@
 <%= label_tag(:size, 'gewünschte Raumgröße') %>
-<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :onchange => ("javascript: document.list.submit();")) %>
+<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :class => 'room_input') %>
 <br>
 <%= t'.necessary_equipment' %>
 <br>
 <%  Equipment.group(:category).pluck(:category).each do |category| %> 
 	<% if params.has_key?(category) %>
-	<%= check_box_tag(category,true, true, :onclick => "javascript: document.list.submit();") %>
+	<%= check_box_tag(category,true, true, :class => 'room_input equipment') %>
 	<% else %>
-	<%= check_box_tag(category,true, false, :onclick => "javascript: document.list.submit();") %>
+	<%= check_box_tag(category,true, false, :class => 'room_input equipment') %>
 	<% end %>
 	<%= label_tag(category, category) %>
 	<% end %>
