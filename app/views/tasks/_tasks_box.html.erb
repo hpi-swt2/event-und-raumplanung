@@ -15,11 +15,15 @@
           <td><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>"></td>
           <td><%= task.attachments.count() > 0 ? "Yes" : "No" %></td>
           <td><%= link_to task.name, task_path(task) %></td>
-          <td class="<%= task.status %> pull-right"><%= (task.user_id.blank?) ? t("tasks.status.not_assigned") : (get_email task.user_id) %></td>
-          <% if  task.deadline %> 
+          <% if task.user_id.blank? %> 
+            <td class="<%= task.status %>"><%= t("tasks.status.not_assigned") %></td>
+          <% else %>
+            <td class="<%= task.status %> "><%= (get_email task.user_id) %></td>
+          <% end %>
+          <% if task.deadline %> 
             <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
           <% else %>
-           <td></td>
+            <td></td>
           <% end %>
         </tr>
       <% end %>
