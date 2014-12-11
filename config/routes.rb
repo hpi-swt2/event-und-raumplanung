@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :uploads, :only => [:new, :create, :destroy]
+
   resources :groups do
     member do
       get 'manage_rooms'
@@ -18,6 +20,8 @@ Rails.application.routes.draw do
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
   post 'rooms/:id' => 'rooms#details'
+
+  post 'tasks/upload_file' => 'tasks#upload_file'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 

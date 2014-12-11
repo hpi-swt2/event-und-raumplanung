@@ -2,9 +2,11 @@ class Task < ActiveRecord::Base
   include RankedModel
 
   belongs_to :event
+  belongs_to :user
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
-  belongs_to :user
+  has_many :uploads, :dependent => :destroy
+  accepts_nested_attributes_for :uploads
   validates_presence_of :name
   ranks :task_order, :with_same => :event_id
 

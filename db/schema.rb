@@ -143,6 +143,17 @@ ActiveRecord::Schema.define(version: 20141205103749) do
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
+  create_table "uploads", force: true do |t|
+    t.integer  "task_id"
+    t.string   "task_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: ""
     t.string   "encrypted_password",     default: "", null: false
