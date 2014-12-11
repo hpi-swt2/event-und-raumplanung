@@ -52,7 +52,6 @@ Rails.application.routes.draw do
   get 'events/:id/new_event_suggestion' => 'events#new_event_suggestion', as: :new_event_suggestion_from_event
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
-  patch 'events/:id/sugguest' => 'events#create_suggestion', as: :create_suggestion
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'

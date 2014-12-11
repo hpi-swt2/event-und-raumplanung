@@ -130,25 +130,6 @@ class EventsController < ApplicationController
   def sugguest 
   end 
 
-  def create_suggestion
-    @event = Event.new(event_params)
-    @event.user_id = current_user_id
-    logger.info @event.inspect
-    respond_to do |format|
-      if @event.save 
-        if @event.checkVacancy
-          format.html { redirect_to @event, notice: t('notices.successful_sugguest', :model => Event.model_name.human) }
-          format.json { render :show, status: :created, location: @event }
-        else
-          format.html { redirect_to @event, alert: t('alert.successful_sugguest_conflict', :model => Event.model_name.human)  }
-          format.json { render json: @event.errors, status: :unprocessable_entity }
-        end 
-      else
-        format.html { render :sugguest }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
-    end 
-  end 
   # POST /events
   # POST /events.json
   def create
