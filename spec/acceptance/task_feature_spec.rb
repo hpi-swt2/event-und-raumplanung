@@ -19,7 +19,7 @@ RSpec.feature "Task" do
     #  - Attachments url muss ausgefüllt werden 
     #  - Attachments url ist nicht gültig"
 
-<<-DOC
+
     scenario "create subtle Task" do
   		page.visit "/tasks"
 		page.should have_text("Task")
@@ -49,9 +49,9 @@ RSpec.feature "Task" do
 		#page.click_link("Anhang hinzufügen", :match => :first)
 		#page.find('input[value="Anhang hinzufügen"]').click
 		page.click_button "Anhang hinzufügen"
-		page.click_button "Delete"
+		page.click_button "Delete" #would delete Anhang
 		page.click_button "Task erstellen"
 		page.should have_content("Task wurde erfolgreich erstellt.")
     end
-DOC
+
 end
