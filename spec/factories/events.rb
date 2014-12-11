@@ -19,4 +19,11 @@ FactoryGirl.define do
     f.is_private true
     f.user_id 122
   end
+
+  factory :declined_event, parent: :event do
+    status 'declined'
+  end
+  factory :approved_event, parent: :event do
+    status 'approved'
+  end
 end
