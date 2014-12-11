@@ -60,7 +60,7 @@ class TasksController < ApplicationController
   def update
     if params[:uploads]
       params[:uploads].each { |upload|
-        @task.uploads.create(:file => upload)}
+        @task.uploads.create(:file => upload) }
     end
     respond_to do |format|
       if @task.update_and_send_notification((set_status task_params), current_user)
@@ -115,7 +115,7 @@ class TasksController < ApplicationController
 
   def upload_file
     if params[:uploads]
-        @task.uploads.create(:file => params[:uploads])
+      @task.uploads.create(:file => params[:uploads])
     end
 
     respond_to do |format|
