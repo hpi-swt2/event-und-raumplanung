@@ -55,7 +55,6 @@ Rails.application.routes.draw do
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve_or_decline' => 'events#approve_or_decline', as: "approve_or_decline_event"
-  get 'events/:id/approve_or_decline' => 'events#approve_or_decline', as: "approve_or_decline_event"
   get 'events/:id/approve' => 'events#approve', as: "approve_event"
   get 'events/:id/decline' => 'events#decline', as: "decline_event"
 
