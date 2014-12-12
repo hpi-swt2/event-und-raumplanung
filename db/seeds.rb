@@ -41,8 +41,8 @@ task = Task.create(id: 1, name: "Pizza Bestellen", description: "10 Pizzen von C
 
 #
 # create Comments
-comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", task_id: 1)
-comment = Comments.create(user_id: 1, content: "Ich will NOCH MEHR PIZZA!!!", created_at: "2014-14-26 15:37:42", task_id: 1)
+comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", event_id: 1)
+comment = Comments.create(user_id: 1, content: "Ich will NOCH MEHR PIZZA!!!", created_at: "2014-12-26 15:37:42", event_id: 1)
 
 
 #

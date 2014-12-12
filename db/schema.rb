@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20141205131556) do
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "task_id"
+    t.integer  "event_id"
   end
 
   create_table "equipment", force: true do |t|
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 20141205131556) do
     t.time     "start_time"
     t.date     "end_date"
     t.time     "end_time"
+    t.boolean  "is_important"
   end
 
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
@@ -102,6 +103,17 @@ ActiveRecord::Schema.define(version: 20141205131556) do
     t.integer "event_id"
     t.integer "room_id"
   end
+
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.boolean  "is_favorite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "groups", force: true do |t|
     t.string   "name"
