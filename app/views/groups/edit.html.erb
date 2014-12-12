@@ -12,5 +12,5 @@
 <%= form_for @group, :html => { :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
   <%= text_field User, :email, :class => 'form-control' %>
-  <%= f.submit "Add User", :class => 'btn btn-primary' %>
+  <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 <% end %>
