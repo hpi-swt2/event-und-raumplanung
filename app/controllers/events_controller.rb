@@ -78,32 +78,25 @@ class EventsController < ApplicationController
   end
 
   def approve
-<<<<<<< HEAD
-    @event.update(status: 'approved')
-=======
     puts 'message: ' + params[:message]
-    @event.update(approved: true)
+    @event.update(status: 'approved')
     if params[:message] == nil or params[:message].strip.empty?
       UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
     else
       UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
     end
->>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
+
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
-<<<<<<< HEAD
     @event.update(status: 'declined')
-=======
-    @event.update(approved: false)
     if params[:message] == nil or params[:message].strip.empty?
       UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
     else
       UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
     end
 
->>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
@@ -226,12 +219,7 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-<<<<<<< HEAD
-      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
-=======
-
-      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :message, :commit,:room_ids => [])
->>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
+      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
     end
 
     def set_return_url
