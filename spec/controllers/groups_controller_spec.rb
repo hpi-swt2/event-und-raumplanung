@@ -41,9 +41,18 @@ RSpec.describe GroupsController, :type => :controller do
   # GroupsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  let(:assign_user_session) {
+    {
+      User:{
+        email: "hpi_user@student.hpi.de" 
+      }
+    } 
+  }
+
   context "when user is logged-in" do
     let(:user) { create :user }
     let(:adminUser) { create :adminUser }
+    let(:hpiUser) { create :hpiUser }
 
     before(:each, :isAdmin => false) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -112,13 +121,14 @@ RSpec.describe GroupsController, :type => :controller do
     describe "GET assign_user" do
       it "redirects to the root path as normal user", :isAdmin => false do
         group = Group.create! valid_attributes
-        get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        get :assign_user, {:id => group.to_param}, valid_session
         expect(response).to redirect_to(root_path)
       end
 
       it "assigns user to group as admin", :isAdmin => true do
+        hpiUser.save
         group = Group.create! valid_attributes
-        get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        get :assign_user, {:id => group.to_param}, assign_user_session
         expect(group.users.first).to eq(user)
         expect(user.groups.first).to eq(group)
         expect(group.users.count).to eq(1)
@@ -129,14 +139,14 @@ RSpec.describe GroupsController, :type => :controller do
     describe "GET unassign_user" do
       it "redirects to the root path as normal user", :isAdmin => false do
         group = Group.create! valid_attributes
-        get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        get :unassign_user, {:id => group.to_param, :email => user.email.to_param}, valid_session
         expect(response).to redirect_to(root_path)
       end
 
       it "unassigns user to group as admin", :isAdmin => true do
         group = Group.create! valid_attributes
         group.users << user
-        get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        get :unassign_user, {:id => group.to_param, :email => user.email.to_param}, valid_session
         expect(group.users.count).to eq(0)
         expect(user.groups.count).to eq(0)
       end
@@ -295,52 +305,5 @@ RSpec.describe GroupsController, :type => :controller do
       end
     end
   end
-
-  /
-    describe "in group room management" do
-      let(:group1) { create :group, name: "group1"}
-      let(:group2) { create :group, name: "group2"}
-      let(:room1) { create :room}
-      let(:room2) { create :room }
-
-      # group1 = create(:group, name: "Group1")
-      # group2 = create(:group, name: "Group2")
-      # room1 = create(:room)
-      # room2 = create(:room)
-
-      describe "assigning a room" do
-        context "that is already assigned" do
-          before(:each) do
-            get :assign_room, {:id => group2, :room => room1.to_param}, valid_session
-          end
-          # it "does not assign a room" do
-          #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   expect(room1.group).to eq (group2.id)
-          # end
-        end
-
-        context "that is not assigned yet" do
-          it "assigns the room" do
-            # puts group1.inspect
-            # room1.group = group1
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-            # puts group1.reload.inspect
-            # puts Room.find(room1.id).inspect
-            # puts flash.inspect
-            # puts response.body
-
-            # RELOAD!! as room1 is just a local variable, get actual information from DB
-            expect(room1.reload.group_id).to eq (group1.id)
-          end
-        end
-
-        it "redirects to manage group path" do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          expect(response).to redirect_to(manage_rooms_group_path(group1))
-        end
-      end
-    end
-  end/
 
 end

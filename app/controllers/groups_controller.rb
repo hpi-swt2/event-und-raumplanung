@@ -110,18 +110,22 @@ class GroupsController < ApplicationController
     end
 
     def load_user_from_email
-      @user = User.find_by_email(params[:User][:email])
-      if @user == nil
-        flash[:error] = t("groups.edit.user_not_found")
-        redirect_to edit_group_path(@group)
+      if params.include?(:User)
+        @user = User.find_by_email(params[:User][:email])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
       end
     end
 
     def load_user_from_id
-      @user = User.find(params[:user_id])
-      if @user == nil
-        flash[:error] = t("groups.edit.user_not_found")
-        redirect_to edit_group_path(@group)
+      if params.include?(:User)
+        @user = User.find(params[:user_id])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
       end
     end
 
