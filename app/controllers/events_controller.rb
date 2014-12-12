@@ -3,11 +3,12 @@ class EventsController < ApplicationController
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :approve_or_decline, :new_event_template, :new_event_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
+
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :approve_or_decline]
   after_filter :flash_to_headers, :only => :check_vacancy
 
   def current_user_id
@@ -77,13 +78,41 @@ class EventsController < ApplicationController
   end
 
   def approve
+<<<<<<< HEAD
     @event.update(status: 'approved')
+=======
+    puts 'message: ' + params[:message]
+    @event.update(approved: true)
+    if params[:message] == nil or params[:message].strip.empty?
+      UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
+    else
+      UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+    end
+>>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
+<<<<<<< HEAD
     @event.update(status: 'declined')
+=======
+    @event.update(approved: false)
+    if params[:message] == nil or params[:message].strip.empty?
+      UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
+    else
+      UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+    end
+
+>>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def approve_or_decline
+    if(params[:commit] == 'Approve')
+      self.approve
+    else
+      self.decline
+    end
   end
 
   def check_vacancy
@@ -197,7 +226,12 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
+<<<<<<< HEAD
       params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
+=======
+
+      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :message, :commit,:room_ids => [])
+>>>>>>> 322a042596223ae5870eadc628e6d56fe1a15841
     end
 
     def set_return_url
