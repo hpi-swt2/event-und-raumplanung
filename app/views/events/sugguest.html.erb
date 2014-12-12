@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => [:'helpers.titles.sugguest', 'Sugguest %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-<%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch",  :html => { :class => "form-horizontal event" } do |f| %>
+<%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch", :remote => true, :html => { :class => "form-horizontal event", :id => "sugguest-form" } do |f| %>
     <% if @event.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
@@ -18,7 +18,7 @@
       </div>
     </div>
   <% end %>
-
+ <%= f.hidden_field :id, :value => @event.id%>
 <div class="control-group">
     <%= f.label model_class.human_attribute_name(:name), :class => 'control-label' %>
     <div class="controls">
@@ -74,9 +74,9 @@
       </div>
     </div>
   </div>
- 
-  <%= f.submit t('.sugguest', :default => t("helpers.links.sugguest")), :class => 'btn btn-primary' %>
+  <%= f.submit t('.sugguest', :default => t("helpers.links.sugguest")), :class => 'btn btn-primary', :id => "submit_suggestion" %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
+  <%= link_to t('.sugguest', :default => t("helpers.links.sugguest")), sugguest_event_path(17), :target => "_blank" %>
 
 <% end %>

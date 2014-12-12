@@ -4,9 +4,8 @@
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= t('events.show.id') %>:</strong></dt>
-  <dd><%= @event.id %></dd>
-  <dt><strong><%= t('events.show.name') %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt><dd><%= @event.id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @event.name %></dd>
   <dt><strong><%= t('events.show.description') %>:</strong></dt>
   <dd><%= raw nl2br h @event.description %></dd>
@@ -17,11 +16,11 @@
   <dt><strong><%= t('events.show.private') %>:</strong></dt>
   <dd><%= check_box_tag 'private', 'private', @event.is_private, disabled: :disabled %></dd>
   <dt><strong><%= t('events.show.starts_at') %>:</strong></dt>
-  <% if @event.starts_at %> 
+  <% if @event.starts_at %>
     <dd><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></dd>
-  <% end %> 
+  <% end %>
   <dt><strong><%= t('events.show.ends_at') %>:</strong></dt>
-  <% if  @event.ends_at%> 
+  <% if  @event.ends_at%>
   <dd><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></dd>
   <% end %>
   <dt><strong><%= t('events.show.user') %>:</strong></dt>
@@ -36,13 +35,13 @@
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               events_path, :class => 'btn btn-default'  %>
-<% if can? :edit, @event %> 
+<% if can? :edit, @event %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
                 edit_event_path(@event), :class => 'btn btn-default' %>
 <% end %>
 <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
                       new_event_template_from_event_path(@event), :class => 'btn btn-default' %>
-<% if can? :destroy, @event %> 
+<% if can? :destroy, @event %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                 event_path(@event),
                 :method => 'delete',
