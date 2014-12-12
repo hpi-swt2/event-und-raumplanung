@@ -63,20 +63,43 @@
 	<!-- </tbody> -->
 <!-- </table> -->
 
-<div id='calendar'></div>
-<script>$('#calendar').fullCalendar({				
-				defaultView: 'agendaDay'
+
+<script>$(document).ready(function() {
+			$('#calendar').fullCalendar({				
+				defaultView: 'agendaDay',
+				eventSources: [{
+				events:[{
+					title: 'Weihnachtsfeier',
+					start: '2014-12-12'
+				},
+				{
+					title: 'Film',
+					start: '2014-12-12T15:00:00Z',
+					end: '2014-12-12T18:00:00Z'
+				},
+				{
+					title: 'Meeting',
+					start: '2014-12-12T13:30:00Z',
+					end: '2014-12-12T15:00:00Z'
+				},
+				{
+					title: 'Lunch',
+					start: '2014-12-12T12:30:00Z',
+					end: '2014-12-12T13:30:00Z'
+				}]}]
 				});
+			});
 </script>
 <style type='text/css'>
 
 	#calendar {
-		width: 600px;
+		width: 900px;
 		height: 900px;
 		margin: 0 auto;
 	}
 
 </style>
+<div id='calendar'></div>
 <% @room.bookings.each do |booking| %>
 	<% if(booking.start.to_date == Date.today) %>
 		<% name=booking.name %>
