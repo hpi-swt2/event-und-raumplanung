@@ -1,0 +1,33 @@
+<h1>Listing event_suggestions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Starts at</th>
+      <th>Datetime</th>
+      <th>Ends at</th>
+      <th>Datetime</th>
+      <th>Status</th>
+      <th>Room</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @event_suggestions.each do |event_suggestion| %>
+      <tr>
+        <td><%= event_suggestion.starts_at %></td>
+        <td><%= event_suggestion.ends_at %></td>
+        <td><%= event_suggestion.status %></td>
+        <td><%= event_suggestion.room_id %></td>
+        <td><%= link_to 'Show', event_suggestion %></td>
+        <td><%= link_to 'Edit', edit_event_suggestion_path(event_suggestion) %></td>
+        <td><%= link_to 'Destroy', event_suggestion, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Event suggestion', new_event_suggestion_path %>

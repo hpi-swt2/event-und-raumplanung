@@ -9,7 +9,7 @@ def bootstrap_flash(options = {})
       logger.info type
       type = type.to_sym
       type = :success if type == :notice
-      type = :warning  if type == :alert     #alert should be treated as a warning and not as a success
+      type = :warning if type == :alert     #alert should be treated as a warning and not as a success
       type = :danger  if type == :error
       next unless ALERT_TYPES.include?(type)
 

@@ -1,17 +1,18 @@
 // // Place all the behaviors and hooks related to the matching controller here.
 // // All this logic will automatically be available in application.js.
-
+EVENT_URL = '/events/'
+SUGGEST_URL = '/new_event_suggestion'
 
 var ready; 
 ready = function() { 
 	var typingTimer; 
 	var doneTypingInterval = 1000; 
-	$('#event-form input').change(function() { 
+	$('#sugguest-form input').change(function() { 
 		clearTimeout(typingTimer); 
 		typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
 	});
 
-	$('#event-form #selectpicker').change(function() { 
+	$('#sugguest-form #selectpicker').change(function() { 
 		clearTimeout(typingTimer); 
 		typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
 	});
@@ -29,10 +30,10 @@ ready = function() {
 		
 		var data = { 	
 			event: {
-			starts_at_date: $('#event_starts_at_date').val(),
- 			starts_at_time: $('#event_starts_at_time').val(),
- 		 	ends_at_date:  $('#event_ends_at_date').val(),
- 		 	ends_at_time: $('#event_ends_at_time').val(), 
+			starts_at_date: $('#event_suggestion_starts_at_date').val(),
+ 			starts_at_time: $('#event_suggestion_starts_at_time').val(),
+ 		 	ends_at_date:  $('#event_suggestion_ends_at_date').val(),
+ 		 	ends_at_time: $('#event_suggestion_ends_at_time').val(), 
  		 	room_ids: rooms
  			}
  		} 
@@ -94,7 +95,8 @@ ready = function() {
 	 		var ends_at_time = getTime(ends_at); 
 
 	 		time_msg += " von " + starts_at_time + " bis " + ends_at_time; 
-	 		msg = "Ihr Event konfligiert mit dem Event &rdquo;" + data[i]["event_name"] + "&rdquo; stattfindend " + " " + time_msg + " " + room_msg; 
+	 		msg = "Ihre Alternative konfligiert mit dem Event " + i + " stattfindend " + " " + time_msg + " " + room_msg; 
+	 		msg += suggestionLink(i);
 			messages.push(msg)
 		}
 	} 
@@ -138,7 +140,9 @@ ready = function() {
 		return hourOutput + ":" + minOutput + " Uhr" 
 	}
 	
-	
+	function suggestionLink(id) { 
+		return "<br/><a target='_blank' href=" + EVENT_URL + id + SUGGEST_URL +"> Alternative für Event " + id + " vorschlagen</a>"; 
+	}
 	
 	function clearFlash() { 
 		$(".notice").html(""); 
