@@ -7,9 +7,16 @@
 
   <tbody>
     <% @users.each do |user| %>
-      <tr>
-        <td><%= user.email %></td>
-      </tr>
+      <% if @group.users.include?(user) %>  
+        <tr>
+          <td><%= user.username %></td>
+          <td><%= t('groups.show.assigned')%></td>
+          <% if params[:action] == "edit" %>
+            <td><%= link_to t('.unassign_user', :default => t("groups.show.unassign_user")),
+              unassign_user_group_path(@group, user.id), :class => 'btn btn-default' %></td>
+          <% end %>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

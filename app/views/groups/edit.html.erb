@@ -5,12 +5,12 @@
 
 <h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
 
+<%= render :partial => 'form' %>
+
+<%= render :partial => 'users' %>
+
 <%= form_for @group, :html => { :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
   <%= text_field User, :email, :class => 'form-control' %>
   <%= f.submit "Add User", :class => 'btn btn-primary' %>
 <% end %>
-
-<%= render :partial => 'users' %>
-
-<%= render :partial => 'form' %>

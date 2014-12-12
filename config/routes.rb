@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
-      get 'unassign_user/:email', :action => 'unassign_user', :as => 'unassign_user'
+      get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
     end
   end
 
