@@ -31,6 +31,10 @@ class Event < ActiveRecord::Base
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
   
+
+
+
+
   def dates_cannot_be_in_the_past
     errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at < Date.today
     errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at < Date.today
