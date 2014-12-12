@@ -1,4 +1,5 @@
 class EventSuggestionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_event_suggestion, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -40,13 +41,23 @@ class EventSuggestionsController < ApplicationController
   end
 
   def update
-    @event_suggestion.update(event_suggestion_params)
-    respond_with(@event_suggestion)
+    respond_to do |format|
+      if @event_suggestion.update(event_suggestion_params)
+        format.html { redirect_to @event_suggestion, notice: t('notices.successful_update', :model => EventSuggestion.model_name.human) }
+        format.json { render :show, status: :ok, location: @event_suggestion }
+      else
+        format.html { render :edit }
+        format.json { render json: @event_suggestion.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy
     @event_suggestion.destroy
-    respond_with(@event_suggestion)
+    respond_to do |format|
+      format.html { redirect_to events_url, notice: t('notices.successful_destroy', :model => EventSuggestion.model_name.human) }
+      format.json { head :no_content }
+    end
   end
 
   private

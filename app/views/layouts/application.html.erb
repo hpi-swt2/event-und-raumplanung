@@ -54,7 +54,7 @@
           <ul class="nav navbar-nav">
             <!-- Use model_name.human(:count => 2) not model_name.human.pluralize -->
             <li><%= link_to Event.model_name.human(:count => 2), events_path %></li>
-            <li><%= link_to EventTemplate.model_name.human(:count => 2), event_templates_path %></li>
+            <li><%= link_to "Vorlagen", event_templates_path %></li>
             <li><%= link_to Room.model_name.human(:count => 2), rooms_path %></li>
             <li><%= link_to Group.model_name.human(:count => 2), groups_path %></li>
             <li><%= link_to Task.model_name.human(:count => 2), tasks_path %></li>

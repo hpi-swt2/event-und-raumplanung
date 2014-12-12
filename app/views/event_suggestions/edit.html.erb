@@ -1,6 +1,6 @@
 <h1>Editing event_suggestion</h1>
 
-<%= render 'form' %>
+<%= render :partial => 'form', locals: {model_class: EventSuggestion} %>
 
 <%= link_to 'Show', @event_suggestion %> |
 <%= link_to 'Back', event_suggestions_path %>

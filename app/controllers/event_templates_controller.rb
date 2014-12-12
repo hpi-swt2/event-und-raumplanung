@@ -18,7 +18,7 @@ class EventTemplatesController < ApplicationController
       @filterrific.select_options =   {
         sorted_by: EventTemplate.options_for_sorted_by
       }
-      
+
       @event_templates = EventTemplate.only_from(current_user_id).filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_event_templates] = @filterrific.to_hash
@@ -52,6 +52,7 @@ class EventTemplatesController < ApplicationController
     time = Time.new.getlocal
     time -= time.sec
     time += time.min % 15
+    @event.participant_count = @event_template.participant_count
     @event.starts_at = time
     @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
