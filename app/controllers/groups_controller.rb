@@ -119,9 +119,14 @@ class GroupsController < ApplicationController
 
   def promote_user
     authorize! :promote_user, Group
-    mem = @user.memberships.select{|membership| membership.group_id == @group.id}.first
-    mem.isLeader = true
-    mem.save()
+    if @user.is_member_of_group(@group)
+      mem = @user.memberships.select{|membership| membership.group_id == @group.id}.first
+      mem.isLeader = true
+      mem.save()
+      flash[:notice] = "Benutzer "+@user.identity_url+" erfolgreich zum Gruppenleiter ernannt"
+    else
+      flash[:error] = "Benutzer "+@user.identity_url+" ist kein Mitglied der Gruppe"
+    end
     redirect_to edit_group_path(@group)
   end
 
