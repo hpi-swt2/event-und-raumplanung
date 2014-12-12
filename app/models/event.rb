@@ -72,6 +72,19 @@ class Event < ActiveRecord::Base
     where("user_id = ?",user_id) if user_id
   }
 
+  scope :other_to, lambda { |event_id|
+    where("id <> ?",event_id) if event_id
+  }
+
+  scope :not_approved, lambda { 
+    where("approved is NULL OR approved = TRUE") 
+  }
+
+  scope :overlapping, lambda { |start, ende|
+    where("     (:start BETWEEN starts_at AND ends_at) 
+            OR  (:ende BETWEEN starts_at AND ends_at) 
+            OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende}) 
+  }
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -93,7 +106,8 @@ class Event < ActiveRecord::Base
     unless rooms.nil? 
       rooms = rooms.collect{|i| i.to_i}
     end  
-    events =  Event.where(":starts_at <= starts_at and :ends_at > starts_at or starts_at <= :starts_at and ends_at > :starts_at", {:starts_at => self.starts_at, :ends_at => self.ends_at})
+    
+    events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
     if events.empty?
       logger.info "XX"
       return colliding_events
