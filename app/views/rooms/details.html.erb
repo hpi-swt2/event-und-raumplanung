@@ -27,11 +27,6 @@
 				</tbody>
 			</table></td>
 		</tr>
-        <tr>
-          <button type="button" class="btn btn-default btn-s" data-toggle="modal" data-target="#myModal">
-            Request details (todo: integrate with #50)
-          </button>
-        </tr>
 	</tbody>
 </table>
 <table class="table table-column">
@@ -57,63 +52,7 @@
 		<% end %>
 	</tbody>
 </table>
-
-<!-- Modal -->
-<% event=Event.find(1)
-   user = User.find(event.user_id).identity_url
-%> <!-- Todo: integrate with calendar -->
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <%= form_tag({controller: "events", action: "approve_or_decline"}, method: "post") do %>
-
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"><%= event.name %></h4>
-          </div>
-
-          <div class="modal-body">
-            <dl class="dl-horizontal">
-              <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt>
-              <dd><%= link_to event.id, event_path(event) %></dd>
-              <dt><strong><%= model_class.human_attribute_name(:rooms) %>:</strong></dt>
-              <dd><%= concat_rooms(event) %></dd>
-              <dt><strong><%= model_class.human_attribute_name(:participant_count) %>:</strong></dt>
-              <dd><%= event.participant_count %></dd>
-              <dt><strong><%= model_class.human_attribute_name(:starts_at) %>:</strong></dt>
-              <% if event.starts_at %>
-                  <dd><%= event.starts_at.strftime("%d.%m.%Y - %H:%M") %></dd>
-              <% end %>
-              <dt><strong><%= model_class.human_attribute_name(:ends_at) %>:</strong></dt>
-              <% if event.ends_at %>
-                  <dd><%= event.ends_at.strftime("%d.%m.%Y - %H:%M") %></dd>
-              <% end %>
-              <dt><strong><%= model_class.human_attribute_name(:user) %>:</strong></dt>
-              <dd><%= user %></dd>
-              <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-              <dd><%= event.status %></dd>
-            </dl>
-            <div class="form-group">
-
-                  <%= label_tag(:q, "Message for event creator:") %><br />
-                  <%= text_area_tag("message", '', rows: '3', :class => 'form-control') %>
-
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-s" data-dismiss="modal"><span>Close</span></button>
-            <%= submit_tag("Decline", :class => 'btn btn-danger btn-s') %>
-            <%= submit_tag("Approve", :class => 'btn btn-success btn-s') %>
-          </div>
-
-      <% end %>
-
-    </div>
-  </div>
-</div>
-
-<%= link_to t('.back', :default => t("helpers.links.back")), rooms_list_path, :class => 'btn btn-default'  %>
-<%= link_to t('.request', :default => t("helpers.links.request booking")), new_booking_path(:room => @room.id), :class => 'btn btn-default' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              rooms_list_path, :class => 'btn btn-default'  %>
+<%= link_to t('.request', :default => t("helpers.links.request booking")),
+              new_booking_path(:room => @room.id), :class => 'btn btn-default' %>

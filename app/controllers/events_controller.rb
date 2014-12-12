@@ -3,12 +3,11 @@ class EventsController < ApplicationController
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :approve_or_decline, :new_event_template, :new_event_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :approve_or_decline]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
   after_filter :flash_to_headers, :only => :check_vacancy
 
   def current_user_id
@@ -78,34 +77,13 @@ class EventsController < ApplicationController
   end
 
   def approve
-    puts 'message: ' + params[:message]
     @event.update(status: 'approved')
-    if params[:message] == nil or params[:message].strip.empty?
-      UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
-    else
-      UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
-    end
-
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
     @event.update(status: 'declined')
-    if params[:message] == nil or params[:message].strip.empty?
-      UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
-    else
-      UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
-    end
-
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
-  end
-
-  def approve_or_decline
-    if(params[:commit] == 'Approve')
-      self.approve
-    else
-      self.decline
-    end
   end
 
   def check_vacancy

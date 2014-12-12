@@ -11,7 +11,6 @@ class RoomPropertiesController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
-    @date = Date.today
   end
 
   # GET /rooms/new
