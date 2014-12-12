@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20141205103749) do
 
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,18 +54,18 @@ ActiveRecord::Schema.define(version: 20141205103749) do
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.time     "start_time"
-    t.time     "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "room_id"
+    t.integer  "participant_count"
   end
 
-  add_index "event_templates", ["room_id"], name: "index_event_templates_on_room_id", using: :btree
   add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
+
+  create_table "event_templates_rooms", force: true do |t|
+    t.integer "event_template_id"
+    t.integer "room_id"
+  end
 
   create_table "events", force: true do |t|
     t.string   "name"
