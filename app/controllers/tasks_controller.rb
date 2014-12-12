@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
+  before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
   # GET /tasks.json
@@ -14,6 +15,7 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+
   end
 
   # GET /tasks/new
@@ -32,18 +34,12 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    create_params = task_params_with_attachments
-    if create_params[:user_id].blank?
-      create_params[:status] = "not_assigned"
-    else
-      create_params[:status] = "pending"
-    end
-    @task = Task.new(create_params)
-
+    @task = Task.new(set_status task_params_with_attachments)
+    @task.done = false
     respond_to do |format|
       if @task.save
         if @task.user
-          @task.send_notification
+          @task.send_notification_to_assigned_user(current_user)
         end
 
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
@@ -58,14 +54,8 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
-    update_params = task_params
-    if update_params[:user_id].blank?
-      update_params[:status] = "not_assigned"
-    elsif update_params[:user_id].to_i != @task.user_id.to_i
-      update_params[:status] = "pending"
-    end
     respond_to do |format|
-      if @task.update_and_send_notification(update_params)
+      if @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -74,6 +64,15 @@ class TasksController < ApplicationController
       end
     end
   end
+
+  def update_task_order
+    @task = Task.find(task_update_order_params[:task_id])
+    @task.task_order_position = task_update_order_params[:task_order_position]
+    @task.save
+
+    render nothing: true # this is a POST action, updates sent via AJAX, no view rendered
+  end
+
 
   # DELETE /tasks/1
   # DELETE /tasks/1.json
@@ -90,7 +89,12 @@ class TasksController < ApplicationController
       @task.status = "accepted"
       @task.save
     end
-    redirect_to @task
+    
+    respond_to do |format| 
+      format.html { redirect_to @task }
+      format.json { render json: @task }
+    end
+
   end
 
   def decline
@@ -107,17 +111,46 @@ class TasksController < ApplicationController
       @task = Task.find(params[:id])
     end
 
+    def set_return_url
+      @return_url = tasks_path
+      @return_url = root_path if request.referrer && URI(request.referer).path == root_path
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done)
     end
+
     def task_params_with_attachments
       params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
     end
+
+    def task_update_order_params
+      params.require(:task).permit(:task_id, :task_order_position)
+    end
+
     def event_id
       if params[:event]
         return params[:event][:event_id] unless params[:event][:event_id].empty?
       end
       nil
+    end
+
+    def set_status(params)
+      updated_params = params
+      if !@task
+        if updated_params[:user_id].blank?
+          updated_params[:status] = "not_assigned"
+        else
+          updated_params[:status] = "pending"
+        end
+      else
+        if updated_params[:user_id].blank?
+          updated_params[:status] = "not_assigned"
+        elsif updated_params[:user_id].to_i != @task.user_id.to_i
+          updated_params[:status] = "pending"
+        end
+      end
+      return updated_params
     end
 end

@@ -1,0 +1,17 @@
+# ruby encoding: utf-8
+
+en:
+  groups:
+    index:
+      title: Group-overview
+      all_groups: All groups
+    show:
+      assign_rooms: assign rooms
+      assigned: assigned
+      unassigned: unassigned
+      user_overview: User-overview
+    edit:
+      assign_rooms: assign rooms
+      assigned: assigned
+      unassigned: unassigned
+      user_overview: User-overview

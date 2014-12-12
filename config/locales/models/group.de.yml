@@ -4,8 +4,8 @@ de:
   activerecord:
     models:
       group:
-        one: 'Gruppe'
-        other: 'Gruppen'
+        one: Gruppe
+        other: Gruppen
     attributes:
       group:
-        name: 'Name'
+        name: Name

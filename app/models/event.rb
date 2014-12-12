@@ -18,8 +18,11 @@ class Event < ActiveRecord::Base
     ]
   )
   self.per_page = 12
+  
   has_many :bookings
   has_many :tasks
+
+  has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms 
 
@@ -35,7 +38,7 @@ class Event < ActiveRecord::Base
 
   
    def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past") if starts_at && starts_at < Date.today
+      errors.add(:starts_at, "can't be in the past #{Date.today}") if starts_at && starts_at < Date.today
       errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
     end
    def start_before_end_date
