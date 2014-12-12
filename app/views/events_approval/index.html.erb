@@ -1,80 +1,98 @@
-<h1>EventsApproval#index</h1>
+<h1><%=t '.title' %></h1>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Event</th>
-      <th>Bookings</th>
-      <th>Aktion</th>
-    </tr>
-  </thead> 
-  <tbody>
-    <% @events.each do |event| %>
+<div id='open_events'>
+
+  <% if not @user_is_admin %>
+    <div style="border-color:#FF0000; border-width:2px; border-style:solid; padding:4px">
+      To approve and decline events, you need to be an admin. Make yourself an admin by replacing <br>
+      identity_url: http://example.com/test.admin <br>
+      with your identity url <br>
+      identity_url: https://openid.hpi.uni-potsdam.de/user/forename.surname <br>
+      in the config file <br>
+      event-und-raumplanung/config/config.yml <br>
+    </div>
+  <%end%>
+
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td>
-          Max Mustermann requests
-          <br>
-          <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
-        	<%= link_to event.name, event_path(event) %> -
-        	<%= event.description %>
-          (<%= event.participant_count %>)
-        </td>
-        <td>
-        	<% event.bookings.each do |booking| %>
-            <%= link_to booking.name, booking_path(booking) %>, <%= booking.description %>
+        <th><%=t '.event' %></th>
+        <th></th>
+        <th><%=t '.bookings' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+          <td>
+            <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+            <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
             <br>
-            <%= booking.start.strftime '%A, %d/%m/%y %H:%M' %> - <%= booking.end.strftime '%H:%M' %>,
+          	<%= link_to event.name, event_path(event) %> -
+          	<%= event.description %>
+            (<%= event.participant_count %>)
+          </td>
+          <td>
+            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
+          </td>
+          <td>
+          	<% event.bookings.each do |booking| %>
+              <%= link_to booking.name, booking_path(booking) %>,
+              <%= booking.description %>
+              <br>
+              <%= timeslot_with_date_as_string(booking) %>,
+         			<%= link_to booking.room.name, booking.room unless booking.room.nil?%>
+              <% break unless event.bookings.last != booking %>
+          		<hr style="margin:0; padding:0;">
+          	<% end %>
+          </td>
+          <td>
+            <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
+            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= t('.no_open_events') unless @events.exists? %>
+</div>
 
-       			<%= link_to booking.room.name, booking.room %>
-            <% if event.bookings.last != booking %>
-        		  <hr style="margin:0; padding:0;">
-            <% end %>  
-        	<% end %>
-        </td>
-        <td>
-          <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
-          <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
-        </td>
-      </tr> 
-    <% end %>
-  </tbody>
-</table>
-<% if @events.count == 0 %>
-  No open events.
-<% end %>
 <br><br>
-<h4>Approved Bookings</h4>
-<center>
-  <%= link_to "<--", events_approval_path(date: @date.yesterday) %>
-	<%= @date.strftime '%A, %d/%m/%y' %> 
-  <%= link_to "-->", events_approval_path(date: @date.tomorrow) %>
-</center>
 
-<% bookings_exist = false %>
-<table class="table table-striped">
-  <tbody>
-    <% @bookings.each do |booking| %>
-      <% if !booking.event.approved.nil? and booking.event.approved %>
-        <% bookings_exist = true %>
+<div id='approved_bookings'>
+  <h4><%=t '.approved_bookings' %></h4>
+  <center>
+    <table>
+      <td><%= link_to "<--", events_approval_path(date: @date.yesterday) %></td>
+      <td>
+        <%= form_tag("events_approval", method: "get", :name => "datePicker") do %>
+          <%= select_date(@date, {}, :onchange => ("javascript: document.datePicker.submit();")) %>
+        <% end %>
+      </td>
+      <td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
+    </table>
+  </center>
+  <table class="table table-striped">
+    <tbody>
+      <% @bookings.each do |booking| %>
         <tr>
           <td>
-          	<%= link_to booking.name, booking_path(booking) %>
-            Max Mustermann, <%= link_to booking.event.name, event_path(booking.event) %>),
+          	<%= link_to booking.name, booking_path(booking) %>,
+            <%= t('.user') + ' ' + booking.event.user_id.to_s %>,
+            <%= link_to booking.event.name, event_path(booking.event) %>,
             <%= booking.event.description %>,
           	<%= booking.description %>
             <br>
-            <%= booking.start.strftime '%H:%M' %> - <%=booking.end.strftime '%H:%M' %>,
-            <%= link_to booking.room.name, booking.room %>
+            <%= timeslot_as_string(booking) %>,
+            <%= link_to booking.room.name, booking.room unless booking.room.nil? %>
             (<%= booking.event.participant_count %>)
           </td>
         </tr>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
-<% if !bookings_exist %>
-  <center>No approved bookings.</center>
-<% end %>
+      </tbody>
+  </table>
+  <%= t('.no_approved_bookings') unless @bookings.exists? %>
+</div>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -94,7 +112,7 @@
   <dd id="event_rooms"></dd>
   <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
   <dd id="event_participant_count"></dd>
-  <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt> 
+  <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
   <dd id="event_starts_at"></dd>
   <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
   <dd id="event_ends_at"></dd>

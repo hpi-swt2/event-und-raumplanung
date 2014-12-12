@@ -1,0 +1,17 @@
+# ruby encoding: utf-8
+
+de:
+  groups:
+    index:
+      title: Gruppenübersicht
+      all_groups: Alle Gruppen
+    show:
+      assign_rooms: Räume zuweisen
+      assigned: zugewiesen
+      unassigned: entfernt
+      user_overview: Benutzerübersicht
+    edit:
+      assign_rooms: Räume zuweisen
+      assigned: zugewiesen
+      unassigned: entfernt
+      user_overview: Benutzerübersicht

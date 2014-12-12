@@ -4,10 +4,12 @@ class EventsController < ApplicationController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
+  before_action :set_return_url, only: [:show, :new, :edit]
+
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
   after_filter :flash_to_headers, :only => :check_vacancy
-  
+
   def current_user_id
     current_user.id
   end
@@ -43,7 +45,7 @@ class EventsController < ApplicationController
   # GET /events.json
   def index
 
-     
+
      @filterrific = Filterrific.new(
       Event,
       params[:filterrific] || session[:filterrific_events])
@@ -75,45 +77,46 @@ class EventsController < ApplicationController
   end
 
   def approve
-    @event.update(approved: true)
+    @event.update(status: 'approved')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
-    @event.update(approved: false)
+    @event.update(status: 'declined')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def check_vacancy
-    checked_params = event_params  
-    
+    checked_params = event_params
+
     @event = Event.new(event_params)
     @event.user_id = current_user_id
-    
+
     conflicting_events = @event.checkVacancy event_params[:room_ids]
-   
+
     respond_to do |format|
-      if conflicting_events.empty? 
+      if conflicting_events.empty?
         flash[:notice] = "Vacant"
         format.json { render :json => {status: true}}
-      else 
+      else
         flash[:warning] = "Not available"
 
-        msg = Hash[conflicting_events.map { |event| 
+        msg = Hash[conflicting_events.map { |event|
           eventname = @event.id
           eventname = event.name if (event.user_id == current_user_id || !event.is_private)
           [event.id, {"event_name" => eventname,  "starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
         msg[:status]= false
         format.json { render :json => msg}
-      end 
-    end 
-  end 
+      end
+    end
+  end
 
   # GET /events/1
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
+    @tasks = @event.tasks.rank(:task_order)
   end
 
   # GET /events/new
@@ -131,8 +134,8 @@ class EventsController < ApplicationController
     #authorize! :edit, @event
   end
 
-  def sugguest 
-  end 
+  def sugguest
+  end
 
   # POST /events
   # POST /events.json
@@ -194,6 +197,12 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
     end
+
+    def set_return_url
+      @return_url = tasks_path
+      @return_url = root_path if request.referrer && URI(request.referer).path == root_path
+    end
+
 end

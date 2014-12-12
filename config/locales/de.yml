@@ -136,12 +136,12 @@ de:
       create: ! '%{model} erstellen'
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
-    links: 
+    links:
       suggest: ! 'Alternative vorschlagen'
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
-    titles: 
-      suggest: 'Alternative vorschlagen' 
+    titles:
+      suggest: 'Alternative vorschlagen'
   number:
     currency:
       format:
@@ -212,7 +212,7 @@ de:
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
     successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
-  alert: 
+  alert:
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
   tasks:
