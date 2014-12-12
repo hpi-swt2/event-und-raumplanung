@@ -83,6 +83,12 @@ equipment6 = Equipment.create(name: 'Beamer HD 12424424', description: 'Ein fest
 equipment7 = Equipment.create(name: 'Beamer HD 1247912', description: 'Ein fest installierter Beamer mit HD', room_id: room6.id, category: 'Beamer')
 equipment8 = Equipment.create(name: 'Whiteboard 234', description: 'Ein fest installierter Whiteboard zum Brainstorming', room_id: room7.id, category: 'Whiteboard')
 
+
+#
+## Create Users
+user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
+user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
+
 #
 # Create Event
 
@@ -91,9 +97,9 @@ event2 = Event.create(name: "Sommerfest", description: "Details zur Sommerfest 2
 event3 = Event.create(name: "Tribute von Panem", description: "Details zum Event Tribute von Panem 2015", participant_count: 10, created_at: "2015-11-20 12:20:20", user_id: 1, room_id: room3.id, rooms: [room3], is_private: true, is_important: false,  status: "In Bearbeitung", starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01", start_date: "-4711-01-01", start_time: "2000-01-01 12:46:37", end_date: "-4711-01-01", end_time: "2000-01-01 12:46:37")
 event4 = Event.create(name: 'Mathe', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: 1, room_id: room13.id, rooms: [room13], is_private: false, is_important: false,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
 event5 = Event.create(name: 'PT', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: 1, room_id: room12.id, rooms: [room12], is_private: false, is_important: true,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
-event6 = Event.create(name: 'POIS', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: 2, room_id: room7.id, rooms: [room7], is_private: false, is_important: false,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
-event7 = Event.create(name: 'ISEC', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: 3, room_id: room12.id, rooms: [room12], is_private: false, is_important: false,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
-event8 = Event.create(name: 'HCI II', description: 'Vorlesung', participant_count: 40, created_at: DateTime.now, user_id: 3, room_id: room13.id, rooms: [room13], is_private: false, is_important: true,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
+event6 = Event.create(name: 'POIS', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: user2.id, room_id: room7.id, rooms: [room7], is_private: false, is_important: false,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
+event7 = Event.create(name: 'ISEC', description: 'Vorlesung', participant_count: 20, created_at: DateTime.now, user_id: user3.id, room_id: room12.id, rooms: [room12], is_private: false, is_important: false,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
+event8 = Event.create(name: 'HCI II', description: 'Vorlesung', participant_count: 40, created_at: DateTime.now, user_id: user3.id, room_id: room13.id, rooms: [room13], is_private: false, is_important: true,  status: "In Bearbeitung", starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 2), start_date: Date.today, end_date: Date.today, start_time: Time.current, end_time: Time.current.advance(hours: 2))
 
 #
 # Create Booking

@@ -14,11 +14,14 @@ Rails.application.routes.draw do
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
-  get 'rooms/list'
+  post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
+  post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
 
+  
+  
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   resources :attachments

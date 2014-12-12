@@ -84,5 +84,8 @@ class Event < ActiveRecord::Base
   ]
   end
 
+  scope :open, -> { where.not status: ['approved', 'declined'] }
+  scope :approved, -> { where status: 'approved' }
+  scope :declined, -> { where status: 'declined' }
 
 end

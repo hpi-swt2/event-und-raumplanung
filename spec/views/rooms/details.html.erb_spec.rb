@@ -1,7 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe "rooms/details.html.erb" do
-	it "must run" do
+    before(:all) do
+        @default_locale = I18n.default_locale
+    end
+    
+    after(:all) do
+        I18n.default_locale = @default_locale
+    end
+    
+    it "must run" do
 		1.should == 1
 	end
   
@@ -56,4 +64,21 @@ RSpec.describe "rooms/details.html.erb" do
 		expect(rendered).to include(room.bookings.first.start.to_s(:time))
 		expect(rendered).to include(room.bookings.first.end.to_s(:time))
 	end
+    
+    context "uses locales to show both German and English" do
+   
+        it "shows English" do    
+            assign(:room,FactoryGirl.build(:room1))
+            I18n.default_locale = :en
+            render
+            expect(rendered).to include('Equipment')
+        end
+        
+        #it "shows German" do    
+        #    assign(:room,FactoryGirl.build(:room1))
+        #    I18n.default_locale = :de
+        #    render
+        #    expect(rendered).to include('Ausstattung')
+        #end
+    end
 end
