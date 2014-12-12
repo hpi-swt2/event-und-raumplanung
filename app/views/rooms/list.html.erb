@@ -17,7 +17,7 @@
 <br>
 <%= t'.necessary_properties' %>
 <br>
-<% @properties.each do |property| %>
+<% Room.all.properties.each do |property| %>
 <% if params.has_key?(property) %>
 <%= check_box_tag(property, true, true, :onclick => "javascript: document.list.submit();") %>
 <% else %>
