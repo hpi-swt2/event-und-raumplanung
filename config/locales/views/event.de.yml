@@ -14,3 +14,16 @@ de:
       status: 'Status'
       user: 'Benutzer'
 
+    show:
+      id: 'ID'
+      name: 'Name'
+      description: 'Beschreibung'
+      starts_at: 'Startet'
+      ends_at: 'Endet'
+      status: 'Status'
+      user: 'Benutzer'
+      private: 'Privat'
+      rooms: 'Räume'
+      participant_count: 'Teilnehmerzahl'
+      created_at: 'Erstellt'
+      updated_at: 'Geändert'

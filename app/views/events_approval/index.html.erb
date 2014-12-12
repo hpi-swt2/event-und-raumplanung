@@ -20,18 +20,19 @@
         <th></th>
         <th><%=t '.bookings' %></th>
       </tr>
-    </thead> 
+    </thead>
     <tbody>
       <% @events.each do |event| %>
-          <td>          
+          <td>
             <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+            <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
             <br>
           	<%= link_to event.name, event_path(event) %> -
           	<%= event.description %>
             (<%= event.participant_count %>)
           </td>
-          <td>        
-            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>            
+          <td>
+            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
           </td>
           <td>
           	<% event.bookings.each do |booking| %>
@@ -45,10 +46,10 @@
           	<% end %>
           </td>
           <td>
-          	<%= link_to t('.decline'), decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
-            <%= link_to t('.approve'), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+            <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
+            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
           </td>
-        </tr> 
+        </tr>
       <% end %>
     </tbody>
   </table>
@@ -87,7 +88,42 @@
           </td>
         </tr>
       <% end %>
-    </tbody>
+      </tbody>
   </table>
   <%= t('.no_approved_bookings') unless @bookings.exists? %>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Event</h4>
+      </div>
+      <div class="modal-body">
+<dl class="dl-horizontal">
+  <dt><strong><%= Event.human_attribute_name(:id) %>:</strong></dt>
+  <dd id="event_id"></dd>
+  <dt><strong><%= Event.human_attribute_name(:name) %>:</strong></dt>
+  <dd id="event_name"></dd>
+  <dt><strong><%= Event.human_attribute_name(:description) %>:</strong></dt>
+  <dd id="event_description"></dd>
+  <dt><strong><%= Event.human_attribute_name(:rooms) %>:</strong></dt>
+  <dd id="event_rooms"></dd>
+  <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
+  <dd id="event_participant_count"></dd>
+  <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
+  <dd id="event_starts_at"></dd>
+  <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
+  <dd id="event_ends_at"></dd>
+  <dt><strong><%= Event.human_attribute_name(:user) %>:</strong></dt>
+  <dd id="event_user"></dd>
+</dl>
+  </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-warning suggest-btn" href=""><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
+        <a type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
+      </div>
+    </div>
+  </div>
 </div>

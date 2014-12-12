@@ -17,10 +17,11 @@ class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
   has_and_belongs_to_many :rooms, dependent: :nullify
-  accepts_nested_attributes_for :rooms 
+  accepts_nested_attributes_for :rooms
 
   date_time_attribute :starts_at
   date_time_attribute :ends_at
+
 
   validates :name, presence: true
   validates :starts_at, presence: true
@@ -29,15 +30,16 @@ class Event < ActiveRecord::Base
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
-  
-   def dates_cannot_be_in_the_past
-      errors.add(:starts_at, "can't be in the past #{Date.today}") if starts_at && starts_at < Date.today
-      errors.add(:ends_at, "can't be in the past") if ends_at && ends_at < Date.today
-    end
-   def start_before_end_date
-      errors.add(:starts_at, "start has to be before the end") if starts_at && starts_at && ends_at < starts_at
-   end
-  
+
+
+  def dates_cannot_be_in_the_past
+    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
+    errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at && ends_at < Date.today
+  end
+  def start_before_end_date
+    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
+  end
+
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
@@ -71,6 +73,19 @@ class Event < ActiveRecord::Base
     where("user_id = ?",user_id) if user_id
   }
 
+  scope :other_to, lambda { |event_id|
+    where("id <> ?",event_id) if event_id
+  }
+
+  scope :not_approved, lambda {
+    where("approved is NULL OR approved = TRUE")
+  }
+
+  scope :overlapping, lambda { |start, ende|
+    where("     (:start BETWEEN starts_at AND ends_at)
+            OR  (:ende BETWEEN starts_at AND ends_at)
+            OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende})
+  }
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -82,6 +97,32 @@ class Event < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_ends_at_asc'), 'ends_at_asc'],
     [(I18n.t 'sort_options.sort_status'), 'status_asc']
   ]
+  end
+
+  def checkVacancy(rooms)
+    logger.info self.starts_at
+    logger.info self.ends_at
+    logger.info rooms
+    colliding_events = []
+    unless rooms.nil?
+      rooms = rooms.collect{|i| i.to_i}
+    end
+
+    events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
+    if events.empty?
+      logger.info "XX"
+      return colliding_events
+    else
+      unless rooms.nil?
+        rooms_count = rooms.size
+        events.each do | event |
+          if (rooms - event.rooms.pluck(:id)).size < rooms_count
+             colliding_events.push(event)
+          end
+        end
+      end
+    end
+    return colliding_events
   end
 
   scope :open, -> { where.not status: ['approved', 'declined'] }
