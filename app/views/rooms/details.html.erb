@@ -65,17 +65,25 @@
 
 <div id='calendar'></div>
 <script>$('#calendar').fullCalendar({				
-				defaultView: 'agendaDay'});
+				defaultView: 'agendaDay'
+				});
 </script>
 <style type='text/css'>
 
 	#calendar {
-		width: 450px;
+		width: 600px;
 		height: 900px;
 		margin: 0 auto;
 	}
 
 </style>
+<% @room.bookings.each do |booking| %>
+	<% if(booking.start.to_date == Date.today) %>
+		<% name=booking.name %>
+		<% startDate=booking.start.to_date %>
+		<% endDate=booking.end.to_date %>
+	<% end %>
+<% end %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
