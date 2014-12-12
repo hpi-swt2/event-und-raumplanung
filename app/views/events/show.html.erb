@@ -56,12 +56,12 @@
 <h2>Kommentare</h2>
 
 <div class="commentsContainer">
-  <% Comments.where(event_id: 1).each do |comment| %>
+  <% Comments.where(event_id: @event.id).each do |comment| %>
       <%= render :partial => 'comments_container', :locals => {:comment => comment} %>
   <% end %>
 </div>
 
 <div>
-  <textarea rows="4" cols="80"></textarea>
-
+  <textarea id="commentText" rows="4" cols="80"></textarea>
+  <%= link_to 'Create Comment', controller: "events", action: "create_comment", user_id: @user, event_id: @event.id %>
 </div>

@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
+  skip_load_and_authorize_resource :only =>[:create_comment, :index, :show, :new, :create, :new_event_template, :reset_filterrific]
 
   def current_user_id
     current_user.id
@@ -126,6 +126,21 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  def create_comment
+    @comment = Comments.new(params)
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to @comment, notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  helper_method :create_comment
 
   private
     # Use callbacks to share common setup or constraints between actions.
