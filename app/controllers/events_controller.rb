@@ -1,9 +1,9 @@
 class EventsController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :approve_or_decline, :new_event_template]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :approve, :decline, :approve_or_decline]
 
   def current_user_id
     current_user.id
@@ -56,14 +56,34 @@ class EventsController < ApplicationController
 
   def approve
     puts "approve"
+    puts 'message: ' + params[:message]
     @event.update(approved: true)
+    if params[:message] == nil or params[:message].strip.empty?
+      UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
+    else
+      UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+    end
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
     puts "decline"
     @event.update(approved: false)
+    if params[:message] == nil or params[:message].strip.empty?
+      UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
+    else
+      UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+    end
+
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def approve_or_decline
+    if(params[:commit] == 'Approve')
+      self.approve
+    else
+      self.decline
+    end
   end
 
   # GET /events/1
@@ -158,6 +178,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :show_only_my_events, :message, :commit,:room_ids => [])
     end
 end
