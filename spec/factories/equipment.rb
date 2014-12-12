@@ -1,5 +1,6 @@
 FactoryGirl.define do
-  factory :equipment1 do |f|
-    f.name "beamer"
+  factory :equipment do |f|
+    f.name 'beamer'
+    room
   end
 end
