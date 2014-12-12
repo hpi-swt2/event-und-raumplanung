@@ -9,4 +9,7 @@ $(function() {
   $('#advancedSearch').on('hidden.bs.collapse', function () {
     $(".drop-down-chevron").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
   });
+  $('.datetimepicker').datetimepicker({
+    language: 'de'
+  });
 });

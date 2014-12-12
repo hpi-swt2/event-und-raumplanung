@@ -17,3 +17,6 @@
 //= require bootstrap-select
 //= require_tree .
 //= require filterrific/filterrific-jquery
+//= require moment
+//= require bootstrap-datetimepicker
+//= require moment/de

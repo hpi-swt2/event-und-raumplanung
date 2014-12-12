@@ -60,35 +60,9 @@
         <div class="chardin_box">
           <%= t '.starts_after' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.date_field(
+          <%= f.text_field(
             :starts_after,
-            class: 'form-control'
-          ) %>
-       </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <div class="chardin_box">
-          <%= t '.starts_before' %>
-          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.date_field(
-            :starts_before,
-            class: 'form-control'
-          ) %>
-       </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <div class="form-group">
-        <div class="chardin_box">
-          <%= t '.ends_after' %>
-          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.date_field(
-            :ends_after,
-            class: 'form-control'
+            class: 'datetimepicker form-control'
           ) %>
        </div>
       </div>
@@ -98,9 +72,9 @@
         <div class="chardin_box">
           <%= t '.ends_before' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.date_field(
+          <%= f.text_field(
             :ends_before,
-            class: 'form-control'
+            class: 'datetimepicker form-control'
           ) %>
        </div>
       </div>

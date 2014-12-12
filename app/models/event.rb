@@ -12,8 +12,6 @@ class Event < ActiveRecord::Base
       :room_ids,
       :sorted_by,
       :starts_after,
-      :starts_before,
-      :ends_after,
       :ends_before,
       :participants_gte,
       :participants_lte
@@ -77,16 +75,12 @@ class Event < ActiveRecord::Base
     where("user_id = ?",user_id) if user_id
   }
   scope :starts_after, lambda { |ref_date|
-    where('starts_at >= ?', ref_date)
-  }
-  scope :starts_before, lambda { |ref_date|
-    where('starts_at <= ?', ref_date)
-  }
-  scope :ends_after, lambda { |ref_date|
-    where('ends_at >= ?', ref_date)
+    date = DateTime.strptime(ref_date, "%d.%m.%Y %H:%M Uhr")
+    where('starts_at >= ?', date)
   }
   scope :ends_before, lambda { |ref_date|
-    where('ends_at <= ?', ref_date)
+    date = DateTime.strptime(ref_date, "%d.%m.%Y %H:%M Uhr")
+    where('ends_at <= ?', date)
   }
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
