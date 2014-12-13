@@ -138,6 +138,52 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET index_toggle_favorite" do
+    it "redirects to events" do
+      event = Event.create! valid_attributes
+      get :index_toggle_favorite, {:id => event.to_param}, valid_session
+      expect(response).to redirect_to(events_url)
+    end
+    
+    it "toggles the favorite event" do
+      event = Event.create! valid_attributes
+      
+      get :index_toggle_favorite, {:id => event.to_param}, valid_session
+      get :index, {}, valid_session
+      expect(assigns(:favorites).include?(event)).to eq true
+
+      get :index_toggle_favorite, {:id => event.to_param}, valid_session
+      get :index, {}, valid_session
+      expect(assigns(:favorites).include?(event)).to eq false
+      
+      get :index_toggle_favorite, {:id => event.to_param}, valid_session
+      get :index, {}, valid_session
+      expect(assigns(:favorites).include?(event)).to eq true
+    end
+  end
+
+  describe "GET show_toggle_favorite" do
+    it "redirects to event" do
+      event = Event.create! valid_attributes
+      get :show_toggle_favorite, {:id => event.to_param}, valid_session
+      expect(response).to redirect_to(event)
+    end
+    it "toggles the favorite event" do
+      event = Event.create! valid_attributes
+      get :show_toggle_favorite, {:id => event.to_param}, valid_session
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:favorite).empty?).to eq false
+
+      get :show_toggle_favorite, {:id => event.to_param}, valid_session
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:favorite).empty?).to eq true
+
+      get :show_toggle_favorite, {:id => event.to_param}, valid_session
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:favorite).empty?).to eq false
+    end
+  end
+
   describe "GET edit" do
     it "assigns the requested event as @event" do
       event = Event.create! valid_attributes

@@ -51,7 +51,6 @@ class EventsController < ApplicationController
       @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
       @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
-      puts @favorites
       session[:filterrific_events] = @filterrific.to_hash
 
 
