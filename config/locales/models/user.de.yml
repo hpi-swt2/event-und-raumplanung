@@ -8,5 +8,8 @@ de:
         other: Benutzer
     attributes:
       user:
+        username: Benutzername
+        email: E-Mail
+        status: Status
         identity_url: Identity url
         encrypted_password: Passwort
