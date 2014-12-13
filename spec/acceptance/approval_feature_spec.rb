@@ -18,7 +18,7 @@ RSpec.feature "Event approval" do
 		have_text("Event request processing")
 		have_text("Sommerfest")
 		page.driver.options[:respect_data_method] = false
-		page.click_on("Approve", :match => :first) 
+		page.click_on("Genehmigen", :match => :first) 
 		#page.first(:link, "Approve").click
 		page.should have_content("Event has been successfully approved.")		
 	end
@@ -27,11 +27,13 @@ RSpec.feature "Event approval" do
   		page.visit "/events_approval"
 		have_text("Event request processing")
 		have_text("Sommerfest")
-		page.first(:link, "Decline").click		
+		page.driver.options[:respect_data_method] = false
+		page.click_on("Ablehnen", :match => :first) 
+		#page.first(:link, "Decline").click		
 		page.should have_content("Event has been successfully rejected.")
 		puts page.body
 	end
-
+<<-DOC
 	scenario "View details for Room" do
   		page.visit "/events_approval"
 		page.click_link("room", :match => :first).click
@@ -45,5 +47,6 @@ RSpec.feature "Event approval" do
 		page.should have_content("Event")
 		page.should have_content("Details zur Sommerfest 2015")
 	end
+DOC
 end
 

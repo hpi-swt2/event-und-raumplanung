@@ -117,6 +117,7 @@ group :test, :development  do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'database_cleaner'
+	gem 'rack_session_access'
 	gem 'rails-dev-tweaks'
 	gem 'timecop'
 end

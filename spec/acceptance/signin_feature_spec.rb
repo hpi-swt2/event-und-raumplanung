@@ -5,15 +5,15 @@ RSpec.feature "User signin" do
 	scenario "Signing in with correct eMail" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
-		page.fill_in "E-mail", :with => "Max.Mustermann@student.hpi.de"
+		page.fill_in "user_email", :with => "Max.Mustermann@student.hpi.de"
 		page.click_button "Log in"
 		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/serve"
 	end
-	
+
 	scenario "Signing in with incorrect eMail" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
-		page.fill_in "E-mail", :with => "test"
+		page.fill_in "user_email", :with => "test"
 		page.click_button "Log in"
 		page.should have_content("Inkorrekte E-mail Adresse.")
 	end
@@ -21,14 +21,14 @@ RSpec.feature "User signin" do
 	scenario "Signing in admin eMail" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
-		page.fill_in "E-mail", :with => "test.admin@admin.hpi.de"
+		page.fill_in "user_email", :with => "test.admin@admin.hpi.de"
 		page.click_button "Log in"
-		page.fill_in "Password", :with => "test_admin"
+		page.fill_in "user_encrypted_password", :with => "test_admin"
 		page.click_button "Log in"
 		page.should have_content("Willkommen test.admin!")
 	end
 
-<<-DOC
+<<-DOC	
 	scenario "Signing in with correct openID URL" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
