@@ -17,7 +17,9 @@ RSpec.feature "Event approval" do
 		page.visit "/events_approval"
 		have_text("Event request processing")
 		have_text("Sommerfest")
-		page.first(:link, "Approve").click
+		page.driver.options[:respect_data_method] = false
+		page.click_on("Approve", :match => :first) 
+		#page.first(:link, "Approve").click
 		page.should have_content("Event has been successfully approved.")		
 	end
 
