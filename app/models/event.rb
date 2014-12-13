@@ -8,13 +8,13 @@ class Event < ActiveRecord::Base
     default_settings: { sorted_by: 'created_at_desc' },
     filter_names: [
       :search_query,
-      :own,
       :room_ids,
       :sorted_by,
       :starts_after,
       :ends_before,
       :participants_gte,
-      :participants_lte
+      :participants_lte,
+      :user
     ]
   )
   self.per_page = 12
@@ -72,10 +72,11 @@ class Event < ActiveRecord::Base
   end
   }
   scope :room_ids, lambda { |room_ids|
-    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
-  }
-  scope :own, lambda { |user_id|
-    where("user_id = ?",user_id) if user_id
+    if room_ids.present?
+      joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
+    else
+      all
+    end
   }
   scope :starts_after, lambda { |ref_date|
     date = DateTime.strptime(ref_date, "%d.%m.%Y %H:%M Uhr")
@@ -90,6 +91,13 @@ class Event < ActiveRecord::Base
   }
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
+  }
+  scope :user, lambda { |id|
+    if id.present?
+      where(user_id: id)
+    else
+      all
+    end
   }
 
   def self.options_for_sorted_by

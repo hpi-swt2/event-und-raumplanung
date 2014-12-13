@@ -18,12 +18,18 @@
           ) %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
           <%= t '.only_show_own' %>
-          <%= f.check_box(:own) %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.check_box(
+            :user,
+            {},
+            current_user.id,
+            nil
+          ) %>
        </div>
       </div>
     </div> 
