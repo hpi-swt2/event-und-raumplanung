@@ -61,6 +61,13 @@ RSpec.describe TasksController, type: :controller do
         user_id: user.id
       }
     }
+    let(:invalid_attributes) {
+      {
+        name: '',
+      }
+    }
+
+    let(:valid_session) { {} }
   
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -176,6 +183,16 @@ RSpec.describe TasksController, type: :controller do
       task = Task.create! valid_attributes_with_user
       patch :update, id: task.to_param, task: { user_id: nil }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+
+    it "renders the 'new' template" do
+      post :create, {:task => invalid_attributes}, valid_session
+      expect(response).to render_template("new")
+    end
+
+    it "should render the edit page when wrong parameters are passed to update" do
+      put :update, {:id => task.to_param, :task => invalid_attributes}, valid_session
+      expect(response).to render_template("edit")
     end
   end
 end
