@@ -24,12 +24,7 @@
         <div class="chardin_box">
           <%= t '.only_show_own' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.check_box(
-            :user,
-            {},
-            current_user.id,
-            nil
-          ) %>
+          <%= f.check_box :user %>
        </div>
       </div>
     </div> 
@@ -46,8 +41,7 @@
       <div class="form-group">
         <div class="chardin_box">
           <%= t '.filtered_by_rooms' %>
-           <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :id => 'selectpicker', :multiple =>'' }%>
-       <script> $('#selectpicker').selectpicker(); </script>
+          <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :multiple =>'' }%>
        </div>
       </div>
     </div> 

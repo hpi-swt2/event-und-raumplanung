@@ -12,4 +12,5 @@ $(function() {
   $('.datetimepicker').datetimepicker({
     language: 'de'
   });
+  $('.selectpicker').selectpicker();
 });

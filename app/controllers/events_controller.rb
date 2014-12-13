@@ -45,6 +45,8 @@ class EventsController < ApplicationController
       @filterrific.select_options =   {
         sorted_by: Event.options_for_sorted_by
       }
+      @filterrific.user = current_user_id if @filterrific.user == 1;
+      @filterrific.user = nil if @filterrific.user == 0;
       @filterrific.room_ids = nil if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
       @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
