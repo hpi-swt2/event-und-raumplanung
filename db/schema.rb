@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141205103749) do
+ActiveRecord::Schema.define(version: 20141210144902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,24 @@ ActiveRecord::Schema.define(version: 20141205103749) do
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
+
+  create_table "event_suggestions", force: true do |t|
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "room_id"
+    t.integer  "user_id"
+  end
+
+  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
+  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
+
+  create_table "event_suggestions_rooms", force: true do |t|
+    t.integer "event_suggestion_id"
+    t.integer "room_id"
+  end
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
@@ -124,8 +142,10 @@ ActiveRecord::Schema.define(version: 20141205103749) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
+    t.integer  "event_suggestion_id"
   end
 
+  add_index "rooms", ["event_suggestion_id"], name: "index_rooms_on_event_suggestion_id", using: :btree
   add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
@@ -155,8 +175,10 @@ ActiveRecord::Schema.define(version: 20141205103749) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: ""
+    t.string   "email",                               null: false
+    t.string   "username",               default: ""
     t.string   "encrypted_password",     default: "", null: false
+    t.string   "status"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -165,12 +187,13 @@ ActiveRecord::Schema.define(version: 20141205103749) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.string   "identity_url",                        null: false
+    t.string   "identity_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "student"
   end
 
-  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end

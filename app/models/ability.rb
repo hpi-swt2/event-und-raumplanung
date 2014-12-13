@@ -30,7 +30,8 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
-    can [:update, :destroy, :edit], Event, :user_id => user.id
+    can [:update, :destroy, :edit, ], Event, :user_id => user.id
+    can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     if user.identity_url == load_admin
         can :manage, Group
@@ -44,7 +45,6 @@ class Ability
 
   def load_admin
     config = YAML.load_file(Rails.root.join('config', 'config.yml'))
-    admin_identity = config['admin']['identity_url']
-
+    admin_identity = config['admin']['username']
   end
 end

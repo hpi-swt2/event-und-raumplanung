@@ -1,14 +1,26 @@
 class EventsController < ApplicationController
-
+  skip_filter :verify_authenticity_token, :check_vacancy
+ # skip_filter :authenticate_user, :check_vacancy
+  skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
+  after_filter :flash_to_headers, :only => :check_vacancy
 
   def current_user_id
     current_user.id
+  end
+
+   def flash_to_headers
+    if request.xhr?
+      #avoiding XSS injections via flash
+      flash_json = Hash[flash.map{|k,v| [k,ERB::Util.h(v)] }].to_json
+      response.headers['X-Flash-Messages'] = flash_json
+      flash.discard
+    end
   end
 
   # GET /events/1/new_event_template
@@ -21,11 +33,19 @@ class EventsController < ApplicationController
     render "event_templates/new"
   end
 
+  def new_event_suggestion
+    @event_suggestion = EventSuggestion.new
+    @event_suggestion.starts_at = @event.starts_at
+    @event_suggestion.ends_at = @event.ends_at
+    @event_suggestion.rooms = @event.rooms
+    render "event_suggestions/new"
+  end
+
   # GET /events
   # GET /events.json
   def index
 
-     
+
      @filterrific = Filterrific.new(
       Event,
       params[:filterrific] || session[:filterrific_events])
@@ -66,10 +86,36 @@ class EventsController < ApplicationController
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
+  def check_vacancy
+    checked_params = event_params
+
+    @event = Event.new(event_params)
+    @event.user_id = current_user_id
+
+    conflicting_events = @event.checkVacancy event_params[:room_ids]
+
+    respond_to do |format|
+      if conflicting_events.empty?
+        flash[:notice] = "Vacant"
+        format.json { render :json => {status: true}}
+      else
+        flash[:warning] = "Not available"
+
+        msg = Hash[conflicting_events.map { |event|
+          eventname = @event.id
+          eventname = event.name if (event.user_id == current_user_id || !event.is_private)
+          [event.id, {"event_name" => eventname,  "starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
+        msg[:status]= false
+        format.json { render :json => msg}
+      end
+    end
+  end
+
   # GET /events/1
   # GET /events/1.json
   def show
     @user = User.find(@event.user_id).identity_url
+    logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
   end
 
@@ -88,13 +134,22 @@ class EventsController < ApplicationController
     #authorize! :edit, @event
   end
 
+  def sugguest
+  end
+
   # POST /events
   # POST /events.json
   def create
     @event = Event.new(event_params)
     @event.user_id = current_user_id
+    logger.info @event.inspect
+
     respond_to do |format|
       if @event.save
+        conflicting_events = @event.checkVacancy event_params[:room_ids]
+        if conflicting_events.size > 1 ## this event is also in the returned list
+          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
+        end
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
         format.json { render :show, status: :created, location: @event }
       else
@@ -109,6 +164,12 @@ class EventsController < ApplicationController
   def update
       respond_to do |format|
       if @event.update(event_params)
+        conflicting_events = @event.checkVacancy event_params[:room_ids]
+        logger.info "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        logger.info conflicting_events.inspect
+        if conflicting_events.size > 1 ## this event is also in the returned list
+          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
+        end
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
       else
@@ -136,7 +197,7 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :room_ids => [])
+      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
     end
 
     def set_return_url
