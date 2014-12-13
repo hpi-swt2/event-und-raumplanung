@@ -40,3 +40,28 @@
 
   <%= render :partial => 'upcoming_events' %>
 </div>
+<div class "page-header">
+    <h2><%=t '.equipment' %> </h2>
+    <% if @assigned_equipment %>
+      <table class="table table-column">
+        <thead>
+        <tr>
+          <th><%= t '.category'%></th>
+          <th><%= t '.available'%></th>
+        </tr>
+        </thead>
+        <tbody>
+          <% @assigned_equipment.each do |category, count| %>
+            <tr>
+              <td><%= category%></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <em><%=t '.no_equipment' %></em><br/>
+    <% end %>
+</div>
+<br></br>
+

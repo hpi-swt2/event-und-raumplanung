@@ -15,6 +15,7 @@ class RoomsController < ApplicationController
   # GET /rooms/1.json
   def show
     @events = @room.upcoming_events.take(5)
+    @assigned_equipment = Equipment.all.where(room_id: @room.id).group(:category).count
   end
 
   # GET /rooms/new

@@ -10,6 +10,10 @@ de:
       upcoming_events: Anstehende Events
       all_events: Alle Events
       no_properties: Keine speziellen Eigenschaften
+      equipment: Ausstattung
+      category: Kategorie
+      available: Vorhanden
+      no_equipment: Keine Ausstattung vorhanden
     events:
       no_upcoming_events: Keine anstehenden Events
     label:

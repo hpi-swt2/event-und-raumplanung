@@ -1,11 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe "rooms/_form.html.erb" do
-  it "shows assigned equipment" do
-    #@available_equipment = {Beamer: '1'}
-    #render
-    #expect(rendered).to include("Beamer")
+      
+  before(:each) do
+    assign(:room, FactoryGirl.build(:room))
+    assign(:assigned_equipment, {'Beamer' => 1})
+    assign(:available_equipment, {'Beamer' => 2, 'Toaster' => 1})
+    assign(:properties, [])
   end
-  it "shows available equipment" do
+  
+  it "shows equipment" do
+    render
+    expect(rendered).to include("Beamer")
+    expect(rendered).to include("Toaster")
   end
 end
