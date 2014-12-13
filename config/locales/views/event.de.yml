@@ -20,3 +20,17 @@ de:
       participants_gte: 'mind. Teilnehmer'
       participants_lte: 'max. Teilnehmer'
       advanced_search: 'Erweiterte Suche'
+
+    show:
+      id: 'ID'
+      name: 'Name'
+      description: 'Beschreibung'
+      starts_at: 'Startet'
+      ends_at: 'Endet'
+      status: 'Status'
+      user: 'Benutzer'
+      private: 'Privat'
+      rooms: 'Räume'
+      participant_count: 'Teilnehmerzahl'
+      created_at: 'Erstellt'
+      updated_at: 'Geändert'

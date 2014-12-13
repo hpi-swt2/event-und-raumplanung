@@ -1,5 +1,9 @@
-<%= form_for @event, :html => { :class => "form-horizontal event", :id => "event-form" } do |f| %>
+<%- model_class = Event -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.sugguest', 'Sugguest %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
 
+<%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch", :remote => true, :html => { :class => "form-horizontal event", :id => "sugguest-form" } do |f| %>
     <% if @event.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
@@ -14,22 +18,19 @@
       </div>
     </div>
   <% end %>
-
-  <div class="control-group">
+ <%= f.hidden_field :id, :value => @event.id%>
+<div class="control-group">
     <%= f.label model_class.human_attribute_name(:name), :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'form-control', :maxlength=>"254" %>
+      <%= f.text_field :name, :class => 'form-control', :maxlength=>"254", :readonly => true %>
     </div>
-    <%= error_span(@event[:name]) %>
   </div>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:description), :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'form-control' %>
+      <%= f.text_area :description, :class => 'form-control', :readonly => true %>
     </div>
-    <%= error_span(@event[:description]) %>
   </div>
-  <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
@@ -40,12 +41,11 @@
     </script>
     <%= error_span(@event[:rooms]) %>
   </div>
-  <div class="control-group">
+    <div class="control-group">
     <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :participant_count, :class => 'form-control' %>
+      <%= f.number_field :participant_count, :class => 'form-control', :readonly => true %>
     </div>
-    <%= error_span(@event[:participant_count]) %>
   </div>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
@@ -73,27 +73,10 @@
         <%= error_span(@event[:ends_at_time]) %>
       </div>
     </div>
-     
   </div>
-  <div class="control-group">
-
-    <div class="row">
-      <div class="controls col-sm-6">
-      <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
-      <%= f.check_box :is_private %>
-      </div>
-      <div class="controls col-sm-6">
-      <%= f.label model_class.human_attribute_name(:Important), :class => 'control-label' %>
-      <%= f.check_box :is_important %>
-      </div>
-   </div>
-  </div>
-
- <div class="notice"></div> <!-- display conflicting events -->
-
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit t('.sugguest', :default => t("helpers.links.sugguest")), :class => 'btn btn-primary', :id => "submit_suggestion" %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
+  <%= link_to t('.sugguest', :default => t("helpers.links.sugguest")), sugguest_event_path(17), :target => "_blank" %>
 
 <% end %>
