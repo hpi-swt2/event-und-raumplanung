@@ -39,6 +39,13 @@
       <%= error_span(@task[:event_id]) %>
     </div>
     <div class="control-group">
+      <%= f.label :deadline, :class => 'control-label' %>
+      <div class="controls">
+          <%= f.date_field :deadline, :class => 'form-control' %>
+      </div>  
+      <%= error_span(@task[:deadline]) %>  
+    </div>
+    <div class="control-group">
         <%= f.label :user_id, :class => 'control-label' %>
         <div class="controls">
           <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none')}, :class => 'form-control' %>

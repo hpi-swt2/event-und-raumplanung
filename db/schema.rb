@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.datetime "deadline"
     t.integer  "task_order"
   end
 
