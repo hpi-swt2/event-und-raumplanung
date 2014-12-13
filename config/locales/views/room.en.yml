@@ -1,0 +1,33 @@
+# ruby encoding: utf-8
+
+de:
+  rooms:
+    index:
+      title: Raumübersicht
+      all_events: Alle Events
+    show:
+      no_upcoming_events: Keine anstehenden Events
+      upcoming_events: Anstehende Events
+      all_events: Alle Events
+      no_properties: Keine speziellen Eigenschaften
+    events:
+      no_upcoming_events: Keine anstehenden Events
+    details:
+      capacity: Capacity
+      equipment: Equipment
+      request: Request booking
+      people: people
+      table_information: Tables upon request
+      table_request: Request tables
+    list:
+      room_selection: Room Selection
+      requested_size: needed size of room
+      necessary_equipment: Necessary equipment
+      necessary_properties: Necessary properties
+      no_rooms_found: No rooms met the criteria
+      no_selection: No criteria selected
+      room_id: Room_id
+      room_name: Name of room
+      room_size: Maximum number of persons
+      equipment: Equipment
+      properties: Properties

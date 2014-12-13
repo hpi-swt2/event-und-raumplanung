@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :event_suggestions
   resources :groups do
     member do
       get 'manage_rooms'
@@ -15,9 +16,13 @@ Rails.application.routes.draw do
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'rooms/list'
+  post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
+  post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
+
+
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
@@ -37,6 +42,8 @@ Rails.application.routes.draw do
   resources :bookings
 
   resources :equipment
+
+  patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do
     get :reset_filterrific, on: :collection
@@ -58,6 +65,10 @@ Rails.application.routes.draw do
 
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
+  get 'events/:id/new_event_suggestion' => 'events#new_event_suggestion', as: :new_event_suggestion_from_event
+  get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
+
+
 
   get 'events/:id/index_toggle_favorite' => 'events#index_toggle_favorite', as: :index_toggle_favorite_from_event
   get 'events/:id/show_toggle_favorite' => 'events#show_toggle_favorite', as: :show_toggle_favorite_from_event
@@ -66,7 +77,7 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase  
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'rooms/:id/events' => 'rooms#list_events', as: :room_events
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
