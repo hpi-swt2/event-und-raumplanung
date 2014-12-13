@@ -42,7 +42,7 @@
 <%= link_to t('.back', :default => t("helpers.links.back")),
               @return_url, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_task_path(@task, return_url: request.env['PATH_INFO']), :class => 'btn btn-default' %>
+              edit_task_path(@task), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               task_path(@task),
               :method => 'delete',
