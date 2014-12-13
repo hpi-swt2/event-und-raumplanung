@@ -3,7 +3,7 @@
     <% if @event_template.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => EventTemplate.model_name.human, :count => @event_template.errors.count %></h3>
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Event.model_name.human, :count => @event_template.errors.count %></h3>
       </div>
       <div class="panel-body">
         <ul>
@@ -16,22 +16,39 @@
   <% end %>
 
   <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
+    <%= f.label model_class.human_attribute_name(:name), :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
+      <%= f.text_field :name, :class => 'form-control', :maxlength=>"254" %>
     </div>
     <%= error_span(@event_template[:name]) %>
   </div>
   <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
+    <%= f.label model_class.human_attribute_name(:description), :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :description, :class => 'form-control' %>
     </div>
     <%= error_span(@event_template[:description]) %>
   </div>
+  <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event_template.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+    </div>
+    <script>
+    $('#selectpicker').selectpicker();
+    </script>
+    <%= error_span(@event_template[:rooms]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :participant_count, :class => 'form-control' %>
+    </div>
+    <%= error_span(@event_template[:participant_count]) %>
+  </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            event_templates_path, :class => 'btn btn-default' %>
+            events_path, :class => 'btn btn-default' %>
 
 <% end %>
