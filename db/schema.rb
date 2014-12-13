@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20141210144902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -169,8 +168,8 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
-    t.integer  "task_order"
     t.datetime "deadline"
+    t.integer  "task_order"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
