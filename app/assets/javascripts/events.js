@@ -2,10 +2,20 @@
 // // Place all the behaviors and hooks related to the matching controller here.
 // // All this logic will automatically be available in application.js.
 
-
-var ready;
-ready = function () {
-    var typingTimer,
+$(function() {
+  $('#advancedSearch').on('shown.bs.collapse', function () {
+    $(".drop-down-chevron").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+  });
+  
+  $('#advancedSearch').on('hidden.bs.collapse', function () {
+    $(".drop-down-chevron").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+  });
+  $('.datetimepicker').datetimepicker({
+    language: 'de'
+  });
+  $('.selectpicker').selectpicker();
+  
+  var typingTimer,
         doneTypingInterval = 1000;
 
     function getValidRooms() {
@@ -57,7 +67,4 @@ ready = function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(getValidRooms, doneTypingInterval);
     });
-};
-
-$(document).ready(ready);
-$(document).on('page:load', ready);
+});
