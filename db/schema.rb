@@ -169,8 +169,8 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
-    t.datetime "deadline"
     t.integer  "task_order"
+    t.datetime "deadline"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree

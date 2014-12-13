@@ -20,7 +20,6 @@ de:
       participants_gte: 'mind. Teilnehmer'
       participants_lte: 'max. Teilnehmer'
       advanced_search: 'Erweiterte Suche'
-
     show:
       id: 'ID'
       name: 'Name'
