@@ -53,6 +53,16 @@ class RoomsController < ApplicationController
      @rooms = Room.find(rooms_ids)
   end
 
+  def getValidRooms
+    needed_rooms = Equipment.where("category IN (?)", params['room']['equipment']).pluck(:room_id)
+    needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms, :room_size => params['room']['size']})
+    msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
+
+    respond_to do |format|
+        format.json { render :json => msg} 
+    end 
+  end 
+
   # GET /rooms/1/edit
   def edit
     authorize! :edit, @room

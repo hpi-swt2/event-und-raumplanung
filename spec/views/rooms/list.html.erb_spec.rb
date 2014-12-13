@@ -12,7 +12,7 @@ RSpec.describe "rooms/list.html.erb" do
       assign(:empty, false)
       assign(:rooms, Array.new)
       render
-      expect(rendered).to include("nix ausgewählt")
+      expect(rendered).to include(I18n.t('rooms.list.no_selection'))
   end
 
   it "must display no Rooms found message" do
@@ -22,7 +22,7 @@ RSpec.describe "rooms/list.html.erb" do
     assign(:empty, true)
     assign(:rooms, Array.new)
     render
-    expect(rendered).to include("keine Räume gefunden!")
+    expect(rendered).to include(I18n.t('rooms.list.no_rooms_found'))
   end
 
   it "must display a room" do
