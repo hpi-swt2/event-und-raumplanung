@@ -228,6 +228,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
+    timecop (0.7.1)
     timers (4.0.1)
       hitimes
     turbolinks (2.4.0)
@@ -265,8 +266,8 @@ DEPENDENCIES
   devise
   devise_openid_authenticatable
   factory_girl_rails
-  fullcalendar-rails (~> 2.0.2.0)
   filterrific
+  fullcalendar-rails (~> 2.0.2.0)
   guard-rspec
   jbuilder (~> 2.0)
   jquery-rails
@@ -290,6 +291,7 @@ DEPENDENCIES
   spring
   sqlite3
   therubyracer
+  timecop
   turbolinks
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)

@@ -36,6 +36,7 @@ class Ability
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
+        can :manage, Event
     else
         can :read, Group
     end
@@ -43,7 +44,6 @@ class Ability
 
   def load_admin
     config = YAML.load_file(Rails.root.join('config', 'config.yml'))
-    admin_identity = config['admin']['identity_url']
-
+    admin_identity = config['admin']['username']
   end
 end

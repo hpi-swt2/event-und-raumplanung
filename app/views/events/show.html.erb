@@ -17,6 +17,8 @@
   <dd><%= @event.participant_count %></dd>
   <dt><strong><%= model_class.human_attribute_name(:private) %>:</strong></dt>
   <dd><%= check_box_tag 'private', 'private', @event.is_private, disabled: :disabled %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:important) %>:</strong></dt>
+  <dd><%= check_box_tag 'important', 'important', @event.is_important, disabled: :disabled %></dd>
   <dt><strong><%= model_class.human_attribute_name(:starts_at) %>:</strong></dt>
   <% if @event.starts_at %> 
     <dd><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></dd>
@@ -39,8 +41,7 @@
 <% @event_id = @event.id %>
 <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks })%>
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
+<%= link_to t('.back', :default => t("helpers.links.back")), @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
 <% if can? :edit, @event %> 
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
                 edit_event_path(@event), :class => 'btn btn-default' %>

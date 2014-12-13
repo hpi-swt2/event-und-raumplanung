@@ -59,11 +59,16 @@
             <li><%= link_to Task.model_name.human(:count => 2), tasks_path %></li>
              <li><%= link_to "Booking", "bookings/new" %></li>
              <li><%= link_to "Filtering", "rooms/list" %></li>
-            <li><%= link_to "Process Requests", "events_approval/" %></li>
+            <li><%= link_to "Process Requests", events_approval_path %></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right" style="height: 50px;">
+          <ul class="nav navbar-nav navbar-right " style="height: 50px;">
             <% if user_signed_in? %>
-            <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+              <% if @current_user.student? %>
+                <li><a><%= @current_user.username + " (" + t("application.student") + ")" %></a></li>
+              <% else %>
+                <li><a><%= @current_user.username + " (" + t("application.staff") + ")" %></a></li>
+              <% end %>
+            <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>
         </div>
