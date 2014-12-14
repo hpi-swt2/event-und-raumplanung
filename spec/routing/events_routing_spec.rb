@@ -35,5 +35,10 @@ RSpec.describe EventsController, :type => :routing do
       expect(:get => "/events/1/new_event_template").to route_to("events#new_event_template", :id => "1")
     end
 
+    it "routes to #approve and #decline" do
+      expect(:post => "/events/1/approve").to route_to("events#approve", :id => "1")
+      expect(:post => "/events/1/decline").to route_to("events#decline", :id => "1")
+    end
+
   end
 end

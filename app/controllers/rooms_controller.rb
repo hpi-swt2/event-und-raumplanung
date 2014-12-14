@@ -30,14 +30,14 @@ class RoomsController < ApplicationController
     @empty = false;
     @noSelection = false
     rooms_ids = Room.all.pluck(:id)
-    if params.size <= 5
+    if params.size <= 4
         if params[:room].nil? or params[:room][:size].empty?
-     @noSelection = true
+            @noSelection = true
         end
     end
     if !params[:room].nil? and !params[:room][:size].empty?
-      size = params[:room][:size]
-      rooms_ids = rooms_ids & Room.where('size >= ?', size).pluck(:id)
+      @size = params[:room][:size]
+      rooms_ids = rooms_ids & Room.where('size >= ?', @size).pluck(:id)
      end
      @categories.each do |category|
       if params.has_key?(category)
@@ -54,6 +54,16 @@ class RoomsController < ApplicationController
      end
      @rooms = Room.find(rooms_ids)
   end
+
+  def getValidRooms
+    needed_rooms = Equipment.where("category IN (?)", params['room']['equipment']).pluck(:room_id)
+    needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms, :room_size => params['room']['size']})
+    msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
+
+    respond_to do |format|
+        format.json { render :json => msg} 
+    end 
+  end 
 
   # GET /rooms/1/edit
   def edit

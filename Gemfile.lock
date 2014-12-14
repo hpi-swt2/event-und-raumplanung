@@ -38,6 +38,8 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap3-datetimepicker-rails (3.1.3)
+      momentjs-rails (>= 2.8.1)
     builder (3.2.2)
     cancancan (1.9.2)
     capybara (2.4.4)
@@ -85,6 +87,7 @@ GEM
     filterrific (1.4.2)
       rails (>= 3.1.0)
     formatador (0.2.5)
+    fullcalendar-rails (2.0.2.0)
     guard (2.8.2)
       formatador (>= 0.2.4)
       listen (~> 2.7)
@@ -103,6 +106,11 @@ GEM
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
+    jquery-ui-rails (5.0.3)
+      railties (>= 3.2.16)
     json (1.8.1)
     knockoutjs-rails (3.2.0)
       railties (>= 3.1, < 5)
@@ -121,6 +129,8 @@ GEM
     minitest (5.4.2)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
+    momentjs-rails (2.8.3)
+      railties (>= 3.1)
     multi_json (1.10.1)
     newrelic_rpm (3.9.5.251)
     nokogiri (1.6.4.1)
@@ -163,6 +173,8 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
+    ranked-model (0.4.0)
+      activerecord (>= 3.1.12)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
@@ -218,6 +230,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
+    timecop (0.7.1)
     timers (4.0.1)
       hitimes
     turbolinks (2.4.0)
@@ -247,6 +260,7 @@ DEPENDENCIES
   airbrake
   better_errors
   binding_of_caller
+  bootstrap3-datetimepicker-rails (~> 3.1.3)
   cancancan (~> 1.9)
   capybara
   codeclimate-test-reporter
@@ -256,11 +270,15 @@ DEPENDENCIES
   devise_openid_authenticatable
   factory_girl_rails
   filterrific
+  fullcalendar-rails (~> 2.0.2.0)
   guard-rspec
   jbuilder (~> 2.0)
   jquery-rails
+  jquery-turbolinks
+  jquery-ui-rails
   knockoutjs-rails
   mocha
+  momentjs-rails
   newrelic_rpm
   pg
   pry
@@ -269,12 +287,14 @@ DEPENDENCIES
   rails (= 4.1.6)
   rails-dev-tweaks
   rails_12factor
+  ranked-model
   rspec-rails
   sdoc (~> 0.4.0)
   simplecov
   spring
   sqlite3
   therubyracer
+  timecop
   turbolinks
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)

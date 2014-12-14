@@ -44,6 +44,16 @@ de:
     sessions:
       signed_in: "Erfolgreich angemeldet."
       signed_out: "Erfolgreich abgemeldet."
+      sign_out: ausloggen
+      already_signed_out: "Bereits ausgeloggt."
+      status_missing: "Bitte gib deinen Benutzerstatus an."
+      status_changed: "Benutzerstatus geändert!"
+      admin_password: "Admin-Passwort eingeben."
+      status_student: "Student"
+      status_staff: "Mitarbeiter"
+      email_invalid: "Falsche E-mail. Bitte melde dich mit der Mail-Adresse an, mit der du dich das erste Mal angemeldet hast."
+      wrong_username: "Dein Name in der Mail-Adresse stimmt nicht mit dem Namen der OpenID überein."
+      wrong_domain: "Bitte benutze eine gültige HPI E-Mail Adresse."
     unlocks:
       send_instructions: "Du erhältst in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren können."
       send_paranoid_instructions: "Falls Deine E-Mail-Adresse in unserer Datenbank existiert erhältst Du in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren kannst."
