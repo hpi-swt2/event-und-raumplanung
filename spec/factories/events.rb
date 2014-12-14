@@ -14,8 +14,8 @@ FactoryGirl.define do
     sequence(:name) { |n| "Eventname#{n}" }
     description "Eventdescription"
     participant_count 15
-    starts_at Date.new(9999, 9, 10)
-    ends_at Date.new(9999, 10, 10)
+    starts_at DateTime.now.advance(:days => +1)
+    ends_at DateTime.now.advance(:days => +1, :hours => +1)
     is_private true
     user_id 122
   end
