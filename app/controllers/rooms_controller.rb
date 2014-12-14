@@ -87,7 +87,7 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1.json
   def update
     assign_equipment
-    authorize! :update, @room
+    #authorize! :update, @room
 
     respond_to do |format|
       if @room.update(room_params)
