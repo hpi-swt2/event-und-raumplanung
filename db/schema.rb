@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126141428) do
+ActiveRecord::Schema.define(version: 20141209132713) do
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20141126141428) do
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id"
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: ""
+    t.string   "email",                               null: false
     t.string   "username",               default: ""
     t.string   "encrypted_password",     default: "", null: false
     t.string   "status"
@@ -151,12 +151,13 @@ ActiveRecord::Schema.define(version: 20141126141428) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.string   "identity_url",                        null: false
+    t.string   "identity_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "student"
   end
 
-  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
