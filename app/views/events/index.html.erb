@@ -1,5 +1,13 @@
 <%- model_class = Event -%>
 
+<script type="text/javascript">
+  $(function() {  
+    $('.datetimepicker').datetimepicker({
+      language: '<%= I18n.default_locale %>'
+    });
+  })
+</script>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>

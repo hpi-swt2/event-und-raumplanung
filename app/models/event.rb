@@ -81,11 +81,11 @@ class Event < ActiveRecord::Base
     end
   }
   scope :starts_after, lambda { |ref_date|
-    date = DateTime.strptime(ref_date, "%d.%m.%Y %H:%M Uhr")
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('starts_at >= ?', date)
   }
   scope :ends_before, lambda { |ref_date|
-    date = DateTime.strptime(ref_date, "%d.%m.%Y %H:%M Uhr")
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('ends_at <= ?', date)
   }
   scope :participants_gte, lambda { |count|
