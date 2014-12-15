@@ -149,7 +149,7 @@ class EventsController < ApplicationController
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
         format.json { render :show, status: :created, location: @event }
       else
-        #format.html { render :new }
+        format.html { render :new }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -164,6 +164,8 @@ class EventsController < ApplicationController
        # format.json { render :show, status: :ok, location: @event }
       
        # format.json { render json: @event.errors, status: :unprocessable_entity }
+      else 
+        format.html {render :edit}
       end
     end
   end

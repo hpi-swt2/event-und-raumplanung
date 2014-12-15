@@ -38,13 +38,7 @@ describe Event do
 	  expect(results).not_to include(@approved_event, @open_event)
 	end
 
-	after(:all) do
-		@open_event.destroy
-		@declined_event.destroy
-		@approved_event.destroy
-	end
-
-end
+	
 
    it "should find time overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
@@ -90,6 +84,11 @@ end
 
   end
 
+after(:all) do
+		@open_event.destroy
+		@declined_event.destroy
+		@approved_event.destroy
+	end
 
 
 end
