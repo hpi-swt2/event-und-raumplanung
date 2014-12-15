@@ -7,21 +7,23 @@ class EventsApprovalController < ApplicationController
   def index
     read_and_exec_params
     check_admin_status
-		@bookings = Booking.where('start BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:start, :event_id)
-		@events = Event.where.not({status: ['approved', 'declined']})
+    @events = Event.open.order(:starts_at)
+		@bookings = Booking.start_at_day(@date).approved.order(:start, :event_id)
   end
 
   private
     def read_and_exec_params
       if params[:date]
-        if params[:date].is_a?(Hash)
-          @date = (params[:date][:year]+ '-' + params[:date][:month] + '-' + params[:date][:day]).to_date
-        else
-          @date = params[:date].to_date
+        begin
+          if params[:date].is_a?(Hash)
+            @date = (params[:date][:year]+ '-' + params[:date][:month] + '-' + params[:date][:day]).to_date
+          else
+            @date = params[:date].to_date
+          end
+        rescue
         end
-      else    
-        @date = Date.today
-      end
+      end    
+      @date = Date.today unless not @date.nil? and @date.acts_like_date?
     end
 
     def check_admin_status
