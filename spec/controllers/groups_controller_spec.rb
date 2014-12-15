@@ -71,6 +71,7 @@ RSpec.describe GroupsController, :type => :controller do
       get :assign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
       get :promote_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
       sign_out adminUser
+
       @request.env["devise.mapping"] = Devise.mappings[:groupLeader]
       sign_in groupLeader
     end
@@ -137,8 +138,8 @@ RSpec.describe GroupsController, :type => :controller do
         it "redirects to the root path", :isAdmin => false do
           group = Group.create! valid_attributes
           get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
-          group.users.should_not include user
-          user.groups.should_not include group
+          expect(group.users).not_to include user
+          expect(user.groups).not_to include group
           expect(group.users.count).to eq(0)
           expect(user.groups.count).to eq(0)
           expect(response).to redirect_to(root_path)
