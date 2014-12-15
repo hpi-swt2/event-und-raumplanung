@@ -3,40 +3,16 @@
   <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
+<%= render :partial => 'form' %>
+
 <h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:identity_url) %></th>
-      <th><%=t '.status', :default => t("helpers.status") %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
+<% if @users.count > 0 %>
+	<%= render :partial => 'users' %>
+<% end %>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td>
-          <% if @group.users.include? user %>
-            <%=t '.assigned', :default => t("groups.edit.assigned") %>
-          <% else %>
-            <%=t '.unassigned', :default => t("groups.edit.unassigned") %>
-          <% end %>
-        </td>
-        <td>
-          <% if @group.users.include? user %>
-            <%= link_to 'entfernen', unassign_user_group_path(@group, user),
-                    :class => 'btn btn-default btn-xs' %>
-          <% else %>
-            <%= link_to 'zuweisen', assign_user_group_path(@group, user),
-                    :class => 'btn btn-default btn-xs' %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<%= render :partial => 'form' %>
+<%= form_for @group, :html => { :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
+  <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
+  <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+  <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
+<% end %>

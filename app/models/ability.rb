@@ -32,7 +32,7 @@ class Ability
 
     can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-    if user.identity_url == load_admin
+    if user.username == load_admin
         can :manage, Group
         can :manage, Room
         can :manage, Equipment

@@ -24,7 +24,12 @@
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            groups_path, :class => 'btn btn-default' %>
+  <% if @group.id != nil %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              group_path(@group), :class => 'btn btn-default' %>
+  <% else %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              groups_path, :class => 'btn btn-default' %>
+  <% end %>
 
 <% end %>
