@@ -67,13 +67,13 @@ $(function() {
 
 // }); head
 
-};
+});
 
 
-	$('#event-form #selectpicker').change(function() { 
-		clearTimeout(typingTimer); 
-		typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
-	});
+$('#event-form #selectpicker').change(function() { 
+	clearTimeout(typingTimer); 
+	typingTimer = setTimeout(checkVacancy, doneTypingInterval); 
+});
 // $(document).ajaxComplete(function(event, request) { 
 // var flash = $.parseJSON(request.getResponseHeader('X-Flash-Messages'));
 //   if(!flash) return;
@@ -82,44 +82,44 @@ $(function() {
 //   if(flash.error) { /* code to display the 'error' flash */ alert("aa"); }
 // }); 
 
-	function checkVacancy(e) { 
-		rooms = []
-		$("#selectpicker option:selected").each(function(){ rooms.push($(this).val());}); 
-		
-		var data = { 	
-			event: {
-			starts_at_date: $('#event_starts_at_date').val(),
- 			starts_at_time: $('#event_starts_at_time').val(),
- 		 	ends_at_date:  $('#event_ends_at_date').val(),
- 		 	ends_at_time: $('#event_ends_at_time').val(), 
- 		 	room_ids: rooms
- 			}
- 		} 
-		$.ajax({
-			url: '/checkVacancy',
-			type: 'PATCH',
-			data: data,
-			dataType: 'json',
-			beforeSend: function(xhr) {
-			 	xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));}, 
-			 success:(function(data){
-			 	if (!data["status"]) { 
-			 		flashWarning(data); 
-			 	}
-			 	else 
-			 		clearFlash(); 
-			 //	var data = JSON.parse(data);
-			// 	if(data['status']){ 
-			// 		alert('true'); 
-			// 	}
-			// 	else 
-			// 		alert('false');
-		})
-			// })
-		}); 
-	}; 
+function checkVacancy(e) { 
+	rooms = []
+	$("#selectpicker option:selected").each(function(){ rooms.push($(this).val());}); 
 	
-	function flashWarning(data) { 
+	var data = { 	
+		event: {
+		starts_at_date: $('#event_starts_at_date').val(),
+			starts_at_time: $('#event_starts_at_time').val(),
+		 	ends_at_date:  $('#event_ends_at_date').val(),
+		 	ends_at_time: $('#event_ends_at_time').val(), 
+		 	room_ids: rooms
+			}
+		} 
+	$.ajax({
+		url: '/checkVacancy',
+		type: 'PATCH',
+		data: data,
+		dataType: 'json',
+		beforeSend: function(xhr) {
+		 	xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));}, 
+		 success:(function(data){
+		 	if (!data["status"]) { 
+		 		flashWarning(data); 
+		 	}
+		 	else 
+		 		clearFlash(); 
+		 //	var data = JSON.parse(data);
+		// 	if(data['status']){ 
+		// 		alert('true'); 
+		// 	}
+		// 	else 
+		// 		alert('false');
+	})
+		// })
+	}); 
+}; 
+	
+function flashWarning(data) { 
 	messages = [] 
 	for(var i in data) {
 		if(isNum(i)) {  
@@ -164,9 +164,9 @@ $(function() {
 	} 
 	 
 	$(".notice").html(output); 
-	}
+}
 	
-	function convertUTCDateToLocalDate(date) {
+function convertUTCDateToLocalDate(date) {
     var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
 
     var offset = date.getTimezoneOffset() / 60;
@@ -175,35 +175,33 @@ $(function() {
     newDate.setHours(hours - offset);
 
     return newDate;   
-	}
-	function isNum(val) { 
-		return /^\d+$/.test(val);
-	} 
+}
+
+function isNum(val) { 
+	return /^\d+$/.test(val);
+} 
 	
-	function isSameDay(startDate, endDate) { 
+function isSameDay(startDate, endDate) { 
 	if(startDate.getDate() == endDate.getDate() && startDate.getMonth() == endDate.getMonth()) { 
 		return true; 
 	}
 	else { 
 		return false; 
 	}
-	}
+}
 	
-	function getTime(date) { 
-		var hours = date.getHours(); 
-		var mins = date.getMinutes(); 
+function getTime(date) { 
+	var hours = date.getHours(); 
+	var mins = date.getMinutes(); 
+
+	var hourOutput = ((hours < 10) ? "0" + hours : hours);
+	var minOutput = ((mins < 10) ? "0" + mins : mins);(hours < 10 ); 
+	return hourOutput + ":" + minOutput + " Uhr" 
+}	
 	
-		var hourOutput = ((hours < 10) ? "0" + hours : hours);
-		var minOutput = ((mins < 10) ? "0" + mins : mins);(hours < 10 ); 
-		return hourOutput + ":" + minOutput + " Uhr" 
-	}
-	
-	
-	
-	function clearFlash() { 
-		$(".notice").html(""); 
-	}
-}; 
+function clearFlash() { 
+	$(".notice").html(""); 
+}
 
 $(document).ready(ready);
 $(document).on('page:load', ready);
