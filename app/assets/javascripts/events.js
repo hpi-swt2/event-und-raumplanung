@@ -65,16 +65,17 @@ ready = function() {
 	for(var i in data) {
 		if(isNum(i)) {  
 			if(data[i]["rooms"].length > 1) { 
-				room = ""
+				roomlist = "" // monosyndetic enumeration of all rooms as a string
 				for(var j in rooms) { 
-					if( room == "") { 
-						room = data[i]["rooms"][j]; 
+					if( roomlist == "") { 
+						roomlist = data[i]["rooms"][j]; 
 					}
-					else {
-						room += ", " + data[i]["rooms"][j];
+					else {// suport.arra
+						roomlist += ", " + data[i]["rooms"][j]; 
 					}
 				}
 				room_msg = "in den Räumen " + room; 
+				
 			}
 			else { 
 				room_msg = "im Raum " + data[i].rooms[0] ; 
