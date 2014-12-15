@@ -42,9 +42,7 @@ describe Event do
 
    it "should find time overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
- 
     @event2 = FactoryGirl.create(:standardEvent)
-
 
     ## the following line is taken from checkVacancy
     events =  Event.other_to(@event2.id).not_approved.overlapping(@event2.starts_at,@event2.ends_at)
@@ -53,8 +51,6 @@ describe Event do
 
     @event1.destroy
     @event2.destroy
-
-
   end
 
    it "SHOULD find overlapping events" do

@@ -101,30 +101,20 @@ class Event < ActiveRecord::Base
 
 
   def checkVacancy(rooms) 
-    logger.info "checkVacancy"
-    logger.info self.starts_at 
-    logger.info self.ends_at  
-    logger.info rooms 
+    
     colliding_events = []
-    unless rooms.nil?
-      rooms = rooms.collect{|i| i.to_i}
-    end
+    return colliding_events if rooms.nil?
 
+    rooms = rooms.collect{|i| i.to_i}
     events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
-    puts events.inspect
-    if events.empty?
-      return colliding_events
-    else
-      unless rooms.nil?
-        rooms_count = rooms.size
-        events.each do | event |
-          puts event.rooms.inspect
-          if (rooms - event.rooms.pluck(:id)).size < rooms_count
-             colliding_events.push(event)
-          end
-        end
-      end
-    end
+  
+    return colliding_events if events.empty?
+  
+    rooms_count = rooms.size
+    events.each do | event |
+      #kongruiert mindestents ein Raum?
+      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0  
+    end 
     return colliding_events
   end
 
