@@ -11,7 +11,7 @@
 	<%= render :partial => 'users' %>
 <% end %>
 
-<%= form_for @group, :html => { :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
+<%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
   <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
   <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
