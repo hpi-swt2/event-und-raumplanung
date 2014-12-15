@@ -62,19 +62,23 @@
 		<!-- <% end %> -->
 	<!-- </tbody> -->
 <!-- </table> -->
-
-
 <script>$(document).ready(function() {
 			$('#calendar').fullCalendar({				
 				defaultView: 'agendaDay',
 				eventSources: [{
-				events:[{
+				events:[<% if(@room.bookings.first != nil) %>
+				{
+					title: <%= @room.bookings.first.name %>,
+					start: <%= @room.bookings.first.start.to_s %>
+				},
+				<% end %>
+				{
 					title: 'Weihnachtsfeier',
 					start: '2014-12-12'
 				},
 				{
 					title: 'Film',
-					start: '2014-12-12T15:00:00Z',
+					start: '2014-12-12T14:00:00Z',
 					end: '2014-12-12T18:00:00Z'
 				},
 				{
@@ -83,17 +87,25 @@
 					end: '2014-12-12T15:00:00Z'
 				},
 				{
+					title: 'Harry Potter',
+					start: '2014-12-13T12:00:00Z',
+					end: '2012-12-13T14:00:00Z'
+				},
+				{
 					title: 'Lunch',
 					start: '2014-12-12T12:30:00Z',
 					end: '2014-12-12T13:30:00Z'
-				}]}]
+				}]
+				
+				}]
+				
 				});
 			});
 </script>
 <style type='text/css'>
 
 	#calendar {
-		width: 900px;
+		width: 600px;
 		height: 900px;
 		margin: 0 auto;
 	}
