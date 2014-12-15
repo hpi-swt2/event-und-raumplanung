@@ -140,16 +140,17 @@ RSpec.describe GroupsController, :type => :controller do
         # expect(user.groups.count).to eq(1)
         # trying to test this by using the page's input field
 
+        pending("Find out, why the path is correct but the content is empty..")
+
         include Warden::Test::Helpers
         Warden.test_mode!
 
         login_as(adminUser, :scope => :user)
         
-        visit '/groups/1/edit'
+        visit edit_group_path(group)
 
         expect(current_path).to eq(edit_group_path(group))
 
-        pending("Find out, why the path is correct but the content is empty..")
         find("#input_email").set(user.email)
         click_button "Submit"
         expect(group.users.first).to eq(user)
