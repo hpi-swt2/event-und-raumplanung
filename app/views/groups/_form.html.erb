@@ -25,10 +25,10 @@
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <% if @group.id != nil %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+    <%= link_to t('.back', :default => t("helpers.links.back")),
               group_path(@group), :class => 'btn btn-default' %>
   <% else %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+    <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default' %>
   <% end %>
 
