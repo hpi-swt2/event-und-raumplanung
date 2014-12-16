@@ -40,8 +40,6 @@ class EventTemplate < ActiveRecord::Base
       order("event_templates.created_at #{ direction }")
     when /^name_/
       order("LOWER(event_templates.name) #{ direction }")
-    when /^status_/
-      order("LOWER(event_templates.status) #{ direction }")
   else
     raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
   end
