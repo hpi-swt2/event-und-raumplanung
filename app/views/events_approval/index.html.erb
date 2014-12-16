@@ -31,7 +31,7 @@
             (<%= event.participant_count %>)
           </td>
           <td>        
-            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>            
+            <%= image_tag("flag.png", :alt => "Important", :width => 25, :height => 24) unless not event.is_important %>            
           </td>
           <td>
           	<% event.bookings.each do |booking| %>
