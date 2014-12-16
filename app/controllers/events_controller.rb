@@ -157,10 +157,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        conflicting_events = @event.checkVacancy event_params[:room_ids]
-        if conflicting_events.size > 1 ## this event is also in the returned list
-          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
-        end
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
         format.json { render :show, status: :created, location: @event }
       else
@@ -175,17 +171,12 @@ class EventsController < ApplicationController
   def update
       respond_to do |format|
       if @event.update(event_params)
-        conflicting_events = @event.checkVacancy event_params[:room_ids]
-        logger.info "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        logger.info conflicting_events.inspect
-        if conflicting_events.size > 1 ## this event is also in the returned list
-          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
-        end
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
-      else
-        format.html { render :edit }
+      
        # format.json { render json: @event.errors, status: :unprocessable_entity }
+      else 
+        format.html {render :edit}
       end
     end
   end
