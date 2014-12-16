@@ -41,9 +41,11 @@ class Ability
     # cann_user, :unassign_user],can [:assig Group, user.is_leader_of_group(@group.id)
     # can [:unassign_user, :assign_user], Group, :user_id => user.id
     if user.identity_url == load_admin
+
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
+        can :manage, Event
     else
         can :read, Group
     end
@@ -51,6 +53,6 @@ class Ability
 
   def load_admin
     config = YAML.load_file(Rails.root.join('config', 'config.yml'))
-    admin_identity = config['admin']['identity_url']
+    admin_identity = config['admin']['username']
   end
 end

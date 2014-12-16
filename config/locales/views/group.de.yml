@@ -4,14 +4,16 @@ de:
   groups:
     index:
       title: Gruppenübersicht
-      all_events: Alle Gruppen
+      all_groups: Alle Gruppen
     show:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
       unassigned: entfernt
+      unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
       member: Mitglied
       leader: Gruppenleiter
+      enter_email: Email-Adresse eingeben
     edit:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
@@ -22,3 +24,5 @@ de:
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen
       back: Zurück
+      user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
+      assign_user: Nutzer zuweisen

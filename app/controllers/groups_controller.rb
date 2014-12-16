@@ -6,17 +6,15 @@ class GroupsController < ApplicationController
   before_action :get_user_roles, only: [:show, :edit]
   # before_action :current_ability, only: [:promote_user, :degrade_user]
 
-  # load_and_authorize_resource
-
   def index
     @groups = Group.all
   end
 
   def show
     # authorize :assign_user, Group
-
+    @users = @group.users 
   end
-  
+    
   def assign_user
     authorize! :assign_user, @group
     # authorize :assign_user, Group
@@ -46,6 +44,7 @@ class GroupsController < ApplicationController
   def edit
     # Only authorized users can edit groups (ability.rb)
     authorize! :edit, @group
+    @users = @group.users
   end
 
   def create
@@ -143,22 +142,45 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
     end
 
-    def set_user
-      @user = User.find(params[:user_id])
+    def load_user_from_email
+      if params.include?(:User)
+        @user = User.find_by_email(params[:User][:email])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
+      end
+    end
+
+    def load_user_from_id
+      if params.include?(:user_id)
+        @user = User.find(params[:user_id])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
+      end
     end
 
     def group_params
       params.require(:group).permit(:name)
     end
+
     def set_room
       @room = Room.find(params[:room_id])
     end
+
     def get_user_roles
       @users = User.all
       @leaders = @users.select{|u| u.is_leader_of_group(@group.id)}
       @members = @users.select{|u| u.is_member_of_group(@group.id) && u.is_leader_of_group(@group.id) == false}
       @nonmembers = @users.select{|u| u.is_member_of_group(@group.id) == false}
     end
+
+    def set_user
+      @user = User.find(params[:user_id])
+    end
+
     # def current_ability
       # @current_ability ||= Ability.new(current_user, @group)
     # end

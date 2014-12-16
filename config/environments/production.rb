@@ -27,7 +27,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true
 
   # Generate digests for assets URLs.
   config.assets.digest = true
@@ -76,16 +76,18 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'event-und-raumplanung.herokuapp.com', port: 80 }
+  config.action_mailer.default_url_options = { host: ENV['HEROKU_HOSTNAME'], port: 80 }
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp-mail.outlook.com',
+    address:              'smtp.gmail.com',
     port:                 587,
-    user_name:            'event-und-raumplanung@outlook.com',
-    password:             'Test1234',
+    user_name:            'hpiswt2eur@gmail.com',
+    password:             ENV['HEROKU_SMTP_PASSWORD'],
     authentication:       'plain',
-    enable_starttls_auto: true  }
+    enable_starttls_auto: true
+  }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_options = {from: 'event-und-raumplanung@outlook.com'}
+  config.action_mailer.default_options = {from: 'hpiswt2eur@gmail.com'}
 end

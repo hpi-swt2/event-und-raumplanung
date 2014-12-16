@@ -3,16 +3,9 @@
   <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-<h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
+<%= render :partial => 'form' %>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:identity_url) %></th>
-      <th><%=t '.status', :default => t("helpers.status") %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
+<h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
 
   <tbody>
     <% @leaders.each do |user| %>
@@ -37,17 +30,22 @@
         <% end %>
       </tr>
     <% end %>
-    <% @nonmembers.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td> </td>
-        <td><%= link_to 'zuweisen', assign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %> </td>
-      </tr>
-    <% end %>
   </tbody>
 </table>
+
+
+<% if @users.count > 0 %>
+	<%= render :partial => 'users' %>
+<% end %>
+
+<%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
+  <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
+  <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+  <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
+
+<% end %>
+
 <% if can? :update, @group %>
   <%= render :partial => 'form' %>
 <% else%>
     <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
-<% end %>
