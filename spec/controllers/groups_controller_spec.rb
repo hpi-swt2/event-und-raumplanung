@@ -48,9 +48,8 @@ RSpec.describe GroupsController, :type => :controller do
     let(:user2) { create :user }
     let(:adminUser) { create :adminUser }
     let(:groupLeader) {create :groupLeader}
+    let(:group) {create :group}
     let(:group2) {create :group}
-    let(:groupLeader2) {create :groupLeader}
-
 
     before(:each, :isAdmin => false) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -64,20 +63,19 @@ RSpec.describe GroupsController, :type => :controller do
 
 
     before(:each, :isGroupLeader => true) do
-      @request.env["devise.mapping"] = Devise.mappings[:adminUser]
-      sign_in adminUser
-      get :assign_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      get :promote_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      get :assign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      get :promote_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      sign_out adminUser
+      # @request.env["devise.mapping"] = Devise.mappings[:adminUser]
+      # sign_in adminUser
+      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
+      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
+      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
+      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
+      # sign_out adminUser
 
       @request.env["devise.mapping"] = Devise.mappings[:groupLeader]
-      sign_in groupLeader
+      @groupLeader = groupLeader
+      sign_in @groupLeader
+      @leaderGroup = @groupLeader.groups.last
     end
-
-
-
 
     describe "GET index" do
       it "assigns all groups as @groups as normal user", :isAdmin => false do
@@ -145,24 +143,26 @@ RSpec.describe GroupsController, :type => :controller do
           expect(response).to redirect_to(root_path)
         end
       end
+
       context "as admin user" do
         it "assigns user to group", :isAdmin => true do
           group = Group.create! valid_attributes
-          get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+          get :assign_user, {:id => group.to_param, :user_id => user.to_param}
           expect(group.users.first).to eq(user)
           expect(user.groups.first).to eq(group)
           expect(group.users.count).to eq(1)
           expect(user.groups.count).to eq(1)
         end
       end
+
       context "as group leader" do
         it "assigns user to group", :isGroupLeader => true do
+          thatgroup = @groupLeader.groups.last
           expect {
-            get :assign_user, {:id => group2.to_param, :user_id => user.to_param}, valid_session
-          }.to change(group2.users, :count).by(1)
-          expect(group2.users.include? user)
-          expect(user.groups.first).to eq(group2)
-          expect(group2.users.count).to eq(3)
+            get :assign_user, {:id => thatgroup.id, :user_id => user.to_param}
+          }.to change(thatgroup.users, :count).by(1)
+          expect(thatgroup.users.include? user)
+          expect(user.groups.first).to eq(thatgroup)
           expect(user.groups.count).to eq(1)
         end
       end
@@ -176,6 +176,7 @@ RSpec.describe GroupsController, :type => :controller do
           expect(response).to redirect_to(root_path)
         end
       end
+
       context "as admin user" do
         it "unassigns user from group", :isAdmin => true do
           group = Group.create! valid_attributes
@@ -188,19 +189,30 @@ RSpec.describe GroupsController, :type => :controller do
       context "as group leader" do
         context "unassigns a normal user" do
           it "unassigns user from group", :isGroupLeader => true do
-            group2.users << user
-            get :unassign_user, {:id => group2.to_param, :user_id => user.to_param}, valid_session
-            expect(group2.users.count).to eq(2)
-            expect(user.groups.count).to eq(0)
+            @leaderGroup.users << user
+            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => user.to_param}
+            user.reload
+            @leaderGroup.reload
+            expect(@leaderGroup.users).not_to include(user)
+            expect(user.groups).not_to include(@leaderGroup)
           end
         end
         context "unassigns another group leader" do
           it "does not unassign user from group", :isGroupLeader => true do
-            get :unassign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-            expect(group2.users.include? groupLeader2)
-            expect(group2.users.count).to eq(2)
-            expect(groupLeader2.groups.first).to eq(group2)
-            expect(groupLeader2.groups.count).to eq(1)
+
+            # add some guy to group and make him leader
+            @leaderGroup.users << user
+            mem = user.memberships.last
+            mem.isLeader = true
+            mem.save
+
+            # try to remove him as group leader. this should not work 
+            # (as technically, it would imply degrading the other user)
+            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => user.to_param}
+            @leaderGroup.reload
+
+            expect(@leaderGroup.users.include? user)
+            expect(user.groups).to include(@leaderGroup)
           end
         end
       end
@@ -209,15 +221,15 @@ RSpec.describe GroupsController, :type => :controller do
     describe "GET promote_user" do
       context "as normal user" do
         it "does not promote a user", :isAdmin => false do
-          # get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
-          # get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
-          # expect(user2.is_leader_of_group(group2.id)).to eq(false)
+          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
+          get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
+          expect(user2.is_leader_of_group(group2.id)).to eq(false)
         end
       end
       context "as group leader" do
         it "does not promote a user", :isGroupLeader => true do
-          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
-          get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
+          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}
+          get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}
           expect(user2.is_leader_of_group(group2.id)).to eq(false)
         end
       end
@@ -233,17 +245,35 @@ RSpec.describe GroupsController, :type => :controller do
     describe "degrade user" do
       context "as normal user" do
         it "does not degrade a user", :isAdmin => false do
-
+          group.users << user
+          mem = user.memberships.last
+          mem.isLeader = true
+          mem.save
+          get :degrade_user, {:id => group.id, :user_id => user.id}
+          mem.reload
+          expect(mem.isLeader).to eq(true)
         end
       end
       context "as group leader" do
         it "does not degrade a user", :isGroupLeader => true do
-
+          @leaderGroup.users << user
+          mem = user.memberships.last
+          mem.isLeader = true
+          mem.save
+          get :degrade_user, {:id => @leaderGroup.id, :user_id => @groupLeader.id}
+          mem.reload
+          expect(mem.isLeader).to eq(true)
         end
       end
       context "as admin" do
         it "does degrade a user", :isAdmin => true do
-
+          group.users << user
+          mem = user.memberships.last
+          mem.isLeader = true
+          mem.save
+          get :degrade_user, {:id => group.id, :user_id => user.id}
+          mem.reload
+          expect(mem.isLeader).to eq(false)
         end
       end
     end
@@ -362,15 +392,10 @@ RSpec.describe GroupsController, :type => :controller do
       let(:room1) { create :room}
       let(:room2) { create :room }
 
-      # group1 = create(:group, name: "Group1")
-      # group2 = create(:group, name: "Group2")
-      # room1 = create(:room)
-      # room2 = create(:room)
-
       describe "assigning a room" do
         context "that is already assigned" do
           before(:each) do
-            get :assign_room, {:id => group2, :room => room1.to_param}, valid_session
+            get :assign_room, {:id => group2, :room => room1.to_param}
           end
           # it "does not assign a room" do
           #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
@@ -379,74 +404,26 @@ RSpec.describe GroupsController, :type => :controller do
           # end
         end
 
-        context "that is not assigned yet" do
-          it "assigns the room as normal user", :isAdmin => false do
+        context "as normal user that is not assigned yet", :isAdmin => false do
+          it "does not assign the room" do
             # puts group1.inspect
             # room1.group = group1
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
+            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
             # puts group1.reload.inspect
             # puts Room.find(room1.id).inspect
             # puts flash.inspect
             # puts response.body
 
             # RELOAD!! as room1 is just a local variable, get actual information from DB
-            expect(room1.reload.group_id).to eq (group1.id)
+            expect(room1.reload.group_id).to eq (nil)
           end
         end
 
-        it "redirects to manage group path as normal user", :isAdmin => false do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          expect(response).to redirect_to(manage_rooms_group_path(group1))
+        it "redirects to the start page when not authorized", :isAdmin => false do
+          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+          expect(response).to redirect_to(root_path)
         end
       end
     end
   end
-
-  /
-    describe "in group room management" do
-      let(:group1) { create :group, name: "group1"}
-      let(:group2) { create :group, name: "group2"}
-      let(:room1) { create :room}
-      let(:room2) { create :room }
-
-      # group1 = create(:group, name: "Group1")
-      # group2 = create(:group, name: "Group2")
-      # room1 = create(:room)
-      # room2 = create(:room)
-
-      describe "assigning a room" do
-        context "that is already assigned" do
-          before(:each) do
-            get :assign_room, {:id => group2, :room => room1.to_param}, valid_session
-          end
-          # it "does not assign a room" do
-          #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   expect(room1.group).to eq (group2.id)
-          # end
-        end
-
-        context "that is not assigned yet" do
-          it "assigns the room" do
-            # puts group1.inspect
-            # room1.group = group1
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-            # puts group1.reload.inspect
-            # puts Room.find(room1.id).inspect
-            # puts flash.inspect
-            # puts response.body
-
-            # RELOAD!! as room1 is just a local variable, get actual information from DB
-            expect(room1.reload.group_id).to eq (group1.id)
-          end
-        end
-
-        it "redirects to manage group path" do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          expect(response).to redirect_to(manage_rooms_group_path(group1))
-        end
-      end
-    end
-  end/
-
 end

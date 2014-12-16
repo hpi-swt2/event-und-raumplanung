@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
     # authorize :assign_user, Group
 
   end
-
+  
   def assign_user
     authorize! :assign_user, @group
     # authorize :assign_user, Group
