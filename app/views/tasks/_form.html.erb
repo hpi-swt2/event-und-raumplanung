@@ -70,28 +70,28 @@
         <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
       </ul>
 
+      <form data-bind="submit: addAttachment">
+        <div class="control-group">
+          <label class="control-label" for="attachment_title">Titel</label>
+          <div class="controls">
+            <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
+          </div>
+        </div>    
+        <div class="control-group">
+          <label class="control-label" for="attachment_url">URL</label>
+          <div class="controls">
+            <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
+          </div>
+        </div>
+        <div class="control-group">
+          <input type="submit" value="<%= t('tasks.attachments.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
+        </div>
+      </form>
+
+      <br>
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
   <% end %>
 </div>
 
-<div class="col-lg-2">
-  <form data-bind="submit: addAttachment">
-    <div class="control-group">
-      <label class="control-label" for="attachment_title">Titel</label>
-      <div class="controls">
-        <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
-      </div>
-    </div>    
-    <div class="control-group">
-      <label class="control-label" for="attachment_url">URL</label>
-      <div class="controls">
-        <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
-      </div>
-    </div>
-    <div class="control-group">
-      <input type="submit" value="<%= t('tasks.attachments.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
-    </div>
-  </form>
-</div>
