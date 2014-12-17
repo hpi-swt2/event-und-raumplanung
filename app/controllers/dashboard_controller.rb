@@ -4,6 +4,7 @@ class DashboardController < ApplicationController
 	def index
    		@events = next_five_events
 		get_my_tasks	
+		@my_upcoming_events = next_five_own_events
  	end
 
   	private
@@ -25,5 +26,9 @@ class DashboardController < ApplicationController
 		pending_event_ids = @my_pending_tasks.collect{ |task| task.event_id }.uniq
 		@my_accepted_events = Event.find(accepted_event_ids)
 		@my_pending_events = Event.find(pending_event_ids)
+	end
+
+	def next_five_own_events
+		return Event.where("(ends_at >= '#{(Time.current.to_s(:db))}') AND (user_id = #{current_user.id}) ").order('starts_at ASC').limit(5)
 	end
 end

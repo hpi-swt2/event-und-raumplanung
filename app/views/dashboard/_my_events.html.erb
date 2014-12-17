@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= t('dashboard.my_events') %></h3>
+    </div>
+    <div class="panel-body">
+        <% unless my_upcoming_events.blank? %>
+            <ul class="list-group">
+                <% my_upcoming_events.each do |event| %>
+                    <li class="list-group-item">
+                        <%= link_to event.name, event_path(event) %>
+                    </li>
+                <% end %>
+            </ul>
+        <% else %>
+            <p>
+                <%= t('dashboard.no_own_upcoming_events') %>
+            </p>
+        <% end %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_event_path, :class => 'btn btn-primary' %>
+    </div>
+</div>

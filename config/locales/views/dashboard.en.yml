@@ -9,3 +9,5 @@ en:
     no_taks: You currently have no tasks to do.
     no_pending_tasks: You have no pending tasks.
     calendar: Calendar
+    my_events: My Events
+    no_own_upcoming_events: You have not created any events.

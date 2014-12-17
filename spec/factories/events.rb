@@ -19,4 +19,14 @@ FactoryGirl.define do
     is_private true
     user_id 122
   end
+
+  factory :my_upcoming_event, :class => Event do
+    sequence(:name) { |n| "Eventname#{n}" }
+    description "Eventdescription"
+    participant_count 15
+    starts_at Date.new(9999, 9, 10)
+    ends_at Date.new(9999, 10, 10)
+    is_private true
+    sequence(:user_id) { |id| id }
+  end
 end
