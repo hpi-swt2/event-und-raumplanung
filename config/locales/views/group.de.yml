@@ -11,11 +11,18 @@ de:
       unassigned: entfernt
       unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
+      member: Mitglied
+      leader: Gruppenleiter
       enter_email: Email-Adresse eingeben
     edit:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
       unassigned: entfernt
       user_overview: Benutzerübersicht
+      unassign: Aus Gruppe entfernen
+      assign: Gruppe zuweisen
+      degrade: Gruppenleiterschaft entziehen 
+      promote: zum Gruppenleiter ernennen
+      back: Zurück
       user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
       assign_user: Nutzer zuweisen

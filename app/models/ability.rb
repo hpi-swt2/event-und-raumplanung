@@ -5,6 +5,9 @@ class Ability
     # Define abilities for the passed in user here. For example:
     #
        user ||= User.new # guest user (not logged in)
+       # @groups = user.memberships.select{|membership| membership.isLeader ==true}
+       leader_memberships = user.memberships.select{|membership| membership.isLeader == true}
+
        #user.id = 0
     #   if user.admin?
     #     can :manage, :all
@@ -29,11 +32,16 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
-
-    can [:update, :destroy, :edit, ], Event, :user_id => user.id
-    can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
+    # if groupT != nil
+    #     can [:assign_user, :unassign_user], Group if user.memberships.find_by(:group, groupT.id).isLeader
+    # end
+    can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
+    can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-    if user.username == load_admin
+    # cann_user, :unassign_user],can [:assig Group, user.is_leader_of_group(@group.id)
+    # can [:unassign_user, :assign_user], Group, :user_id => user.id
+    if user.identity_url == load_admin
+
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
