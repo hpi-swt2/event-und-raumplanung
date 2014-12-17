@@ -5,7 +5,21 @@ class EquipmentController < ApplicationController
   # GET /equipment
   # GET /equipment.json
   def index
+
     @equipment = Equipment.all
+
+
+    @filterrific = Filterrific.new(
+      Equipment, params[:filterrific])
+      @equipment = Equipment.filterrific_find(@filterrific).page(params[:page])
+      
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
+    
   end
 
   # GET /equipment/1
