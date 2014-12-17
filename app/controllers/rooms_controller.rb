@@ -7,7 +7,22 @@ class RoomsController < ApplicationController
   # GET /rooms
   # GET /rooms.json
   def index
-    @rooms = Room.all
+    @filterrific = Filterrific.new(Room,params[:filterrific] || session[:filterrific_rooms])
+    @filterrific.select_options =  {sorted_by: Room.options_for_sorted_by, items_per_page: Room.options_for_per_page}
+    @rooms = Room.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Room.per_page)
+    session[:filterrific_rooms] = @filterrific.to_hash
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_rooms] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
   end
 
   # GET /rooms/1

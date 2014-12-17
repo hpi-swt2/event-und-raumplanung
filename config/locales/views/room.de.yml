@@ -5,6 +5,10 @@ de:
     index:
       title: Raumübersicht
       all_events: Alle Events
+      sorted_by: 'Sortiert nach'
+      reset_filter: 'Filter zurücksetzen'
+      items_per_page: 'Räume pro Seite'
+      search: 'Suche'
     show:
       no_upcoming_events: Keine anstehenden Events
       upcoming_events: Anstehende Events

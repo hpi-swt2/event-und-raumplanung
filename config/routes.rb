@@ -30,7 +30,9 @@ Rails.application.routes.draw do
 
   resources :room_properties
 
-  resources :rooms
+  resources :rooms do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :tasks do
     post :update_task_order, on: :collection

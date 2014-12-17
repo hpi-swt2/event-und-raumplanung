@@ -4,7 +4,9 @@ de:
       title: Eventübersicht
       only_show_own: 'nur meine Events anzeigen'
       sorted_by: 'Sortiert nach'
+      items_per_page: 'Events pro Seite'
       reset_filter: 'Filter zurücksetzen'
+      nothing_selected: 'Keine ausgewählt'
       filtered_by_rooms: 'Nach Räumen filtern'
       search: 'Suche'
       name: 'Name'

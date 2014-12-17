@@ -44,24 +44,12 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-
-
-     @filterrific = Filterrific.new(
-      Event,
-      params[:filterrific] || session[:filterrific_events])
-      @filterrific.select_options =   {
-        sorted_by: Event.options_for_sorted_by
-      }
-      @filterrific.own = if @filterrific.own == 1
-          current_user_id
-        else
-          nil
-        end
-      @filterrific.room_ids = Room.all.map(&:id) if @filterrific.room_ids && @filterrific.room_ids.size <=1
-      @events = Event.filterrific_find(@filterrific).page(params[:page])
-
-      session[:filterrific_events] = @filterrific.to_hash
-
+    @filterrific = Filterrific.new(Event,params[:filterrific] || session[:filterrific_events])
+    @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
+    @filterrific.own = if @filterrific.own == 1
+       current_user_id; else nil; end
+    @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    session[:filterrific_events] = @filterrific.to_hash
 
     respond_to do |format|
       format.html
