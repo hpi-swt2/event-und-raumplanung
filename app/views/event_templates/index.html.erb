@@ -2,38 +2,51 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-     <!-- <th><%= model_class.human_attribute_name(:id) %></th> don´t show the id-->
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @event_templates.each do |event_template| %>
-      <tr>
-        <!-- <td><%= link_to event_template.id, event_template_path(event_template) %></td> don´t show the id -->
-        <td><%= link_to event_template.name, event_template_path(event_template) %></td>
-        <td><%= trimDescription event_template.description %></td>
-        <td><%= event_template.created_at.strftime('%d.%m.%Y') %></td>  
-        <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_event_template_path(event_template), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      event_template_path(event_template),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-           <%= link_to t('.create', :default => t("helpers.submit.create", :model => Event.model_name.human.titleize)),
-                      new_event_from_template_path(event_template), :class => 'btn btn-default btn-xs' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="well">
+  <div class="row">
+    <%= form_for @filterrific do |f| %>
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.search' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :search_query,
+            class: 'filterrific-periodically-observed form-control'
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.sorted_by' %>
+          <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, {class: 'form-control'}) %>
+          <%# See below for the Student.options_for_sorted_by presenter method %>
+       </div>
+      </div>
+    </div> 
+    <div class="col-md-4">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= link_to(
+             (t '.reset_filter'),
+            reset_filterrific_event_templates_path
+          ) %>
+       </div>
+      </div>
+    </div> 
+    <%# add an automated spinner to your form when the list is refreshed %>
+    <%= render_filterrific_spinner %>
+  <% end %>
+  </div>
+</div>
+
+<%= render(
+  partial: 'event_templates/list',
+  locals: { event_templates: @event_templates,  model_class:  model_class }
+) %>
+<div class="clear"></div>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_event_template_path,

@@ -8,16 +8,18 @@
   <dd><%= @group.name %></dd>
 </dl>
 
+<% if @users.count > 0 %>
+  <h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
+  <%= render :partial => 'users' %>
+<% end %>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
 <% if can? :update, @group %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-<% if can? :destroy, @group %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              group_path(@group),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+<% if can? :update, @group %>
+  <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
+              manage_rooms_group_path(@group), :class => 'btn btn-default' %>
 <% end %>

@@ -3,11 +3,17 @@
 de:
   activerecord:
     models:
-      room: 'Raum'
-      rooms: 'Räume'
+      room:
+        one: 'Raum'
+        other: 'Räume'
     attributes:
       room:
         name: 'Name'
         size: 'Größe'
         properties: 'Eigenschaften'
         created_at: 'Erstellungsdatum'
+        equipment: 'Ausstattung'
+        category: 'Kategorie'
+        available: 'Vorhanden'
+        max_count: 'Maximale Anzahl'
+

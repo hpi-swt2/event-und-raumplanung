@@ -5,7 +5,6 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -14,13 +13,8 @@
   <tbody>
     <% @groups.each do |group| %>
       <tr>
-        <td><%= link_to group.id, group_path(group) %></td>
-        <td><%= group.name %></td>
+        <td><%= link_to group.name, group_path(group) %></td>
         <td>
-          <% if can? :update, group %>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_group_path(group), :class => 'btn btn-default btn-xs' %>
-          <% end %>
           <% if can? :destroy, group %>  
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       group_path(group),
