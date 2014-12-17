@@ -2,14 +2,15 @@ class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user]
   before_action :set_room, only: [:assign_room ,:unassign_room]
-  before_action :set_user, only: [:assign_user, :unassign_user]
+  before_action :load_user_from_email, only: [:assign_user]
+  before_action :load_user_from_id, only: [:unassign_user]
 
   def index
     @groups = Group.all
   end
 
   def show
-    @users = User.all
+    @users = @group.users 
   end
 
   def assign_user
@@ -37,7 +38,7 @@ class GroupsController < ApplicationController
     # Only authorized users can edit groups (ability.rb)
     authorize! :update, Group
 
-    @users = User.all
+    @users = @group.users
   end
 
   def create
@@ -108,8 +109,24 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
     end
 
-    def set_user
-      @user = User.find(params[:user_id])
+    def load_user_from_email
+      if params.include?(:User)
+        @user = User.find_by_email(params[:User][:email])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
+      end
+    end
+
+    def load_user_from_id
+      if params.include?(:user_id)
+        @user = User.find(params[:user_id])
+        if @user == nil
+          flash[:error] = t("groups.edit.user_not_found")
+          redirect_to edit_group_path(@group)
+        end
+      end
     end
 
     def group_params

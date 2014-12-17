@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require turbolinks
@@ -19,3 +20,6 @@
 //= require fullcalendar
 //= require moment
 //= require filterrific/filterrific-jquery
+//= require moment
+//= require bootstrap-datetimepicker
+//= require moment/de

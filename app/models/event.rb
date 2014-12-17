@@ -8,14 +8,21 @@ class Event < ActiveRecord::Base
     default_settings: { sorted_by: 'created_at_desc' },
     filter_names: [
       :search_query,
-      :own,
       :room_ids,
-      :sorted_by
+      :sorted_by,
+      :starts_after,
+      :ends_before,
+      :participants_gte,
+      :participants_lte,
+      :user
     ]
   )
   self.per_page = 12
+  
   has_many :bookings
   has_many :tasks
+
+  has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
 
@@ -67,10 +74,32 @@ class Event < ActiveRecord::Base
   end
   }
   scope :room_ids, lambda { |room_ids|
-    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
+    if room_ids.present?
+      joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids.select { |room_id| room_id!=''})
+    else
+      all
+    end
   }
-  scope :own, lambda { |user_id|
-    where("user_id = ?",user_id) if user_id
+  scope :starts_after, lambda { |ref_date|
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
+    where('starts_at >= ?', date)
+  }
+  scope :ends_before, lambda { |ref_date|
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
+    where('ends_at <= ?', date)
+  }
+  scope :participants_gte, lambda { |count|
+    where('participant_count >= ?', count)
+  }
+  scope :participants_lte, lambda { |count|
+    where('participant_count <= ?', count)
+  }
+  scope :user, lambda { |id|
+    if id.present?
+      where(user_id: id)
+    else
+      all
+    end
   }
 
   scope :other_to, lambda { |event_id|
@@ -99,23 +128,26 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def checkVacancy(rooms)
-    logger.info self.starts_at
-    logger.info self.ends_at
-    logger.info rooms
+
+  def checkVacancy(rooms) 
+    logger.info "checkVacancy"
+    logger.info self.starts_at 
+    logger.info self.ends_at  
+    logger.info rooms 
     colliding_events = []
     unless rooms.nil?
       rooms = rooms.collect{|i| i.to_i}
     end
 
     events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
+    puts events.inspect
     if events.empty?
-      logger.info "XX"
       return colliding_events
     else
       unless rooms.nil?
         rooms_count = rooms.size
         events.each do | event |
+          puts event.rooms.inspect
           if (rooms - event.rooms.pluck(:id)).size < rooms_count
              colliding_events.push(event)
           end
