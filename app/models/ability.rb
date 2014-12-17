@@ -30,12 +30,14 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
-    can [:update, :destroy, :edit], Event, :user_id => user.id
+    can [:update, :destroy, :edit, ], Event, :user_id => user.id
+    can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-    if user.identity_url == load_admin
+    if user.username == load_admin
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
+        can :manage, Event
     else
         can :read, Group
     end

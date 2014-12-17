@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
   validates_uniqueness_of :username
   devise :openid_authenticatable, :rememberable
+  has_many :favorites
   has_and_belongs_to_many :groups
 
   def self.build_from_email(email)

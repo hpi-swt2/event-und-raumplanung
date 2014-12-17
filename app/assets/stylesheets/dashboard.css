@@ -1,0 +1,37 @@
+.tasks-pending-panel-body {
+	border-top: 1px solid #ddd;
+}
+
+.task-list-event {
+	font-weight: bold;
+}
+
+.task-list-list {
+	margin-left: 2em;
+}
+
+.pending-tasks-table {
+	margin-left: 2em;
+	width: calc(100% - 2em);
+}
+.pending-tasks-table td:first-child {
+	width: 75%;
+}
+.pending-tasks-table .btn-xs
+{
+	font-size: 8px !important;
+	padding: 1px 3px !important;
+	line-height: 1.3 !important;
+}
+
+.pending-tasks-table td {
+	padding: 5px;
+}
+
+.hidden-link {
+	color: #333;
+}
+
+.hidden-link:hover,  .hidden-link:focus{
+	color: #333;
+}
