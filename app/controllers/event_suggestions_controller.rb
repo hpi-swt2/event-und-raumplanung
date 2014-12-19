@@ -31,7 +31,7 @@ class EventSuggestionsController < ApplicationController
     @event_suggestion = EventSuggestion.new(event_suggestion_params)
     respond_to do |format|
       if @event_suggestion.save
-        format.html { redirect_to @event_suggestion, notice: t('notices.successful_create', :model => EventSuggestion.model_name.human) }
+        format.html { redirect_to events_approval_path, notice: t('notices.successful_create', :model => EventSuggestion.model_name.human) } # redirect to overview
         format.json { render :show, status: :created, location: @event_suggestion }
       else
         format.html { render :new }
