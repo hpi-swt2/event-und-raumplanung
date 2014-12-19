@@ -4,9 +4,9 @@
     </div>
     <div class="panel-body">
         <% unless my_upcoming_events.blank? %>
-            <ul class="list-group">
+            <ul>
                 <% my_upcoming_events.each do |event| %>
-                    <li class="list-group-item">
+                    <li>
                         <%= link_to event.name, event_path(event) %>
                     </li>
                 <% end %>
@@ -16,6 +16,7 @@
                 <%= t('dashboard.no_own_upcoming_events') %>
             </p>
         <% end %>
+        <%= link_to t('dashboard.more'), events_path(:only_own => true), :class => 'own-events' %>
         <%= link_to t('.new', :default => t("helpers.links.new")), new_event_path, :class => 'btn btn-primary' %>
     </div>
 </div>

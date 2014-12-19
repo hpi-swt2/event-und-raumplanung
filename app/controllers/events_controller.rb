@@ -32,7 +32,9 @@ class EventsController < ApplicationController
       @filterrific.select_options =   {
         sorted_by: Event.options_for_sorted_by
       }
-      @filterrific.own = if @filterrific.own == 1
+
+      # pass parameter only_own if you want the events to be initially filtered for events for current user
+      @filterrific.own = if @filterrific.own == 1 || params[:only_own]
           current_user_id
         else
           nil

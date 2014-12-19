@@ -85,34 +85,26 @@ RSpec.describe DashboardController, type: :controller do
       end
     end
 
-    # describe "My events widget on Dashboard" do
-    #   let(:other_user_event) { create :event, user_id: other_user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+    describe "My events widget on Dashboard" do
+      let(:other_user_event) { create :event, user_id: other_user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
 
-    #   before do
-    #     Timecop.freeze(Date.today + 3)
-    #   end
+      it 'assigns max 5 upcoming events as @my_upcoming_events' do
+        6.times { |i| FactoryGirl.create(:my_upcoming_event, name: i.to_s, user_id: user.id) }
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).size).to eq(5)
+      end
 
-    #   after do
-    #     Timecop.return
-    #   end
+      it 'should only assign upcoming events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? past_event). to eq(false)
+      end
 
-    #   it 'assigns max 5 upcoming events as @my_events' do
-    #     6.times { |i| FactoryGirl.create(:my_upcoming_event, name: i.to_s, user_id: user.id) }
-    #     get :index, {}, valid_session
-    #     expect(assigns(:my_events).size).to eq(5)
-    #   end
-
-    #   it 'should only assign upcoming events' do
-    #     get :index, {}, valid_session
-    #     expect(assigns(:my_events).include? event). to eq(true)
-    #     expect(assigns(:my_events).include? past_event). to eq(false)
-    #   end
-
-    #   it 'should only assign my events' do
-    #     get :index, {}, valid_session
-    #     expect(assigns(:my_events).include? event). to eq(true)
-    #     expect(assigns(:my_events).include? other_user_event). to eq(false)
-    #   end
-    # end
+      it 'should only assign my events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? other_user_event). to eq(false)
+      end
+    end
   end
 end
