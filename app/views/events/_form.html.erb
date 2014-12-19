@@ -1,4 +1,4 @@
-<%= form_for @event, :html => { :class => "form-horizontal event" } do |f| %>
+<%= form_for @event, :html => { :class => "form-horizontal event", :id => "event-form" } do |f| %>
 
     <% if @event.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -29,6 +29,7 @@
     </div>
     <%= error_span(@event[:description]) %>
   </div>
+  <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
@@ -87,6 +88,9 @@
       </div>
    </div>
   </div>
+
+ <div class="notice"></div> <!-- display conflicting events -->
+
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

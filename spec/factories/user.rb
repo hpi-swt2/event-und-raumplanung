@@ -11,6 +11,7 @@ FactoryGirl.define do
   	adminUser.identity_url "test_admin"
     adminUser.email "test_admin@example.com"
     adminUser.encrypted_password "test_admin"
+    adminUser.username "test_admin"
   end
 
   factory :hpiUser, :class => User do |hpiUser|

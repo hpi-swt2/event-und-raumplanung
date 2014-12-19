@@ -7,6 +7,7 @@
       <th class="col-sm-1"></th>
       <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
       <th class="col-sm-5"></th>
+      <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
     </tr>
   </thead>
   <tbody>
@@ -16,8 +17,13 @@
         <td class="col-sm-1">
           <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
         </td>
-        <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
+        <td class="col-sm-5"><%= link_to task.name, task_path(task, return_url: return_url) %></td>
         <td class="<%= task.status %> text-right col-sm-5"><%= (task.user_id.blank?) ? t('tasks.status.not_assigned') : (task.user.identity_url) %></td>
+        <% if task.deadline %> 
+          <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
+        <% else %>
+          <td></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
