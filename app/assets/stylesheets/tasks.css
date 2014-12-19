@@ -32,3 +32,13 @@
     margin-top: 10px;
     margin-bottom:  20px;
 }
+
+
+.task-upload
+{
+    margin: 5px 0px;
+}
+.task-upload .task-upload-name, .task-upload>button
+{
+    display: none;
+}

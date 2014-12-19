@@ -43,7 +43,7 @@ class TasksController < ApplicationController
         end
         if params[:uploads]
           params[:uploads].each { |upload|
-            @task.uploads.create(:file => upload)}
+            @task.uploads.create!(:file => upload)}
         end
 
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
