@@ -42,6 +42,18 @@ describe Event do
 	  expect(results).not_to include(@approved_event, @open_event)
 	end
 
+	it ".approve should set approve status in an event" do
+    	event = build(:event)
+    	event.approve
+    	expect(Event.approved.find(event)).to eq(event)
+ 	end
+
+ 	it ".decline should set decline status in an event" do
+    	event = build(:event)
+    	event.decline
+    	expect(Event.declined.find(event)).to eq(event)
+ 	end
+
 	after(:all) do
 		@open_event.destroy
 		@declined_event.destroy

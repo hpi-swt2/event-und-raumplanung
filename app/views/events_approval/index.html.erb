@@ -45,8 +45,8 @@
           	<% end %>
           </td>
           <td>
-          	<%= link_to t('.decline'), decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
-            <%= link_to t('.approve'), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+          	<%= link_to t('.decline'), decline_event_path(event), :method => :decline, :class => 'btn btn-danger btn-xs' %>
+            <%= link_to t('.approve'), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
           </td>
         </tr> 
       <% end %>

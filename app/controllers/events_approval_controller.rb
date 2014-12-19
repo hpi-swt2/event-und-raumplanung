@@ -23,7 +23,7 @@ class EventsApprovalController < ApplicationController
         rescue
         end
       end    
-      @date = Date.today unless not @date.nil? and @date.acts_like_date?
+      @date = Date.today unless !@date.nil? && @date.acts_like_date?
     end
 
     def check_admin_status

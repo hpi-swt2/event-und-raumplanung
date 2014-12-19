@@ -87,5 +87,11 @@ class Event < ActiveRecord::Base
   scope :open, -> { where.not status: ['approved', 'declined'] }
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
+  def approve
+    self.update(status: 'approved')
+  end
+  def decline
+    self.update(status: 'declined')
+  end
 
 end
