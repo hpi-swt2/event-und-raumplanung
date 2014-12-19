@@ -3,11 +3,11 @@ de:
     application:
       student: Student
       staff: Mitarbeiter
-      events: Events
+      events: Veranstaltungen
       rooms: Räume
       groups: Gruppen
       tasks: Aufgaben
-      requests: Raumanfragen
-      my_account: Mein Konto
-      home: Startseite
+      requests: Offene Anfragen
+      room_mate: Room Mate
       configuration: Verwaltung
+      equipment: Ausstattung
