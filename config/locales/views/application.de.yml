@@ -1,11 +1,13 @@
 de:
-  application:
-    student: Student
-    staff: Mitarbeiter
-    navigation:
+  layouts:
+    application:
+      student: Student
+      staff: Mitarbeiter
       events: Events
-      templates: Eventvorlagen
       rooms: Räume
       groups: Gruppen
       tasks: Aufgaben
-      open_requests: Offene Anfragen
+      requests: Raumanfragen
+      my_account: Mein Konto
+      home: Startseite
+      configuration: Verwaltung
