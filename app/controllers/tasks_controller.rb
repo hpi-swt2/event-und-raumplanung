@@ -41,10 +41,7 @@ class TasksController < ApplicationController
         if @task.user
           @task.send_notification_to_assigned_user(current_user)
         end
-        if params[:uploads]
-          params[:uploads].each { |upload|
-            @task.uploads.create!(:file => upload)}
-        end
+        upload_files if params[:uploads]
 
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
@@ -58,15 +55,9 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
-    if params[:uploads]
-      params[:uploads].each { |upload|
-        @task.uploads.create(:file => upload) }
-    end
-    if params[:delete_uploads]
-      params[:delete_uploads].each do |id, value|
-        Upload.find(id).destroy! if value == 'true'
-      end
-    end
+    upload_files if params[:uploads]
+    delete_files if params[:delete_uploads]
+    
     respond_to do |format|
       if @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
@@ -118,17 +109,6 @@ class TasksController < ApplicationController
     redirect_to @task
   end
 
-  def upload_file
-    if params[:uploads]
-      @task.uploads.create(:file => params[:uploads])
-    end
-
-    respond_to do |format|
-      format.html { render :nothing => true } # render no html
-      format.json { render json: @task.uploads }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
@@ -176,5 +156,13 @@ class TasksController < ApplicationController
         end
       end
       return updated_params
+    end
+
+    def upload_files
+      params[:uploads].each { |upload| @task.uploads.create!(:file => upload) }
+    end
+
+    def delete_files
+      params[:delete_uploads].each { |id, value| Upload.find(id).destroy! if value == 'true' }
     end
 end
