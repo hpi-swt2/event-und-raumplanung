@@ -106,6 +106,11 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
+    it "creates task with uploads" do
+      expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
     it "sets the event for a new task that should belong to the event" do
       get :new, event_id: 1
       expect(assigns(:task).event_id).to eq(1)
@@ -145,6 +150,13 @@ RSpec.describe TasksController, type: :controller do
   
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, user_id: task.user_id, done: task.done }
+      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "updates a task with uploads" do
+      expect { patch :update, id: task, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      upload_id = Upload.find_by(file_file_name: 'test_pdf.pdf').id      
+      expect { patch :update, id: task,  task: {description: "description", name: "Test"}, delete_uploads: Hash[upload_id, 'true'] }.to change { Upload.count }.from(1).to(0)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 

@@ -64,26 +64,32 @@
 
     <h3><%= t('.attachments') %></h3>
     <h4><%= t('tasks.form.files') %></h4>
+    <button id="add_upload_field" name="add_upload_field" onclick="addUploadField();" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
     <div class="control-group" id="upload_div">
         <div class="controls" data-task-id="<%= @task.id %>">
-            <% if @task.id.nil? %>
-                <%= file_field_tag "uploads[]", :type => :file, :onchange => "upload($(this).parent().attr('data-task-id'));", :class => 'btn btn-default btn-file', :multiple => true %>
-            <% else %>
-                <%= file_field_tag "uploads[]", :type => :file, :onchange => "upload($(this).parent().attr('data-task-id'));", :class => 'btn btn-default btn-file' %>
-            <% end %>
+            <div class="task-upload" id="task_upload_template">
+              <%= file_field_tag "uploads[]", :id => 'uploads_template', :type => :file, :class => 'btn btn-default btn-file', :onchange => 'onUploadFileSelected(this)' %>
+              <span class="task-upload-name"></span>
+              <button id="delete_upload_template" name="delete_upload_template" type="button" class="btn btn-xs btn-danger" onclick="removeUploadFile(this)"><span class="glyphicon glyphicon-remove"></span></button>
+            </div><div class="task-upload" id="task_upload_1">
+              <%= file_field_tag "uploads[]", :id => 'uploads_1', :type => :file, :class => 'btn btn-default btn-file', :onchange => 'onUploadFileSelected(this)' %>
+              <span class="task-upload-name"></span>
+              <button id="delete_upload_1" name="delete_upload_1" type="button" class="btn btn-xs btn-danger" onclick="removeUploadFile(this)"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
         </div>
     </div>
-    <% end %>
     <ul id="list_uploads" class="list-group">
         <% if @task.uploads.count() > 0 %>
-            <% @task.uploads.each do |upload| %>
+            <% @task.uploads.each_with_index do |upload, i| %>
                 <div>
-                <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item', :style => "width:85%; display: inline-block;" %>
-                <%= link_to t('delete'), upload, :remote => true, :onclick => "this.parentNode.remove();", :class => 'btn btn-danger', :method => :delete %>
+                  <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item', :style => "width:85%; display: inline-block;" %>
+                  <button id="task_list_upload_<%= i %>" name="task_list_upload_<%= i %>" type="button" class="btn btn-xs btn-danger" onclick="removeTaskFile(this)"><span class="glyphicon glyphicon-remove"></span></button>
+                  <input type='hidden' name='delete_uploads[<%= upload.id %>]' value='false'>
                 </div>
             <% end %>
         <% end %>
     </ul>
+  <% end %>
 
     <h4><%= t('tasks.form.links') %></h4>
     <form id="attachment_form" data-bind="submit: addAttachment">
