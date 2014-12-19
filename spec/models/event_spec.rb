@@ -45,7 +45,7 @@ describe Event do
   it 'should return events for a room' do
     room = FactoryGirl.create(:room)
     another_room = FactoryGirl.create(:room)
-    results = Event.room_ids(nil)
+    results = Event.room_ids([])
     expect(results).to include(@upcoming_event)
     @upcoming_event.rooms << room
     results = Event.room_ids([room.id, another_room.id])
