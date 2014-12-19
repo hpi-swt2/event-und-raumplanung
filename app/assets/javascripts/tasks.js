@@ -59,7 +59,7 @@ function upload(taskID)
 
 function addUploadField()
 {
-    var template = $("#task_upload_1");
+    var template = $("#task_upload_template");
     var newUpload = template.clone();
     var uploadsCount = $("input[name='uploads[]'").size() + 1;
 
@@ -88,4 +88,11 @@ function removeUploadFile(target)
 {
    var upload = $(target).parent();
    upload.remove(); 
+}
+
+function removeTaskFile(target)
+{
+    var upload = $(target).parent();
+    upload.children("input[type='hidden']").val("true");
+    upload.hide();
 }

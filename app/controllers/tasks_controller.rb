@@ -62,6 +62,11 @@ class TasksController < ApplicationController
       params[:uploads].each { |upload|
         @task.uploads.create(:file => upload) }
     end
+    if params[:delete_uploads]
+      params[:delete_uploads].each do |id, value|
+        Upload.find(id).destroy! if value == 'true'
+      end
+    end
     respond_to do |format|
       if @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }

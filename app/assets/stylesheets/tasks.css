@@ -38,6 +38,10 @@
 {
     margin: 5px 0px;
 }
+#task_upload_template
+{
+    display: none;
+}
 .task-upload .task-upload-name, .task-upload>button
 {
     display: none;
