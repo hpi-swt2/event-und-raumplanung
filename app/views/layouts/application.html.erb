@@ -52,7 +52,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <%= link_to t('.room_mate'), root_path, :class => "navbar-brand" %>
+          <%= link_to root_path, :class => "navbar-brand" do %>
+            <%= image_tag("hpi-logo.png", :alt => "HPI", :id => "hpi_logo") %>
+            <small><%= t('.room_mate') %></small>
+          <% end %>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -100,7 +103,7 @@
       </div><!--/row-->
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p>&copy; Hasso Plattner Institut 2014</p>
       </footer>
 
     </div> <!-- /container -->
