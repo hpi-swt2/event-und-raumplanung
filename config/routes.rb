@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
-      get 'assign_user/:user_id', :action => 'assign_user', :as => 'assign_user'
+      patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
     end
   end
@@ -72,6 +72,9 @@ Rails.application.routes.draw do
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
 
+
+  get 'events/:id/index_toggle_favorite' => 'events#index_toggle_favorite', as: :index_toggle_favorite_from_event
+  get 'events/:id/show_toggle_favorite' => 'events#show_toggle_favorite', as: :show_toggle_favorite_from_event
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

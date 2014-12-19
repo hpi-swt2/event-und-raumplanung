@@ -97,6 +97,9 @@ gem 'date_time_attribute'
 gem 'paperclip', '~> 4.2'
 
 gem 'ranked-model'
+gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
+
+gem 'jquery-turbolinks'
 
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation

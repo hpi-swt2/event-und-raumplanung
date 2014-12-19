@@ -113,6 +113,17 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.integer "room_id"
   end
 
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.boolean  "is_favorite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+
   create_table "groups", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -157,6 +168,7 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.datetime "deadline"
     t.integer  "task_order"
   end
 

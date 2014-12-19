@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
   validates_uniqueness_of :username
   devise :openid_authenticatable, :rememberable
+  has_many :favorites
   has_and_belongs_to_many :groups
 
-  def self.build_from_identity_url(identity_url)
-    # to-do: find a sophisticated way to set the correct email right here
-    User.new(:identity_url => identity_url, :email => '')
+  def self.build_from_email(email)
+    User.new(:email => email)
   end
 end
