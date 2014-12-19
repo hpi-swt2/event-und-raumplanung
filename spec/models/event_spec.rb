@@ -19,6 +19,11 @@ describe Event do
     @event.is_private == true or @event.is_private == false
   end
 
+  it "should be private by default" do
+    event = build(:event)
+    expect(event.is_private).to be true
+  end
+
   it ".open should only return open events" do
 	  results = Event.open
 	  expect(results).to include(@open_event)
