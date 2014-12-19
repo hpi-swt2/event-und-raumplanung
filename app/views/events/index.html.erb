@@ -1,5 +1,13 @@
 <%- model_class = Event -%>
 
+<script type="text/javascript">
+  $(function() {
+    $('.datetimepicker').datetimepicker({
+      language: '<%= I18n.default_locale %>'
+    });
+  })
+</script>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
@@ -13,19 +21,21 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.text_field(
             :search_query,
+            :placeholder => "Search for " + Event.model_name.human.pluralize,
             class: 'filterrific-periodically-observed form-control'
           ) %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
           <%= t '.only_show_own' %>
-          <%= f.check_box(:own) %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.check_box :user %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
@@ -34,18 +44,49 @@
           <%# See below for the Student.options_for_sorted_by presenter method %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
           <%= t '.filtered_by_rooms' %>
-           <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :id => 'selectpicker', :multiple =>'', :title => (t '.nothing_selected')}%>
-       <script> $('#selectpicker').selectpicker(); </script>
+          <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :multiple =>'' }%>
        </div>
       </div>
-    </div> 
+    </div>
   </div>
   <div class="row">
+    <div class="col-md-3">
+    <div class="form-group">
+      <a class="btn btn-default" data-toggle="collapse" href="#advancedSearch"><span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span> <%= t('.advanced_search')%></a>
+    </div>
+    </div>
+  </div>
+  <div id ="advancedSearch" class="collapse">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.starts_after' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :starts_after,
+            class: 'datetimepicker form-control'
+          ) %>
+       </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.ends_before' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :ends_before,
+            class: 'datetimepicker form-control'
+          ) %>
+       </div>
+      </div>
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
@@ -53,14 +94,40 @@
           <%= f.select(:items_per_page, @filterrific.select_options[:items_per_page], {}, {class: 'form-control'}) %>
        </div>
       </div>
-    </div> 
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-3">
-      <%= link_to (t '.reset_filter'), reset_filterrific_events_path, :class => 'btn btn-primary' %>
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.participants_gte' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.number_field(
+            :participants_gte,
+            class: 'form-control'
+          ) %>
+       </div>
+      </div>
     </div>
     <div class="col-md-3">
-    <%= render_filterrific_spinner %>
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.participants_lte' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.number_field(
+            :participants_lte,
+            class: 'form-control'
+          ) %>
+       </div>
+      </div>
     </div>
-    <div class="col-md-3"></div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <%= link_to( (t '.reset_filter'), reset_filterrific_events_path, :class => 'btn btn-default') %>
+      <%= render_filterrific_spinner %>
+    </div>
   </div>
   <% end %>
 </div>

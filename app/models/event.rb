@@ -8,15 +8,22 @@ class Event < ActiveRecord::Base
     default_settings: { sorted_by: 'created_at_desc',  items_per_page: 10},
     filter_names: [
       :search_query,
-      :own,
       :room_ids,
       :sorted_by,
-      :items_per_page
+      :items_per_page,
+      :starts_after,
+      :ends_before,
+      :participants_gte,
+      :participants_lte,
+      :user
     ]
   )
-  self.per_page = 10
+  self.per_page = 12
+
   has_many :bookings
   has_many :tasks
+
+  has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
 
@@ -71,11 +78,29 @@ class Event < ActiveRecord::Base
   end
   }
   scope :room_ids, lambda { |room_ids|
-    room_ids = room_ids.select { |room_id| room_id!=''} 
-    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0 
+    room_ids = room_ids.select { |room_id| room_id!=''}
+    joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
-  scope :own, lambda { |user_id|
-    where("user_id = ?",user_id) if user_id
+  scope :starts_after, lambda { |ref_date|
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
+    where('starts_at >= ?', date)
+  }
+  scope :ends_before, lambda { |ref_date|
+    date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
+    where('ends_at <= ?', date)
+  }
+  scope :participants_gte, lambda { |count|
+    where('participant_count >= ?', count)
+  }
+  scope :participants_lte, lambda { |count|
+    where('participant_count <= ?', count)
+  }
+  scope :user, lambda { |id|
+    if id.present?
+      where(user_id: id)
+    else
+      all
+    end
   }
 
   scope :other_to, lambda { |event_id|
@@ -115,21 +140,21 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def checkVacancy(rooms) 
-    
+  def checkVacancy(rooms)
+
     colliding_events = []
     return colliding_events if rooms.nil?
 
     rooms = rooms.collect{|i| i.to_i}
     events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
-  
+
     return colliding_events if events.empty?
-  
+
     rooms_count = rooms.size
     events.each do | event |
       #kongruiert mindestents ein Raum?
-      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0  
-    end 
+      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
+    end
     return colliding_events
   end
 

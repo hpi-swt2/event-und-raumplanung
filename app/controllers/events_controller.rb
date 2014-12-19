@@ -3,18 +3,19 @@ class EventsController < ApplicationController
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion]
+
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
   after_filter :flash_to_headers, :only => :check_vacancy
 
   def current_user_id
     current_user.id
   end
 
-   def flash_to_headers
+  def flash_to_headers
     if request.xhr?
       #avoiding XSS injections via flash
       flash_json = Hash[flash.map{|k,v| [k,ERB::Util.h(v)] }].to_json
@@ -33,6 +34,18 @@ class EventsController < ApplicationController
     render "event_templates/new"
   end
 
+  #GET /events/1/index_toggle_favorite
+  def index_toggle_favorite
+    toggle_favorite
+    redirect_to events_url
+  end
+
+  #GET /events/1/show_toggle_favorite
+  def show_toggle_favorite
+    toggle_favorite
+    redirect_to event_url
+  end
+
   def new_event_suggestion
     @event_suggestion = EventSuggestion.new
     @event_suggestion.starts_at = @event.starts_at
@@ -46,9 +59,10 @@ class EventsController < ApplicationController
   def index
     @filterrific = Filterrific.new(Event,params[:filterrific] || session[:filterrific_events])
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-    @filterrific.own = if @filterrific.own == 1
-       current_user_id; else nil; end
+    @filterrific.user = current_user_id if @filterrific.user == 1;
+    @filterrific.user = nil if @filterrific.user == 0;
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
 
     respond_to do |format|
@@ -102,6 +116,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
@@ -150,9 +165,9 @@ class EventsController < ApplicationController
       if @event.update(event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
-      
+
        # format.json { render json: @event.errors, status: :unprocessable_entity }
-      else 
+      else
         format.html {render :edit}
       end
     end
@@ -179,9 +194,24 @@ class EventsController < ApplicationController
       params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
     end
 
+    def toggle_favorite
+
+      favorite = Favorite.where('user_id = ? AND event_id = ?',current_user_id,@event.id);
+      if favorite.empty?
+        Favorite.create(:user_id => current_user_id, :event_id => @event.id, :is_favorite => true)
+      else
+        if favorite.last().is_favorite?
+          favorite.last().is_favorite = false
+          favorite.last().save();
+        else
+          favorite.last().is_favorite = true
+          favorite.last().save();
+        end
+      end
+  end
+
     def set_return_url
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
-
 end

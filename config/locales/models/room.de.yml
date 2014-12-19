@@ -12,6 +12,10 @@ de:
         size: 'Größe'
         properties: 'Eigenschaften'
         created_at: 'Erstellungsdatum'
+        equipment: 'Ausstattung'
+        category: 'Kategorie'
+        available: 'Vorhanden'
+        max_count: 'Maximale Anzahl'
   sort_options:
     sort_name_asc : 'Name (a-z)'
     sort_name_desc : 'Name (z-a)'
@@ -19,5 +23,3 @@ de:
     sort_created_at_asc : 'Erstellungsdatum (älteste zuerst)'
     sort_size_asc : 'Größe aufsteigend'
     sort_size_desc : 'Größe absteigend'
-
-

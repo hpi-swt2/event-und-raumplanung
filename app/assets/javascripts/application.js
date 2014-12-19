@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui/sortable
 //= require jquery-ui/effect-highlight
@@ -24,3 +25,6 @@
 //= require fullcalendar
 //= require moment
 //= require filterrific/filterrific-jquery
+//= require moment
+//= require bootstrap-datetimepicker
+//= require moment/de
