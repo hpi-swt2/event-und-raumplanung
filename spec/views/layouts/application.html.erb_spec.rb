@@ -14,7 +14,7 @@ RSpec.describe "layouts/application", :type => :view do
     sign_in_test_user hpi_user
     render
 
-    assert_select "ul.navbar-nav" do 
+    assert_select ".navbar-default" do 
       assert_select "a[href=?]", events_approval_path, false
     end
   end
@@ -23,7 +23,7 @@ RSpec.describe "layouts/application", :type => :view do
     sign_in_test_user admin_user
     render
 
-    assert_select "ul.navbar-nav" do 
+    assert_select ".navbar-default" do 
       assert_select "a[href=?]", events_approval_path
     end
   end
@@ -32,10 +32,11 @@ RSpec.describe "layouts/application", :type => :view do
     sign_in_test_user hpi_user
     render
 
-    assert_select "ul.navbar-nav" do 
+    assert_select ".navbar-default" do
       assert_select "a[href=?]", root_path
       assert_select "a[href=?]", events_path
       assert_select "a[href=?]", rooms_path
+      assert_select "a[href=?]", equipment_index_path
       assert_select "a[href=?]", groups_path
     end
   end
