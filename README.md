@@ -64,7 +64,7 @@ Um den `rails dev server` zu starten:
 Pull request
 ------------
 
-Wir benutzen [review.ninja](http://app.review.ninja/hpi-swt2/event-und-raumplanung) für Pull requests.
+Wir benutzen [review.ninja](http://app.review.ninja/hpi-swt2/event-und-raumplanung) für Pull Requests.
 
 Deployment
 ----------
