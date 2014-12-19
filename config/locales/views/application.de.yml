@@ -1,4 +1,13 @@
 de:
-  application:
-    student: Student
-    staff: Mitarbeiter
+  layouts:
+    application:
+      student: Student
+      staff: Mitarbeiter
+      events: Events
+      rooms: Räume
+      groups: Gruppen
+      tasks: Aufgaben
+      requests: Raumanfragen
+      my_account: Mein Konto
+      home: Startseite
+      configuration: Verwaltung

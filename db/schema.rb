@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209132713) do
+ActiveRecord::Schema.define(version: 20141210144902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,24 @@ ActiveRecord::Schema.define(version: 20141209132713) do
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
+
+  create_table "event_suggestions", force: true do |t|
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "room_id"
+    t.integer  "user_id"
+  end
+
+  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
+  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
+
+  create_table "event_suggestions_rooms", force: true do |t|
+    t.integer "event_suggestion_id"
+    t.integer "room_id"
+  end
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
@@ -95,6 +113,17 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.integer "room_id"
   end
 
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.boolean  "is_favorite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+
   create_table "groups", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -124,8 +153,10 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
+    t.integer  "event_suggestion_id"
   end
 
+  add_index "rooms", ["event_suggestion_id"], name: "index_rooms_on_event_suggestion_id", using: :btree
   add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
@@ -137,11 +168,23 @@ ActiveRecord::Schema.define(version: 20141209132713) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.datetime "deadline"
     t.integer  "task_order"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
+
+  create_table "uploads", force: true do |t|
+    t.integer  "task_id"
+    t.string   "task_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                               null: false

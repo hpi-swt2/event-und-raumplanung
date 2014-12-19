@@ -30,7 +30,6 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -95,7 +94,12 @@ gem 'will_paginate-bootstrap'
 
 gem 'date_time_attribute'
 
+gem 'paperclip', '~> 4.2'
+
 gem 'ranked-model'
+gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
+
+gem 'jquery-turbolinks'
 
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
@@ -120,4 +124,3 @@ group :test, :development  do
 	gem 'rails-dev-tweaks'
 	gem 'timecop'
 end
-

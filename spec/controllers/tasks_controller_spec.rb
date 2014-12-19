@@ -6,7 +6,7 @@ RSpec.describe TasksController, type: :controller do
     let(:user) { FactoryGirl.create(:user) }
     let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, user_id: user.id }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
-
+    
     before(:each) { sign_in user }
 
     it 'should change tasks status of assigned task to accepted' do
@@ -16,6 +16,7 @@ RSpec.describe TasksController, type: :controller do
     it 'should not change tasks status of unassigned task to accepted' do
       expect{get :accept, id: unassigned_task.id}.to_not change{Task.find(unassigned_task.id).status}
     end
+
   end
 
   describe "GET decline" do
@@ -23,7 +24,7 @@ RSpec.describe TasksController, type: :controller do
     let(:user) { FactoryGirl.create(:user) }
     let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, user_id: user.id }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
-
+    
     before(:each) { sign_in user }
 
     it 'should change tasks status of assigned task to declined' do
@@ -110,7 +111,22 @@ RSpec.describe TasksController, type: :controller do
       expect(assigns(:task).event_id).to eq(1)
       expect(assigns(:event_field_readonly)).to be(:true)
     end
-  
+    
+    it "creates task with valid deadline" do
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow} }.to change { Task.count }.by(1)
+      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "creates task with invalid deadline" do
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.today} }.to change { Task.count }.by(0)
+      expect(response).to render_template("new")
+    end
+
+    it "creates task with invalid deadline" do
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday} }.to change { Task.count }.by(0)
+      expect(response).to render_template("new")
+    end
+
     it "shows a task" do
       get :show, id: task
       expect(response).to be_success
@@ -125,7 +141,7 @@ RSpec.describe TasksController, type: :controller do
     it "edits a task" do
       get :edit, id: task
       expect(response).to be_success
-    end
+    end   
   
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, user_id: task.user_id, done: task.done }
@@ -149,6 +165,16 @@ RSpec.describe TasksController, type: :controller do
       secondTask = create(:task)
       xhr :post, :update_task_order, task: { task_id: secondTask.id, task_order_position: 0 }
       expect(Task.rank(:task_order).first).to eq secondTask
+    end
+
+    it "updates a task with valid deadline" do
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.tomorrow }
+      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "updates a task" do
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today }
+      expect(response).to render_template("edit")
     end
   
     it "destroys a task" do

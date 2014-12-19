@@ -1,4 +1,13 @@
 en:
-  application:
-    student: student
-    staff: staff
+  layouts:
+    application:
+      student: student
+      staff: staff
+      events: Events
+      rooms: Rooms
+      groups: Groups
+      tasks: Tasks
+      requests: Room Requests
+      my_account: My Account
+      home: Home
+      configuration: Configuration

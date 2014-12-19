@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline, :upload_file]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
@@ -41,6 +41,10 @@ class TasksController < ApplicationController
         if @task.user
           @task.send_notification_to_assigned_user(current_user)
         end
+        if params[:uploads]
+          params[:uploads].each { |upload|
+            @task.uploads.create(:file => upload)}
+        end
 
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
@@ -54,6 +58,10 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
+    if params[:uploads]
+      params[:uploads].each { |upload|
+        @task.uploads.create(:file => upload) }
+    end
     respond_to do |format|
       if @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
@@ -105,6 +113,17 @@ class TasksController < ApplicationController
     redirect_to @task
   end
 
+  def upload_file
+    if params[:uploads]
+      @task.uploads.create(:file => params[:uploads])
+    end
+
+    respond_to do |format|
+      format.html { render :nothing => true } # render no html
+      format.json { render json: @task.uploads }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
@@ -118,11 +137,11 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done)
+      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline)
     end
 
     def task_params_with_attachments
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline, :attachments_attributes => [ :title, :url ])
     end
 
     def task_update_order_params
