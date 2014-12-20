@@ -15,10 +15,6 @@
       <tr>
         <td><%= link_to group.name, group_path(group) %></td>
         <td>
-          <% if can? :update, group %>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_group_path(group), :class => 'btn btn-default btn-xs' %>
-          <% end %>
           <% if can? :destroy, group %>  
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       group_path(group),

@@ -4,7 +4,9 @@ de:
       title: Eventübersicht
       only_show_own: 'nur meine Events anzeigen'
       sorted_by: 'Sortiert nach'
+      items_per_page: 'Events pro Seite'
       reset_filter: 'Filter zurücksetzen'
+      nothing_selected: 'Keine ausgewählt'
       filtered_by_rooms: 'Nach Räumen filtern'
       search: 'Suche'
       name: 'Name'
@@ -13,7 +15,13 @@ de:
       ends_at: 'Endet'
       status: 'Status'
       user: 'Benutzer'
-
+      starts_after: 'Beginnt nach'
+      starts_before: 'Beginnt vor'
+      ends_after: 'Endet nach'
+      ends_before: 'Endet vor'
+      participants_gte: 'mind. Teilnehmer'
+      participants_lte: 'max. Teilnehmer'
+      advanced_search: 'Erweiterte Suche'
     show:
       id: 'ID'
       name: 'Name'

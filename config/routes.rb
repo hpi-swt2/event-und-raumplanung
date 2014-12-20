@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
-      get 'assign_user/:user_id', :action => 'assign_user', :as => 'assign_user'
+      patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
     end
   end
@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
-  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+  get 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
@@ -30,7 +30,9 @@ Rails.application.routes.draw do
 
   resources :room_properties
 
-  resources :rooms
+  resources :rooms do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :tasks do
     post :update_task_order, on: :collection
@@ -69,6 +71,9 @@ Rails.application.routes.draw do
   get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
 
 
+
+  get 'events/:id/index_toggle_favorite' => 'events#index_toggle_favorite', as: :index_toggle_favorite_from_event
+  get 'events/:id/show_toggle_favorite' => 'events#show_toggle_favorite', as: :show_toggle_favorite_from_event
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

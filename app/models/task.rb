@@ -1,5 +1,7 @@
 class Task < ActiveRecord::Base
+
   include RankedModel
+  include DateTimeAttribute
 
   belongs_to :event
   has_many :attachments, inverse_of: :task
@@ -7,6 +9,13 @@ class Task < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :name
   ranks :task_order, :with_same => :event_id
+  date_time_attribute :deadline
+  validate :deadline_cannot_be_in_the_past
+
+
+  def deadline_cannot_be_in_the_past
+    errors.add(:deadline, "can't be in the past") if deadline && deadline <= Date.today
+  end
 
   def update_and_send_notification(task_params, assigner)
     previousUser = user
@@ -32,6 +41,6 @@ class Task < ActiveRecord::Base
   end
 
   def send_notification_to_previously_assigned_user(previousUser, assigner)
-    UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver
+    UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver  
   end
 end

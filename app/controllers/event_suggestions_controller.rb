@@ -31,7 +31,7 @@ class EventSuggestionsController < ApplicationController
     @event_suggestion = EventSuggestion.new(event_suggestion_params)
     respond_to do |format|
       if @event_suggestion.save
-        format.html { redirect_to @event_suggestion, notice: t('notices.successful_create', :model => EventSuggestion.model_name.human) }
+        format.html { redirect_to @event_suggestion, notice: t('notices.successful_create', :model => EventSuggestion.model_name.human) } # redirect to overview
         format.json { render :show, status: :created, location: @event_suggestion }
       else
         format.html { render :new }
@@ -55,7 +55,7 @@ class EventSuggestionsController < ApplicationController
   def destroy
     @event_suggestion.destroy
     respond_to do |format|
-      format.html { redirect_to events_url, notice: t('notices.successful_destroy', :model => EventSuggestion.model_name.human) }
+      format.html { redirect_to event_suggestions_path, notice: t('notices.successful_destroy', :model => EventSuggestion.model_name.human) }
       format.json { head :no_content }
     end
   end

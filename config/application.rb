@@ -25,6 +25,7 @@ module EventUndRaumplanung
     config.i18n.default_locale = :de
 
     config.autoload_paths += %W(#{config.root}/lib) #modules under lib get autoloaded
+    config.assets.debug = false
     
     config.generators do |g|
        g.test_framework  :rspec, :fixture => true, :views => false

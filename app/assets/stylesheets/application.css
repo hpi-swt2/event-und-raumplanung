@@ -13,4 +13,9 @@
  *= require_tree .
  *= require_self
  *= require fullcalendar
+ *= require bootstrap-datetimepicker
  */
+
+footer {
+    margin-top: 20px;
+}

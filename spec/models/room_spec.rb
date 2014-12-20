@@ -14,6 +14,12 @@ describe Room do
     #expect(@room.upcoming_events.size).to eq(1)
   end
 
+  it "must run and must correctly use the factory" do
+    @room1 = FactoryGirl.build(:room1)
+    @room1.name.should == ("HS1")
+    @room1.size.should == (30)
+  end
+
   it "should list rooms properties" do
     property = FactoryGirl.create(:room_property)
     expect(@room.list_properties).to eq('')

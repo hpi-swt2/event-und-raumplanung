@@ -96,6 +96,9 @@ gem 'will_paginate-bootstrap'
 gem 'date_time_attribute'
 
 gem 'ranked-model'
+gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
+
+gem 'jquery-turbolinks'
 
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
@@ -119,5 +122,6 @@ group :test, :development  do
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
 	gem 'timecop'
+	gem 'rspec-activemodel-mocks'
 end
 
