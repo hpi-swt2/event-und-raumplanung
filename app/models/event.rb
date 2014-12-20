@@ -99,7 +99,7 @@ class Event < ActiveRecord::Base
   ]
   end
 
-  def checkVacancy(rooms)
+  def check_vacancy(rooms)
     logger.info self.starts_at
     logger.info self.ends_at
     logger.info rooms

@@ -92,24 +92,26 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     @event.user_id = current_user_id
 
-    conflicting_events = @event.checkVacancy event_params[:room_ids]
+    conflicting_events = @event.check_vacancy event_params[:room_ids]
 
     respond_to do |format|
-      if conflicting_events.empty?
-        flash[:notice] = "Vacant"
-        format.json { render :json => {status: true}}
-      else
-        flash[:warning] = "Not available"
-
-        msg = Hash[conflicting_events.map { |event|
-          eventname = @event.id
-          eventname = event.name if (event.user_id == current_user_id || !event.is_private)
-          [event.id, {"event_name" => eventname,  "starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
-        msg[:status]= false
-        format.json { render :json => msg}
-      end
+      msg = conflicting_events_msg conflicting_events
+      format.json { render :json => msg}
     end
   end
+
+  def conflicting_events_msg events
+    msg = {}
+    if events.empty?
+      msg[:status] = true
+    else  
+      msg = Hash[events.map { |event|
+          eventname = event.name if (event.user_id == current_user_id || !event.is_private)
+          [event.id, {"event_name" => eventname,  "starts_at" => event.starts_at, "ends_at" => event.ends_at, "rooms" => event.rooms.pluck(:name)}]}]
+      msg[:status]= false
+    end 
+    return msg
+  end 
 
   # GET /events/1
   # GET /events/1.json
@@ -165,8 +167,6 @@ class EventsController < ApplicationController
       respond_to do |format|
       if @event.update(event_params)
         conflicting_events = @event.checkVacancy event_params[:room_ids]
-        logger.info "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        logger.info conflicting_events.inspect
         if conflicting_events.size > 1 ## this event is also in the returned list
           format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
         end
