@@ -82,4 +82,49 @@ RSpec.describe EventTemplatesController, :type => :controller do
 
     end
   end
+  describe "PUT update" do
+    describe "with valid params" do
+      let(:new_attributes) {
+        {name:'Michas GB 2',
+        description:'Keine coole Sache',
+        participant_count: 1
+        }
+      }
+
+      it "updates the requested event" do
+        event = EventTemplate.create! valid_attributes
+        put :update, {:id => event.to_param, :event_template => new_attributes}
+        event.reload
+        expect(event.name).to eq 'Michas GB 2'
+        expect(event.description).to eq 'Keine coole Sache'
+        expect(event.participant_count).to be 1
+      end
+
+      it "assigns the requested event as @event" do
+        event = EventTemplate.create! valid_attributes
+        put :update, {:id => event.to_param, :event_template => valid_attributes}
+        expect(assigns(:event_template)).to eq(event)
+      end
+
+      it "redirects to the event" do
+        event = EventTemplate.create! valid_attributes
+        put :update, {:id => event.to_param, :event_template => valid_attributes}
+        expect(response).to redirect_to(event)
+      end
+    end
+  end
+ describe "DELETE destroy" do
+    it "destroys the requested event" do
+      event = EventTemplate.create! valid_attributes
+      expect {
+        delete :destroy, {:id => event.to_param}
+      }.to change(EventTemplate, :count).by(-1)
+    end
+
+    it "redirects to the events list" do
+      event = EventTemplate.create! valid_attributes
+      delete :destroy, {:id => event.to_param}
+      expect(response).to redirect_to(event_templates_url)
+    end
+  end
 end
