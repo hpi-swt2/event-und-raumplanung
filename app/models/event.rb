@@ -138,17 +138,12 @@ class Event < ActiveRecord::Base
 
     rooms = rooms.collect{|i| i.to_i}
     events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
-    if events.empty?
-      return colliding_events
-    else
-      unless rooms.nil?
-        rooms_count = rooms.size
-        events.each do | event |
-          if (rooms - event.rooms.pluck(:id)).size < rooms_count
-             colliding_events.push(event)
-          end
-        end
-      end
+
+    return colliding_events if events.empty?
+
+    rooms_count = rooms.size
+    events.each do | event |
+      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
     end
     return colliding_events
   end
