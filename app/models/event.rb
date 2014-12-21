@@ -102,20 +102,6 @@ class Event < ActiveRecord::Base
     end
   }
 
-  scope :other_to, lambda { |event_id|
-    where("id <> ?",event_id) if event_id
-  }
-
-  scope :not_approved, lambda {
-    where("approved is NULL OR approved = TRUE")
-  }
-
-  scope :overlapping, lambda { |start, ende|
-    where("     (:start BETWEEN starts_at AND ends_at)
-            OR  (:ende BETWEEN starts_at AND ends_at)
-            OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende})
-  }
-
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -128,22 +114,7 @@ class Event < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_status'), 'status_asc']
   ]
   end
-
-  def check_vacancy(rooms)
-    colliding_events = []
-    return colliding_events if rooms.nil?
-
-    rooms = rooms.collect{|i| i.to_i}
-    events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
-
-    return colliding_events if events.empty?
-
-    events.each do | event |
-      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
-    end
-    return colliding_events
-  end
-
+  
   scope :open, -> { where.not status: ['approved', 'declined'] }
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }

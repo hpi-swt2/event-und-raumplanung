@@ -1,4 +1,4 @@
-class EventsController < ApplicationController
+class EventsController < GenericEventsController
   skip_filter :verify_authenticity_token, :check_vacancy
  # skip_filter :authenticate_user, :check_vacancy
   skip_before_filter :authenticate_user!
@@ -10,11 +10,10 @@ class EventsController < ApplicationController
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
   after_filter :flash_to_headers, :only => :check_vacancy
-
-  def current_user_id
-    current_user.id
-  end
-
+  
+  before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
+  before_action :get_model, only: [:new, :create, :update, :destroy]
+  
   def flash_to_headers
     if request.xhr?
       #avoiding XSS injections via flash
@@ -89,13 +88,9 @@ class EventsController < ApplicationController
   end
 
   def check_vacancy
-    checked_params = event_params
-
     @event = Event.new(event_params)
     @event.user_id = current_user_id
-
     conflicting_events = @event.check_vacancy event_params[:room_ids]
-
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
@@ -126,13 +121,11 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    @event = Event.new
-    time = Time.new.getlocal
-    time -= time.sec
-    time += time.min % 15
-    @event.starts_at = time
-    @event.ends_at = (time+(60*60))
-  end
+    super
+  end 
+  #   @event = Event.new
+  #   @event.setDefaultTime
+  # end
 
   # GET /events/1/edit
   def edit
@@ -145,48 +138,20 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
-    @event.user_id = current_user_id
-    logger.info @event.inspect
-
-    respond_to do |format|
-      if @event.save
-        format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
-        format.json { render :show, status: :created, location: @event }
-      else
-        format.html { render :new }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
-    end
+    super
   end
 
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-      respond_to do |format|
-      if @event.update(event_params)
-        conflicting_events = @event.check_vacancy event_params[:room_ids]
-        if conflicting_events.size > 1 ## this event is also in the returned list
-          format.html { redirect_to @event, alert: t('alert.conflict_detected', :model => Event.model_name.human)  }
-        end
-        format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
-       # format.json { render :show, status: :ok, location: @event }
-
-       # format.json { render json: @event.errors, status: :unprocessable_entity }
-      else
-        format.html {render :edit}
-      end
-    end
+    @update_result = @event.update(event_params)
+    super
   end
 
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
-    @event.destroy
-    respond_to do |format|
-      format.html { redirect_to events_url, notice: t('notices.successful_destroy', :model => Event.model_name.human) }
-      format.json { head :no_content }
-    end
+    super
   end
 
   private
@@ -214,7 +179,7 @@ class EventsController < ApplicationController
           favorite.last().save();
         end
       end
-  end
+    end
 
     def set_return_url
       @return_url = tasks_path

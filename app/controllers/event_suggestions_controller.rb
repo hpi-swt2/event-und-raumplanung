@@ -1,6 +1,9 @@
-class EventSuggestionsController < ApplicationController
+class EventSuggestionsController < GenericEventsController
   before_action :authenticate_user!
   before_action :set_event_suggestion, only: [:show, :edit, :update, :destroy]
+  
+  before_action :get_instance_variable, only: [:create, :update, :destroy]
+  before_action :get_model, only: [:new, :create, :update, :destroy]
 
   def index
     @event_suggestions = EventSuggestion.all
@@ -15,49 +18,23 @@ class EventSuggestionsController < ApplicationController
   end
 
   def new
-    @event_suggestion = EventSuggestion.new
-    time = Time.new.getlocal
-    time -= time.sec
-    time += time.min % 15
-    @event_suggestion.starts_at = time
-    @event_suggestion.ends_at = (time+(60*60))
+    super
   end
 
   def edit
   end
 
   def create
-    logger.info event_suggestion_params.inspect
-    @event_suggestion = EventSuggestion.new(event_suggestion_params)
-    respond_to do |format|
-      if @event_suggestion.save
-        format.html { redirect_to @event_suggestion, notice: t('notices.successful_create', :model => EventSuggestion.model_name.human) } # redirect to overview
-        format.json { render :show, status: :created, location: @event_suggestion }
-      else
-        format.html { render :new }
-        format.json { render json: @event_suggestion.errors, status: :unprocessable_entity }
-      end
-    end
+    super
   end
 
   def update
-    respond_to do |format|
-      if @event_suggestion.update(event_suggestion_params)
-        format.html { redirect_to @event_suggestion, notice: t('notices.successful_update', :model => EventSuggestion.model_name.human) }
-        format.json { render :show, status: :ok, location: @event_suggestion }
-      else
-        format.html { render :edit }
-        format.json { render json: @event_suggestion.errors, status: :unprocessable_entity }
-      end
-    end
+    @update_result = @event_suggestion.update(event_suggestion_params)
+    super
   end
 
   def destroy
-    @event_suggestion.destroy
-    respond_to do |format|
-      format.html { redirect_to event_suggestions_path, notice: t('notices.successful_destroy', :model => EventSuggestion.model_name.human) }
-      format.json { head :no_content }
-    end
+    super
   end
 
   private
