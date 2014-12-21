@@ -1,5 +1,5 @@
 class EventTemplate < ActiveRecord::Base
-
+  include FilteringModule
   # This directive enables Filterrific for the Student class.
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
@@ -24,11 +24,7 @@ class EventTemplate < ActiveRecord::Base
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
-  scope :search_query, lambda { |query|
-    terms = query.downcase.split(/\s+/)
-    terms = terms.map { |e| (e.gsub('*', '%') + '%').gsub(/%+/, '%')}
-    where( terms.map { |term| "LOWER(event_templates.name) LIKE ?"}.join(' AND '), *terms.map { |e| [e]} )
-  }
+
   scope :only_from, lambda { |user_id|
     where("user_id = ?",user_id)
   }

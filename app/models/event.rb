@@ -2,6 +2,7 @@ class Event < ActiveRecord::Base
   include DateTimeAttribute
   include EventModule
   include PaginationModule
+  include FilteringModule
   # This directive enables Filterrific for the Student class.
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
@@ -44,11 +45,7 @@ class Event < ActiveRecord::Base
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
-  scope :search_query, lambda { |query|
-    terms = query.downcase.split(/\s+/)
-    terms = terms.map { |e| (e.gsub('*', '%') + '%').gsub(/%+/, '%')}
-    where( terms.map { |term| "LOWER(events.name) LIKE ?"}.join(' AND '), *terms.map { |e| [e]} )
-  }
+
   scope :items_per_page, lambda { |per|
     #workaround
   }
