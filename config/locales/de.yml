@@ -206,6 +206,7 @@ de:
       default: ! '%A, %d. %B %Y, %H:%M Uhr'
       long: ! '%A, %d. %B %Y, %H:%M Uhr'
       short: ! '%d. %B, %H:%M Uhr'
+      time_only : ! '%H:%M Uhr'
     pm: nachmittags
     starts_at: Startzeitpunkt
     ends_at: Endzeitpunkt
@@ -217,6 +218,12 @@ de:
   alert:
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
+  event: 
+    alert: 
+      conflict_same_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
+      conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
+      conflict_different_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
+      conflict_different_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
   tasks:
     status:
       not_assigned: nicht zugewiesen
