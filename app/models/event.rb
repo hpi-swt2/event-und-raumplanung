@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   include DateTimeAttribute
   include EventModule
+  include PaginationModule
   # This directive enables Filterrific for the Student class.
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
@@ -65,28 +66,34 @@ class Event < ActiveRecord::Base
       order("LOWER(events.name) #{ direction }")
     when /^status_/
       order("LOWER(events.status) #{ direction }")
-  else
-    raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
-  end
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+    end
   }
+
   scope :room_ids, lambda { |room_ids|
     room_ids = room_ids.select { |room_id| room_id!=''}
     joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
+
   scope :starts_after, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('starts_at >= ?', date)
   }
+
   scope :ends_before, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('ends_at <= ?', date)
   }
+
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
   }
+
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
   }
+
   scope :user, lambda { |id|
     if id.present?
       where(user_id: id)
@@ -108,6 +115,7 @@ class Event < ActiveRecord::Base
             OR  (:ende BETWEEN starts_at AND ends_at)
             OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende})
   }
+
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -120,17 +128,6 @@ class Event < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_status'), 'status_asc']
   ]
   end
-  def self.options_for_per_page
-  [
-    [5,5],
-    [10,10],
-    [15,15],
-    [25,25],
-    [50,50],
-    [100,100],
-    [500,500]
-  ]
-  end
 
   def check_vacancy(rooms)
     colliding_events = []
@@ -141,7 +138,6 @@ class Event < ActiveRecord::Base
 
     return colliding_events if events.empty?
 
-    rooms_count = rooms.size
     events.each do | event |
       colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
     end
