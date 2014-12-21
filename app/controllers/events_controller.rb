@@ -197,34 +197,24 @@ class EventsController < GenericEventsController
     end
 
     def get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
-      if same_day conflicting_event.starts_at, conflicting_event.ends_at 
-        return conflict_msg_for_event_on_same_day conflicting_event, room_msg, conflicting_event_name
-      else 
-        return conflict_msg_for_event_on_different_days conflicting_event, room_msg, conflicting_event_name
-      end 
-    end
-
-    def same_day starts_at, ends_at
-      Time.at(starts_at).to_date === Time.at(ends_at).to_date
-    end 
-
-    def conflict_msg_for_event_on_same_day conflicting_event, room_msg, conflicting_event_name
       start_time = I18n.l conflicting_event.starts_at, format: :time_only
       end_time = I18n.l conflicting_event.ends_at, format: :time_only
       if conflicting_event.rooms.size > 1
-        return I18n.t('event.alert.conflict_same_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-      else 
-        return I18n.t('event.alert.conflict_same_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
+          return I18n.t('event.alert.conflict_same_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+        else 
+          return return I18n.t('conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+        end
+      else
+        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
+          return I18n.t('event.alert.conflict_same_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+        else
+          return I18n.t('conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+        end 
       end 
     end 
 
-    def conflict_msg_for_event_on_different_days conflicting_event, room_msg, conflicting_event_name
-      start_time = I18n.l conflicting_event.starts_at, format: :time_only
-      end_time = I18n.l conflicting_event.ends_at, format: :time_only
-      if conflicting_event.rooms.size > 1 
-        return I18n.t('conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-      else 
-        return I18n.t('conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-      end
+    def same_day starts_at, ends_at
+      Time.at(starts_at).to_date === Time.at(ends_at).to_date
     end 
 end
