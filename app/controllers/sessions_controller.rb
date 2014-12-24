@@ -70,15 +70,15 @@ class SessionsController < Devise::SessionsController
         end
         
         if(@user.email != nil and @user.email != session[:email] and @user.email != '')
-          flash[:error] = t('devise.sessions.email_invalid') 
+          flash[:error] = t('devise.sessions.email_invalid')
           flash[:notice] = "";
           sign_out @user
           redirect_to root_path
         else
 
           # Custom email, username and status creation
-          @user.email = params["user"]["email"];
-          @user.username = build_name_from_email(params[:user][:email]);
+          @user.username = build_name_from_email(session[:email]);
+          @user.identity_url = "https://openid.hpi.uni-potsdam.de/" + @user.username;
           if (@user.username != build_name_from_identity_url(current_user.identity_url))
             flash[:error] = t('devise.sessions.wrong_username')
             flash[:notice] = "";
