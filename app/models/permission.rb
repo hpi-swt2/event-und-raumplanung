@@ -1,9 +1,8 @@
 class Permission < ActiveRecord::Base
-  has_many :permission_manifests
   belongs_to :permitted_entity, :polymorphic => true
   belongs_to :room
 
-  enum type: [
+  enum category: [
     :manage_rooms,
     :edit_rooms,
     :approve_events,

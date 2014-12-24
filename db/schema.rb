@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20141224115526) do
     t.integer  "room_id"
     t.integer  "permitted_entity_id"
     t.string   "permitted_entity_type"
-    t.integer  "type"
+    t.integer  "category"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
