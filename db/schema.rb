@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210144902) do
+ActiveRecord::Schema.define(version: 20141224115526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -135,6 +134,17 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.integer "group_id"
     t.integer "user_id"
   end
+
+  create_table "permissions", force: true do |t|
+    t.integer  "room_id"
+    t.integer  "permitted_entity_id"
+    t.string   "permitted_entity_type"
+    t.integer  "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "permissions", ["room_id"], name: "index_permissions_on_room_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"

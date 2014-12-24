@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :permissions
+
   resources :event_suggestions
   resources :groups do
     member do
