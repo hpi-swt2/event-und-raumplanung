@@ -392,6 +392,51 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET new_event_suggestion" do 
+    it "creates a new event suggestion and assigns it as @event_suggestion" do 
+      event = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      event_suggestion = assigns(:event_suggestion)
+      expect(event_suggestion.starts_at).to eq(event.starts_at)
+      expect(event_suggestion.ends_at).to eq(event.ends_at)
+      expect(event_suggestion.rooms).to eq(event.rooms)
+    end 
+    
+    it "renders the event_suggestion 'new' template" do 
+      event = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(response).to render_template("event_suggestions/new")
+    end
+  end 
+
+  describe "GET approve" do 
+    it "approves the given event" do
+      event = Event.create! valid_attributes
+      get :approve, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(assigns(:event).status).to eq('approved')
+    end
+
+    it "redirects to events_approval_path" do
+      event = Event.create! valid_attributes
+      get :approve, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(response).to redirect_to(events_approval_path)
+    end
+  end
+
+  describe "GET decline" do 
+    it "declines the given event" do
+      event = Event.create! valid_attributes
+      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(assigns(:event).status).to eq('declined')
+    end
+
+    it "redirects to events_decline_path" do
+      event = Event.create! valid_attributes
+      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(response).to redirect_to(events_approval_path)
+    end
+  end
+
   describe "DELETE destroy" do
     it "destroys the requested event" do
       event = Event.create! valid_attributes
