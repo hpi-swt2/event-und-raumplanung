@@ -96,7 +96,99 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:approved_event) { 
+    { 
+      name:'Michas GB',
+      description:'Coole Sache',
+      participant_count: 2000,
+      starts_at_date:'2020-08-23',
+      ends_at_date:'2020-08-23',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1'], 
+    }
+  }
+  
+  let(:event_on_multiple_days_one_room) { 
+    { 
+      name:'Michas GB',
+      description:'Coole Sache',
+      participant_count: 2000,
+      starts_at_date:'2020-08-23',
+      ends_at_date:'2020-08-24',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1'], 
+    }
+  }
+  let(:event_on_multiple_days_multiple_rooms) { 
+    { 
+      name:'Michas GB',
+      description:'Coole Sache',
+      participant_count: 2000,
+      starts_at_date:'2020-08-23',
+      ends_at_date:'2020-08-24',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1', '2'], 
+    }
+  }
 
+    let(:event_on_one_day_multiple_rooms) { 
+    { 
+      name:'Michas GB',
+      description:'Coole Sache',
+      participant_count: 2000,
+      starts_at_date:'2020-08-23',
+      ends_at_date:'2020-08-23',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1', '2'], 
+    }
+  }
+
+
+  let(:not_conflicting_event) { 
+    { 
+      starts_at_date:'2020-08-22',
+      ends_at_date:'2020-08-22',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1'], 
+    }
+  }
+
+  let(:conflicting_event) { 
+    { 
+      starts_at_date:'2020-08-23',
+      ends_at_date:'2020-08-23',
+      starts_at_time:'17:00',
+      ends_at_time:'23:59',
+      room_ids: ['1'], 
+    }
+  }
+
+  let(:not_conflicting_result) { 
+    { :status => true }.to_json
+  }
+
+  let(:conflicting_result) { 
+    { :status => false }.to_json
+  }
+
+  let(:room1) { 
+    { 
+      id: 1, 
+      name: 'HS1',
+    }
+  }
+
+  let(:room2) { 
+    { 
+      id: 2, 
+      name: 'HS2',
+    }
+  }
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -315,4 +407,82 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "If conflicting events" do 
+    before(:all) do
+      DatabaseCleaner.clean
+      DatabaseCleaner.start 
+      Room.create! name: 'HS1'
+      Room.create! name: 'HS2'
+      Event.create! attributes_for(:scheduledEvent)
+    end
+
+    after(:all) do 
+      DatabaseCleaner.clean
+    end 
+
+    describe "do not exist" do 
+      it "then no conflicting events are returned" do 
+        patch :check_vacancy, event: not_conflicting_event, format: :json
+        result = JSON.parse(response.body)
+        expect(result).to include('status')
+        expect(result['status']).to eq(true)
+        expect(response.body).to eq(not_conflicting_result) 
+      end
+    end
+    describe "do exist" do
+      it "then conflicting events are returned" do 
+        patch :check_vacancy, event: conflicting_event, format: :json
+        result = JSON.parse(response.body)
+        expect(result).to include('status')
+        expect(result['status']).to eq(false)     
+      end 
+
+      it "then all conflicting events are returned" do 
+        patch :check_vacancy, event: conflicting_event, format: :json
+        result = JSON.parse(response.body)
+        expect(result.length).to eq(2)
+      end
+
+      describe "and if the conflicting event" do 
+        it "takes place on one day in one room, the correct error message gets returned" do 
+          event = Event.create! attributes_for(:event_on_one_day_with_one_room)
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_one_room', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+
+        it "takes place on multiple days in one room, the correct error message gets returned" do 
+          event = Event.create! attributes_for(:event_on_multiple_days_with_one_room)
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_different_days_one_room', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+        it "takes place on multiple days in mulitple rooms, the correct error message gets returned" do 
+          event = Event.create! attributes_for(:event_on_multiple_days_with_multiple_rooms)
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_different_days_multiple_rooms', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+        
+        it "takes place on one day in multiple rooms, the correct error message gets returned" do 
+          event = Event.create! attributes_for(:event_on_one_day_with_multiple_rooms)
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+      end
+    end
+  end
 end

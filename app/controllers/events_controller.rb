@@ -97,8 +97,6 @@ class EventsController < GenericEventsController
     end
   end
 
- 
-
   def conflicting_events_msg events
     msg = {}
     if events.empty?
@@ -203,13 +201,13 @@ class EventsController < GenericEventsController
         if same_day conflicting_event.starts_at, conflicting_event.ends_at 
           return I18n.t('event.alert.conflict_same_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
         else 
-          return I18n.t('conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+          return I18n.t('event.alert.conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
         end
       else
         if same_day conflicting_event.starts_at, conflicting_event.ends_at 
           return I18n.t('event.alert.conflict_same_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
         else
-          return I18n.t('conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
+          return I18n.t('event.alert.conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
         end 
       end 
     end 
