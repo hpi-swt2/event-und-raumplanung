@@ -401,6 +401,7 @@ RSpec.describe EventsController, :type => :controller do
       expect(event_suggestion.ends_at).to eq(event.ends_at)
       expect(event_suggestion.rooms).to eq(event.rooms)
       expect(event_suggestion.user_id).to eq(event.user_id)
+      expect(event_suggestion.event_id).to eq(event.id)
     end 
     
     it "renders the event_suggestion 'new' template" do 

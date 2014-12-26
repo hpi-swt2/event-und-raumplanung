@@ -51,6 +51,7 @@ class EventsController < GenericEventsController
     @event_suggestion.ends_at = @event.ends_at
     @event_suggestion.rooms = @event.rooms
     @event_suggestion.user_id = @event.user_id
+    @event_suggestion.event_id = @event.id
     render "event_suggestions/new"
   end
 
