@@ -41,6 +41,38 @@ class Ability
     else
         can :read, Group
     end
+
+    can [:create, :destroy], Room do |room|
+        user.has_permission("manage_rooms")        
+    end
+
+    can :update, Room do |room|
+        user.has_permission("edit_rooms", room)
+    end
+
+    can [:create, :destroy], Equipment do |equipment|
+        user.has_permission("manage_equipment")        
+    end
+    
+    can :update, Equipment do |equipment|
+        user.has_permission("edit_equipment")        
+    end
+
+    can [:create, :destroy], RoomProperty do |property|
+        user.has_permission("manage_properties")        
+    end
+    
+    can :update, RoomProperty do |property|
+        user.has_permission("edit_properties")        
+    end
+
+    can :assign_to, Room do |room|
+        user.has_permission("assign_to_rooms", room)
+    end
+
+    can :approve, Event do |event|
+        event.rooms.any? {|room| user.has_permission("approve_events", room)}
+    end
   end
 
   def load_admin

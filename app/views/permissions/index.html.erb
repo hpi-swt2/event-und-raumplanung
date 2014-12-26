@@ -1,0 +1,8 @@
+<%- model_class = Permission -%>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <% @categories.each do |key| %>
+  <input type="checkbox"/><%= key.humanize %><br/>
+  <% end %>
+</div>

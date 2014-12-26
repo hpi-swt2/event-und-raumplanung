@@ -11,6 +11,15 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :groups
   has_many :permissions, :as => :permitted_entity
 
+  def has_permission(category, room = nil)
+    if (self.permissions.for_category(category).any? { |permission|
+      permission.room == room or permission.room.nil?
+    })
+      return true
+    end
+    return (self.groups.any? { |group| group.has_permission(category, room) })
+  end
+
   def self.build_from_email(email)
     User.new(:email => email)
   end

@@ -12,4 +12,8 @@ class Permission < ActiveRecord::Base
     :edit_properties,
     :assign_to_rooms ]
 
+  scope :for_category, lambda { |category|
+    where(category: categories[category])
+  }
+
 end

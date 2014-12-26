@@ -17,15 +17,26 @@ describe Permission do
     group = FactoryGirl.create(:group)
     group.permissions << permission
     expect(permission.permitted_entity).to eq(group)
-    expect(group.permissions).to include(permission)
+    expect(group.has_permission(permission.category)).to be true
   end
 
   it "should give a user a permission" do
     permission = FactoryGirl.create(:permission)
     user = FactoryGirl.create(:user)
+    expect(user.has_permission(permission.category)).to be false
     user.permissions << permission
     expect(permission.permitted_entity).to eq(user)
-    expect(user.permissions).to include(permission)
+    expect(user.has_permission(permission.category)).to be true
+  end
+
+  it "should give a users group a permission" do
+    permission = FactoryGirl.create(:permission)
+    user = FactoryGirl.create(:user)
+    group = FactoryGirl.create(:group)
+    expect(user.has_permission(permission.category)).to be false
+    group.permissions << permission
+    user.groups << group
+    expect(user.has_permission(permission.category)).to be true
   end
 
   it "should give a user a permission on a room" do
@@ -33,8 +44,9 @@ describe Permission do
     room = FactoryGirl.create(:room)
     permission.room = room
     user = FactoryGirl.create(:user)
+    expect(user.has_permission(permission.category, room)).to be false
     user.permissions << permission
-    expect(user.permissions.collect { |p| p.room }).to include(room)
+    expect(user.has_permission(permission.category, room)).to be true
   end
 
 end
