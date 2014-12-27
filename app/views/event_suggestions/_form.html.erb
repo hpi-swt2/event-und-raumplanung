@@ -45,14 +45,11 @@
     <div class="controls">
       <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
     </div>
-    <script>
-    $('#selectpicker').selectpicker();
-    </script>
     <%= error_span(@event[:rooms]) %>
   </div>
   <div class="notice"></div>
   <div class="actions">
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit t('helpers.links.suggest'), :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
   </div>

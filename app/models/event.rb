@@ -27,7 +27,6 @@ class Event < ActiveRecord::Base
 
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
-  belongs_to :event_suggestion
   accepts_nested_attributes_for :rooms
 
   date_time_attribute :starts_at

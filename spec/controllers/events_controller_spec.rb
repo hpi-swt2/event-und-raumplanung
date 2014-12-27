@@ -482,12 +482,12 @@ RSpec.describe EventsController, :type => :controller do
     it "creates a new event suggestion and assigns it as @event_suggestion" do 
       event = Event.create! valid_attributes
       get :new_event_suggestion, {:id => event.to_param}, valid_session
-      event_suggestion = assigns(:event_suggestion)
+      event_suggestion = assigns(:event)
       expect(event_suggestion.starts_at).to eq(event.starts_at)
       expect(event_suggestion.ends_at).to eq(event.ends_at)
       expect(event_suggestion.rooms).to eq(event.rooms)
       expect(event_suggestion.user_id).to eq(event.user_id)
-      expect(event_suggestion.event_id).to eq(event.id)
+      expect(session['event_id']).to eq(event.id)
     end 
     
     it "renders the event_suggestion 'new' template" do 
