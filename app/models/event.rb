@@ -91,7 +91,7 @@ class Event < ActiveRecord::Base
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
   }
-
+  
   scope :user, lambda { |id|
     if id.present?
       where(user_id: id)

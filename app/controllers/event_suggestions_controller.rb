@@ -26,6 +26,7 @@ class EventSuggestionsController < GenericEventsController
 
   def create
     super
+    logger.info @event_suggestion.inspect
   end
 
   def update
@@ -43,6 +44,6 @@ class EventSuggestionsController < GenericEventsController
     end
 
     def event_suggestion_params
-      params.require(:event_suggestion).permit(:event_suggestion_id, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :room_ids => [])
+      params.require(:event_suggestion).permit(:event_suggestion_id, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :event_id, :room_ids => [])
     end
 end

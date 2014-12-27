@@ -3,9 +3,8 @@
 // All this logic will automatically be available in application.js.
 var EVENT_URL = '/events/',
     SUGGEST_URL = '/new_event_suggestion',
-    DECLINE_URL = '/decline';
-
-var ready;
+    DECLINE_URL = '/decline',
+    ready;
 
 function declineEvent(id) {
     $.ajax({
@@ -76,9 +75,12 @@ function clickHandler(e) {
     });
 }
 
+
+
 ready = function () {
-    $(".decline-btn").click(clickHandler);
+    $(".decline-btn").unbind("click").click(clickHandler);
 };
+
 
 $(document).ready(ready);
 $(document).on('page:load', ready);

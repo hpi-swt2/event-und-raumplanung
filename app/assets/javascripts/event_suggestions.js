@@ -40,10 +40,10 @@ function checkVacancy() {
     $("#selectpicker option:selected").each(function () { rooms.push($(this).val()); });
     data = {
         event: {
-            starts_at_date: $('#event_suggestion_starts_at_date').val(),
-            starts_at_time: $('#event_suggestion_starts_at_time').val(),
-            ends_at_date:  $('#event_suggestion_ends_at_date').val(),
-            ends_at_time: $('#event_suggestion_ends_at_time').val(),
+            starts_at_date: $('#event_starts_at_date').val(),
+            starts_at_time: $('#event_starts_at_time').val(),
+            ends_at_date:  $('#event_ends_at_date').val(),
+            ends_at_time: $('#event_ends_at_time').val(),
             room_ids: rooms
         }
     };

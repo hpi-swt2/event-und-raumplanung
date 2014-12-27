@@ -1,0 +1,6 @@
+<% if can? :decline_event_suggestion, event %>
+	<%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_suggestion_path(event), :class => 'btn btn-danger btn-xs' %>
+<% end %> 
+<% if can? :approve_event_suggestion, event %>   
+    <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_suggestion_path(event), :class => 'btn btn-success btn-xs' %>
+<% end %>

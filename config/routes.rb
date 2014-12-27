@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   resources :event_suggestions
   resources :groups do
     member do
@@ -15,6 +16,8 @@ Rails.application.routes.draw do
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   get 'events/:id/decline' => 'events#decline', as: "decline_event"
+  get 'events/:id/approve_event_suggestion' => 'events#approve_event_suggestion', as: "approve_event_suggestion"
+  get 'events/:id/decline_event_suggestion' => 'events#decline_event_suggestion', as: "decline_event_suggestion"
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
@@ -45,6 +48,9 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  get 'events/create_event_suggestion' => 'events#new_event_suggestion'
+  patch 'events/create_event_suggestion' => 'events#create_event_suggestion'
+  post 'events/create_event_suggestion' => 'events#create_event_suggestion', as: :create_event_suggestion_from_event
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do

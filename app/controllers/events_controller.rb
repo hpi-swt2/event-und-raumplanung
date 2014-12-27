@@ -4,11 +4,11 @@ class EventsController < GenericEventsController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion]
   after_filter :flash_to_headers, :only => :check_vacancy
   
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
@@ -46,23 +46,24 @@ class EventsController < GenericEventsController
   end
 
   def new_event_suggestion
-    @event_suggestion = EventSuggestion.new
-    @event_suggestion.starts_at = @event.starts_at
-    @event_suggestion.ends_at = @event.ends_at
-    @event_suggestion.rooms = @event.rooms
-    @event_suggestion.user_id = @event.user_id
-    @event_suggestion.event_id = @event.id
+    session['event_id'] = @event.id
     render "event_suggestions/new"
+  end
+
+  def create_event_suggestion
+    params = event_suggestion_params event_params
+    create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
   # GET /events
   # GET /events.json
   def index
-    @filterrific = Filterrific.new(Event,params[:filterrific] || session[:filterrific_events])
+    @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
     @filterrific.user = current_user_id if @filterrific.user == 1;
     @filterrific.user = nil if @filterrific.user == 0;
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    logger.info @event_suggestions.inspect
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
 
@@ -82,6 +83,16 @@ class EventsController < GenericEventsController
   def approve
     @event.update(status: 'approved')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def approve_event_suggestion
+    @event.update(status: 'pending')
+    redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
+  end
+
+  def decline_event_suggestion
+    @event.update(status: 'declined')
+    redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested'))
   end
 
   def decline
@@ -137,9 +148,10 @@ class EventsController < GenericEventsController
   # POST /events
   # POST /events.json
   def create
-    super
+    create_event event_params, :new, Event.model_name.human
   end
 
+  
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
@@ -161,11 +173,36 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:event_id, :name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
+    end
+
+    def create_event params, new_url, model
+      logger.info params
+      @event = Event.new(params)
+      @event.user_id = current_user_id
+      respond_to do |format|
+        if @event.save
+          format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
+          format.json { render :show, status: :created, location: @event }
+        else
+          format.html { render new_url}
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    def event_suggestion_params params
+      @event = Event.find(session[:event_id])
+      params['name'] = @event.name
+      params['description'] = @event.description
+      params['participant_count'] = @event.participant_count
+      params['is_private'] = @event.is_private
+      params['is_important'] = @event.is_important
+      params['status'] = 'suggested'
+      return params
     end
 
     def toggle_favorite
-
       favorite = Favorite.where('user_id = ? AND event_id = ?',current_user_id,@event.id);
       if favorite.empty?
         Favorite.create(:user_id => current_user_id, :event_id => @event.id, :is_favorite => true)
