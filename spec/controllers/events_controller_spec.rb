@@ -233,6 +233,20 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET new_event_suggestion" do 
+    it "stores the current event_id into the session" do 
+      event = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event.to_param}, valid_session
+      expect(session['event_id']).to eq(event.id)
+    end
+
+    it "renders the new template of even_suggestion" do 
+      event = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event.to_param}, valid_session
+      expect(response).to render_template("event_suggestions/new")
+    end
+  end
+
   describe "GET new_event_template" do
     it "assigns a new event_template as @event_template" do
       event = Event.create! valid_attributes
@@ -330,7 +344,8 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to render_template("new")
       end
     end
-	describe "with invalid participant count" do
+
+	  describe "with invalid participant count" do
       it "assigns a newly created but unsaved event as @event" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
@@ -341,8 +356,79 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to render_template("new")
       end
     end
+  end
 
-   end
+  describe "POST create_even_suggestion" do
+    before(:all) do 
+      DatabaseCleaner.clean
+      DatabaseCleaner.start 
+      Room.create! name: 'HS1'
+      Room.create! name: 'HS2' 
+      @event = Event.create! attributes_for(:event_valid_attributes)
+    end 
+
+    describe "with valid params" do
+      it "creates a new Event" do
+        expect {
+          get :new_event_suggestion, {:id => @event.to_param}
+          post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        }.to change(Event, :count).by(1)
+      end  
+
+      it "creates a new Event with the status suggested" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        expect(assigns(:event)[:status]).to eq('suggested')
+      end
+
+      it "creates a new Event with the name, description, participant_count, importance and privacy of the old event" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        expect(assigns(:event)['name']).to eq(@event.name)
+        expect(assigns(:event)['description']).to eq(@event.description)
+        expect(assigns(:event)['participant_count']).to eq(@event.participant_count)
+        expect(assigns(:event)['is_important']).to eq(@event.is_important)
+        expect(assigns(:event)['is_private']).to eq(@event.is_private)
+      end
+
+      it "assigns a newly created Event as @event" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        expect(assigns(:event)).to be_a(Event)
+        expect(assigns(:event)).to be_persisted
+      end
+
+      it "redirects to the created event_suggestion" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        expect(response).to redirect_to(Event.last)
+      end
+    end
+    
+    describe "with invalid params" do
+      it "assigns a newly created but unsaved Event as @event" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session
+        expect(assigns(:event)).to be_a_new(Event)
+      end
+
+      it "original event_id is still saved in session" do 
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session
+        expect(session[:event_id]).to eq(@event.id)
+      end  
+     
+      it "re-renders the 'new' template" do
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session        
+        expect(response).to render_template("event_suggestions/new")
+      end
+    end
+
+    after(:all) do 
+      DatabaseCleaner.clean
+    end
+  end
 
   describe "PUT update" do
     describe "with valid params" do
@@ -395,7 +481,7 @@ RSpec.describe EventsController, :type => :controller do
   describe "GET new_event_suggestion" do 
     it "creates a new event suggestion and assigns it as @event_suggestion" do 
       event = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      get :new_event_suggestion, {:id => event.to_param}, valid_session
       event_suggestion = assigns(:event_suggestion)
       expect(event_suggestion.starts_at).to eq(event.starts_at)
       expect(event_suggestion.ends_at).to eq(event.ends_at)
@@ -406,7 +492,7 @@ RSpec.describe EventsController, :type => :controller do
     
     it "renders the event_suggestion 'new' template" do 
       event = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      get :new_event_suggestion, {:id => event.to_param}, valid_session
       expect(response).to render_template("event_suggestions/new")
     end
   end 
@@ -414,14 +500,50 @@ RSpec.describe EventsController, :type => :controller do
   describe "GET approve" do 
     it "approves the given event" do
       event = Event.create! valid_attributes
-      get :approve, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      get :approve, {:id => event.to_param}
       expect(assigns(:event).status).to eq('approved')
     end
 
     it "redirects to events_approval_path" do
       event = Event.create! valid_attributes
-      get :approve, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      get :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_approval_path)
+    end
+  end
+
+  describe "GET approve_event_suggestion" do 
+    it "approves the given event suggestion" do 
+      event_suggestion = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event_suggestion.to_param}
+      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      get :approve_event_suggestion, {:id => event_suggestion.to_param}
+      expect(assigns(:event).status).to eq('pending')
+    end
+
+    it "redirects to events_path" do
+      event_suggestion = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event_suggestion.to_param}
+      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      get :approve_event_suggestion, {:id => event_suggestion.to_param}
+      expect(response).to redirect_to(events_path)
+    end
+  end
+
+  describe "GET decline_event_suggestion" do 
+    it "approves the given event suggestion" do 
+      event_suggestion = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event_suggestion.to_param}
+      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      get :decline_event_suggestion, {:id => event_suggestion.to_param}
+      expect(assigns(:event).status).to eq('declined')
+    end
+
+    it "redirects to events_path" do
+      event_suggestion = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event_suggestion.to_param}
+      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      get :decline_event_suggestion, {:id => event_suggestion.to_param}
+      expect(response).to redirect_to(events_path)
     end
   end
 

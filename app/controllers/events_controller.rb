@@ -177,7 +177,6 @@ class EventsController < GenericEventsController
     end
 
     def create_event params, new_url, model
-      logger.info params
       @event = Event.new(params)
       @event.user_id = current_user_id
       respond_to do |format|

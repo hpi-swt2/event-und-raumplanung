@@ -31,7 +31,7 @@ describe Event do
 
   	@event1.destroy
   	@event2.destroy
-  end  
+  end 
 
   it 'should return events after a certain date' do
     date = @upcoming_event.starts_at.advance(:hours => -1).strftime("%d.%m.%Y %H:%M Uhr")
@@ -220,4 +220,21 @@ describe "event order" do
       expect(@events).to include @event
     end
 
+  end
+
+  describe EventSuggestion do
+    before(:each) do
+        @request.env["devise.mapping"] = Devise.mappings[:user]
+        sign_in user
+      end
+    
+    it "has a valid factory" do
+        factory = FactoryGirl.build(:event_suggestion)
+        expect(factory).to be_valid
+      end
+      
+      it "should have the status pending when created" do
+        @event_suggestion = FactoryGirl.build(:event_suggestion)
+        expect(@event_suggestion.status).to eq('pending')
+      end
   end

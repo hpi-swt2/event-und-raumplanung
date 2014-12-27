@@ -92,6 +92,29 @@ FactoryGirl.define do
    room_ids ['1']
   end
 
+  factory :event_valid_attributes, :class => Event do 
+    name 'Michas GB'
+    description 'Coole Sache'
+    participant_count 2000
+    starts_at_date (Date.today + 1).strftime("%Y-%m-%d")
+    ends_at_date (Date.today + 2).strftime("%Y-%m-%d")
+    starts_at_time (Date.today).strftime("%H:%M")
+    ends_at_time (Date.today).strftime("%H:%M")
+    user_id 122
+    room_ids ['1']
+  end
+
+  factory :event_invalid_attributes, :class => Event do 
+    name 'Michas GB'
+    description 'Coole Sache'
+    participant_count 2000
+    starts_at_date (Date.today - 1).strftime("%Y-%m-%d")
+    ends_at_date (Date.today - 2).strftime("%Y-%m-%d")
+    starts_at_time (Date.today).strftime("%H:%M")
+    ends_at_time (Date.today).strftime("%H:%M")
+    user_id 122
+    room_ids ['1']
+  end
   # factory :scheduledEvent, :class => Event do 
   #  sequence(:name) { |n| "Party#{n}" }
   #  description "All night long glühwein for free"
