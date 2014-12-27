@@ -142,6 +142,7 @@ de:
       suggest: ! 'Alternative vorschlagen'
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
+      task:    ! 'Aufgabe erstellen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:

@@ -24,6 +24,13 @@ class TasksController < ApplicationController
     unless params[:event_id].blank?
       @task.event_id = params[:event_id] 
       @event_field_readonly = :true
+      render 'new'
+    else 
+      unless params[:event_template_id].blank?
+        @task.event_template_id = params[:event_template_id]
+        @event_field_readonly = :true
+        render 'new_for_event_template'
+      end
     end
   end
 
@@ -118,11 +125,11 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline)
+      params.require(:task).permit(:name, :description, :event_id, :event_template_id, :user_id, :done, :deadline)
     end
 
     def task_params_with_attachments
-      params.require(:task).permit(:name, :description, :event_id, :user_id, :done, :deadline, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :event_template_id, :user_id, :done, :deadline, :attachments_attributes => [ :title, :url ])
     end
 
     def task_update_order_params

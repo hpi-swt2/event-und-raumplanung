@@ -12,6 +12,8 @@ class EventTemplate < ActiveRecord::Base
   )
   self.per_page = 12
   has_and_belongs_to_many :rooms, dependent: :nullify
+  has_many :tasks,  dependent: :destroy
+
   accepts_nested_attributes_for :rooms 
 
 

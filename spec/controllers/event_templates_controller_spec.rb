@@ -34,6 +34,21 @@ RSpec.describe EventTemplatesController, :type => :controller do
       get :show, {:id => event_template.to_param}
       expect(assigns(:event_template)).to eq(event_template)
     end
+
+    it "assigns the tasks of the requested event_template as @tasks ordered by rank" do
+      event_template = EventTemplate.create! valid_attributes
+      firstTask = create(:task)
+      firstTask.event_template = event_template
+      firstTask.save
+
+      secondTask = create(:task)
+      secondTask.event_template = event_template
+      secondTask.task_order_position = 0
+      secondTask.save
+
+      get :show, {:id => event_template.to_param}
+      expect(assigns(:tasks)).to eq [secondTask, firstTask]
+    end
   end
 
   describe "GET new" do

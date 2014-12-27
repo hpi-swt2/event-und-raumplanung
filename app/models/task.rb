@@ -4,6 +4,7 @@ class Task < ActiveRecord::Base
   include DateTimeAttribute
 
   belongs_to :event
+  belongs_to :event_template
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
   belongs_to :user

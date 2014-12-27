@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
 
-  resources :event_suggestions
   resources :groups do
     member do
       get 'manage_rooms'

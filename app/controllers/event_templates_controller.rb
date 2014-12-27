@@ -39,6 +39,7 @@ class EventTemplatesController < ApplicationController
   # GET /templates/1
   # GET /templates/1.json
   def show
+    @tasks = @event_template.tasks.rank(:task_order)
   end
 
   # GET /templates/new
