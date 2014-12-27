@@ -4,16 +4,22 @@ class Equipment < ActiveRecord::Base
   filterrific(
     filter_names: [
       :equipment_name,
-      :search_for_name
+      :rooms,
+      :category
     ]
   )
   scope :equipment_name, lambda { |name|
     where('name = ?', name)
   }
-  scope :search_for_name, lambda { |room|
-  	room_id= Room.where(["name = ?", room]).id
-  	puts(room_id)
-
+  scope :rooms, lambda { |room|
+  	
+    room_id = Room.find_by_name(room)
     where('room_id = ?', room_id)
+  }
+
+  scope :category, lambda { |category|
+    if category != 'Alle Kategorien'
+      where('category = ?', category)
+    end
   }
 end

@@ -9,7 +9,7 @@
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @equipment.description %></dd>
   <dt><strong><%= model_class.human_attribute_name(:room_id) %>:</strong></dt>
-  <dd><%= @equipment.room_id %></dd>
+  <dd><%= Room.find(@equipment.room_id).name %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

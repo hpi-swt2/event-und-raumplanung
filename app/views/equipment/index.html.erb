@@ -3,6 +3,14 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
+<!--Creating an array which consists of all category names - needed for filterrific -->
+<% @categories= Equipment.select(:category).distinct.order('category ASC') %>
+<% @array = Array.new %>
+<% @categories.each do | cat | %>
+  <% @array << [cat.category,cat.category] %>
+<% end %>
+
+
 <%= form_for @filterrific do |f| %>
 <div class="row">
   <div class="col-md-4">
@@ -19,12 +27,7 @@
   <div class="col-md-4">
     <div class="chardin_box">
           <%= t '.search' %>
-          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.text_field(
-            :equipment_name,
-            :placeholder => "Search for name",
-            class: 'filterrific-periodically-observed form-control'
-          ) %>
+          <%= f.select(:category, @array, {include_blank: '- Alle Kategorien -'}, {class: 'form-control'}) %>
     </div>
   </div>
   <div class="col-md-4">
@@ -32,7 +35,7 @@
           <%= t '.search' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.text_field(
-            :search_for_name,
+            :rooms,
             :placeholder => "All Rooms",
             class: 'filterrific-periodically-observed form-control'
           ) %>
