@@ -38,6 +38,7 @@ class Ability
         can :manage, Room
         can :manage, Equipment
         can :manage, Event
+        can :manage, RoomProperty
     else
         can :read, Group
     end
@@ -70,8 +71,12 @@ class Ability
         user.has_permission("assign_to_rooms", room)
     end
 
-    can :approve, Event do |event|
-        event.rooms.any? {|room| user.has_permission("approve_events", room)}
+    can [:approve, :decline], Event do |event|
+        if event.rooms.empty?
+            user.has_permission("approve_events")
+        else
+            event.rooms.all? {|room| user.has_permission("approve_events", room)}
+        end
     end
   end
 

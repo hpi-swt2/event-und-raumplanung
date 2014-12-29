@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   devise :openid_authenticatable, :rememberable
   has_many :favorites
   has_and_belongs_to_many :groups
-  has_many :permissions, :as => :permitted_entity
+  has_many :permissions, :as => :permitted_entity, :dependent => :destroy
 
   def has_permission(category, room = nil)
     if (self.permissions.for_category(category).any? { |permission|
@@ -18,6 +18,14 @@ class User < ActiveRecord::Base
       return true
     end
     return (self.groups.any? { |group| group.has_permission(category, room) })
+  end
+
+  def permit(category, room = nil)
+    self.permissions << Permission.new(category: category, room: room)
+  end
+
+  def unpermit(category, room = nil)
+    self.permissions.find_by(category: Permission::categories[category], room: room).destroy
   end
 
   def self.build_from_email(email)

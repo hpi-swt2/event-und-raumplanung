@@ -12,6 +12,8 @@ class Permission < ActiveRecord::Base
     :edit_properties,
     :assign_to_rooms ]
 
+  validates_uniqueness_of :permitted_entity_id, scope: [:permitted_entity_type, :category, :room]
+
   scope :for_category, lambda { |category|
     where(category: categories[category])
   }

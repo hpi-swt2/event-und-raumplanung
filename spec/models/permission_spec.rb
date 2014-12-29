@@ -13,40 +13,44 @@ describe Permission do
   end
 
   it "should give a group a permission" do
-    permission = FactoryGirl.create(:permission)
+    category = "edit_rooms"
     group = FactoryGirl.create(:group)
-    group.permissions << permission
-    expect(permission.permitted_entity).to eq(group)
-    expect(group.has_permission(permission.category)).to be true
+    expect(group.has_permission(category)).to be false
+    group.permit(category)
+    expect(group.has_permission(category)).to be true
+    group.unpermit(category)
+    expect(group.has_permission(category)).to be false
   end
 
   it "should give a user a permission" do
-    permission = FactoryGirl.create(:permission)
+    category = "edit_rooms"
     user = FactoryGirl.create(:user)
-    expect(user.has_permission(permission.category)).to be false
-    user.permissions << permission
-    expect(permission.permitted_entity).to eq(user)
-    expect(user.has_permission(permission.category)).to be true
+    expect(user.has_permission(category)).to be false
+    user.permit(category)
+    expect(user.has_permission(category)).to be true
+    user.unpermit(category)
+    expect(user.has_permission(category)).to be false
   end
 
   it "should give a users group a permission" do
-    permission = FactoryGirl.create(:permission)
+    category = "edit_rooms"
     user = FactoryGirl.create(:user)
     group = FactoryGirl.create(:group)
-    expect(user.has_permission(permission.category)).to be false
-    group.permissions << permission
+    expect(user.has_permission(category)).to be false
+    group.permit(category)
     user.groups << group
-    expect(user.has_permission(permission.category)).to be true
+    expect(user.has_permission(category)).to be true
   end
 
   it "should give a user a permission on a room" do
-    permission = FactoryGirl.create(:permission)
+    category = "edit_rooms"
     room = FactoryGirl.create(:room)
-    permission.room = room
     user = FactoryGirl.create(:user)
-    expect(user.has_permission(permission.category, room)).to be false
-    user.permissions << permission
-    expect(user.has_permission(permission.category, room)).to be true
+    expect(user.has_permission(category, room)).to be false
+    user.permit(category, room)
+    expect(user.has_permission(category, room)).to be true
+    user.unpermit(category, room)
+    expect(user.has_permission(category, room)).to be false
   end
 
 end
