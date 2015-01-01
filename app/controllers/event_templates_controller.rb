@@ -59,6 +59,7 @@ class EventTemplatesController < ApplicationController
     @event.name = @event_template.name
     @event.description = @event_template.description
     @event.rooms = @event_template.rooms
+    @event_template_id = @event_template.id
     render "events/new"
   end
 

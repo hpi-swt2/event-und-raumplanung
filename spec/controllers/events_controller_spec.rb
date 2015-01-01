@@ -269,6 +269,12 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event_template)).to have_attributes(:name => event.name, :description => event.description, :participant_count => event.participant_count, :rooms => event.rooms) 
       expect(response).to render_template("event_templates/new")
     end
+
+    it "assigns the event id as @event_id" do 
+      event = Event.create! valid_attributes
+      get :new_event_template, {:id => event.to_param}, valid_session
+      expect(assigns(:event_id)).to eq(event.id)
+    end
   end
 
   describe "GET index_toggle_favorite" do

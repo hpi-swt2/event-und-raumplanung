@@ -75,6 +75,12 @@ RSpec.describe EventTemplatesController, :type => :controller do
       expect(assigns(:event).description).to eq event_template.description
       expect(response).to render_template("events/new")
     end
+
+    it "assigns the event_template id as @event_template_id" do 
+      event_template = FactoryGirl.create(:event_template)
+      get :new_event, {:id => event_template.to_param}
+      expect(assigns(:event_template_id)).to eq event_template.id
+    end
   end
 
   describe "GET edit" do
