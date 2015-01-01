@@ -54,6 +54,21 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:valid_attributes_with_template_id_for_request) { 
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
+    rooms: ["1", "2"], 
+    is_private: true,
+    user_id: user.id,
+    event_template_id: 1
+    }
+  }
+
   let(:invalid_attributes) {
     {
     name:'Michas GB',
@@ -251,10 +266,7 @@ RSpec.describe EventsController, :type => :controller do
     it "assigns a new event_template as @event_template" do
       event = Event.create! valid_attributes
       get :new_event_template, {:id => event.to_param}, valid_session
-      expect(assigns(:event_template).name).to eq event.name
-      expect(assigns(:event_template).description).to eq event.description
-      expect(assigns(:event_template).participant_count).to eq event.participant_count
-      expect(assigns(:event_template).rooms).to eq event.rooms
+      expect(assigns(:event_template)).to have_attributes(:name => event.name, :description => event.description, :participant_count => event.participant_count, :rooms => event.rooms) 
       expect(response).to render_template("event_templates/new")
     end
   end
@@ -314,6 +326,7 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST create" do
+    
     describe "with valid params" do
       it "creates a new Event" do
         expect {
@@ -356,7 +369,98 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to render_template("new")
       end
     end
+
+    describe "and prior event_template" do
+      before(:all) do 
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+        FactoryGirl.create(:event_template)
+      end   
+      
+      it "assigns @event_template_id with the id of the prior event_template" do
+        post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+        expect(assigns(:event_template_id).to_i).to eq(valid_attributes_with_template_id_for_request[:event_template_id])
+      end
+
+      it "creates a new Event" do
+        expect {
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+        }.to change(Event, :count).by(1)
+      end
+
+      describe "without tasks" do
+        it "then no new tasks are created" do
+          expect {
+            post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          }.to_not change(Task, :count)
+        end
+
+        it "then new event has no tasks" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          expect(assigns(:event).tasks).to be_empty
+        end 
+      end
+
+      describe "with tasks" do
+        before(:all) do
+          DatabaseCleaner.clean
+          FactoryGirl.create(:event_template, :with_tasks)
+        end
+
+        it "then new tasks are created" do
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          expect {
+            post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          }.to change(Task, :count).by(event_template.tasks.size)
+        end
+
+        it "then events tasks have the same values as the event_templates tasks" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        describe "that have attachments" do 
+          before(:all) do
+            DatabaseCleaner.clean
+            FactoryGirl.create(:event_template, :with_tasks_that_have_attachments)
+          end
+
+          it "then new attachments are created" do
+            event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+            attachment_count = event_template.tasks.inject(0) { |result, task| result + task.attachments.length}
+            expect {
+              post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+            }.to change(Attachment, :count).by(attachment_count)
+          end
+
+          it "then the events tasks attachments have the same values as the event_templates tasks attachments" do
+            post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+            event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+            ignored = ['id', 'updated_at', 'created_at', 'task_id']
+            assigns(:event).tasks.each_with_index do |task, i|
+                task.attachments.each_with_index do |attachment, j| 
+                expect(attachment.attributes.except(*ignored)).to eql(event_template.tasks[i].attachments[j].attributes.except(*ignored))
+              end
+            end
+          end
+        end 
+      end
+
+      it "assigns a newly created Event to @event if wrong parameters" do
+        post :create, {:event => invalid_attributes}, valid_session
+        expect(assigns(:event)).to be_a_new(Event)
+      end
+    end
+    after(:all) do 
+      DatabaseCleaner.clean
+    end
   end
+
+
 
   describe "POST create_even_suggestion" do
     before(:all) do 

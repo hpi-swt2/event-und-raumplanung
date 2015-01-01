@@ -30,6 +30,7 @@ class EventsController < GenericEventsController
     @event_template.description = @event.description
     @event_template.participant_count = @event.participant_count
     @event_template.rooms = @event.rooms
+    @event_id = @event.id
     render "event_templates/new"
   end
 
@@ -173,12 +174,15 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit,:room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit, :event_template_id, :room_ids => [])
     end
 
     def create_event params, new_url, model
+      @event_template_id = params['event_template_id']
+      params.delete('event_template_id')
       @event = Event.new(params)
       @event.user_id = current_user_id
+      create_tasks @event_template_id
       respond_to do |format|
         if @event.save
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
@@ -189,6 +193,29 @@ class EventsController < GenericEventsController
         end
       end
     end
+
+    def create_tasks event_template_id
+      if event_template_id
+        event_template = EventTemplate.find(event_template_id)
+        event_template.tasks.collect do |original_task| 
+          event_task = original_task.dup
+          event_task = create_attachments original_task, event_task
+          event_task.event_template_id = nil
+          @event.tasks << event_task 
+        end
+      else 
+        return
+      end
+      return 
+    end
+
+    def create_attachments original_task, new_task
+      original_task.attachments.collect do |original_attachments| 
+        event_attachment = original_attachments.dup 
+        new_task.attachments << event_attachment
+      end
+      return new_task
+    end          
 
     def event_suggestion_params params
       @event = Event.find(session[:event_id])

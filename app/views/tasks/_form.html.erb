@@ -31,31 +31,21 @@
       </div>
       <%= error_span(@task[:description]) %>
     </div>
-    <% if for_event_template %> 
-      <div class="control-group">
-        <%= f.label :event_template_id, :class => 'control-label' %>
-        <div class="controls">
-          <%= f.text_field :event_template_id, :class => 'form-control' , :readonly => @event_field_readonly %>
-        </div>
-        <%= error_span(@task[:event_template_id]) %>
-      </div>
-    <% else %>
-      <div class="control-group">
-        <%= f.label :event_id, :class => 'control-label' %>
-        <div class="controls">
-          <%= f.text_field :event_id, :class => 'form-control' , :readonly => @event_field_readonly %>
-        </div>
-        <%= error_span(@task[:event_id]) %>
-      </div>
-    <% end %>
     <div class="control-group">
-      <%= f.label :deadline, :class => 'control-label' %>
-      <div class="controls">
-          <%= f.date_field :deadline, :class => 'form-control' %>
-      </div>  
-      <%= error_span(@task[:deadline]) %>  
+      <% if @for_event_template %> 
+        <%= f.hidden_field :event_template_id, :value => @task.event_template_id, :readonly => true %>
+      <% else %>
+        <%= f.hidden_field :event_id, :value => @task.event_id, :readonly => true %>
+      <% end %>
     </div>
-    <% unless for_event_template %>
+    <% unless @for_event_template %> 
+      <div class="control-group">
+        <%= f.label :deadline, :class => 'control-label' %>
+        <div class="controls">
+            <%= f.date_field :deadline, :class => 'form-control' %>
+        </div>  
+        <%= error_span(@task[:deadline]) %>  
+      </div>
       <div class="control-group">
           <%= f.label :user_id, :class => 'control-label' %>
           <div class="controls">
@@ -64,7 +54,7 @@
           <%= error_span(@task[:user_id]) %>
       </div>
     <% end %>
-    <% unless @task.new_record? %>
+    <% unless @task.new_record? or @for_event_template %>
       <div class="control-group">
         <%= f.label :done, :class => 'control-label' %>
         <div class="checkbox">

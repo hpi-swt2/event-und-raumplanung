@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline]
+  before_action :set_for_event_template, only: [:edit]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
@@ -15,21 +16,18 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
-
   end
 
   # GET /tasks/new
   def new
     @task = Task.new
     unless params[:event_id].blank?
-      @task.event_id = params[:event_id] 
-      @event_field_readonly = :true
-      render 'new'
+      @task.event_id = params[:event_id]
+      @for_event_template = false
     else 
       unless params[:event_template_id].blank?
         @task.event_template_id = params[:event_template_id]
-        @event_field_readonly = :true
-        render 'new_for_event_template'
+        @for_event_template = true
       end
     end
   end
@@ -42,13 +40,11 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-    @task.done = false
     respond_to do |format|
       if @task.save
         if @task.user
           @task.send_notification_to_assigned_user(current_user)
         end
-
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
       else
@@ -160,4 +156,8 @@ class TasksController < ApplicationController
       end
       return updated_params
     end
+
+    def set_for_event_template 
+      @for_event_template = @task.event_id.nil? ? true : false
+    end 
 end

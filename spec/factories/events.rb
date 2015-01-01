@@ -137,7 +137,19 @@ FactoryGirl.define do
     starts_at_time (Date.today).strftime("%H:%M")
     ends_at_time (Date.today).strftime("%H:%M")
     user_id 122
-  end 
+  end
+
+  trait :with_assignments do
+    after :create do |event|
+      FactoryGirl.create_list :task, 2, :event => event
+    end
+  end
+
+  trait :with_assignments_that_have_attachments do
+    after :create do |event|
+      FactoryGirl.create_list :task_with_attachment, 2, :event => event
+    end
+  end
   # factory :scheduledEvent, :class => Event do 
   #  sequence(:name) { |n| "Party#{n}" }
   #  description "All night long glühwein for free"

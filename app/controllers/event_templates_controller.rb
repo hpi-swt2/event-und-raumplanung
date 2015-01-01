@@ -69,8 +69,12 @@ class EventTemplatesController < ApplicationController
   # POST /templates
   # POST /templates.json
   def create
-    @event_template = EventTemplate.new(eventtemplate_params)
+    params = eventtemplate_params
+    @event_id = params['event_id']
+    params.delete('event_id')
+    @event_template = EventTemplate.new(params)
     @event_template.user_id = current_user_id
+    create_tasks @event_id
 
     respond_to do |format|
       if @event_template.save
@@ -115,6 +119,37 @@ class EventTemplatesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def eventtemplate_params
-      params.require(:event_template).permit(:name, :description, :participant_count, :room_ids => [])
+      params.require(:event_template).permit(:name, :description, :participant_count, :event_id, :room_ids => [])
     end
+
+    def create_tasks event_id
+      if event_id
+        event = Event.find(event_id)
+        event.tasks.collect do |original_task|
+          event_template_task = Task.new task_parameters original_task.attributes            
+          event_template_task.event_id = nil
+          event_template_task = create_attachments original_task, event_template_task
+          @event_template.tasks << event_template_task 
+        end
+      else 
+        return
+      end
+      return 
+    end
+
+    def task_parameters task_attributes   #only name, description and task_order are relevant for event_template tasks
+      params = {}
+      params['name'] = task_attributes['name']
+      params['description'] = task_attributes['description']
+      params['task_order'] = task_attributes['task_order']
+      return params
+    end
+
+    def create_attachments original_task, new_task
+      original_task.attachments.collect do |original_attachments| 
+        event_attachment = original_attachments.dup 
+        new_task.attachments << event_attachment
+      end
+      return new_task
+    end  
 end

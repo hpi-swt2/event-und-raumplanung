@@ -10,12 +10,12 @@
       <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
       <% if params[:controller] == 'events' %>
         <th class="col-sm-5"></th>
+        <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
       <% end %>
-      <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
     </tr>
   </thead>
   <tbody>
-    <% tasks.each do |task| %>
+    <% @tasks.each do |task| %>
       <tr data-item-id=<%= "#{task.id}" %> class="item">
       <%if params[:controller] == 'events' %>
         <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user-id="<%= task.user_id %>"></td>
