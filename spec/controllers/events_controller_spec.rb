@@ -31,10 +31,10 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
     description:'Coole Sache',
     participant_count: 2000,
-    starts_at_date:'2020-08-23',
-    ends_at_date:'2020-08-23',
-    starts_at_time:'17:00',
-    ends_at_time:'23:59',
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
     is_private: true,
     user_id: user.id
     }
@@ -44,10 +44,10 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
     description:'Coole Sache',
     participant_count: 2000,
-    starts_at_date:'2020-08-23',
-    ends_at_date:'2020-08-23',
-    starts_at_time:'17:00',
-    ends_at_time:'23:59',
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
     rooms: ["1", "2"], 
     is_private: true,
     user_id: user.id
@@ -58,10 +58,10 @@ RSpec.describe EventsController, :type => :controller do
     {name:'Michas GB',
     description:'Coole Sache',
     participant_count: 2000,
-    starts_at_date:'2020-08-23',
-    ends_at_date:'2020-08-23',
-    starts_at_time:'17:00',
-    ends_at_time:'23:59',
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
     rooms: ["1", "2"], 
     is_private: true,
     user_id: user.id,
@@ -83,10 +83,10 @@ RSpec.describe EventsController, :type => :controller do
   let(:invalid_attributes_for_request) {
     {
     name:'Michas GB',
-    starts_at_date:'2014-08-23',
-    ends_at_date:'2014-08-23',
-    starts_at_time:'17:00',
-    ends_at_time:'23:59', 
+    starts_at_date: (Date.today - 1),
+    ends_at_date: Date.today,
+    starts_at_time: Time.now.strftime("%H:%M"),
+    ends_at_time: Time.now.strftime("%H:%M"),
     rooms:[],
     user_id: user.id
   }
@@ -95,8 +95,10 @@ RSpec.describe EventsController, :type => :controller do
    let(:invalid_participant_count) {
     {name:'Michas GB',
    	participant_count:-100,
-   	starts_at_date:'2020-08-23',
-    ends_at_date:'2020-08-23',
+    starts_at_date: Time.now.strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: Time.now.strftime("%H:%M"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
     user_id: user.id
     }
   }
@@ -104,81 +106,54 @@ RSpec.describe EventsController, :type => :controller do
   let(:invalid_participant_count_for_request) {
     {name:'Michas GB',
     participant_count:-100,
-    starts_at_date:'2020-08-23',
-    ends_at_date:'2020-08-23',
+    starts_at_date: Time.now.strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: Time.now.strftime("%H:%M"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
     rooms: [],
     user_id: user.id
     }
   }
 
-  let(:approved_event) { 
-    { 
-      name:'Michas GB',
-      description:'Coole Sache',
-      participant_count: 2000,
-      starts_at_date:'2020-08-23',
-      ends_at_date:'2020-08-23',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
-      room_ids: ['1'], 
+
+  let(:invalid_attributes_for_event_suggestion) {
+    {
+      starts_at_date: (Date.today - 1).strftime("%Y-%m-%d"),
+      ends_at_date: (Date.today - 1).strftime("%Y-%m-%d"),
+      starts_at_time: Time.now.strftime("%H:%M"),
+      ends_at_time: Time.now.strftime("%H:%M"),
+      user_id: 122,
+      original_event_id: 1
+    }
+  } 
+
+  let(:valid_attributes_for_event_suggestion) {
+    {
+      starts_at_date: (Time.now + 1).strftime("%Y-%m-%d"),
+      ends_at_date: (Time.now + 2).strftime("%Y-%m-%d"),
+      starts_at_time: Time.now.strftime("%H:%M"),
+      ends_at_time: Time.now.strftime("%H:%M"),
+      user_id: 122,
+      original_event_id: 1
     }
   }
   
-  let(:event_on_multiple_days_one_room) { 
-    { 
-      name:'Michas GB',
-      description:'Coole Sache',
-      participant_count: 2000,
-      starts_at_date:'2020-08-23',
-      ends_at_date:'2020-08-24',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
-      room_ids: ['1'], 
-    }
-  }
-  let(:event_on_multiple_days_multiple_rooms) { 
-    { 
-      name:'Michas GB',
-      description:'Coole Sache',
-      participant_count: 2000,
-      starts_at_date:'2020-08-23',
-      ends_at_date:'2020-08-24',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
-      room_ids: ['1', '2'], 
-    }
-  }
-
-    let(:event_on_one_day_multiple_rooms) { 
-    { 
-      name:'Michas GB',
-      description:'Coole Sache',
-      participant_count: 2000,
-      starts_at_date:'2020-08-23',
-      ends_at_date:'2020-08-23',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
-      room_ids: ['1', '2'], 
-    }
-  }
-
-
   let(:not_conflicting_event) { 
     { 
-      starts_at_date:'2020-08-22',
-      ends_at_date:'2020-08-22',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
+      starts_at_date: (Time.now - 7200).strftime("%Y-%m-%d"),
+      ends_at_date: (Time.now - 3600).strftime("%Y-%m-%d"),
+      starts_at_time: (Time.now - 7200).strftime("%H:%M"),
+      ends_at_time: (Time.now - 3600).strftime("%H:%M"),
       room_ids: ['1'], 
     }
   }
 
   let(:conflicting_event) { 
     { 
-      starts_at_date:'2020-08-23',
-      ends_at_date:'2020-08-23',
-      starts_at_time:'17:00',
-      ends_at_time:'23:59',
+      starts_at_date: Time.now.strftime("%Y-%m-%d"),
+      ends_at_date: (Time.now + 3600).strftime("%Y-%m-%d"),
+      starts_at_time: Time.now.strftime("%H:%M"),
+      ends_at_time: (Time.now + 3600).strftime("%H:%M"),
       room_ids: ['1'], 
     }
   }
@@ -191,19 +166,6 @@ RSpec.describe EventsController, :type => :controller do
     { :status => false }.to_json
   }
 
-  let(:room1) { 
-    { 
-      id: 1, 
-      name: 'HS1',
-    }
-  }
-
-  let(:room2) { 
-    { 
-      id: 2, 
-      name: 'HS2',
-    }
-  }
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -262,7 +224,7 @@ RSpec.describe EventsController, :type => :controller do
     it "stores the current event_id into the session" do 
       event = Event.create! valid_attributes
       get :new_event_suggestion, {:id => event.to_param}, valid_session
-      expect(assigns(:original_event_id)).to eq(event.id)
+      expect(assigns(:original_event_id).to_i).to eq(event.id)
     end
 
     it "renders the new template of even_suggestion" do 
@@ -482,28 +444,26 @@ RSpec.describe EventsController, :type => :controller do
     before(:all) do 
       DatabaseCleaner.clean
       DatabaseCleaner.start 
-      Room.create! name: 'HS1'
-      Room.create! name: 'HS2' 
-      @event = Event.create! attributes_for(:event_valid_attributes)
+      @event = FactoryGirl.create(:event, :with_rooms)
     end 
 
     describe "with valid params" do
       it "creates a new Event" do
         expect {
           get :new_event_suggestion, {:id => @event.to_param}
-          post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+          post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         }.to change(Event, :count).by(1)
       end  
 
       it "creates a new Event with the status suggested" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         expect(assigns(:event)[:status]).to eq('suggested')
       end
 
       it "creates a new Event with the name, description, participant_count, importance and privacy of the old event" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         expect(assigns(:event)['name']).to eq(@event.name)
         expect(assigns(:event)['description']).to eq(@event.description)
         expect(assigns(:event)['participant_count']).to eq(@event.participant_count)
@@ -511,16 +471,29 @@ RSpec.describe EventsController, :type => :controller do
         expect(assigns(:event)['is_private']).to eq(@event.is_private)
       end
 
+      it "creates a new Event with the event_id pointing to the original Event" do 
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+        expect(assigns(:event).event_id).to eq(@event.id)
+      end
+
+      it "makes the original Event point to the newly created Event" do 
+        get :new_event_suggestion, {:id => @event.to_param}
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+        @event.reload
+        expect(@event.event_suggestion_id).to eq(assigns(:event).id)
+      end
+
       it "assigns a newly created Event as @event" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         expect(assigns(:event)).to be_a(Event)
         expect(assigns(:event)).to be_persisted
       end
 
       it "redirects to the created event_suggestion" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+        post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         expect(response).to redirect_to(Event.last)
       end
     end
@@ -528,19 +501,19 @@ RSpec.describe EventsController, :type => :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved Event as @event" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session
-        expect(assigns(:event)).to be_a_new(Event)
+        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session
+        expect(assigns(:event)).to be_a(Event)
       end
 
       it "original event_id is still saved in session" do 
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session
-        expect(assigns(:original_event_id)).to eq(@event.id)
+        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session
+        expect(assigns(:original_event_id).to_i).to eq(@event.id)
       end  
      
       it "re-renders the 'new' template" do
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session        
+        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session        
         expect(response).to render_template("event_suggestions/new")
       end
     end
@@ -612,11 +585,19 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
-  describe "GET approve_event_suggestion" do 
+  describe "GET approve_event_suggestion" do
+    before(:all) do 
+      DatabaseCleaner.clean
+      DatabaseCleaner.start
+      FactoryGirl.create(:room1)
+      FactoryGirl.create(:room2)
+      FactoryGirl.create(:event)
+    end
+
     it "approves the given event suggestion" do 
       event_suggestion = Event.create! valid_attributes
       get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
       get :approve_event_suggestion, {:id => event_suggestion.to_param}
       expect(assigns(:event).status).to eq('pending')
     end
@@ -624,29 +605,29 @@ RSpec.describe EventsController, :type => :controller do
     it "redirects to events_path" do
       event_suggestion = Event.create! valid_attributes
       get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
+      post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
       get :approve_event_suggestion, {:id => event_suggestion.to_param}
       expect(response).to redirect_to(events_path)
     end
   end
 
-  describe "GET decline_event_suggestion" do 
-    it "approves the given event suggestion" do 
-      event_suggestion = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
-      get :decline_event_suggestion, {:id => event_suggestion.to_param}
-      expect(assigns(:event).status).to eq('declined')
-    end
+  # describe "GET decline_event_suggestion" do  TO BE IMPLEMENTED !!!
+  #   it "approves the given event suggestion" do 
+  #     event_suggestion = Event.create! valid_attributes
+  #     get :new_event_suggestion, {:id => event_suggestion.to_param}
+  #     post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+  #     get :decline_event_suggestion, {:id => event_suggestion.to_param}
+  #     expect(assigns(:event).status).to eq('declined')
+  #   end
 
-    it "redirects to events_path" do
-      event_suggestion = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => attributes_for(:valid_attributes_for_event_suggestion)}, valid_session
-      get :decline_event_suggestion, {:id => event_suggestion.to_param}
-      expect(response).to redirect_to(events_path)
-    end
-  end
+  #   it "redirects to events_path" do
+  #     event_suggestion = Event.create! valid_attributes
+  #     get :new_event_suggestion, {:id => event_suggestion.to_param}
+  #     post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+  #     get :decline_event_suggestion, {:id => event_suggestion.to_param}
+  #     expect(response).to redirect_to(events_path)
+  #   end
+  # end
 
   describe "GET decline" do 
     it "declines the given event" do
@@ -680,10 +661,10 @@ RSpec.describe EventsController, :type => :controller do
   describe "If conflicting events" do 
     before(:all) do
       DatabaseCleaner.clean
-      DatabaseCleaner.start 
-      Room.create! name: 'HS1'
-      Room.create! name: 'HS2'
-      Event.create! attributes_for(:scheduledEvent)
+      DatabaseCleaner.start
+      FactoryGirl.create(:room1)
+      FactoryGirl.create(:room2)
+      FactoryGirl.create(:scheduledEvent)
     end
 
     after(:all) do 
@@ -715,7 +696,7 @@ RSpec.describe EventsController, :type => :controller do
 
       describe "and if the conflicting event" do 
         it "takes place on one day in one room, the correct error message gets returned" do 
-          event = Event.create! attributes_for(:event_on_one_day_with_one_room)
+          event = FactoryGirl.create :event_on_one_day_with_one_room
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
           patch :check_vacancy, event: conflicting_event, format: :json
@@ -725,7 +706,7 @@ RSpec.describe EventsController, :type => :controller do
         end
 
         it "takes place on multiple days in one room, the correct error message gets returned" do 
-          event = Event.create! attributes_for(:event_on_multiple_days_with_one_room)
+          event = FactoryGirl.create :event_on_multiple_days_with_one_room
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
           patch :check_vacancy, event: conflicting_event, format: :json
@@ -734,7 +715,7 @@ RSpec.describe EventsController, :type => :controller do
           expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_different_days_one_room', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
         end
         it "takes place on multiple days in mulitple rooms, the correct error message gets returned" do 
-          event = Event.create! attributes_for(:event_on_multiple_days_with_multiple_rooms)
+          event = FactoryGirl.create :event_on_multiple_days_with_multiple_rooms
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
           patch :check_vacancy, event: conflicting_event, format: :json
@@ -744,7 +725,7 @@ RSpec.describe EventsController, :type => :controller do
         end
         
         it "takes place on one day in multiple rooms, the correct error message gets returned" do 
-          event = Event.create! attributes_for(:event_on_one_day_with_multiple_rooms)
+          event = FactoryGirl.create :event_on_one_day_with_multiple_rooms
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
           patch :check_vacancy, event: conflicting_event, format: :json

@@ -4,9 +4,9 @@ FactoryGirl.define do
     f.name "Eventname"
     f.description "Eventdescription"
     f.participant_count 15
-    f.starts_at Date.today + 1
-    f.ends_at Date.today + 1
-    f.is_private true
+    f.starts_at Time.now
+    f.ends_at Time.now + 7200
+    f.is_private false
     f.user_id 122
   end
 
@@ -37,106 +37,44 @@ FactoryGirl.define do
    rooms { build_list :room, 3 }
  end 
 
-  factory :scheduledEvent, :class => Event do
-   name'Michas GB'
-   description'Coole Sache'
-   participant_count 2000
-   starts_at_date'2020-08-23'
-   ends_at_date'2020-08-23'
-   starts_at_time'17:00'
-   ends_at_time'23:59'
+  factory :scheduledEvent, parent: :event do
+   starts_at_date (Time.now).strftime("%Y-%m-%d")
+   ends_at_date (Time.now + 7200).strftime("%Y-%m-%d")    # + 2h
+   starts_at_time (Time.now).strftime("%H:%M")
+   ends_at_time (Time.now + 7200).strftime("%H:%M")
    room_ids ['1'] 
+   is_private false
   end
 
-  factory :event_on_multiple_days_with_multiple_rooms, :class => Event do 
-   name 'Michas GB'
-   description 'Coole Sache'
-   participant_count 2000
-   starts_at_date '2020-08-23'
-   ends_at_date '2020-08-24'
-   starts_at_time '17:00'
-   ends_at_time '23:59'
+  factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do 
+   ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
+   ends_at_time (Time.now + 86400).strftime("%H:%M")
    room_ids ['1', '2']
   end
 
-  factory :event_on_one_day_with_multiple_rooms, :class => Event do 
-   name 'Michas GB'
-   description 'Coole Sache'
-   participant_count 2000
-   starts_at_date '2020-08-23'
-   ends_at_date '2020-08-23'
-   starts_at_time '17:00'
-   ends_at_time '23:59'
+  factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do 
+   ends_at_date (Time.now).strftime("%Y-%m-%d") 
+   ends_at_time (Time.now).strftime("%H:%M")  
    room_ids ['1', '2']
   end
 
-  factory :event_on_multiple_days_with_one_room, :class => Event do 
-   name 'Michas GB'
-   description 'Coole Sache'
-   participant_count 2000
-   starts_at_date '2020-08-23'
-   ends_at_date '2020-08-24'
-   starts_at_time '17:00'
-   ends_at_time '23:59'
+  factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
+   ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
+   ends_at_time (Time.now + 86400).strftime("%H:%M")
    room_ids ['1']
   end
 
-  factory :event_on_one_day_with_one_room, :class => Event do 
-   name 'Michas GB'
-   description 'Coole Sache'
-   participant_count 2000
-   starts_at_date '2020-08-23'
-   ends_at_date '2020-08-23'
-   starts_at_time '17:00'
-   ends_at_time '23:59'
+  factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
+   ends_at_date (Time.now).strftime("%Y-%m-%d") 
+   ends_at_time (Time.now).strftime("%H:%M")
    room_ids ['1']
-  end
-
-  factory :event_valid_attributes, :class => Event do 
-    name 'Michas GB'
-    description 'Coole Sache'
-    participant_count 2000
-    starts_at_date (Date.today + 1).strftime("%Y-%m-%d")
-    ends_at_date (Date.today + 2).strftime("%Y-%m-%d")
-    starts_at_time (Date.today).strftime("%H:%M")
-    ends_at_time (Date.today).strftime("%H:%M")
-    user_id 122
-    room_ids ['1']
-  end
-
-  factory :event_invalid_attributes, :class => Event do 
-    name 'Michas GB'
-    description 'Coole Sache'
-    participant_count 2000
-    starts_at_date (Date.today - 1).strftime("%Y-%m-%d")
-    ends_at_date (Date.today - 2).strftime("%Y-%m-%d")
-    starts_at_time (Date.today).strftime("%H:%M")
-    ends_at_time (Date.today).strftime("%H:%M")
-    user_id 122
-    room_ids ['1']
   end
 
   factory :event_suggestion, :class => Event do 
-    starts_at Date.today + 1
-    ends_at Date.today + 2
+    starts_at Time.now + 1
+    ends_at Time.now + 2
     user_id 122
     rooms { build_list :room, 3 }
-  end
-
-  factory :valid_attributes_for_event_suggestion, :class => Event do
-    starts_at_date (Date.today + 1).strftime("%Y-%m-%d")
-    ends_at_date (Date.today + 2).strftime("%Y-%m-%d")
-    starts_at_time (Date.today).strftime("%H:%M")
-    ends_at_time (Date.today).strftime("%H:%M")
-    user_id 122
-  end
-
-  factory :invalid_attributes_for_event_suggestion, :class => Event do
-    starts_at_date (Date.today - 1).strftime("%Y-%m-%d")
-    ends_at_date (Date.today - 1).strftime("%Y-%m-%d")
-    starts_at_time (Date.today).strftime("%H:%M")
-    ends_at_time (Date.today).strftime("%H:%M")
-    user_id 122
   end
 
   trait :with_assignments do

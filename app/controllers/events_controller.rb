@@ -204,6 +204,9 @@ class EventsController < GenericEventsController
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
+          if params['event_id']
+            @original_event_id = params['event_id']
+          end
           format.html { render new_url}
           format.json { render json: @event.errors, status: :unprocessable_entity }
         end
