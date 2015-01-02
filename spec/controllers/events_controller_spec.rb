@@ -248,11 +248,21 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
-  describe "GET new_event_suggestion" do 
+  describe "GET new_event_suggestion" do
+    it "creates a new event suggestion and assigns it as @event_suggestion" do 
+      event = Event.create! valid_attributes
+      get :new_event_suggestion, {:id => event.to_param}, valid_session
+      event_suggestion = assigns(:event)
+      expect(event_suggestion.starts_at).to eq(event.starts_at)
+      expect(event_suggestion.ends_at).to eq(event.ends_at)
+      expect(event_suggestion.rooms).to eq(event.rooms)
+      expect(event_suggestion.user_id).to eq(event.user_id)
+    end
+
     it "stores the current event_id into the session" do 
       event = Event.create! valid_attributes
       get :new_event_suggestion, {:id => event.to_param}, valid_session
-      expect(session['event_id']).to eq(event.id)
+      expect(assigns(:original_event_id)).to eq(event.id)
     end
 
     it "renders the new template of even_suggestion" do 
@@ -525,7 +535,7 @@ RSpec.describe EventsController, :type => :controller do
       it "original event_id is still saved in session" do 
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => attributes_for(:event_invalid_attributes)}, valid_session
-        expect(session[:event_id]).to eq(@event.id)
+        expect(assigns(:original_event_id)).to eq(@event.id)
       end  
      
       it "re-renders the 'new' template" do
@@ -587,25 +597,6 @@ RSpec.describe EventsController, :type => :controller do
       end
     end
   end
-
-  describe "GET new_event_suggestion" do 
-    it "creates a new event suggestion and assigns it as @event_suggestion" do 
-      event = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event.to_param}, valid_session
-      event_suggestion = assigns(:event)
-      expect(event_suggestion.starts_at).to eq(event.starts_at)
-      expect(event_suggestion.ends_at).to eq(event.ends_at)
-      expect(event_suggestion.rooms).to eq(event.rooms)
-      expect(event_suggestion.user_id).to eq(event.user_id)
-      expect(session['event_id']).to eq(event.id)
-    end 
-    
-    it "renders the event_suggestion 'new' template" do 
-      event = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event.to_param}, valid_session
-      expect(response).to render_template("event_suggestions/new")
-    end
-  end 
 
   describe "GET approve" do 
     it "approves the given event" do

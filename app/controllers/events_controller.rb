@@ -4,11 +4,11 @@ class EventsController < GenericEventsController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
   after_filter :flash_to_headers, :only => :check_vacancy
   
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
@@ -47,12 +47,13 @@ class EventsController < GenericEventsController
   end
 
   def new_event_suggestion
-    session['event_id'] = @event.id
+    @original_event_id = @event.id
     render "event_suggestions/new"
   end
 
   def create_event_suggestion
-    params = event_suggestion_params event_params
+    params = add_original_event_params event_suggestion_params
+    params = add_reference_to_original_event params 
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
@@ -91,10 +92,15 @@ class EventsController < GenericEventsController
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
   end
 
-  def decline_event_suggestion
-    @event.update(status: 'declined')
-    redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested'))
-  end
+  # def decline_event_suggestion
+  #   @event.destroy
+  #     respond_to do |format|
+  #       format.html { redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested')) }
+  #       format.json { head :no_content }
+  #     end
+  #   # @event.update(status: 'declined')
+  #   # redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested'))
+  # end
 
   def decline
     @event.update(status: 'declined')
@@ -138,7 +144,7 @@ class EventsController < GenericEventsController
   #   @event.setDefaultTime
   # end
 
-  # GET /events/1/edit
+  # GET /events/1/edit 
   def edit
     #authorize! :edit, @event
   end
@@ -152,11 +158,14 @@ class EventsController < GenericEventsController
     create_event event_params, :new, Event.model_name.human
   end
 
-  
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
     @update_result = @event.update(event_params)
+    if @event.event_suggestion_id
+      @event.event_suggestion.destroy
+      @update_result = @event.update(:status => 'pending', :event_suggestion_id => nil)
+    end
     super
   end
 
@@ -177,6 +186,10 @@ class EventsController < GenericEventsController
       params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit, :event_template_id, :room_ids => [])
     end
 
+    def event_suggestion_params
+      params.require(:event).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :original_event_id, :room_ids => [])
+    end
+
     def create_event params, new_url, model
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
@@ -185,6 +198,9 @@ class EventsController < GenericEventsController
       create_tasks @event_template_id
       respond_to do |format|
         if @event.save
+          if params['event_id']
+            @event.event.update(:event_suggestion_id => @event.id)
+          end
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
@@ -217,14 +233,20 @@ class EventsController < GenericEventsController
       return new_task
     end          
 
-    def event_suggestion_params params
-      @event = Event.find(session[:event_id])
+    def add_original_event_params params
+      @event = Event.find(params['original_event_id'])
       params['name'] = @event.name
       params['description'] = @event.description
       params['participant_count'] = @event.participant_count
       params['is_private'] = @event.is_private
       params['is_important'] = @event.is_important
       params['status'] = 'suggested'
+      return params
+    end
+
+    def add_reference_to_original_event params
+      params['event_id'] = params['original_event_id']
+      params.delete('original_event_id')
       return params
     end
 

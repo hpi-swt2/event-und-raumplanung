@@ -232,6 +232,11 @@ de:
       approved: bestätigt
       declined: abgelehnt
       pending: In Bearbeitung
+  events: 
+    show: 
+      suggested_for: 'Vorgeschlagen für'
+    links:
+      edit_original_event: 'Ursprüngliches Event editieren'
   tasks:
     status:
       not_assigned: nicht zugewiesen

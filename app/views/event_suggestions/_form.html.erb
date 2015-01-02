@@ -47,6 +47,9 @@
     </div>
     <%= error_span(@event[:rooms]) %>
   </div>
+  <% unless @original_event_id.nil? %> 
+    <%= f.hidden_field :original_event_id, :value => @original_event_id, :readonly => true%>
+  <% end %>
   <div class="notice"></div>
   <div class="actions">
   <%= f.submit t('helpers.links.suggest'), :class => 'btn btn-primary' %>

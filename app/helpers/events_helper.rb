@@ -14,4 +14,8 @@ module EventsHelper
 		return event.rooms.map(&:name).to_sentence
 	end 
 
+	def get_name_of_original_event event 
+		return 'Event ' + event.event.name
+	end
+
 end

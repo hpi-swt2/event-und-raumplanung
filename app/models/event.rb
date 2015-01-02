@@ -25,6 +25,10 @@ class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
 
+  belongs_to :event
+
+  belongs_to :event_suggestion, :class_name => 'Event', dependent: :destroy
+  
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
