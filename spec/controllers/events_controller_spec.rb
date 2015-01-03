@@ -444,7 +444,9 @@ RSpec.describe EventsController, :type => :controller do
     before(:all) do 
       DatabaseCleaner.clean
       DatabaseCleaner.start 
-      @event = FactoryGirl.create(:event, :with_rooms)
+      FactoryGirl.create :room1
+      FactoryGirl.create :room2
+      @event = FactoryGirl.create(:event)
     end 
 
     describe "with valid params" do
@@ -505,7 +507,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(assigns(:event)).to be_a(Event)
       end
 
-      it "original event_id is still saved in session" do 
+      it "original event_id is still assigned to @original_event_id" do 
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session
         expect(assigns(:original_event_id).to_i).to eq(@event.id)
@@ -535,12 +537,10 @@ RSpec.describe EventsController, :type => :controller do
 
       it "updates the requested event" do
         event = Event.create! valid_attributes
-        put :update, {:id => event.to_param, :event => new_attributes}, valid_session
-        event.reload
-        #expect(event.name).to eq 'Michas GB 2'
-        #expect(event.description).to eq 'Keine coole Sache'
-        #expect(event.participant_count).to be 1
-
+        expect {
+          put :update, {:id => event.to_param, :event => new_attributes}, valid_session
+          event.reload
+        }.to change(event, :updated_at)
       end
 
       it "assigns the requested event as @event" do
@@ -553,6 +553,23 @@ RSpec.describe EventsController, :type => :controller do
         event = Event.create! valid_attributes
         put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(event)
+      end
+
+      describe "and the requested event has a suggestion" do 
+        it "sets the events status to pending" do 
+          event = FactoryGirl.create(:declined_event, :user_id => user.id)
+          FactoryGirl.create(:event_suggestion, :event_id => event.id)
+          put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
+          event.reload
+          expect(event.status).to eq('pending')
+        end
+
+        it "deletes the corresponding suggestion" do 
+          event = FactoryGirl.create(:declined_event, :user_id => user.id)
+          event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
+          put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
+          expect(event_suggestion).not_to exist_in_database
+        end
       end
     end
 
@@ -644,6 +661,7 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "DELETE destroy" do
+
     it "destroys the requested event" do
       event = Event.create! valid_attributes
       expect {
@@ -655,6 +673,21 @@ RSpec.describe EventsController, :type => :controller do
       event = Event.create! valid_attributes
       delete :destroy, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_url)
+    end
+
+    it "destroys the event_suggestion, but not the original event" do 
+      event = Event.create! valid_attributes
+      event_suggestion = FactoryGirl.create :event_suggestion
+      event = event_suggestion.event
+      delete :destroy, {:id => event_suggestion.to_param}
+      expect(event).to exist_in_database
+    end
+    
+    it "if the original event is destroyed, the even_suggestion is also destroyed" do #DatabaseCleaner is not correctly configured
+      event = Event.create! valid_attributes
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
+      delete :destroy, {:id => event.to_param}
+      expect(event_suggestion).not_to exist_in_database
     end
   end
 

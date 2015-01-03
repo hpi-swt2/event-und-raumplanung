@@ -44,8 +44,8 @@ class Event < ActiveRecord::Base
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
-
-
+  after_create :set_event_suggestion_id, :if => Proc.new{|event| event.event_id}
+  after_save :set_status_to_pending_and_remove_reference_to_suggestion, :if => Proc.new {|event| !new_record? and event.changed? and event.event_suggestion_id and event.status == 'declined'}
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
@@ -120,4 +120,12 @@ class Event < ActiveRecord::Base
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
 
+  def set_event_suggestion_id
+      self.event.update(:event_suggestion_id => self.id)
+  end
+
+  def set_status_to_pending_and_remove_reference_to_suggestion
+    self.event_suggestion.destroy
+    self.update(:status => 'pending', :event_suggestion_id => nil)
+  end
 end

@@ -23,7 +23,7 @@ class EventsController < GenericEventsController
     end
   end
 
-  # GET /events/1/new_event_template
+  # GET /events/:id/new_event_template
   def new_event_template
     @event_template = EventTemplate.new
     @event_template.name = @event.name
@@ -34,27 +34,16 @@ class EventsController < GenericEventsController
     render "event_templates/new"
   end
 
-  #GET /events/1/index_toggle_favorite
+  #GET /events/:id/index_toggle_favorite
   def index_toggle_favorite
     toggle_favorite
     redirect_to events_url
   end
 
-  #GET /events/1/show_toggle_favorite
+  # GET /events/:id/show_toggle_favorite
   def show_toggle_favorite
     toggle_favorite
     redirect_to event_url
-  end
-
-  def new_event_suggestion
-    @original_event_id = @event.id
-    render "event_suggestions/new"
-  end
-
-  def create_event_suggestion
-    params = add_original_event_params event_suggestion_params
-    params = add_reference_to_original_event params 
-    create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
   # GET /events
@@ -140,9 +129,12 @@ class EventsController < GenericEventsController
   def new
     super
   end 
-  #   @event = Event.new
-  #   @event.setDefaultTime
-  # end
+
+  # GET /events/:id/new_event_suggestion
+  def new_event_suggestion
+    @original_event_id = @event.id
+    render "event_suggestions/new"
+  end
 
   # GET /events/1/edit 
   def edit
@@ -158,14 +150,17 @@ class EventsController < GenericEventsController
     create_event event_params, :new, Event.model_name.human
   end
 
+  # POST /events/event_suggestion
+  def create_event_suggestion
+    params = add_original_event_params event_suggestion_params
+    params = add_reference_to_original_event params 
+    create_event params, "event_suggestions/new", 'Vorschlag'
+  end
+
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
     @update_result = @event.update(event_params)
-    if @event.event_suggestion_id
-      @event.event_suggestion.destroy
-      @update_result = @event.update(:status => 'pending', :event_suggestion_id => nil)
-    end
     super
   end
 
@@ -198,9 +193,6 @@ class EventsController < GenericEventsController
       create_tasks @event_template_id
       respond_to do |format|
         if @event.save
-          if params['event_id']
-            @event.event.update(:event_suggestion_id => @event.id)
-          end
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
@@ -218,17 +210,15 @@ class EventsController < GenericEventsController
         event_template = EventTemplate.find(event_template_id)
         event_template.tasks.collect do |original_task| 
           event_task = original_task.dup
-          event_task = create_attachments original_task, event_task
+          event_task = create_tasks_with_attachments original_task, event_task
           event_task.event_template_id = nil
           @event.tasks << event_task 
         end
-      else 
-        return
       end
       return 
     end
 
-    def create_attachments original_task, new_task
+    def create_tasks_with_attachments original_task, new_task
       original_task.attachments.collect do |original_attachments| 
         event_attachment = original_attachments.dup 
         new_task.attachments << event_attachment
