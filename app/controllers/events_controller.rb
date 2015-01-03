@@ -141,9 +141,6 @@ class EventsController < GenericEventsController
     #authorize! :edit, @event
   end
 
-  def sugguest
-  end
-
   # POST /events
   # POST /events.json
   def create

@@ -40,9 +40,9 @@
   <% end %> 
   <dd>
     <% if @favorite.empty? %>
-      <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),show_toggle_favorite_from_event_path(@event), :class => 'btn btn-xs btn-primary' %>
+      <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),show_toggle_favorite_event_path(@event), :class => 'btn btn-xs btn-primary' %>
     <% else %>
-      <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),show_toggle_favorite_from_event_path(@event), :class => 'btn btn-xs btn-danger' %>
+      <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),show_toggle_favorite_event_path(@event), :class => 'btn btn-xs btn-danger' %>
     <% end %> 
   </dd>
 </dl>
@@ -57,7 +57,7 @@
                 edit_event_path(@event), :class => 'btn btn-default' %>
 <% end %>
 <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
-                      new_event_template_from_event_path(@event), :class => 'btn btn-default' %>
+                      new_event_template_event_path(@event), :class => 'btn btn-default' %>
 <% if can? :destroy, @event %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                 event_path(@event),
