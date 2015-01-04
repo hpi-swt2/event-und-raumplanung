@@ -78,7 +78,12 @@ FactoryGirl.define do
     description 'Event Suggestion test instance'
     event_id 1
     participant_count 12
+    status 'suggested'
     rooms { build_list :room, 3 }
+  end
+
+  factory :declined_event_suggestion, parent: :event_suggestion do
+    status 'rejected_suggestion'
   end
 
   trait :with_assignments do
@@ -114,7 +119,7 @@ FactoryGirl.define do
     ends_at Date.new(2333,1,1)
     status "CIn Bearbeitung"
   end
-  
+
   factory :sortEvent3, parent: :event do
     name "M3"
     starts_at Date.new(2110,1,1)

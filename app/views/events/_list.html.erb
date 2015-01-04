@@ -28,7 +28,7 @@
         <td><%=t "event.status.#{event.status}" %></td>
         <td><%= event.user_id %></td>
         <td>
-        <% if event.status == 'suggested' %>
+        <% if event.event_id %>
           <%= render :partial => "event_suggestions/buttons", :locals => {:event => event} %>        
         <% else %>
           <%= render :partial => "buttons", :locals => {:event => event} %>

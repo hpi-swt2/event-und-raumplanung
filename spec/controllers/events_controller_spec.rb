@@ -483,7 +483,7 @@ RSpec.describe EventsController, :type => :controller do
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
         @event.reload
-        expect(@event.event_suggestion_id).to eq(assigns(:event).id)
+        expect(@event.event_suggestion.id).to eq(assigns(:event).id)
       end
 
       it "assigns a newly created Event as @event" do
@@ -555,10 +555,10 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to redirect_to(event)
       end
 
-      describe "and the requested event has a suggestion" do 
+      describe "and the requested event has a rejected suggestion" do 
         it "sets the events status to pending" do 
           event = FactoryGirl.create(:declined_event, :user_id => user.id)
-          FactoryGirl.create(:event_suggestion, :event_id => event.id)
+          FactoryGirl.create(:declined_event_suggestion, :user_id => user.id, :event_id => event.id)
           put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
           event.reload
           expect(event.status).to eq('pending')
@@ -566,7 +566,7 @@ RSpec.describe EventsController, :type => :controller do
 
         it "deletes the corresponding suggestion" do 
           event = FactoryGirl.create(:declined_event, :user_id => user.id)
-          event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
+          event_suggestion = FactoryGirl.create(:declined_event_suggestion, :user_id => user.id, :event_id => event.id)
           put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
           expect(event_suggestion).not_to exist_in_database
         end
@@ -612,39 +612,44 @@ RSpec.describe EventsController, :type => :controller do
     end
 
     it "approves the given event suggestion" do 
-      event_suggestion = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+      event = FactoryGirl.create(:declined_event, :user_id => user.id)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id, :user_id => user.id)
       get :approve_event_suggestion, {:id => event_suggestion.to_param}
       expect(assigns(:event).status).to eq('pending')
     end
 
+    it "removes the event suggestions reference to the original event" do 
+      event = FactoryGirl.create(:declined_event, :user_id => user.id)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id, :user_id => user.id)
+      get :approve_event_suggestion, {:id => event_suggestion.to_param}
+      event_suggestion.reload
+      expect(event_suggestion.event_id).to be_nil
+    end
+
     it "redirects to events_path" do
-      event_suggestion = Event.create! valid_attributes
-      get :new_event_suggestion, {:id => event_suggestion.to_param}
-      post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
+      event = FactoryGirl.create(:declined_event, :user_id => user.id)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id, :user_id => user.id)
       get :approve_event_suggestion, {:id => event_suggestion.to_param}
       expect(response).to redirect_to(events_path)
     end
   end
 
-  # describe "GET decline_event_suggestion" do  TO BE IMPLEMENTED !!!
-  #   it "approves the given event suggestion" do 
-  #     event_suggestion = Event.create! valid_attributes
-  #     get :new_event_suggestion, {:id => event_suggestion.to_param}
-  #     post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
-  #     get :decline_event_suggestion, {:id => event_suggestion.to_param}
-  #     expect(assigns(:event).status).to eq('declined')
-  #   end
+  describe "GET decline_event_suggestion" do  # TO BE IMPLEMENTED !!!
+    it "rejects the given event suggestion" do 
+      event = FactoryGirl.create(:declined_event, :user_id => user.id)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id, :user_id => user.id)
+      get :decline_event_suggestion, {:id => event_suggestion.to_param}
+      event_suggestion.reload
+      expect(event_suggestion.status).to eq('rejected_suggestion')
+    end
 
-  #   it "redirects to events_path" do
-  #     event_suggestion = Event.create! valid_attributes
-  #     get :new_event_suggestion, {:id => event_suggestion.to_param}
-  #     post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
-  #     get :decline_event_suggestion, {:id => event_suggestion.to_param}
-  #     expect(response).to redirect_to(events_path)
-  #   end
-  # end
+    it "redirects to events_path" do
+      event = FactoryGirl.create(:declined_event, :user_id => user.id)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id, :user_id => user.id)
+      get :decline_event_suggestion, {:id => event_suggestion.to_param}
+      expect(response).to redirect_to(events_path)
+    end
+  end
 
   describe "GET decline" do 
     it "declines the given event" do

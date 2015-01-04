@@ -77,23 +77,22 @@ class EventsController < GenericEventsController
   end
 
   def approve_event_suggestion
-    @event.update(status: 'pending')
+    @event.update(status: 'pending', event_id: nil)
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
   end
-
-  # def decline_event_suggestion
-  #   @event.destroy
-  #     respond_to do |format|
-  #       format.html { redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested')) }
-  #       format.json { head :no_content }
-  #     end
-  #   # @event.update(status: 'declined')
-  #   # redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested'))
-  # end
 
   def decline
     @event.update(status: 'declined')
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+  end
+
+  def decline_event_suggestion
+    if @event.update(:status => 'rejected_suggestion')
+      respond_to do |format|
+        format.html { redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested')) }
+        format.json { head :no_content }
+      end
+    end
   end
 
   def check_vacancy

@@ -88,9 +88,6 @@
       </div>
    </div>
   </div>
-  <% unless @event_suggestion_id.nil? %> 
-     <%= f.hidden_field :event_suggestion_id, :value => @event_suggestion_id, :readonly => true%>
-  <% end %>
   <% unless @event_template_id.nil? %> 
      <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
   <% end %>
