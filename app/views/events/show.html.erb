@@ -74,6 +74,6 @@
 </div>
 
 <%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
-  <%= text_area_tag "commentContent", "Content..." %>
-  <%= submit_tag "Kommentieren" %>
+  <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
+  <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
 <% end %>
