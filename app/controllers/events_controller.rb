@@ -69,7 +69,7 @@ class EventsController < ApplicationController
       @filterrific.user = nil if @filterrific.user == 0;
       @filterrific.room_ids = nil if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])
-      @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
+      @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
       session[:filterrific_events] = @filterrific.to_hash
 
 
@@ -124,7 +124,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
