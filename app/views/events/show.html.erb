@@ -69,11 +69,11 @@
 
 <div class="commentsContainer">
   <% Comments.where(event_id: @event.id).each do |comment| %>
-      <%= render :partial => 'comments_container', :locals => {:comment => comment} %>
+      <%= render :partial => 'comments_container', :locals => {comment: comment} %>
   <% end %>
 </div>
 
-<div>
-  <textarea id="commentText" rows="4" cols="80"></textarea>
-  <%= link_to 'Create Comment', controller: "events", action: "create_comment", user_id: @user, event_id: @event.id %>
-</div>
+<%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
+  <%= text_area_tag "commentContent", "Content..." %>
+  <%= submit_tag "Kommentieren" %>
+<% end %>

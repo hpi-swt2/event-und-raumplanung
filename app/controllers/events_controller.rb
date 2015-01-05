@@ -193,10 +193,10 @@ class EventsController < ApplicationController
 
 
   def create_comment
-    @comment = Comments.new(params)
+    @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to @comment, notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to events_url, notice: t('notices.successful_create', :model => Comments.model_name.human) }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
