@@ -43,8 +43,16 @@ en:
     sessions:
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."
+      sign_out: "logout"
       already_signed_out: "Signed out successfully."
+      status_missing: "Please enter a status."
+      status_changed: "Status changed!"
       admin_password: "Enter admin password."
+      status_student: "Student"
+      status_staff: "Staff"
+      email_invalid: "Wrong e-mail. Please sign in with the mail you used for the first login."
+      wrong_username: "Your name in your mail-adress does not match the one of your OpenID."
+      wrong_domain: "Please use a valid HPI mail-adress."
     unlocks:
       send_instructions: "You will receive an email with instructions for how to unlock your account in a few minutes."
       send_paranoid_instructions: "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."

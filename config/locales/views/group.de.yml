@@ -4,14 +4,18 @@ de:
   groups:
     index:
       title: Gruppenübersicht
-      all_events: Alle Gruppen
+      all_groups: Alle Gruppen
     show:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
       unassigned: entfernt
+      unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
+      enter_email: Email-Adresse eingeben
     edit:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
       unassigned: entfernt
       user_overview: Benutzerübersicht
+      user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
+      assign_user: Nutzer zuweisen
