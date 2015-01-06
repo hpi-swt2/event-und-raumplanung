@@ -226,7 +226,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to redirect_to(Event.last)
       end
 
-      it "create Activity when an Event is created" do
+      it "creates activity when an event is created" do
         event = Event.create! valid_attributes
         activity = Activity.find_by_event_id(event.id)
         expect(activity.count).to eq(1)
@@ -289,6 +289,17 @@ RSpec.describe EventsController, :type => :controller do
         event = Event.create! valid_attributes
         put :update, {:id => event.to_param, :event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(event)
+      end
+
+      it "creates activity when an event is updated" do
+        event = Event.create! valid_attributes
+        activities = Activity.find_by_event_id(event.id)
+
+        expect{
+          put :update, {:id => event.to_param, :event => new_attributes}, valid_session
+          event.reload
+          activities.reload
+        }.to change(activities, :count).by(1)
       end
     end
 
