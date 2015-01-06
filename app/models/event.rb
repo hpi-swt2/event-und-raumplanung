@@ -21,6 +21,7 @@ class Event < ActiveRecord::Base
   
   has_many :bookings
   has_many :tasks
+  has_many :activities
 
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
