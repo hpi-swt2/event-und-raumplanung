@@ -315,7 +315,7 @@ RSpec.describe EventsController, :type => :controller do
 
       it "creates activity when an event is updated" do
         event = Event.create! valid_attributes
-        activities = Activity.find_by_event_id(event.id)
+        activities = event.activities
 
         expect{
           put :update, {:id => event.to_param, :event => new_attributes}, valid_session
