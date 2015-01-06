@@ -1,43 +1,17 @@
 <%- model_class = Group -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:&nbsp<%=@group.name%></h1>
 </div>
-<h1><%= current_user.memberships.select{ |group_id| group_id == @group.id }.inspect %></h1>
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @group.name %></dd>
-</dl>
+
 
 <h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:identity_url) %> </th>
-      <th><%=t '.status', :default => t("helpers.status") %> </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @leaders.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td>
-              <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
-        </td>
-      </tr>
-    <% end %>
-
-    <% @members.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td>
-              <span class="label label-default"><%=t '.member', :default => t("groups.show.member") %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @leaders.count > 0 %>
+  <%= render :partial => 'leaders' %>
+<% end %>
+<% if @members.count > 0 %>
+  <%= render :partial => 'users' %>
+<% end %>
 
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

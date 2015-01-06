@@ -1,42 +1,20 @@
 <%- model_class = Group -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %>:&nbsp <%=@group.name%></h1>
 </div>
-
-<%= render :partial => 'form' %>
-
-<h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
-
-  <tbody>
-    <% @leaders.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td><span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span></td>
-        <td>
-        <% if can? :degrade_user, @group %>
-          <%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-primary btn-xs' %>
-        <% end %>
-        </td>
-      </tr>
-    <% end %>
-    <% @members.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td><span class="label label-default"><%=t '.member', :default => t("groups.show.member") %></span></td>
-        <td><%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-        <% if can? :promote_user, @group %>
-          <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<br>
+<h2><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h2>
 
 
-<% if @users.count > 0 %>
+<% if @leaders.count > 0 %>
+  <%= render :partial => 'leaders' %>
+<% end %>
+<% if @members.count > 0 %>
 	<%= render :partial => 'users' %>
 <% end %>
+
+
+<h2><%=t '.assign_user', :default => t("groups.edit.assign_user") %></h2>
 
 <%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
@@ -45,7 +23,10 @@
 
 <% end %>
 
+
+<h2><%=t '.rename', :default => t("groups.edit.rename") %></h2>
 <% if can? :update, @group %>
   <%= render :partial => 'form' %>
 <% else%>
     <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
+<% end %>

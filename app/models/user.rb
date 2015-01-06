@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
       return false
     end
   end
-
+ 
   def self.build_from_email(email)
     User.new(:email => email)
   end

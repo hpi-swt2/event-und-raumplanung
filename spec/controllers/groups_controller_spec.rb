@@ -22,7 +22,7 @@ require 'pp'
 
 RSpec.describe GroupsController, :type => :controller do
 
-  # This should return the minimal set of \pattributes required to create a valid
+  # This should return the minimal set of attributes required to create a valid
   # Group. As you add validations to Group, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
@@ -73,14 +73,6 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     before(:each, :isGroupLeader => true) do
-      # @request.env["devise.mapping"] = Devise.mappings[:adminUser]
-      # sign_in adminUser
-      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      # sign_out adminUser
-
       @request.env["devise.mapping"] = Devise.mappings[:groupLeader]
       @groupLeader = groupLeader
       sign_in @groupLeader
@@ -148,85 +140,28 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET assign_user" do
-
-      context "as normal user" do
-        it "redirects to the root path", :isAdmin => false do
-          group = Group.create! valid_attributes
-          get :assign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
-          expect(group.users).not_to include user
-          expect(user.groups).not_to include group
-          expect(group.users.count).to eq(0)
-          expect(user.groups.count).to eq(0)
-          expect(response).to redirect_to(root_path)
-        end
-      end
-
-      context "as admin user" do
-        it "assigns user to group", :isAdmin => true do
-          group = Group.create! valid_attributes
-          get :assign_user, {:id => group.to_param, :user_id => user.to_param}
-          expect(group.users.first).to eq(user)
-          expect(user.groups.first).to eq(group)
-          expect(group.users.count).to eq(1)
-          expect(user.groups.count).to eq(1)
-        end
-      end
-
-      context "as group leader" do
-        it "assigns user to group", :isGroupLeader => true do
-          thatgroup = @groupLeader.groups.last
-          expect {
-            get :assign_user, {:id => thatgroup.id, :user_id => user.to_param}
-          }.to change(thatgroup.users, :count).by(1)
-          expect(thatgroup.users.include? user)
-          expect(user.groups.first).to eq(thatgroup)
-          expect(user.groups.count).to eq(1)
-        end
-      end
-
-      it "assigns user to group as admin", :isAdmin => true do
-        group = Group.create! valid_attributes
-        # get :assign_user, {:id => group.to_param, :user => user.to_param}, valid_session
-        # expect(group.users.first).to eq(user)
-        # expect(user.groups.first).to eq(group)
-        # expect(group.users.count).to eq(1)
-        # expect(user.groups.count).to eq(1)
-        # trying to test this by using the page's input field
-
-        pending("Find out, why the path is correct but the content is empty..")
-
-        include Warden::Test::Helpers
-        Warden.test_mode!
-
-        login_as(adminUser, :scope => :user)
-        
-        visit edit_group_path(group)
-
-        expect(current_path).to eq(edit_group_path(group))
-
-        find("#input_email").set(user.email)
-        click_button "Submit"
-        expect(group.users.first).to eq(user)
-        expect(user.groups.first).to eq(group)
-        expect(group.users.count).to eq(1)
-        expect(user.groups.count).to eq(1)
-      end
+      # For Assigning user see capibara
     end
 
     describe "GET unassign_user" do
+      before(:each) do 
+        @user = user
+        @group = group
+        @group.users << @user
+        @user.reload
+        @group.reload
 
+      end
       context "as normal user" do
-        it "redirects to the root path", :isAdmin => false do
-          group = Group.create! valid_attributes
-          get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
+        it "does not unassign a user and redirects to the root path", :isAdmin => false do
+          get :unassign_user, {:id => @group.to_param, :user_id => @user.to_param}, valid_session
           expect(response).to redirect_to(root_path)
+          expect(@group.users).to include(@user)
         end
       end
 
       context "as admin user" do
         it "unassigns user from group", :isAdmin => true do
-          group = Group.create! valid_attributes
-          group.users << user
           get :unassign_user, {:id => group.to_param, :user_id => user.to_param}, valid_session
           expect(group.users.count).to eq(0)
           expect(user.groups.count).to eq(0)
@@ -236,28 +171,28 @@ RSpec.describe GroupsController, :type => :controller do
         context "unassigns a normal user" do
           it "unassigns user from group", :isGroupLeader => true do
             @leaderGroup.users << user
-            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => user.to_param}
-            user.reload
+            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => @user.to_param}
+            @user.reload
             @leaderGroup.reload
-            expect(@leaderGroup.users).not_to include(user)
-            expect(user.groups).not_to include(@leaderGroup)
+            expect(@leaderGroup.users).not_to include(@user)
+            expect(@user.groups).not_to include(@leaderGroup)
           end
         end
         context "unassigns another group leader" do
-          it "does not unassign user from group", :isGroupLeader => true do
+          it "does not unassign another group leader from group", :isGroupLeader => true do
 
             # add some guy to group and make him leader
-            @leaderGroup.users << user
+            @leaderGroup.users << @user
             mem = user.memberships.last
             mem.isLeader = true
             mem.save
 
             # try to remove him as group leader. this should not work 
             # (as technically, it would imply degrading the other user)
-            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => user.to_param}
+            get :unassign_user, {:id => @leaderGroup.to_param, :user_id => @user.to_param}
             @leaderGroup.reload
 
-            expect(@leaderGroup.users.include? user)
+            expect(@leaderGroup.users).to include(@user)
             expect(user.groups).to include(@leaderGroup)
           end
         end
@@ -265,30 +200,32 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     describe "GET promote_user" do
+      before(:each) do 
+        group2.users << user2
+        group2.reload
+      end
       context "as normal user" do
         it "does not promote a user", :isAdmin => false do
-          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
           get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
           expect(user2.is_leader_of_group(group2.id)).to eq(false)
         end
       end
       context "as group leader" do
         it "does not promote a user", :isGroupLeader => true do
-          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}
           get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}
           expect(user2.is_leader_of_group(group2.id)).to eq(false)
         end
       end
       context "as admin" do
         it "does promote a user", :isAdmin => true do
-          get :assign_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
           get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
           expect(user2.is_leader_of_group(group2.id)).to eq(true)
         end
       end
     end
 
-    describe "degrade user" do
+
+    describe "GET degrade user" do
       context "as normal user" do
         it "does not degrade a user", :isAdmin => false do
           group.users << user
