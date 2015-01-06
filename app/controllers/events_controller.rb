@@ -169,8 +169,18 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-      respond_to do |format|
-      if @event.update(event_params)
+    @event.attributes = event_params
+    @activity = Activity.create
+
+    @event.activities << @activity
+
+    @activity.username = current_user.username
+    @activity.action = params[:action]
+    @activity.changed_fields = @event.changed
+    @activity.save
+
+    respond_to do |format|
+      if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
        # format.json { render :show, status: :ok, location: @event }
       
