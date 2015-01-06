@@ -4,11 +4,9 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
     #
-       user ||= User.new # guest user (not logged in)
-       # @groups = user.memberships.select{|membership| membership.isLeader ==true}
-       leader_memberships = user.memberships.select{|membership| membership.isLeader == true}
+   user ||= User.new # guest user (not logged in)
 
-       #user.id = 0
+    #   user.id = 0
     #   if user.admin?
     #     can :manage, :all
     #   else
@@ -38,10 +36,8 @@ class Ability
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-    # cann_user, :unassign_user],can [:assig Group, user.is_leader_of_group(@group.id)
-    # can [:unassign_user, :assign_user], Group, :user_id => user.id
-    if user.username == load_admin
 
+    if user.username == load_admin
         can :manage, Group
         can :manage, Room
         can :manage, Equipment

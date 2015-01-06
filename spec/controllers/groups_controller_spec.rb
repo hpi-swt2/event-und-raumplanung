@@ -22,7 +22,7 @@ require 'pp'
 
 RSpec.describe GroupsController, :type => :controller do
 
-  # This should return the minimal set of \pattributes required to create a valid
+  # This should return the minimal set of attributes required to create a valid
   # Group. As you add validations to Group, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
@@ -73,14 +73,6 @@ RSpec.describe GroupsController, :type => :controller do
     end
 
     before(:each, :isGroupLeader => true) do
-      # @request.env["devise.mapping"] = Devise.mappings[:adminUser]
-      # sign_in adminUser
-      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader.to_param}, valid_session
-      # get :assign_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      # get :promote_user, {:id => group2.to_param, :user_id => groupLeader2.to_param}, valid_session
-      # sign_out adminUser
-
       @request.env["devise.mapping"] = Devise.mappings[:groupLeader]
       @groupLeader = groupLeader
       sign_in @groupLeader

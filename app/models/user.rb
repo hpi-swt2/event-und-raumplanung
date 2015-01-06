@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 
   has_many :memberships
   has_many :groups, through: :memberships
-
+  has_many :favorites
 
 
   def is_member_of_group (groupID)
@@ -26,38 +26,7 @@ class User < ActiveRecord::Base
     end
   end
     
-  has_many :favorites
-
-# <<<<<<< HEAD
-#   def self.build_from_identity_url(identity_url)
-
-#     # to-do: find a sophisticated way to set the correct email right here
-#     User.new(:identity_url => identity_url, :email => '')
-
-#   end
-
-#   def self.openid_required_fields
-#     ["http://axschema.org/contact/email"]
-#   end 
-
-#   def openid_fields=(fields)
-#     logger.info "OPENID FIELDS: #{fields.inspect}"
-#     fields.each do |key, value|
-#       # Some AX providers can return multiple values per key
-#       if value.is_a? Array
-#         value = value.first
-#       end
-    
-#       case key.to_s
-#         when "http://axschema.org/contact/email"
-#           self.email = value
-#         else
-#           logger.error "Unknown OpenID field: #{key}"
-#       end
-#     end
-
   def self.build_from_email(email)
     User.new(:email => email)
-
   end
 end
