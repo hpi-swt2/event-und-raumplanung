@@ -225,6 +225,13 @@ RSpec.describe EventsController, :type => :controller do
         post :create, {:event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(Event.last)
       end
+
+      it "create Activity when an Event is created" do
+        event = Event.create! valid_attributes
+        activity = Activity.find_by_event_id(event.id)
+        expect(activity.count).to eq(1)
+        expect(activity.description).to eq("A valid message")
+      end
     end
 
     describe "with invalid dates" do
