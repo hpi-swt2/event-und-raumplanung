@@ -24,7 +24,7 @@
     <tbody>
       <% @events.each do |event| %>
           <td>          
-            <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+            <%= User.where(:id => event.user_id).pluck(:identity_url).first.to_s.split('/').last + ' ' + t('.requests') %>
             <br>
           	<%= link_to event.name, event_path(event) %> -
           	<%= event.description %>
