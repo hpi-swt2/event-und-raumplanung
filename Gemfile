@@ -30,6 +30,7 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -85,6 +86,8 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'fullcalendar-rails', '~> 2.0.2.0'
+gem 'momentjs-rails'
 gem 'filterrific'
 
 gem 'will_paginate'
@@ -99,6 +102,11 @@ gem 'ice_cube'
 # This gem adds selectors and helpers for working with recurring schedules in a Rails app.
 # It uses ice_cube recurring scheduling gem, see: https://github.com/GetJobber/recurring_select
 gem 'recurring_select'
+
+gem 'ranked-model'
+gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
+
+gem 'jquery-turbolinks'
 
 # creating navigations (with multiple levels)
 # see: https://github.com/codeplant/simple-navigation
@@ -121,5 +129,6 @@ group :test, :development  do
 	gem 'guard-rspec'
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
+	gem 'timecop'
 end
 

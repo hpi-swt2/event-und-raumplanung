@@ -12,5 +12,11 @@
  *
  *= require_tree .
  *= require_self
+ *= require fullcalendar
+ *= require bootstrap-datetimepicker
  *= require recurring_select
  */
+
+footer {
+    margin-top: 20px;
+}

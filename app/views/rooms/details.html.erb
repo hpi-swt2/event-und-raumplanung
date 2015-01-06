@@ -5,15 +5,15 @@
 <table class="table table-column">
 	<thead>
 		<tr>
-			<th>Capacity</th>
-			<th>Equipment</th>
+			<th><%= t'.capacity' %></th>
+			<th><%= t'.equipment' %></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td><%= model_class.human_attribute_name(@room.size) %> people<br><br>
-				Tables upon request<br>
-				<%= link_to t('.request', :default => t("helpers.links.request now")),
+			<td><%= @room.size %> <%= t'.people' %><br><br>
+				<%= t'.table_information' %><br>
+				<%= link_to t('.table_request', :default => t("helpers.links.request now")),
 				@room, method: :list, :class => 'btn btn-default btn-xs' %>
 			</td>			
 			<td><table class="table table-column-group">

@@ -52,6 +52,8 @@ de:
     - :day
     - :month
     - :year
+  datetimepicker:
+    format: "%d.%m.%Y %H:%M Uhr"
   datetime:
     distance_in_words:
       about_x_hours:
@@ -122,6 +124,13 @@ de:
       too_long: ist zu lang (mehr als %{count} Zeichen)
       too_short: ist zu kurz (weniger als %{count} Zeichen)
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
+      date_in_the_past: kann nicht in der Vergangenheit liegen
+      start_date_not_before_end_date: muss vor dem Endzeitpunkt liegen
+      unsuccessful_user_assign: 'Benutzer %{email} erfolgreich der Gruppe hinzugefügt'
+      unsuccessful_user_unassign: 'Benutzer %{email} kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist.'
+      unsuccessful_promotion: 'Benutzer %{email} ist kein Mitglied der Gruppe'
+      unsuccessful_degradation: 'Benutzer %{email} ist kein Mitglied der Gruppe'
+
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
       header:
@@ -134,6 +143,12 @@ de:
       create: ! '%{model} erstellen'
       submit: ! '%{model} speichern'
       update: ! '%{model} aktualisieren'
+    links:
+      suggest: ! 'Alternative vorschlagen'
+      decline: ! 'Ablehnen'
+      approve: ! 'Akzeptieren'
+    titles:
+      suggest: 'Alternative vorschlagen'
   number:
     currency:
       format:
@@ -197,10 +212,22 @@ de:
       long: ! '%A, %d. %B %Y, %H:%M Uhr'
       short: ! '%d. %B, %H:%M Uhr'
     pm: nachmittags
+    starts_at: Startzeitpunkt
+    ends_at: Endzeitpunkt
   notices:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
+    successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
+    successful_user_assign: 'Benutzer %{email} erfolgreich der Gruppe hinzugefügt'
+    successful_user_unassign: 'Benutzer %{email} erfolgreich aus Gruppe entfernt'
+    successful_promotion: 'Benutzer %{email} erfolgreich zum Gruppenleiter ernannt'
+    successful_degradation: 'Dem Benutzer %{email} wurde erfolgreich die Gruppenleiter entzogen'
+  tasks:
+    
+  alert:
+    successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
+    conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
   tasks:
     status:
       not_assigned: nicht zugewiesen

@@ -20,14 +20,3 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
-  tasks:
-    status:
-      not_assigned: not assigned
-      pending: pending
-      accepted: accepted
-      declined: declined
-    user:
-      none: None
-    attachments:
-      none: None
