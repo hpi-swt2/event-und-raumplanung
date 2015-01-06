@@ -131,10 +131,16 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.datetime "updated_at"
   end
 
-  create_table "groups_users", id: false, force: true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
+  create_table "memberships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "isLeader",   default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"
