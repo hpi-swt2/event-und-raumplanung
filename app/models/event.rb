@@ -107,7 +107,7 @@ class Event < ActiveRecord::Base
   }
 
   scope :not_approved, lambda {
-    where("approved is NULL OR approved = TRUE")
+    where("approved is NULL OR approved = ?", true)
   }
 
   scope :overlapping, lambda { |start, ende|
