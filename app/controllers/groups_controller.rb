@@ -2,8 +2,10 @@ class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability]
   before_action :set_room, only: [:assign_room ,:unassign_room]
-  before_action :set_user, only: [:assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability]
+  before_action :set_user, only: [:promote_user, :degrade_user, :current_ability]
   before_action :get_user_roles, only: [:show, :edit]
+  before_action :load_user_from_email, only: [:assign_user]
+  before_action :load_user_from_id, only: [:unassign_user]
   # before_action :current_ability, only: [:promote_user, :degrade_user]
 
   def index
@@ -18,7 +20,7 @@ class GroupsController < ApplicationController
   def assign_user
     authorize! :assign_user, @group
     # authorize :assign_user, Group
-    flash[:notice] = "Benutzer "+@user.identity_url+" erfolgreich der Gruppe hinzugefügt"
+    flash[:notice] = "Benutzer "+@user.email+" erfolgreich der Gruppe hinzugefügt"
     @group.users << @user
     redirect_to edit_group_path(@group)
   end
@@ -26,10 +28,10 @@ class GroupsController < ApplicationController
   def unassign_user
     authorize! :unassign_user, @group
     if @user.is_leader_of_group(@group.id) == false
-      flash[:notice] = "Benutzer "+@user.identity_url+" erfolgreich aus Gruppe entfernt"
+      flash[:notice] = "Benutzer "+@user.email+" erfolgreich aus Gruppe entfernt"
       @group.users.delete(@user)
     else
-      flash[:error] = "Benutzer "+@user.identity_url+" kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist."
+      flash[:error] = "Benutzer "+@user.email+" kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist."
     end
     redirect_to edit_group_path(@group)
   end
@@ -122,9 +124,9 @@ class GroupsController < ApplicationController
       mem = @user.memberships.select{|membership| membership.group_id == @group.id}.first
       mem.isLeader = true
       mem.save()
-      flash[:notice] = "Benutzer "+@user.identity_url+" erfolgreich zum Gruppenleiter ernannt"
+      flash[:notice] = "Benutzer "+@user.email+" erfolgreich zum Gruppenleiter ernannt"
     else
-      flash[:error] = "Benutzer "+@user.identity_url+" ist kein Mitglied der Gruppe"
+      flash[:error] = "Benutzer "+@user.email+" ist kein Mitglied der Gruppe"
     end
     redirect_to edit_group_path(@group)
   end
@@ -180,6 +182,8 @@ class GroupsController < ApplicationController
     def set_user
       @user = User.find(params[:user_id])
     end
+
+
 
     # def current_ability
       # @current_ability ||= Ability.new(current_user, @group)

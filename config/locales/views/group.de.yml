@@ -24,5 +24,8 @@ de:
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen
       back: Zurück
+      rename: Gruppe Umbenennen
       user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
       assign_user: Nutzer zuweisen
+      actions: Aktionen
+      role: Rolle

@@ -40,7 +40,7 @@ class Ability
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     # cann_user, :unassign_user],can [:assig Group, user.is_leader_of_group(@group.id)
     # can [:unassign_user, :assign_user], Group, :user_id => user.id
-    if user.identity_url == load_admin
+    if user.identity_url == load_admin or user.email == load_admin_email
 
         can :manage, Group
         can :manage, Room
@@ -54,5 +54,10 @@ class Ability
   def load_admin
     config = YAML.load_file(Rails.root.join('config', 'config.yml'))
     admin_identity = config['admin']['username']
+  end
+
+  def load_admin_email
+    config = YAML.load_file(Rails.root.join('config', 'config.yml'))
+    admin_identity = config['admin']['email']
   end
 end

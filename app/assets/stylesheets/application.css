@@ -15,3 +15,7 @@
  *= require fullcalendar
  *= require bootstrap-datetimepicker
  */
+
+footer {
+    margin-top: 20px;
+}
