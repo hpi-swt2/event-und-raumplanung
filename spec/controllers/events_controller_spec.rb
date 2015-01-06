@@ -245,7 +245,8 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to render_template("new")
       end
     end
-	describe "with invalid participant count" do
+
+    describe "with invalid participant count" do
       it "assigns a newly created but unsaved event as @event" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
@@ -256,8 +257,29 @@ RSpec.describe EventsController, :type => :controller do
         expect(response).to render_template("new")
       end
     end
+  end
 
-   end
+  describe "POST approve" do 
+    it "creates activity when an event is approved" do
+      event = Event.create! valid_attributes
+      activities = Activity.find_by_event_id(event.id)
+
+      expect{
+        post :approve, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+    end
+  end
+
+  describe "POST decline" do 
+    it "creates activity when an event is declined" do
+      event = Event.create! valid_attributes
+      activities = Activity.find_by_event_id(event.id)
+
+      expect{
+        post :decline, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+    end
+  end
 
   describe "PUT update" do
     describe "with valid params" do
@@ -297,9 +319,9 @@ RSpec.describe EventsController, :type => :controller do
 
         expect{
           put :update, {:id => event.to_param, :event => new_attributes}, valid_session
-          event.reload
-          activities.reload
         }.to change(activities, :count).by(1)
+        expect(activities.last.username).to eq(user.username)
+        expect(activities.last.action).to eq("update")
       end
     end
 
