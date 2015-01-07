@@ -8,8 +8,13 @@
   <dd><%= @equipment.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @equipment.description %></dd>
+  
   <dt><strong><%= model_class.human_attribute_name(:room_id) %>:</strong></dt>
-  <dd><%= Room.find(@equipment.room_id).name %></dd>
+  <% if @equipment.room_id? %>
+    <dd><%= Room.find(@equipment.room_id).name %></dd>
+  <% else %>
+    <dd>-</dd>
+  <% end %>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

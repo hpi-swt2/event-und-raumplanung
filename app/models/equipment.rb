@@ -2,8 +2,6 @@ class Equipment < ActiveRecord::Base
   belongs_to :room
 
   validates :name, presence: true
-  validates :description, presence: true
-  validates :room_id, presence: true
   validates :category, presence: true
   
 
@@ -16,7 +14,7 @@ class Equipment < ActiveRecord::Base
   )
   scope :equipment_name, lambda { |name|
     terms = name.downcase.split(/\s+/)
-    terms = terms.map { |e| (e.gsub('*', '%') + '%').gsub(/%+/, '%')}
+    terms = terms.map { |e| ('%'+e.gsub('*', '%') + '%').gsub(/%+/, '%')}
     where( terms.map { |term| "LOWER(equipment.name) LIKE ?"}.join(' AND '), *terms.map { |e| [e]} )
   }
   scope :rooms, lambda { |room|

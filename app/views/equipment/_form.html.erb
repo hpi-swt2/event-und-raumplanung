@@ -1,5 +1,16 @@
-<%= form_for @equipment, :html => { :class => "form-horizontal equipment" } do |f| %>
+<script type="text/javascript" src="https://www.dcl.hpi.uni-potsdam.de/submit/static/multiselect/js/bootstrap-multiselect.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#equipment_room_id").multiselect({
+        enableFiltering: true,
+        maxHeight: 200 });
+    $(".multiselect ").parent().css("width","100%");
+    $(".multiselect ").css("width","100%");
+  })
+</script>
 
+<%= form_for @equipment, :html => { :class => "form-horizontal equipment" } do |f| %>
+    
     <% if @equipment.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
@@ -22,32 +33,26 @@
     </div>
     <%= error_span(@equipment[:name]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :description, :class => 'form-control' %>
-    </div>
-    <%= error_span(@equipment[:description]) %>
-  </div>
   
-  <div class="control-group">
-    <%= f.label :room_id, :class => 'control-label' %>
-    
-    <div class="row">
-      <div class="col-md-6">
+  <div class="row">
+    <div class="col-md-10">  
+      <div class="control-group">
+        <%= f.label :description, :class => 'control-label' %>
         <div class="controls">
-          <%= f.text_field( 
-            :room_id, 
-            :class => 'form-control') %>
+          <%= f.text_field :description, :class => 'form-control' %>
         </div>
+        <%= error_span(@equipment[:description]) %>
       </div>
-      <div class="col-md-6">
+    </div>
+    <div class="col-md-2">  
+      <div class="control-group">
+        <%= f.label :room_id, :class => 'control-label' %>
         <div class="controls">
           <%= f.collection_select(:room_id, Room.order(:name), :id, :name, {include_blank: '- Select Room -'}, {class: 'form-control'}) %>
         </div>
+        <%= error_span(@equipment[:room_id]) %>
       </div>
     </div>
-    <%= error_span(@equipment[:room_id]) %>
   </div>
 
   <div class="control-group">

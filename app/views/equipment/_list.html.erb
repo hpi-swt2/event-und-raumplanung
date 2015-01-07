@@ -19,8 +19,15 @@
       <tr>
         <td><%= link_to equipment.name, equipment_path(equipment) %></td>
         <td><%= trimDescription equipment.description %></td>
-        <td><%= Room.find(equipment.room_id).name %></td>
+        
+        <% if equipment.room_id? %>
+          <td><%= Room.find(equipment.room_id).name %></td>
+        <% else %>
+          <td>-</td>
+        <% end %>
+        
         <td><%= equipment.category %></td>
+
         <td>
           <% if can? :edit, equipment%>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -41,4 +48,3 @@
   </table>
 <%= will_paginate equipment, renderer: BootstrapPagination::Rails %>
 </div>
-
