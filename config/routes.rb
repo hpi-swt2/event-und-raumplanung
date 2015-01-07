@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :permissions
+  resources :permissions, :only => [:index]
 
   resources :event_suggestions
   resources :groups do

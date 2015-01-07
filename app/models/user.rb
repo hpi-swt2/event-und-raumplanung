@@ -31,4 +31,8 @@ class User < ActiveRecord::Base
   def self.build_from_email(email)
     User.new(:email => email)
   end
+
+  def all_permissions
+    return self.permissions.where(room: nil).collect {|permission| permission.category}
+  end  
 end

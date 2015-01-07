@@ -1,0 +1,15 @@
+<%= form_tag :html => { :class => "form-horizontal" } do |f| %>
+  <div class="control-group">
+    <div class="controls">
+    <%= @user.all_permissions %>
+    <%= collection_check_boxes @user, :all_permissions, @categories, :to_s, :to_s do |b| %>
+      <%= b.check_box + t("permissions." + b.text) %> <br/>
+    <% end %>
+
+
+    </div>
+  </div>
+  <br></br>
+  
+
+<% end %>

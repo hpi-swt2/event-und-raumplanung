@@ -4,6 +4,10 @@ class PermissionsController < ApplicationController
 
   def index
     @categories = Permission.categories.keys
+    @permission = Permission.new
+    @user = current_user
   end
+
+
 
 end
