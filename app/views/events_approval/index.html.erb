@@ -32,7 +32,7 @@
             (<%= event.participant_count %>)
           </td>
           <td>        
-            <%= image_tag("flag.png", :alt => "Important", :width => 25, :height => 24) unless not event.is_important %>            
+            <%= image_tag("flag.png", :alt => "Important", :width => 25, :height => 24) unless not event.is_important %>
           </td>
           <td>
           	<% event.bookings.each do |booking| %>
@@ -121,8 +121,8 @@
 </dl>
   </div>
       <div class="modal-footer">
-        <a type="button" class="btn btn-warning suggest-btn" href=""><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
-        <a type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
+        <a type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
+        <a type="button" class="btn btn-danger modal-decline-btn" href="" data-method="decline"><%= t('.decline', :default => t("helpers.links.decline"))%></a>
       </div>
     </div>
   </div>
