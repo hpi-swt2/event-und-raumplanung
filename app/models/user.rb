@@ -25,14 +25,11 @@ class User < ActiveRecord::Base
   end
 
   def unpermit(category, room = nil)
-    self.permissions.find_by(category: Permission::categories[category], room: room).destroy
+    self.permissions.find_by(category: Permission::categories[category], room: room).try(:destroy)
   end
 
   def self.build_from_email(email)
     User.new(:email => email)
   end
 
-  def all_permissions
-    return self.permissions.where(room: nil).collect {|permission| permission.category}
-  end  
 end

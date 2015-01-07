@@ -2,6 +2,9 @@ Rails.application.routes.draw do
 
   resources :permissions, :only => [:index]
 
+  post 'permissions/submit' => 'permissions#submit'
+  post 'permissions/user_permissions' => 'permissions#user_permissions'
+
   resources :event_suggestions
   resources :groups do
     member do

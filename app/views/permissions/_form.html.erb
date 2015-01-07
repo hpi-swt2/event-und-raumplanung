@@ -1,11 +1,13 @@
-<%= form_tag :html => { :class => "form-horizontal" } do |f| %>
+<%= form_tag({action: 'submit'}, {:class => "form-horizontal"}) do |f| %>
   <div class="control-group">
     <div class="controls">
-    <%= @user.all_permissions %>
-    <%= collection_check_boxes @user, :all_permissions, @categories, :to_s, :to_s do |b| %>
-      <%= b.check_box + t("permissions." + b.text) %> <br/>
-    <% end %>
+    <%= select_tag 'user', options_from_collection_for_select(@users, "id", "username") %>
 
+    <div id="categoryDiv"></div>
+
+    <%= submit_tag nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            permissions_path, :class => 'btn btn-default' %>
 
     </div>
   </div>
