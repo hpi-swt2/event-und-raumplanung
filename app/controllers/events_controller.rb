@@ -196,7 +196,7 @@ class EventsController < ApplicationController
     @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to events_url, notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
@@ -205,6 +205,16 @@ class EventsController < ApplicationController
     end
   end
   helper_method :create_comment
+
+  def delete_comment
+    @comment = Comments.find(params[:comment_id])
+    @comment.destroy
+    respond_to do |format|
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_destroy', :model => Event.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+    end
+  end
+  helper_method :delete_comment
 
   private
     # Use callbacks to share common setup or constraints between actions.

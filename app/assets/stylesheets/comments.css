@@ -19,3 +19,7 @@
 .comment {
     border-bottom: dashed 1px #d3d3d3;
 }
+
+.commentDeleteBtn {
+    margin: 10px;
+}
