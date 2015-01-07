@@ -24,7 +24,7 @@
 						title: '<%= each.name %>',
 						start: '<%= each.starts_at %>'
                     
-                    	<% unless each.approved? %>
+                    	<% unless each.is_approved %>
                         	, color: 'red'
                     	<% end %>
 					

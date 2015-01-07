@@ -54,6 +54,12 @@ describe Event do
     	expect(Event.declined.find(event)).to eq(event)
  	end
 
+ 	it ".is_approved should only return true for an approved event" do
+    	expect(@open_event.is_approved).to be false
+    	expect(@declined_event.is_approved).to be false
+    	expect(@approved_event.is_approved).to be true
+ 	end
+
 	after(:all) do
 		@open_event.destroy
 		@declined_event.destroy

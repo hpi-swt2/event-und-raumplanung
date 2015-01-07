@@ -93,5 +93,8 @@ class Event < ActiveRecord::Base
   def decline
     self.update(status: 'declined')
   end
+  def is_approved
+    return self.status == 'approved'
+  end
 
 end
