@@ -51,6 +51,24 @@ ActiveRecord::Schema.define(version: 20150107103750) do
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
+  create_table "event_suggestions", force: true do |t|
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "room_id"
+    t.integer  "user_id"
+  end
+
+  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
+  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
+
+  create_table "event_suggestions_rooms", force: true do |t|
+    t.integer "event_suggestion_id"
+    t.integer "room_id"
+  end
+
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -94,16 +112,33 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.integer "room_id"
   end
 
+  create_table "favorites", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.boolean  "is_favorite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+
   create_table "groups", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "groups_users", id: false, force: true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
+  create_table "memberships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "isLeader",   default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"
@@ -123,8 +158,10 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
+    t.integer  "event_suggestion_id"
   end
 
+  add_index "rooms", ["event_suggestion_id"], name: "index_rooms_on_event_suggestion_id", using: :btree
   add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
@@ -136,6 +173,7 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.boolean  "done",        default: false
     t.integer  "user_id"
     t.string   "status"
+    t.datetime "deadline"
     t.integer  "task_order"
   end
 
@@ -143,8 +181,10 @@ ActiveRecord::Schema.define(version: 20150107103750) do
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: ""
+    t.string   "email",                               null: false
+    t.string   "username",               default: ""
     t.string   "encrypted_password",     default: "", null: false
+    t.string   "status"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -153,12 +193,13 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.string   "identity_url",                        null: false
+    t.string   "identity_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "student"
   end
 
-  add_index "users", ["identity_url"], name: "index_users_on_identity_url", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end

@@ -1,0 +1,11 @@
+de:
+  application:
+    student: Student
+    staff: Mitarbeiter
+    navigation:
+      events: Events
+      templates: Eventvorlagen
+      rooms: Räume
+      groups: Gruppen
+      tasks: Aufgaben
+      open_requests: Offene Anfragen

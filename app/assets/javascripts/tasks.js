@@ -15,7 +15,7 @@ function handleTaskCheckboxClick()
 	{
 		var target = event.target;
 		var taskPath = $(target).attr('data-taskpath');
-        var taskUserId = $(target).attr('data-user_id');
+        var taskUserId = $(target).attr('data-user-id');
 		$.ajax({
 			url: taskPath,
 			type: 'PUT',

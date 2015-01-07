@@ -7,19 +7,25 @@
       <th class="col-sm-1"></th>
       <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
       <th class="col-sm-5"></th>
+      <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
     </tr>
   </thead>
   <tbody>
     <% tasks.each do |task| %>
       <tr data-item-id=<%= "#{task.id}" %> class="item">
-        <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user_id="<%= task.user_id %>"></td>
+        <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user-id="<%= task.user_id %>"></td>
         <td class="col-sm-1">
           <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
         </td>
-        <td class="col-sm-5"><%= link_to task.name, task_path(task, return_url: return_url) %></td>
+        <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
         <td class="<%= task.status %> text-right col-sm-5"><%= (task.user_id.blank?) ? t('tasks.status.not_assigned') : (task.user.identity_url) %></td>
+        <% if task.deadline %> 
+          <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
+        <% else %>
+          <td></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
-<%= link_to t('helpers.links.new'), new_task_path(event_id: @event_id, return_url: return_url), :class => 'btn btn-primary' %>
+<%= link_to t('helpers.links.new'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
