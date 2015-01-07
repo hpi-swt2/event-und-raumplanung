@@ -39,6 +39,7 @@ class Ability
         can :manage, Equipment
         can :manage, Event
         can :manage, RoomProperty
+        can :manage, Permission
     else
         can :read, Group
     end
@@ -67,7 +68,7 @@ class Ability
         user.has_permission("edit_properties")        
     end
 
-    can :assign_to, Room do |room|
+    can [:assign_equipment, :assign_properties], Room do |room|
         user.has_permission("assign_to_rooms", room)
     end
 

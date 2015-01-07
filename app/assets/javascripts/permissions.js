@@ -2,9 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 $(function() {
-  $('#user')
-    .change(updateUserPermissions)
-    .load(updateUserPermissions());
+  $('#user').change(updateUserPermissions);
 })
 
 function updateUserPermissions() {
@@ -14,7 +12,7 @@ function updateUserPermissions() {
     data: { user_id: $('#user').val() },
     dataType: 'html',
     success: function(data) {
-      $('#categoryDiv').html(data);
+      $('#permissionDiv').html(data);
     }
   });
 }
