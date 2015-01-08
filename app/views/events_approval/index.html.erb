@@ -24,7 +24,8 @@
     <tbody>
       <% @events.each do |event| %>
           <td>          
-            <%= User.where(:id => event.user_id).pluck(:identity_url).first.to_s.split('/').last + ' ' + t('.requests') %>
+            <%= User.where(:id => event.user_id).pluck(:identity_url).first.to_s.split('/').last %>
+            <%= t('.requests') %> <!-- this line cannot be combined with the above live as the value of the above line can be nil -->
             <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
             <br>
           	<%= link_to event.name, event_path(event) %> -
