@@ -54,7 +54,6 @@ class EventsController < GenericEventsController
     @filterrific.user = current_user_id if @filterrific.user == 1;
     @filterrific.user = nil if @filterrific.user == 0;
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
-    logger.info @event_suggestions.inspect
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
 
@@ -72,8 +71,8 @@ class EventsController < GenericEventsController
   end
 
   def approve
-    @event.update(status: 'approved')
-    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    @event.approve
+    redirect_to :back
   end
 
   def approve_event_suggestion
@@ -82,8 +81,8 @@ class EventsController < GenericEventsController
   end
 
   def decline
-    @event.update(status: 'declined')
-    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    @event.decline
+    redirect_to :back
   end
 
   def decline_event_suggestion
@@ -118,7 +117,7 @@ class EventsController < GenericEventsController
   # GET /events/1
   # GET /events/1.json
   def show
-    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
     @user = User.find(@event.user_id).identity_url unless @event.user_id.nil?
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)

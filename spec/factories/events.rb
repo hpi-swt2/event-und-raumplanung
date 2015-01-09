@@ -30,7 +30,6 @@ FactoryGirl.define do
    updated_at DateTime.new(2014, 8, 1, 22, 35, 0)
    user_id 767770
    is_private false 
-   approved nil
    status "In Bearbeitung"
    starts_at DateTime.new(2015, 8, 1, 22, 35, 0)
    ends_at DateTime.new(2016, 8, 1, 22, 35, 0)

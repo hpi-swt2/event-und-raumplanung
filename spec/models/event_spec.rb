@@ -23,15 +23,10 @@ describe Event do
     @event.is_private == true or @event.is_private == false
   end
 
-  it "SHOULD find overlapping events" do
-  	@event1 = FactoryGirl.create(:standardEvent)
-  	@event2 = FactoryGirl.create(:standardEvent)
-
-  	coliding_events = @event2.check_vacancy([@event1[:room_id]])
-
-  	@event1.destroy
-  	@event2.destroy
-  end 
+  it "should be private by default" do
+    event = build(:event)
+    expect(event.is_private).to be true
+  end
 
   it 'should return events after a certain date' do
     date = @upcoming_event.starts_at.advance(:hours => -1).strftime("%d.%m.%Y %H:%M Uhr")
@@ -113,6 +108,23 @@ describe Event do
 	  expect(results).not_to include(@approved_event, @open_event)
 	end
 
+	it ".approve should set approve status in an event" do
+    	event = build(:event)
+    	event.approve
+    	expect(Event.approved.find(event)).to eq(event)
+ 	end
+
+ 	it ".decline should set decline status in an event" do
+    	event = build(:event)
+    	event.decline
+    	expect(Event.declined.find(event)).to eq(event)
+ 	end
+
+ 	it ".is_approved should only return true for an approved event" do
+    	expect(@open_event.is_approved).to be false
+    	expect(@declined_event.is_approved).to be false
+    	expect(@approved_event.is_approved).to be true
+ 	end
 
    it "should find time overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
@@ -148,7 +160,6 @@ describe Event do
     @event1.destroy
     @event2.destroy
   end
-
 
 
   after(:all) do
