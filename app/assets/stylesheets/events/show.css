@@ -2,3 +2,20 @@
 	height: 1.5em;
 	line-height: 1.5em;
 }
+
+.event-page-header h1, .event-page-header h2, .event-page-header h3 {
+	margin: 5px;
+}
+
+.event-page-header {
+	margin: 3em 0;
+}
+
+.event-section-divider {
+	border-bottom: 2px solid #aaa;
+}
+
+.event-description {
+	font-size: 1.2em;
+	text-align: justify;
+}
