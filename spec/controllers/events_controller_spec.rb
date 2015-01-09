@@ -275,17 +275,23 @@ RSpec.describe EventsController, :type => :controller do
       expect{
         post :approve, {:id => event.to_param, :date => Date.today}
       }.to change(activities, :count).by(1)
+
+      expect(activities.last.action).to eq("approve")
+      expect(activities.last.username).to eq(user.username)
     end
   end
 
   describe "POST decline" do 
     it "creates activity when an event is declined" do
       event = Event.create! valid_attributes
-      activities = events.activities
+      activities = event.activities
 
       expect{
         post :decline, {:id => event.to_param, :date => Date.today}
       }.to change(activities, :count).by(1)
+
+      expect(activities.last.action).to eq("decline")
+      expect(activities.last.username).to eq(user.username)
     end
   end
 
