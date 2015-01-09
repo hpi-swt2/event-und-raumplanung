@@ -86,8 +86,8 @@ equipment8 = Equipment.create(name: 'Whiteboard 234', description: 'Ein fest ins
 
 #
 ## Create Users
-user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
-user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
+user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: "maxe1992", identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
+user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', username: "eri1942", identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
 
 #
 # Create Event

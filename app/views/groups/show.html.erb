@@ -1,53 +1,26 @@
 <%- model_class = Group -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:&nbsp<%=@group.name%></h1>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @group.name %></dd>
-</dl>
 
 <h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:identity_url) %></th>
-      <th><%=t '.status', :default => t("helpers.status") %></th>
-    </tr>
-  </thead>
+<% if @leaders.count > 0 %>
+  <%= render :partial => 'leaders' %>
+<% end %>
+<% if @members.count > 0 %>
+  <%= render :partial => 'users' %>
+<% end %>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.identity_url %></td>
-        <td>
-          <% if @group.users.include? user %>
-            <%=t '.assigned', :default => t("groups.show.assigned") %>
-          <% else %>
-            <%=t '.unassigned', :default => t("groups.show.unassigned") %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               groups_path, :class => 'btn btn-default'  %>
-<% if can? :update, @group %>
+<% if can? :edit, @group %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-<% if can? :update, @group %>
+<% if can? :manage_rooms, @group %>
   <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
               manage_rooms_group_path(@group), :class => 'btn btn-default' %>
-<% end %>
-<% if can? :destroy, @group %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              group_path(@group),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 <% end %>

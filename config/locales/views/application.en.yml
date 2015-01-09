@@ -2,3 +2,10 @@ en:
   application:
     student: student
     staff: staff
+    navigation:
+      events: Events
+      templates: Templates
+      rooms: Rooms
+      groups: Groups
+      tasks: Tasks
+      open_requests: Open Requests
