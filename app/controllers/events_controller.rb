@@ -271,19 +271,9 @@ class EventsController < GenericEventsController
     def get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
       start_time = I18n.l conflicting_event.starts_at, format: :time_only
       end_time = I18n.l conflicting_event.ends_at, format: :time_only
-      if conflicting_event.rooms.size > 1
-        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
-          return I18n.t('event.alert.conflict_same_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        else 
-          return I18n.t('event.alert.conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        end
-      else
-        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
-          return I18n.t('event.alert.conflict_same_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        else
-          return I18n.t('event.alert.conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        end 
-      end 
+      rooms_translation = conflicting_event.rooms.size > 1 ? 'multiple_rooms' : 'one_room'
+      days_translation = (same_day conflicting_event.starts_at, conflicting_event.ends_at )? 'same_days' : 'different_days'
+      return I18n.t('event.alert.conflict_'+ days_translation + '_' + rooms_translation, name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
     end 
 
     def same_day starts_at, ends_at
