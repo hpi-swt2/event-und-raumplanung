@@ -129,7 +129,11 @@ class EventsController < ApplicationController
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?',current_user_id,@event.id);
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
-    @tasks = @event.tasks.rank(:task_order)
+    if current_user_id == @event.user_id
+      @tasks = @event.tasks.rank(:task_order)
+    else
+      @tasks = @event.tasks.where('user_id = ?', current_user_id).rank(:task_order)
+    end
   end
 
   # GET /events/new

@@ -7,3 +7,5 @@ en:
       declined: declined
     user:
       none: None
+    decline:
+      you_already_accepted_this_task: You already accepted this task.

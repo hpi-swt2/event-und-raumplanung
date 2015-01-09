@@ -44,14 +44,16 @@ RSpec.describe TasksController, type: :controller do
   end
   
   context "when user is logged-in" do
-    let(:task) { create :task }
     let(:user) { create :user }
+    let(:event) { create :event, user_id: user.id }
+    let(:task) { create :task, event_id: event.id }
     let(:anotherUser) { create :user }
     let(:valid_attributes) {
       {
         name: "Test",
         done: false,
-        description: "description"
+        description: "description",
+        event_id: event.id
       }
     }
     let(:valid_attributes_with_user) {
@@ -59,12 +61,14 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         done: false,
         description: "description",
-        user_id: user.id
+        user_id: user.id,
+        event_id: event.id
       }
     }
     let(:invalid_attributes) {
       {
         name: '',
+        event_id: event.id 
       }
     }
 
@@ -92,7 +96,8 @@ RSpec.describe TasksController, type: :controller do
     end
   
     it "creates task" do
-      expect { post :create, task: { description: "description", name: "Test" } }.to change { Task.count }.by(1)
+      expect { post :create, task: { description: "description", name: "Test", event_id: event.id } }
+        .to change { Task.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
@@ -102,12 +107,14 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task with attachments" do
-      expect { post :create, task: { description: "description", name: "Test", attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}.to change { Attachment.count }.by(1)
+      expect { post :create, task: { description: "description", name: "Test", event_id: event.id, 
+        attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}
+        .to change { Attachment.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "creates task with uploads" do
-      expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
@@ -118,17 +125,17 @@ RSpec.describe TasksController, type: :controller do
     end
     
     it "creates task with valid deadline" do
-      expect { post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow} }.to change { Task.count }.by(1)
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow , event_id: event.id} }.to change { Task.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "creates task with invalid deadline" do
-      expect { post :create, task: { description: "description", name: "Test", deadline: Date.today} }.to change { Task.count }.by(0)
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.today, event_id: event.id} }.to change { Task.count }.by(0)
       expect(response).to render_template("new")
     end
 
     it "creates task with invalid deadline" do
-      expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday} }.to change { Task.count }.by(0)
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
       expect(response).to render_template("new")
     end
 
@@ -162,19 +169,19 @@ RSpec.describe TasksController, type: :controller do
 
     it "marks a task as done" do
       task.done = false
-      xhr :put, :update, id: task, task: { done: true }
+      xhr :put, :set_done, id: task, task: { done: true }
       expect(assigns(:task).done).to be true
     end
 
     it "marks a task as undone" do
       task.done = true
-      xhr :put, :update, id: task, task: { done: false }
+      xhr :put, :set_done, id: task, task: { done: false }
       expect(assigns(:task).done).to be false
     end
 
     it "sets the task position" do
-      firstTask = create(:task)
-      secondTask = create(:task)
+      firstTask = create(:task, event_id: event.id)
+      secondTask = create(:task, event_id: event.id)
       xhr :post, :update_task_order, task: { task_id: secondTask.id, task_order_position: 0 }
       expect(Task.rank(:task_order).first).to eq secondTask
     end
@@ -190,7 +197,7 @@ RSpec.describe TasksController, type: :controller do
     end
   
     it "destroys a task" do
-      taskToDelete = create(:task)
+      taskToDelete = create(:task, event_id: event.id)
       expect { delete :destroy, id: taskToDelete }.to change { Task.count }.by(-1)
       expect(response).to redirect_to tasks_path
     end
@@ -201,7 +208,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "doesn't send an email if no user was assigned to a new task" do
-      post :create, task: { description: "description", name: "Test" }
+      post :create, task: { description: "description", name: "Test", event_id: event.id }
       expect(ActionMailer::Base.deliveries).to be_empty
     end
 
@@ -231,6 +238,120 @@ RSpec.describe TasksController, type: :controller do
     it "should render the edit page when wrong parameters are passed to update" do
       put :update, {:id => task.to_param, :task => invalid_attributes}, valid_session
       expect(response).to render_template("edit")
+    end
+  end
+
+  describe "user authorization" do
+    let(:unprivileged_user) { create :user }
+    let(:event_owner) { create :user }
+    let(:assigned_user) { create :user }
+    let(:event) { create :event, user_id: event_owner.id }
+    let(:assigned_task) { create :assigned_task, event_id: event.id, user_id: assigned_user.id }
+    let!(:task) { create :task, event_id: event.id }
+
+    def log_in(user)
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+    end
+
+    it "should not show the task details to the unprivileged user" do
+      log_in unprivileged_user
+      get :show, { :id => task.to_param }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not show the foreign task details to the assigned user" do
+      log_in assigned_user
+      get :show, { :id => task.to_param }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not show the task edit page to the assigned user" do
+      log_in assigned_user
+      get :edit, { :id => task.to_param }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not show the task edit page to the unprivileged user" do
+      log_in unprivileged_user
+      get :edit, { :id => task.to_param }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not update the task with the assigned user's changes" do
+      log_in assigned_user
+      expect { patch :update, id: task, task: { name: 'Another name' } }
+        .to_not change{task.name}
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the assigned user to change the task order" do
+      log_in assigned_user
+      expect { patch :update_task_order, task: { task_id: assigned_task.id, task_order_position: 999 } }
+        .to_not change{task.task_order_position}
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the unprivileged user to mark the task as done" do
+      log_in unprivileged_user
+      expect { xhr :patch, :set_done, id: task, task: { done: !task.done } }
+        .to_not change{task.done}
+      expect(response).to redirect_to root_path
+    end
+
+    it "should allow the event owner to mark the task as done" do
+      log_in event_owner
+      
+      task.done = false
+      xhr :put, :set_done, id: task, task: { done: true }
+      expect(assigns(:task).done).to be true
+    end
+
+    it "should allow the assigned user to mark the task as done" do
+      log_in assigned_user
+      
+      assigned_task.done = false
+      xhr :put, :set_done, id: assigned_task, task: { done: true }
+      expect(assigns(:task).done).to be true
+    end
+
+    it "should not allow the unprivileged user to accept or decline the task" do
+      log_in unprivileged_user
+      expect { get :accept, id: assigned_task.id }.to_not change{assigned_task.status}
+      expect { get :decline, id: assigned_task.id }.to_not change{assigned_task.status}
+    end
+
+    it "should not allow the event owner to accept or decline the task" do
+      log_in event_owner
+      expect { get :accept, id: assigned_task.id }.to_not change{assigned_task.status}
+      expect { get :decline, id: assigned_task.id }.to_not change{assigned_task.status}
+    end
+
+    it "should not allow the unprivileged user to delete the task" do
+      log_in unprivileged_user
+      expect { delete :destroy, id: task.id }.to_not change { Task.count }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the unprivileged user to create a task" do
+      log_in unprivileged_user
+      expect { post :create, task: { description: "description", name: "Test", event_id: event.id } }
+        .to_not change { Task.count }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the assigned user to create a task" do
+      log_in assigned_user
+      expect { post :create, task: { description: "description", name: "Test", event_id: event.id } }
+        .to_not change { Task.count }
+      expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the assigned user to decline the task after he accepted" do
+      log_in assigned_user
+      assigned_task.status = 'accepted'
+      expect { get :decline, id: assigned_task.id }.to_not change{assigned_task.status}
+      expect(response).to redirect_to task_path(assigned_task)
     end
   end
 end

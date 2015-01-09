@@ -13,6 +13,11 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui/sortable
+//= require jquery-ui/effect-highlight
+//= require jquery-ui/widget
+//= require jquery-ui/mouse
+//= require jquery.ui.touch-punch
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
