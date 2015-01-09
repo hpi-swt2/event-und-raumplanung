@@ -155,6 +155,10 @@ class EventsController < ApplicationController
     @event.user_id = current_user_id
     logger.info @event.inspect
 
+    @event.activities << Activity.create(:username => current_user.username, 
+                                :action => params[:action], 
+                                :changed_fields => @event.changed)
+
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
@@ -170,14 +174,10 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     @event.attributes = event_params
-    @activity = Activity.create
-
-    @event.activities << @activity
-
-    @activity.username = current_user.username
-    @activity.action = params[:action]
-    @activity.changed_fields = @event.changed
-    @activity.save
+    
+    @event.activities << Activity.create(:username => current_user.username, 
+                                :action => params[:action], 
+                                :changed_fields => @event.changed)
 
     respond_to do |format|
       if @event.save
@@ -226,7 +226,7 @@ class EventsController < ApplicationController
           favorite.last().save();
         end
       end
-  end
+    end
 
     def set_return_url
       @return_url = tasks_path
