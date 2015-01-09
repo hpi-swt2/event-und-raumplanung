@@ -3,12 +3,12 @@ include RequestHelpers
 
 RSpec.feature "Event approval" do
     background do
-	    @user = FactoryGirl.create :user, email: 'jack@daniels.com'
+	    @admin = FactoryGirl.create(:adminUser)
     end
 
     before(:each) do
-	    page.set_rack_session(:user_id => @user.id) 
-	    load Rails.root + "db/seeds.rb" 
+	    page.set_rack_session(:user_id => @admin.id) 
+	    load Rails.root + "spec/support/seeds.rb" 
     end
 
     let!(:authed_user) { create_logged_in_user }
@@ -16,37 +16,38 @@ RSpec.feature "Event approval" do
 	scenario "Approve an unprocessed Event" do
 		page.visit "/events_approval"
 		have_text("Event request processing")
-		have_text("Sommerfest")
+		have_text("Klubtreffen")
 		page.driver.options[:respect_data_method] = false
 		page.click_on("Genehmigen", :match => :first) 
-		#page.first(:link, "Approve").click
-		page.should have_content("Event has been successfully approved.")		
+		page.visit "/events/1"
+		page.should have_content("approved")
 	end
 
 	scenario "Reject an unprocessed Event" do
   		page.visit "/events_approval"
 		have_text("Event request processing")
-		have_text("Sommerfest")
+		have_text("Klubtreffen")
 		page.driver.options[:respect_data_method] = false
-		page.click_on("Ablehnen", :match => :first) 
-		#page.first(:link, "Decline").click		
-		page.should have_content("Event has been successfully rejected.")
-		puts page.body
+		page.click_on("Ablehnen", :match => :first)
+		sleep 1
+		have_text("Alternative")
+		page.find('a[class="btn btn-danger modal-decline-btn"]').click
+		page.visit "/events/1"
+		page.should have_content("declined")
 	end
-<<-DOC
+	
 	scenario "View details for Room" do
   		page.visit "/events_approval"
-		page.click_link("room", :match => :first).click
-		page.should have_content("Raum")
-		page.should have_content("Keine speziellen Eigenschaften")
+		page.click_link("A-1.1", :match => :first).click
+		page.should have_content("A-1.1")
+		page.should have_content("28")
 	end
 
 	scenario "View details for Event" do
   		page.visit "/events_approval"
-		page.first(:link, "Sommerfest").click
+		page.first(:link, "Klubtreffen").click
 		page.should have_content("Event")
-		page.should have_content("Details zur Sommerfest 2015")
+		page.should have_content("Klubtreffen des PR-Klubs")
 	end
-DOC
 end
 
