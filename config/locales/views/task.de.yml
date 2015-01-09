@@ -7,4 +7,6 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
-    assigned_to: Zugewiesen an
+    show:
+      new: Neue Task
+      no_tasks: Es gibt für dieses Event noch keine Aufgaben.

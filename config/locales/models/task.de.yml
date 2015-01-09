@@ -14,3 +14,4 @@ de:
         event: 'Event'
         status: 'Status'
         done: 'Erledigt'
+        assigned_to: 'Zugewiesen an'

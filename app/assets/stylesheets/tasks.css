@@ -46,3 +46,7 @@
 {
     display: none;
 }
+
+.no-tasks-text {
+    margin: 1em 0em 2em 3em;
+}
