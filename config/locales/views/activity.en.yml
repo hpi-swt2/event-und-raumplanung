@@ -1,0 +1,17 @@
+# ruby encoding: utf-8
+
+en:
+  activities:
+    activity_log: ""
+    create: ""
+    update: ""
+    approve: ""
+    decline: ""
+    the_task: ""
+    the_event: ""
+    on_date: ""
+    at_time: ""
+    marked: ""
+    as: ""
+    done: ""
+    undone: ""
