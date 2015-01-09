@@ -97,7 +97,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task that are marked as undone" do
-      post :create, task: { description: "description", name: "Test", done: true }
+      post :create, task: { description: "description", name: "Test" }
       expect(assigns(:task).done).to be false
     end
 
