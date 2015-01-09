@@ -3,6 +3,7 @@ class DashboardController < ApplicationController
 
 	def index
    		@events = next_five_events
+   		@requests = five_most_urgent_requests
 		get_my_tasks	
  	end
 
@@ -10,6 +11,10 @@ class DashboardController < ApplicationController
 
     def next_five_events
       return Event.where("starts_at >= '#{(Time.current.to_s(:db))}'").order('starts_at ASC').limit(5)
+    end
+
+    def five_most_urgent_requests
+    	return Event.open.order(:starts_at).limit(5)
     end
 
 	def get_my_tasks 

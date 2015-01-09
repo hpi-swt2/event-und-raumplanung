@@ -2,7 +2,9 @@ en:
   dashboard:
     title: Dashboard
     upcoming_events: Next events
+    urgent_event_suggestions: Urgent event suggestions
     no_events: No upcoming events
+    no_event_suggestions: No event requests
     my_tasks: My Tasks
     pending_tasks: Pending Tasks
     accept_tasks: Accept Tasks
