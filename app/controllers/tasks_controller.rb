@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :accept, :decline, :upload_file]
+  before_action :set_task, only: [:show, :edit, :update, :set_done, :destroy, :accept, :decline, :upload_file]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
@@ -15,7 +15,7 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
-
+    authorize! :read, @task
   end
 
   # GET /tasks/new
@@ -24,11 +24,13 @@ class TasksController < ApplicationController
     unless params[:event_id].blank?
       @task.event_id = params[:event_id] 
       @event_field_readonly = :true
+      authorize! :create, @task
     end
   end
 
   # GET /tasks/1/edit
   def edit
+    authorize! :edit, @task
   end
 
   # POST /tasks
@@ -36,6 +38,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(set_status task_params_with_attachments)
     @task.done = false
+    authorize! :create, @task
     respond_to do |format|
       if @task.save
         if @task.user
@@ -55,6 +58,8 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
+    authorize! :update, @task
+
     upload_files if params[:uploads]
     delete_files if params[:delete_uploads]
     
@@ -69,8 +74,18 @@ class TasksController < ApplicationController
     end
   end
 
+  def set_done
+    authorize! :set_done, @task
+    if @task.update(task_set_done_params)
+      respond_to do |format|
+        format.json { head :no_content }
+      end
+    end
+  end
+
   def update_task_order
     @task = Task.find(task_update_order_params[:task_id])
+    authorize! :update, @task
     @task.task_order_position = task_update_order_params[:task_order_position]
     @task.save
 
@@ -81,6 +96,7 @@ class TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
+    authorize! :destroy, @task
     @task.destroy
     respond_to do |format|
       format.html { redirect_to tasks_url, notice: t('notices.successful_destroy', :model => Task.model_name.human) }
@@ -89,6 +105,7 @@ class TasksController < ApplicationController
   end
 
   def accept
+    authorize! :accept, @task
     if @task.user_id
       @task.status = "accepted"
       @task.save
@@ -102,6 +119,7 @@ class TasksController < ApplicationController
   end
 
   def decline
+    authorize! :decline, @task
     if @task.user_id
       @task.status = "declined"
       @task.save
@@ -131,6 +149,10 @@ class TasksController < ApplicationController
 
     def task_update_order_params
       params.require(:task).permit(:task_id, :task_order_position)
+    end
+
+    def task_set_done_params
+      params.require(:task).permit(:done)
     end
 
     def event_id

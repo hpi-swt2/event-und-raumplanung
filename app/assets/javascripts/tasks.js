@@ -19,7 +19,7 @@ function handleTaskCheckboxClick()
 		$.ajax({
 			url: taskPath,
 			type: 'PUT',
-			data: {task: {done: target.checked, user_id: taskUserId}},
+			data: {task: {done: target.checked }},
 			dataType: 'json'
 		});
 	});

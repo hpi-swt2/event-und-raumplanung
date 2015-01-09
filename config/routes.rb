@@ -41,6 +41,7 @@ Rails.application.routes.draw do
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
+  put 'tasks/:id/set_done' => 'tasks#set_done', :as => :set_task_done
 
   resources :bookings
 
