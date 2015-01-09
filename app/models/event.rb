@@ -121,10 +121,10 @@ class Event < ActiveRecord::Base
   scope :not_declined, -> { where.not status: 'declined' }
   
   def approve
-    self.update(status: 'approved')
+    self.update_attribute(:status, 'approved')
   end
   def decline
-    self.update(status: 'declined')
+    self.update_attribute(:status, 'declined')
   end
   def is_approved
     return self.status == 'approved'
