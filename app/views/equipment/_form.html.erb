@@ -1,11 +1,13 @@
-<script type="text/javascript" src="https://www.dcl.hpi.uni-potsdam.de/submit/static/multiselect/js/bootstrap-multiselect.js"></script>
 <script>
   $(document).ready(function(){
-    $("#equipment_room_id").multiselect({
+    $.getScript( "https://www.dcl.hpi.uni-potsdam.de/submit/static/multiselect/js/bootstrap-multiselect.js", function() {
+      $("#equipment_room_id").multiselect({
         enableFiltering: true,
-        maxHeight: 200 });
-    $(".multiselect ").parent().css("width","100%");
-    $(".multiselect ").css("width","100%");
+        maxHeight: 250 });
+      $(".multiselect ").parent().css("width","100%");
+      $(".multiselect ").css("width","100%");
+    })
+
   })
 </script>
 
@@ -27,7 +29,7 @@
   <% end %>
 
   <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
+    <%= f.label t '.name', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
@@ -37,7 +39,7 @@
   <div class="row">
     <div class="col-md-10">  
       <div class="control-group">
-        <%= f.label :description, :class => 'control-label' %>
+        <%= f.label t '.description', :class => 'control-label' %>
         <div class="controls">
           <%= f.text_field :description, :class => 'form-control' %>
         </div>
@@ -46,7 +48,7 @@
     </div>
     <div class="col-md-2">  
       <div class="control-group">
-        <%= f.label :room_id, :class => 'control-label' %>
+        <%= f.label t '.room', :class => 'control-label' %>
         <div class="controls">
           <%= f.collection_select(:room_id, Room.order(:name), :id, :name, {include_blank: '- Select Room -'}, {class: 'form-control'}) %>
         </div>
@@ -56,7 +58,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :category, :class => 'control-label' %>
+    <%= f.label t '.category', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :category, :class => 'form-control' %>
     </div>

@@ -1,35 +1,30 @@
 de:
-  events:
+  equipment:
     index:
-      title: Eventübersicht
-      only_show_own: 'nur meine Events anzeigen'
-      sorted_by: 'Sortiert nach'
-      reset_filter: 'Filter zurücksetzen'
-      filtered_by_rooms: 'Nach Räumen filtern'
-      search: 'Suche'
-      name: 'Name'
-      description: 'Beschreibung'
-      starts_at: 'Startet'
-      ends_at: 'Endet'
-      status: 'Status'
-      user: 'Benutzer'
-      starts_after: 'Beginnt nach'
-      starts_before: 'Beginnt vor'
-      ends_after: 'Endet nach'
-      ends_before: 'Endet vor'
-      participants_gte: 'mind. Teilnehmer'
-      participants_lte: 'max. Teilnehmer'
-      advanced_search: 'Erweiterte Suche'
+      title: Equipment
+      search_name: Search for name
+      search_category: Search for category
+      search_room: Search for room
+      new: New
+    list: 
+      description: Description
+      room: Room
+      category: Category
+      action: Actions
+      new: New
+      edit: Edit
+      delete: Delete
     show:
-      id: 'ID'
-      name: 'Name'
-      description: 'Beschreibung'
-      starts_at: 'Startet'
-      ends_at: 'Endet'
-      status: 'Status'
-      user: 'Benutzer'
-      private: 'Privat'
-      rooms: 'Räume'
-      participant_count: 'Teilnehmerzahl'
-      created_at: 'Erstellt'
-      updated_at: 'Geändert'
+      description: Description
+      room: Room
+      back: Back
+      edit: Edit
+      delete: Delete
+    form:
+      name: Name
+      description: Description
+      room: Room
+      category: Category
+      cancel: Cancel
+    edit:
+      title: Edit Equipment
