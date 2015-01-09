@@ -169,13 +169,13 @@ RSpec.describe TasksController, type: :controller do
 
     it "marks a task as done" do
       task.done = false
-      xhr :put, :update, id: task, task: { done: true }
+      xhr :put, :set_done, id: task, task: { done: true }
       expect(assigns(:task).done).to be true
     end
 
     it "marks a task as undone" do
       task.done = true
-      xhr :put, :update, id: task, task: { done: false }
+      xhr :put, :set_done, id: task, task: { done: false }
       expect(assigns(:task).done).to be false
     end
 
@@ -294,9 +294,25 @@ RSpec.describe TasksController, type: :controller do
 
     it "should not allow the unprivileged user to mark the task as done" do
       log_in unprivileged_user
-      expect { patch :set_done, id: task, task: { done: !task.done } }
+      expect { xhr :patch, :set_done, id: task, task: { done: !task.done } }
         .to_not change{task.done}
       expect(response).to redirect_to root_path
+    end
+
+    it "should allow the event owner to mark the task as done" do
+      log_in event_owner
+      
+      task.done = false
+      xhr :put, :set_done, id: task, task: { done: true }
+      expect(assigns(:task).done).to be true
+    end
+
+    it "should allow the assigned user to mark the task as done" do
+      log_in assigned_user
+      
+      assigned_task.done = false
+      xhr :put, :set_done, id: assigned_task, task: { done: true }
+      expect(assigns(:task).done).to be true
     end
 
     it "should not allow the unprivileged user to accept or decline the task" do
@@ -329,6 +345,13 @@ RSpec.describe TasksController, type: :controller do
       expect { post :create, task: { description: "description", name: "Test", event_id: event.id } }
         .to_not change { Task.count }
       expect(response).to redirect_to root_path
+    end
+
+    it "should not allow the assigned user to decline the task after he accepted" do
+      log_in assigned_user
+      assigned_task.status = 'accepted'
+      expect { get :decline, id: assigned_task.id }.to_not change{assigned_task.status}
+      expect(response).to redirect_to task_path(assigned_task)
     end
   end
 end

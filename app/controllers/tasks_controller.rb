@@ -76,11 +76,8 @@ class TasksController < ApplicationController
 
   def set_done
     authorize! :set_done, @task
-    if @task.update(task_set_done_params)
-      respond_to do |format|
-        format.json { head :no_content }
-      end
-    end
+    @task.update(task_set_done_params)
+    render nothing: true
   end
 
   def update_task_order
@@ -120,9 +117,13 @@ class TasksController < ApplicationController
 
   def decline
     authorize! :decline, @task
-    if @task.user_id
-      @task.status = "declined"
-      @task.save
+    if @task.user_id 
+      if @task.status == "accepted"
+        flash[:error] = t('.you_already_accepted_this_task')
+      else
+        @task.status = "declined"
+        @task.save
+      end
     end
     redirect_to @task
   end
