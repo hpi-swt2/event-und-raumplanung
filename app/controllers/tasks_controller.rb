@@ -36,6 +36,9 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(set_status task_params_with_attachments)
     @task.done = false
+
+    create_activity(@task)
+
     respond_to do |format|
       if @task.save
         if @task.user
@@ -56,6 +59,8 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update_and_send_notification((set_status task_params), current_user)
+        create_activity(@task)
+
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -152,5 +157,16 @@ class TasksController < ApplicationController
         end
       end
       return updated_params
+    end
+
+    def create_activity(task)
+      if task.event_id
+        task_info = [task.name, task.done]
+        event = Event.find(task.event_id)
+        event.activities << Activity.create(:username => current_user.username, 
+                                            :action => params[:action],
+                                            :controller => params[:controller],
+                                            :task_info => task_info)
+      end
     end
 end
