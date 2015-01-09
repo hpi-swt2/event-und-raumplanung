@@ -46,11 +46,18 @@
       <%= error_span(@task[:deadline]) %>  
     </div>
     <div class="control-group">
-        <%= f.label :user_id, :class => 'control-label' %>
+    <% identity_collection = User.all.map{|x| [x.username, "User:#{x.id}"]} +
+                             Group.all.map{|x| [x.name, "Group:#{x.id}"]}
+    %>
+        <%= f.label :identity, :class => 'control-label' %>
         <div class="controls">
-          <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none')}, :class => 'form-control' %>
+          <%= f.select(
+            :identity, identity_collection,
+            {:include_blank => t('tasks.user.none'),
+            :selected => "#{f.object.identity_type}:#{f.object.identity_id}"},            
+            {:class => 'form-control'}) %>
         </div>
-        <%= error_span(@task[:user_id]) %>
+        <%= error_span(@task[:identity]) %>
     </div>
     <% unless @task.new_record? %>
       <div class="control-group">

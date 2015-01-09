@@ -10,8 +10,8 @@
   <dd><%= @task.description %></dd>
   <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
   <dd><%= @task.event_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><% if @task.user %><%= @task.user.identity_url  %><% else %><%= t('tasks.user.none')  %><% end %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:identity) %>:</strong></dt>
+  <dd><% if @task.identity %><%= @task.identity.name  %><% else %><%= t('tasks.user.none')  %><% end %></dd>
   <% if @task.deadline %> 
   <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
   <dd><%= @task.deadline.strftime("%d.%m.%Y") %></dd>
