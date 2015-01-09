@@ -36,11 +36,15 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
+    unless params[:task][:identity].blank?
+        identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
+    end
 
     @task = Task.new(set_status task_params_with_attachments)
-    @task.identity_id         =  identity_params[:id]
-    @task.identity_type       =  identity_params[:type]
+    unless params[:task][:identity].blank? 
+      @task.identity_id         =  identity_params[:id]
+      @task.identity_type       =  identity_params[:type]
+    end
 
     @task.done = false
     authorize! :create, @task
@@ -127,7 +131,7 @@ class TasksController < ApplicationController
 
   def decline
     authorize! :decline, @task
-    if @task.user_id 
+    if @task.identity
       if @task.status == "accepted"
         flash[:error] = t('.you_already_accepted_this_task')
       else

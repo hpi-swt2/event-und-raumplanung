@@ -4,7 +4,7 @@ RSpec.describe TasksController, type: :controller do
   describe "GET accept" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, user_id: user.id }
+    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity:'User:'+user.id.to_s }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
     
     before(:each) { sign_in user }
@@ -22,7 +22,7 @@ RSpec.describe TasksController, type: :controller do
   describe "GET decline" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, user_id: user.id }
+    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: 'User:'+user.id }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
     
     before(:each) { sign_in user }
@@ -61,7 +61,7 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         done: false,
         description: "description",
-        user_id: user.id,
+        identity: 'User:'+ user.id.to_s,
         event_id: event.id
       }
     }
@@ -156,7 +156,7 @@ RSpec.describe TasksController, type: :controller do
     end   
   
     it "updates a task" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, user_id: task.user_id, done: task.done }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, identity: task.identity_type+task.identity_id.to_s, done: task.done }
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
@@ -214,19 +214,20 @@ RSpec.describe TasksController, type: :controller do
 
     it "sends two emails if another user is assigned to task" do
       task = Task.create! valid_attributes_with_user      
-      patch :update, id: task.to_param, task: { user_id: anotherUser.id }
+      patch :update, id: task.to_param, task: { 
+        _id: anotherUser.id }
       expect(ActionMailer::Base.deliveries.count).to eq(2)
     end
 
     it "sends an email if a user is assigned to an existing task" do
       task = Task.create! valid_attributes
-      patch :update, id: task.to_param, task: { user_id: anotherUser.id }
+      patch :update, id: task.to_param, task: { identity:'User:'+anotherUser.id.to_s }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 
     it "sends an email if the assignment of an existing task is removed" do
       task = Task.create! valid_attributes_with_user
-      patch :update, id: task.to_param, task: { user_id: nil }
+      patch :update, id: task.to_param, task: { identity: nil }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 
@@ -246,7 +247,7 @@ RSpec.describe TasksController, type: :controller do
     let(:event_owner) { create :user }
     let(:assigned_user) { create :user }
     let(:event) { create :event, user_id: event_owner.id }
-    let(:assigned_task) { create :assigned_task, event_id: event.id, user_id: assigned_user.id }
+    let(:assigned_task) { create :assigned_task, event_id: event.id, identity: 'User'+assigned_user.id.to_s }
     let!(:task) { create :task, event_id: event.id }
 
     def log_in(user)
