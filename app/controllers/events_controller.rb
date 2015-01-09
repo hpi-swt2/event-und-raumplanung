@@ -7,6 +7,8 @@ class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
 
+  #respond_to :html, :js
+
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
   after_filter :flash_to_headers, :only => :check_vacancy
@@ -128,6 +130,12 @@ class EventsController < ApplicationController
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
+
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    #   format.json
+    # end
   end
 
   # GET /events/new
