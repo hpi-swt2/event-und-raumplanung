@@ -29,6 +29,8 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
+    @task_user_name = ""
+    @task_user_name = User.find(@task.user_id).username if @task.user_id
   end
 
   # POST /tasks

@@ -5,6 +5,9 @@
 
 $(function(){
 	handleTaskCheckboxClick();
+
+    autocompleteCache = {};
+    userAutocomplete();
 });
 
 $(document).on('page:load', handleTaskCheckboxClick);
@@ -23,38 +26,6 @@ function handleTaskCheckboxClick()
 			dataType: 'json'
 		});
 	});
-}
-
-function upload(taskID)
-{
-    if (taskID != "") {
-        var file_data = $("#uploads_").prop("files")[0]; // Getting the properties of file from file field
-        var form_data = new FormData(); // Creating object of FormData class
-        form_data.append("uploads", file_data) // Appending parameter named file with properties of file_field to form_data
-        form_data.append("id", taskID) // Adding extra parameters to form_data
-        $.ajax({
-            url: "/tasks/upload_file",
-            dataType: 'json',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,
-            type: 'post',
-            success: function (data) {
-                $("#list_uploads").append('<div>' +
-                    '<a class="list-group-item" style="width:85%; display: inline-block;" ' +
-                    'href="/files/' + data[data.length - 1].id + '/' + data[data.length - 1].file_file_name + '">' +
-                    data[data.length - 1].file_file_name +
-                    '</a>' +
-                    ' ' +
-                    '<a class="btn btn-danger" rel="nofollow" ' +
-                    'href="/uploads/' + data[data.length - 1].id + '" data-method="delete">' +
-                    'Löschen' +
-                    '</a>' +
-                    '</div>');
-            }
-        });
-    }
 }
 
 function addUploadField()
@@ -95,4 +66,32 @@ function removeTaskFile(target)
     var upload = $(target).parent();
     upload.children("input[type='hidden']").val("true");
     upload.hide();
+}
+
+function userAutocomplete()
+{
+    var autocomple_url = $("#task_user_id_display").data("autocomplete-url");
+    $("#task_user_id_display").autocomplete(
+    {
+        minLength: 2,
+        select: function( event, ui ) 
+        {
+            $("#task_user_id").val(ui.item.id);
+        },
+        source: function(request, response) 
+        {
+            var term = request.term;
+            if (term in autocompleteCache) 
+            {
+                response(autocompleteCache[term]);
+                return;
+            }
+ 
+            $.getJSON(autocomple_url, {search: term}, function(data, status, xhr) 
+            {
+                autocompleteCache[term] = data;
+                response(data);
+            });
+        }
+    });
 }
