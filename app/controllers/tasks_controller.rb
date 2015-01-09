@@ -37,15 +37,18 @@ class TasksController < ApplicationController
     @task = Task.new(set_status task_params_with_attachments)
     @task.done = false
     respond_to do |format|
-      if @task.save
+      if @task.save && upload_files
         if @task.user
           @task.send_notification_to_assigned_user(current_user)
         end
-        upload_files if params[:uploads]
+        #upload_files if params[:uploads]
 
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
       else
+        @upload_errors = get_upload_errors
+        delete_new_uploads
+        @task.destroy
         format.html { render :new }
         format.json { render json: @task.errors, status: :unprocessable_entity }
       end
@@ -55,14 +58,15 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
-    upload_files if params[:uploads]
     delete_files if params[:delete_uploads]
     
     respond_to do |format|
-      if @task.update_and_send_notification((set_status task_params), current_user)
+      if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
+        @upload_errors = get_upload_errors
+        delete_new_uploads
         format.html { render :edit }
         format.json { render json: @task.errors, status: :unprocessable_entity }
       end
@@ -159,10 +163,26 @@ class TasksController < ApplicationController
     end
 
     def upload_files
-      params[:uploads].each { |upload| @task.uploads.create!(:file => upload) }
+      @uploads = []
+      return true unless params[:uploads]
+      params[:uploads].each do |upload| 
+        new_upload = @task.uploads.create(:file => upload)
+        @uploads << new_upload
+      end
+      return (@uploads.any? { |u| u.errors.any? }) ? false : true
     end
 
     def delete_files
       params[:delete_uploads].each { |id, value| Upload.find(id).destroy! if value == 'true' }
+    end
+
+    def delete_new_uploads
+      @uploads.each { |upload| upload.destroy } unless @uploads.blank?
+    end
+
+    def get_upload_errors
+      errors = Hash.new
+      @uploads.each { |upload| errors[upload.file_file_name] = upload.errors if upload.errors.any? } unless @uploads.blank?
+      errors
     end
 end
