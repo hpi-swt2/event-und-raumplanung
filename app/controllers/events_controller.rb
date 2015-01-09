@@ -88,13 +88,17 @@ class EventsController < ApplicationController
 
   def approve
     @event.update(status: 'approved')
-    @event.activities << Activity.create(:username => current_user.username, :action => params[:action])
+    @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
     @event.update(status: 'declined')
-    @event.activities << Activity.create(:username => current_user.username, :action => params[:action])
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
@@ -158,8 +162,8 @@ class EventsController < ApplicationController
     logger.info @event.inspect
 
     @event.activities << Activity.create(:username => current_user.username, 
-                                :action => params[:action], 
-                                :changed_fields => @event.changed)
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => @event.changed)
 
     respond_to do |format|
       if @event.save
@@ -178,8 +182,8 @@ class EventsController < ApplicationController
     @event.attributes = event_params
     
     @event.activities << Activity.create(:username => current_user.username, 
-                                :action => params[:action], 
-                                :changed_fields => @event.changed)
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => @event.changed)
 
     respond_to do |format|
       if @event.save

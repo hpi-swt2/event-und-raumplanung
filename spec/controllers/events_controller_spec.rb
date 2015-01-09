@@ -237,6 +237,7 @@ RSpec.describe EventsController, :type => :controller do
 
         expect(event.activities.count).to eq(1)
         expect(create_event_activity.action).to eq("create")
+        expect(create_event_activity.controller).to eq("events")
         expect(create_event_activity.username).to eq(user.username)
         expect(create_event_activity.changed_fields).to eq(expected_changed_fields)
       end
@@ -277,6 +278,7 @@ RSpec.describe EventsController, :type => :controller do
       }.to change(activities, :count).by(1)
 
       expect(activities.last.action).to eq("approve")
+      expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
     end
   end
@@ -291,6 +293,7 @@ RSpec.describe EventsController, :type => :controller do
       }.to change(activities, :count).by(1)
 
       expect(activities.last.action).to eq("decline")
+      expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
     end
   end
