@@ -66,15 +66,10 @@
 			$('#calendar').fullCalendar({				
 				defaultView: 'agendaDay',
 				eventSources: [{
-				events:[<% if(@room.bookings.first != nil) %>
-				{
-					title: <%= @room.bookings.first.name %>,
-					start: <%= @room.bookings.first.start.to_s %>
-				},
-				<% end %>
+				events:[
 				{
 					title: 'Weihnachtsfeier',
-					start: '2014-12-12'
+					start: '2015-01-09'
 				},
 				{
 					title: 'Film',
@@ -95,7 +90,8 @@
 					title: 'Lunch',
 					start: '2014-12-12T12:30:00Z',
 					end: '2014-12-12T13:30:00Z'
-				}]
+				}],
+				events: [<%= @rooms.events.as_json%>]
 				
 				}]
 				
@@ -112,13 +108,6 @@
 
 </style>
 <div id='calendar'></div>
-<% @room.bookings.each do |booking| %>
-	<% if(booking.start.to_date == Date.today) %>
-		<% name=booking.name %>
-		<% startDate=booking.start.to_date %>
-		<% endDate=booking.end.to_date %>
-	<% end %>
-<% end %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),
