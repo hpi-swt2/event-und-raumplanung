@@ -7,10 +7,26 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
   validates_uniqueness_of :username
   devise :openid_authenticatable, :rememberable
-  has_and_belongs_to_many :groups
 
-  def self.build_from_identity_url(identity_url)
-    # to-do: find a sophisticated way to set the correct email right here
-    User.new(:identity_url => identity_url, :email => '')
+
+  has_many :memberships
+  has_many :groups, through: :memberships
+  has_many :favorites
+
+
+  def is_member_of_group (groupID)
+    return Group.find(groupID).users.include?(self)
+  end
+
+  def is_leader_of_group (groupID)
+    if self.is_member_of_group(groupID)
+      return self.memberships.select{|membership| membership.group_id == groupID}.first.isLeader
+    else
+      return false
+    end
+  end
+    
+  def self.build_from_email(email)
+    User.new(:email => email)
   end
 end

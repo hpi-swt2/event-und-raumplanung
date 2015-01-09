@@ -23,16 +23,17 @@
     </thead>
     <tbody>
       <% @events.each do |event| %>
-          <td>
-            <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+          <td>          
+            <%= User.where(:id => event.user_id).pluck(:identity_url).first.to_s.split('/').last %>
+            <%= t('.requests') %> <!-- this line cannot be combined with the above live as the value of the above line can be nil -->
             <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
             <br>
           	<%= link_to event.name, event_path(event) %> -
           	<%= event.description %>
             (<%= event.participant_count %>)
           </td>
-          <td>
-            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
+          <td>        
+            <%= image_tag("flag.png", :alt => "Important", :width => 25, :height => 24) unless not event.is_important %>
           </td>
           <td>
           	<% event.bookings.each do |booking| %>
@@ -47,7 +48,7 @@
           </td>
           <td>
             <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
-            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
           </td>
         </tr>
       <% end %>
@@ -121,8 +122,8 @@
 </dl>
   </div>
       <div class="modal-footer">
-        <a type="button" class="btn btn-warning suggest-btn" href=""><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
-        <a type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
+        <a type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
+        <a type="button" class="btn btn-danger modal-decline-btn" href="" data-method="decline"><%= t('.decline', :default => t("helpers.links.decline"))%></a>
       </div>
     </div>
   </div>

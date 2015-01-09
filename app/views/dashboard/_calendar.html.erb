@@ -1,0 +1,58 @@
+
+<!---  use
+            render 'calendar'
+       inside ruby tags to display the calendar on any page
+-->
+
+<% @calevents = Event.all %>
+<% @favorites = Favorite.all %>
+
+<div id="calendar"></div>
+
+<script>
+	$(document).ready(function(){
+		$("#calendar").fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			events: [
+                <% @calevents.each do |each| %>
+					
+					<% if each.user_id === current_user.id %>
+					{
+						title: '<%= each.name %>',
+						start: '<%= each.starts_at %>'
+
+                    	<% if each.is_approved %>
+                        	, color: 'green'
+                    	<% else %>
+                    		, color: 'red'
+                    	<% end %> 
+					
+					},
+					<% end %>
+                <% end %>
+
+                <% @favorites.each do |each| %>
+					
+					<% @event = Event.find(each.event_id) %>
+						<% if @event.user_id != current_user.id && each.is_favorite %>
+						{
+							title: '<%= @event.name %>',
+							start: '<%= @event.starts_at %>'
+							
+							<% if @event.is_approved %>
+		                       	, color: 'blue'
+		                    <% else %>
+		                    	, color: 'red'
+		                    <% end %> 	
+						},
+						<% end %>
+                <% end %>
+			],
+			theme: false
+		});
+	});
+</script>

@@ -13,7 +13,13 @@ de:
       ends_at: 'Endet'
       status: 'Status'
       user: 'Benutzer'
-
+      starts_after: 'Beginnt nach'
+      starts_before: 'Beginnt vor'
+      ends_after: 'Endet nach'
+      ends_before: 'Endet vor'
+      participants_gte: 'mind. Teilnehmer'
+      participants_lte: 'max. Teilnehmer'
+      advanced_search: 'Erweiterte Suche'
     show:
       id: 'ID'
       name: 'Name'

@@ -13,17 +13,15 @@ class EventsApprovalController < ApplicationController
 
   private
     def read_and_exec_params
-      if params[:date]
-        begin
-          if params[:date].is_a?(Hash)
-            @date = (params[:date][:year]+ '-' + params[:date][:month] + '-' + params[:date][:day]).to_date
-          else
-            @date = params[:date].to_date
-          end
-        rescue
+      begin
+        if params[:date].is_a?(Hash)
+          @date = (params[:date][:year]+ '-' + params[:date][:month] + '-' + params[:date][:day]).to_date
+        else
+          @date = params[:date].to_date
         end
-      end    
-      @date = Date.today unless not @date.nil? and @date.acts_like_date?
+      rescue
+      end  
+      @date = Date.today unless !@date.nil? && @date.acts_like_date?
     end
 
     def check_admin_status
