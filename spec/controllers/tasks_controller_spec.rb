@@ -175,8 +175,8 @@ RSpec.describe TasksController, type: :controller do
         end 
 
         it "redirects to the created task" do
-          post :create, { task: valid_attributes }
-          expect(response).to redirect_to(Task.last)
+          post :create, { task: valid_attributes_with_event_id }
+          expect(response).to redirect_to(Task.last.event)
         end
 
         it "creates task that are marked as undone" do
