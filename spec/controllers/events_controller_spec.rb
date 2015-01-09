@@ -228,9 +228,17 @@ RSpec.describe EventsController, :type => :controller do
       end
 
       it "creates activity when an event is created" do
-        event = Event.create! valid_attributes
-        activity = event.activities
-        expect(activity.count).to eq(1)
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        
+        event = Event.last
+        create_event_activity = event.activities.first
+        expected_changed_fields = ["name", "description", "participant_count", "starts_at", 
+                                    "ends_at", "is_private", "user_id"]
+
+        expect(event.activities.count).to eq(1)
+        expect(create_event_activity.action).to eq("create")
+        expect(create_event_activity.username).to eq(user.username)
+        expect(create_event_activity.changed_fields).to eq(expected_changed_fields)
       end
     end
 
@@ -316,12 +324,15 @@ RSpec.describe EventsController, :type => :controller do
       it "creates activity when an event is updated" do
         event = Event.create! valid_attributes
         activities = event.activities
+        expected_changed_fields = ["name", "description", "participant_count"]
 
         expect{
           put :update, {:id => event.to_param, :event => new_attributes}, valid_session
         }.to change(activities, :count).by(1)
-        expect(activities.last.username).to eq(user.username)
+
         expect(activities.last.action).to eq("update")
+        expect(activities.last.username).to eq(user.username)
+        expect(activities.last.changed_fields).to eq(expected_changed_fields)
       end
     end
 
