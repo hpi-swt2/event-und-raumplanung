@@ -11,5 +11,10 @@ class Room < ActiveRecord::Base
   def list_properties
     return self.properties.all.map{ |p| p.name }.join(', ')
   end
+  
+ # def self.events_for_today(room_id)
+	#temp = self.find(room_id).bookings
+#	temp.where(['? >= ?', temp.start.to_date, Date.today ]).as_json
+#  end
 
 end

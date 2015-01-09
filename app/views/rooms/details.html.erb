@@ -62,36 +62,12 @@
 		<!-- <% end %> -->
 	<!-- </tbody> -->
 <!-- </table> -->
+<%= @calendar%>
 <script>$(document).ready(function() {
 			$('#calendar').fullCalendar({				
 				defaultView: 'agendaDay',
 				eventSources: [{
-				events:[
-				{
-					title: 'Weihnachtsfeier',
-					start: '2015-01-09'
-				},
-				{
-					title: 'Film',
-					start: '2014-12-12T14:00:00Z',
-					end: '2014-12-12T18:00:00Z'
-				},
-				{
-					title: 'Meeting',
-					start: '2014-12-12T13:30:00Z',
-					end: '2014-12-12T15:00:00Z'
-				},
-				{
-					title: 'Harry Potter',
-					start: '2014-12-13T12:00:00Z',
-					end: '2012-12-13T14:00:00Z'
-				},
-				{
-					title: 'Lunch',
-					start: '2014-12-12T12:30:00Z',
-					end: '2014-12-12T13:30:00Z'
-				}],
-				events: [<%= @rooms.events.as_json%>]
+				events:<%= @calendar%>
 				
 				}]
 				

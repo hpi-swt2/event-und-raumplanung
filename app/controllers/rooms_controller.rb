@@ -109,6 +109,8 @@ class RoomsController < ApplicationController
   end
   
   def details
+	@calendar = Room.find(6).bookings.where(:start => Date.today).as_json
+	@calendar = Booking.events_for_today_for_room(params[:id])
 	render action: 'details'
   end
 
