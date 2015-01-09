@@ -72,7 +72,7 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
-    redirect_to :back
+    redirect_to events_approval_path
   end
 
   def approve_event_suggestion
@@ -82,7 +82,7 @@ class EventsController < GenericEventsController
 
   def decline
     @event.decline
-    redirect_to :back
+    redirect_to events_approval_path
   end
 
   def decline_event_suggestion
@@ -119,7 +119,6 @@ class EventsController < GenericEventsController
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
     @user = User.find(@event.user_id).identity_url unless @event.user_id.nil?
-    logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
   end
 

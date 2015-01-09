@@ -1,12 +1,9 @@
+# is used in Event and Event_Template
 module EventModule
   def self.included(base)
     base.class_eval do
       scope :other_to, lambda { |event_id|
         where("id <> ?",event_id) if event_id
-      }
-
-      scope :not_approved, lambda {
-      	where("approved is NULL OR approved = TRUE")
       }
 
   	  scope :overlapping, lambda { |starts, ends|
@@ -38,7 +35,7 @@ module EventModule
     return colliding_events if rooms.nil?
 
     rooms = rooms.collect{|i| i.to_i}
-    events =  Event.other_to(id).not_approved.overlapping(self.starts_at,self.ends_at)
+    events =  Event.other_to(id).not_declined.overlapping(self.starts_at,self.ends_at)
 
     return colliding_events if events.empty?
 

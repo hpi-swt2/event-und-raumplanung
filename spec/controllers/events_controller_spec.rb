@@ -591,12 +591,14 @@ RSpec.describe EventsController, :type => :controller do
   describe "GET approve" do 
     it "approves the given event" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :approve, {:id => event.to_param}
       expect(assigns(:event).status).to eq('approved')
     end
 
     it "redirects to events_approval_path" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_approval_path)
     end
@@ -654,12 +656,14 @@ RSpec.describe EventsController, :type => :controller do
   describe "GET decline" do 
     it "declines the given event" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(assigns(:event).status).to eq('declined')
     end
 
     it "redirects to events_decline_path" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(response).to redirect_to(events_approval_path)
     end
