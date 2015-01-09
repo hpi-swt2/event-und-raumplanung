@@ -88,11 +88,13 @@ class EventsController < ApplicationController
 
   def approve
     @event.update(status: 'approved')
+    @event.activities << Activity.create(:username => current_user.username, :action => params[:action])
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
   def decline
     @event.update(status: 'declined')
+    @event.activities << Activity.create(:username => current_user.username, :action => params[:action])
     redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
   end
 
