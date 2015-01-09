@@ -37,7 +37,6 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-    @task.done = false
     respond_to do |format|
       if @task.save && upload_files
         if @task.user
