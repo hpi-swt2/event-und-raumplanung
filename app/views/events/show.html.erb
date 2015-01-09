@@ -61,3 +61,13 @@
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you  sure?')) },
                 :class => 'btn btn-danger' %>
 <% end %>
+
+<h4><%= t 'activities.activity_log' %></h4>
+<ul>
+  <% @activity_messages.each do |activity_message| %>
+  <li class="activity">
+    <%= activity_message.html_safe %>
+  </li>
+<% end %>
+</ul>
+
