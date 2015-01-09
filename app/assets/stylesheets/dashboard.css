@@ -32,6 +32,11 @@
 	color: #333;
 }
 
-.hidden-link:hover,  .hidden-link:focus{
+.hidden-link:hover,  .hidden-link:focus {
 	color: #333;
+}
+
+.own-events {
+	display: block !important;
+	text-align: right !important;
 }

@@ -65,7 +65,9 @@ class EventsController < ApplicationController
       @filterrific.select_options =   {
         sorted_by: Event.options_for_sorted_by
       }
-      @filterrific.user = current_user_id if @filterrific.user == 1;
+
+      # pass parameter only_own if you want the events to be initially filtered for events for current user    
+      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
       @filterrific.user = nil if @filterrific.user == 0;
       @filterrific.room_ids = nil if @filterrific.room_ids && @filterrific.room_ids.size <=1
       @events = Event.filterrific_find(@filterrific).page(params[:page])

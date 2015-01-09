@@ -20,6 +20,10 @@ RSpec.describe DashboardController, type: :controller do
     user_id: user.id
   }}
 
+  let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+  let(:other_user) { create :user }
+  let(:past_event) { create :event, name: 'Past Event', user_id: user.id }
+
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     sign_in user
@@ -39,12 +43,9 @@ RSpec.describe DashboardController, type: :controller do
     end
   
     describe "My tasks partial" do
-      let!(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
-      let!(:other_user) { create :user }
       let!(:task) { create :assigned_task, event_id: event.id, user_id: user.id, status: 'accepted' }
       let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, user_id: other_user.id }
       let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, user_id: user.id }
-      let!(:past_event) { create :event, name: 'Past Event', user_id: user.id }
       let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, user_id: user.id, status: 'accepted' }
 
       before do
@@ -81,6 +82,28 @@ RSpec.describe DashboardController, type: :controller do
         get :index, {}, valid_session
         expect(assigns(:my_pending_events).include? event). to eq(true)
         expect(assigns(:my_pending_events).include? past_event). to eq(false)
+      end
+    end
+
+    describe "My events widget on Dashboard" do
+      let(:other_user_event) { create :event, user_id: other_user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+
+      it 'assigns max 5 upcoming events as @my_upcoming_events' do
+        6.times { |i| FactoryGirl.create(:my_upcoming_event, name: i.to_s, user_id: user.id) }
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).size).to eq(5)
+      end
+
+      it 'should only assign upcoming events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? past_event). to eq(false)
+      end
+
+      it 'should only assign my events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? other_user_event). to eq(false)
       end
     end
   end

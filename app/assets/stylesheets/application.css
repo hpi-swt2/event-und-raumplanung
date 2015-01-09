@@ -15,3 +15,50 @@
  *= require fullcalendar
  *= require bootstrap-datetimepicker
  */
+
+footer {
+    margin-top: 20px;
+}
+
+#hpi_logo {
+    display: inline-block;
+    height:32px;
+    width:32px;
+    z-index: 99999999;
+}
+
+.navbar-brand {
+    line-height: 32px;
+    padding-top: 8px;
+}
+
+a, a:hover {
+    color: #b1063a;
+}
+
+.navbar-default, .panel-heading {
+    background-color: #5a6065 !important;
+}
+
+input.task-done-checkbox {
+    color: #b1063a;
+    background-color: #b1063a;
+}
+
+.task-list-list li a {
+    color: black;
+}
+
+.navbar-nav a, .navbar-brand, .panel-heading {
+    color: whitesmoke !important;
+}
+
+.dropdown-menu {
+    background-color: #8a9095 !important;
+	color: white !important;
+}
+
+li.dropdown.open a {
+	background-color: #8a9095 !important;
+	color: white !important;
+}
