@@ -4,7 +4,7 @@ class CreateActivities < ActiveRecord::Migration
       t.string :username
       t.string :action
       t.string :controller
-      t.string :task_name
+      t.text :task_info
       t.text :changed_fields
 
       t.timestamps
