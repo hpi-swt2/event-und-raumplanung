@@ -9,10 +9,10 @@ module EventModule
       	where("approved is NULL OR approved = TRUE")
       }
 
-  	  scope :overlapping, lambda { |start, ende|
-    	where("     (:start BETWEEN starts_at AND ends_at)
-            OR  (:ende BETWEEN starts_at AND ends_at)
-            OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende})
+  	  scope :overlapping, lambda { |starts, ends|
+    	where("     (:starts BETWEEN starts_at AND ends_at)
+            OR  (:ends BETWEEN starts_at AND ends_at)
+            OR  (:starts < starts_at AND :ends > ends_at)", {starts: starts, ends: ends})
   	  }
     end
   end

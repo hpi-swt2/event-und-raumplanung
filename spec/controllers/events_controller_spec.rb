@@ -33,8 +33,8 @@ RSpec.describe EventsController, :type => :controller do
     participant_count: 2000,
     starts_at_date: (Time.now).strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
-    starts_at_time: (Time.now).strftime("%H:%M"),
-    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: true,
     user_id: user.id
     }
@@ -46,8 +46,8 @@ RSpec.describe EventsController, :type => :controller do
     participant_count: 2000,
     starts_at_date: (Time.now).strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
-    starts_at_time: (Time.now).strftime("%H:%M"),
-    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     rooms: ["1", "2"], 
     is_private: true,
     user_id: user.id
@@ -60,8 +60,8 @@ RSpec.describe EventsController, :type => :controller do
     participant_count: 2000,
     starts_at_date: (Time.now).strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
-    starts_at_time: (Time.now).strftime("%H:%M"),
-    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     rooms: ["1", "2"], 
     is_private: true,
     user_id: user.id,
@@ -85,8 +85,8 @@ RSpec.describe EventsController, :type => :controller do
     name:'Michas GB',
     starts_at_date: (Date.today - 1),
     ends_at_date: Date.today,
-    starts_at_time: Time.now.strftime("%H:%M"),
-    ends_at_time: Time.now.strftime("%H:%M"),
+    starts_at_time: Time.now.strftime("%H:%M:%S"),
+    ends_at_time: Time.now.strftime("%H:%M:%S"),
     rooms:[],
     user_id: user.id
   }
@@ -97,8 +97,8 @@ RSpec.describe EventsController, :type => :controller do
    	participant_count:-100,
     starts_at_date: Time.now.strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
-    starts_at_time: Time.now.strftime("%H:%M"),
-    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
+    starts_at_time: Time.now.strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     user_id: user.id
     }
   }
@@ -108,8 +108,8 @@ RSpec.describe EventsController, :type => :controller do
     participant_count:-100,
     starts_at_date: Time.now.strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
-    starts_at_time: Time.now.strftime("%H:%M"),
-    ends_at_time: (Time.now + 7200).strftime("%H:%M"),
+    starts_at_time: Time.now.strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     rooms: [],
     user_id: user.id
     }
@@ -120,8 +120,8 @@ RSpec.describe EventsController, :type => :controller do
     {
       starts_at_date: (Date.today - 1).strftime("%Y-%m-%d"),
       ends_at_date: (Date.today - 1).strftime("%Y-%m-%d"),
-      starts_at_time: Time.now.strftime("%H:%M"),
-      ends_at_time: Time.now.strftime("%H:%M"),
+      starts_at_time: Time.now.strftime("%H:%M:%S"),
+      ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
       original_event_id: 1
     }
@@ -131,8 +131,8 @@ RSpec.describe EventsController, :type => :controller do
     {
       starts_at_date: (Time.now + 1).strftime("%Y-%m-%d"),
       ends_at_date: (Time.now + 2).strftime("%Y-%m-%d"),
-      starts_at_time: Time.now.strftime("%H:%M"),
-      ends_at_time: Time.now.strftime("%H:%M"),
+      starts_at_time: Time.now.strftime("%H:%M:%S"),
+      ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
       original_event_id: 1
     }
@@ -142,8 +142,8 @@ RSpec.describe EventsController, :type => :controller do
     { 
       starts_at_date: (Time.now - 7200).strftime("%Y-%m-%d"),
       ends_at_date: (Time.now - 3600).strftime("%Y-%m-%d"),
-      starts_at_time: (Time.now - 7200).strftime("%H:%M"),
-      ends_at_time: (Time.now - 3600).strftime("%H:%M"),
+      starts_at_time: (Time.now - 7200).strftime("%H:%M:%S"),
+      ends_at_time: (Time.now - 3600).strftime("%H:%M:%S"),
       room_ids: ['1'], 
     }
   }
@@ -152,8 +152,8 @@ RSpec.describe EventsController, :type => :controller do
     { 
       starts_at_date: Time.now.strftime("%Y-%m-%d"),
       ends_at_date: (Time.now + 3600).strftime("%Y-%m-%d"),
-      starts_at_time: Time.now.strftime("%H:%M"),
-      ends_at_time: (Time.now + 3600).strftime("%H:%M"),
+      starts_at_time: Time.now.strftime("%H:%M:%S"),
+      ends_at_time: (Time.now + 3600).strftime("%H:%M:%S"),
       room_ids: ['1'], 
     }
   }
@@ -737,6 +737,7 @@ RSpec.describe EventsController, :type => :controller do
           event = FactoryGirl.create :event_on_one_day_with_one_room
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
+          conflicting_event = attributes_for(:event_on_one_day_with_multiple_rooms)
           patch :check_vacancy, event: conflicting_event, format: :json
           result = JSON.parse(response.body)
           expect(result[event.id.to_s]).to include('msg')
@@ -752,6 +753,7 @@ RSpec.describe EventsController, :type => :controller do
           expect(result[event.id.to_s]).to include('msg')
           expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_different_days_one_room', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
         end
+
         it "takes place on multiple days in mulitple rooms, the correct error message gets returned" do 
           event = FactoryGirl.create :event_on_multiple_days_with_multiple_rooms
           start_time = I18n.l event.starts_at, format: :time_only
@@ -766,6 +768,7 @@ RSpec.describe EventsController, :type => :controller do
           event = FactoryGirl.create :event_on_one_day_with_multiple_rooms
           start_time = I18n.l event.starts_at, format: :time_only
           end_time = I18n.l event.ends_at, format: :time_only
+          conflicting_event = attributes_for(:event_on_one_day_with_multiple_rooms)
           patch :check_vacancy, event: conflicting_event, format: :json
           result = JSON.parse(response.body)
           expect(result[event.id.to_s]).to include('msg')

@@ -40,33 +40,33 @@ FactoryGirl.define do
   factory :scheduledEvent, parent: :event do
    starts_at_date (Time.now).strftime("%Y-%m-%d")
    ends_at_date (Time.now + 7200).strftime("%Y-%m-%d")    # + 2h
-   starts_at_time (Time.now).strftime("%H:%M")
-   ends_at_time (Time.now + 7200).strftime("%H:%M")
+   starts_at_time (Time.now).strftime("%H:%M:%S")
+   ends_at_time (Time.now + 7200).strftime("%H:%M:%S")
    room_ids ['1'] 
    is_private false
   end
 
   factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
-   ends_at_time (Time.now + 86400).strftime("%H:%M")
+   ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    room_ids ['1', '2']
   end
 
   factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do 
    ends_at_date (Time.now).strftime("%Y-%m-%d") 
-   ends_at_time (Time.now).strftime("%H:%M")  
+   ends_at_time (Time.now).strftime("%H:%M:%S")  
    room_ids ['1', '2']
   end
 
   factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
-   ends_at_time (Time.now + 86400).strftime("%H:%M")
+   ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    room_ids ['1']
   end
 
   factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now).strftime("%Y-%m-%d") 
-   ends_at_time (Time.now).strftime("%H:%M")
+   ends_at_time (Time.now).strftime("%H:%M:%S")
    room_ids ['1']
   end
 
