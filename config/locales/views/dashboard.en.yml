@@ -11,3 +11,10 @@ en:
     no_taks: You currently have no tasks to do.
     no_pending_tasks: You have no pending tasks.
     calendar: Calendar
+    user: User
+    requests: requests
+    decline_event: Decline
+    approve_event: Approve
+    show_all: Show all
+    rooms: rooms
+    date_and_time: date and time

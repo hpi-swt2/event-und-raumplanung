@@ -12,13 +12,15 @@
               <tr>
                 <th><%=t '.event' %></th>
                 <th></th>
-                <th><%=t '.bookings' %></th>
+                <th></th>
+                <th><%=t 'dashboard.date_and_time' %></th>
+                <th><%=t 'dashboard.rooms' %></th>
               </tr>
             </thead>
             <tbody>
               <% @requests.each do |event| %>
                   <td>
-                    <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+                    <%= t('dashboard.user') + ' '+ event.user_id.to_s + ' ' + t('dashboard.requests') %>
                     <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
                     <br>
                     <%= link_to event.name, event_path(event) %> -
@@ -26,22 +28,23 @@
                     (<%= event.participant_count %>)
                   </td>
                   <td>
-                    <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
-                  </td>
-                  <td>
-                    <% event.bookings.each do |booking| %>
-                      <%= link_to booking.name, booking_path(booking) %>,
-                      <%= booking.description %>
-                      <br>
-                      <%= timeslot_with_date_as_string(booking) %>,
-                      <%= link_to booking.room.name, booking.room unless booking.room.nil?%>
-                      <% break unless event.bookings.last != booking %>
-                      <hr style="margin:0; padding:0;">
+                    <% if !event.check_vacancy(event.rooms.collect{|r| r.id}).empty? %>
+                      <span class="glyphicon glyphicon-flash" aria-hidden="true" style="font-size:30px"></span>
                     <% end %>
                   </td>
                   <td>
-                    <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
-                    <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+                    <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
+                  </td>
+                  <td>
+                    <span style="white-space:nowrap"><%= event.starts_at.strftime("%d.%m.%Y %H:%M") %>&nbsp;</span><%= t('dashboard.to') %>
+                    <span style="white-space:nowrap"><%= event.ends_at.strftime("%d.%m.%Y %H:%M") %></span>
+                  </td>
+                  <td>
+                    <%= event.rooms.map(&:name).to_sentence %>
+                  </td>
+                  <td>
+                    <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline_event', :default => t("helpers.links.decline"))%></button>
+                    <%= link_to t('.approve_event', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
                   </td>
                 </tr>
               <% end %>
@@ -50,5 +53,6 @@
         <% else %>
             <%= t('dashboard.no_event_requests') %>
         <% end %>
+        <%= link_to t('dashboard.show_all'), events_path, :class => 'btn btn-default' %>
     </div>
 </div>
