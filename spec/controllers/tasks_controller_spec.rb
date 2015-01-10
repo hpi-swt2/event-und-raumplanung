@@ -161,32 +161,45 @@ RSpec.describe TasksController, type: :controller do
     end
 
     describe "POST create" do 
+      before(:all) do 
+        FactoryGirl.create :room1
+        @event = FactoryGirl.create :scheduledEvent
+      end 
+
       describe "with valid params" do
+    
+
         it "creates task" do
+          params = valid_attributes
+          params['event_id'] = @event.id
           expect { 
-            post :create, { task: valid_attributes }
+            post :create, { task: params }
           }.to change(Task, :count).by(1)
         end 
         
         it "assigns a newly created event as @event" do
-          post :create, { task: valid_attributes }
+          params = valid_attributes
+          params['event_id'] = @event.id
+          post :create, { task: params }
           expect(assigns(:task)).to be_a(Task)
           expect(assigns(:task)).to be_persisted
         end 
 
-        it "redirects to the created task" do
-          post :create, { task: valid_attributes_with_event_id }
+        it "redirects to the created tasks event" do
+          params = valid_attributes
+          params['event_id'] = @event.id
+          post :create, { task: params }
           expect(response).to redirect_to(Task.last.event)
         end
 
         it "creates task that are marked as undone" do
-          post :create, task: { description: "description", name: "Test", done: true }
+          post :create, task: { description: "description", name: "Test", done: true, event_id: @event.id }
           expect(assigns(:task)).to have_attributes(:done => true)
         end
 
         it "creates task with valid deadline" do
           expect { 
-            post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow} 
+            post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow, event_id: @event.id} 
           }.to change(Task, :count).by(1)
         end
 
@@ -210,20 +223,22 @@ RSpec.describe TasksController, type: :controller do
 
           it "redirects to the newly created @task" do 
             post :create, { task: valid_attributes_with_attachement }
-            expect(response).to redirect_to(Task.last)
+            expect(response).to redirect_to(Task.last.event)
           end
         end
 
         describe "with user assigned to it" do 
           it "sends an email" do
-            post :create, { :task => valid_attributes_with_user }
+            params = valid_attributes_with_user
+            params[:event_id] = @event.id
+            post :create, { :task => params }
             expect(ActionMailer::Base.deliveries.count).to eq(1)
           end
         end 
 
         describe "without user assigned to it" do 
           it "doesn't send an email " do
-            post :create, task: { description: "description", name: "Test" }
+            post :create, task: { description: "description", name: "Test", event_id: @event.id }
             expect(ActionMailer::Base.deliveries).to be_empty
           end
         end
