@@ -1,10 +1,12 @@
 require 'rails_helper'
+require 'pry'
 
 RSpec.describe TasksController, type: :controller do
+
   describe "GET accept" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity:'User:'+user.id.to_s }
+    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
     
     before(:each) { sign_in user }
@@ -22,7 +24,7 @@ RSpec.describe TasksController, type: :controller do
   describe "GET decline" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: 'User:'+user.id }
+    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
     
     before(:each) { sign_in user }
@@ -46,7 +48,7 @@ RSpec.describe TasksController, type: :controller do
   context "when user is logged-in" do
     let(:user) { create :user }
     let(:event) { create :event, user_id: user.id }
-    let(:task) { create :task, event_id: event.id }
+    let(:task) { create :task, event_id: event.id, identity: user }
     let(:anotherUser) { create :user }
     let(:valid_attributes) {
       {
@@ -61,7 +63,7 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         done: false,
         description: "description",
-        identity: 'User:'+ user.id.to_s,
+        identity: user,
         event_id: event.id
       }
     }
@@ -73,7 +75,11 @@ RSpec.describe TasksController, type: :controller do
     }
 
     let(:valid_session) { {} }
-  
+
+    def identity_dummy(task)
+      return task.identity_type.to_s + ':' + task.identity_id.to_s
+    end
+
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
@@ -154,16 +160,16 @@ RSpec.describe TasksController, type: :controller do
       get :edit, id: task
       expect(response).to be_success
     end   
-  
+
     it "updates a task" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, identity: task.identity_type+task.identity_id.to_s, done: task.done }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, done: task.done, identity: identity_dummy(task)}
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "updates a task with uploads" do
-      expect { patch :update, id: task, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      expect { patch :update, id: task, task: { description: "description", name: "Test", identity: identity_dummy(task) }, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
       upload_id = Upload.find_by(file_file_name: 'test_pdf.pdf').id      
-      expect { patch :update, id: task,  task: {description: "description", name: "Test"}, delete_uploads: Hash[upload_id, 'true'] }.to change { Upload.count }.from(1).to(0)
+      expect { patch :update, id: task,  task: {description: "description", name: "Test" , identity: identity_dummy(task) }, delete_uploads: Hash[upload_id, 'true'] }.to change { Upload.count }.from(1).to(0)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
@@ -187,12 +193,12 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "updates a task with valid deadline" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.tomorrow }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.tomorrow, identity: identity_dummy(task) }
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "updates a task" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today, identity: identity_dummy(task) }
       expect(response).to render_template("edit")
     end
   
@@ -221,7 +227,7 @@ RSpec.describe TasksController, type: :controller do
 
     it "sends an email if a user is assigned to an existing task" do
       task = Task.create! valid_attributes
-      patch :update, id: task.to_param, task: { identity:'User:'+anotherUser.id.to_s }
+      patch :update, id: task.to_param, task: { identity: identity_dummy(task) }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 
@@ -247,7 +253,7 @@ RSpec.describe TasksController, type: :controller do
     let(:event_owner) { create :user }
     let(:assigned_user) { create :user }
     let(:event) { create :event, user_id: event_owner.id }
-    let(:assigned_task) { create :assigned_task, event_id: event.id, identity: 'User'+assigned_user.id.to_s }
+    let(:assigned_task) { create :assigned_task, event_id: event.id, identity: assigned_user }
     let!(:task) { create :task, event_id: event.id }
 
     def log_in(user)

@@ -72,9 +72,11 @@ class TasksController < ApplicationController
     upload_files if params[:uploads]
     delete_files if params[:delete_uploads]
 
-    identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
-    @task.identity_id         =  identity_params[:id]
-    @task.identity_type       =  identity_params[:type]
+    unless params[:task][:identity].blank?
+      identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
+      @task.identity_id         =  identity_params[:id]
+      @task.identity_type       =  identity_params[:type]
+    end
     
     respond_to do |format|
       #if @task.update_and_send_notification((set_status task_params), current_user)
