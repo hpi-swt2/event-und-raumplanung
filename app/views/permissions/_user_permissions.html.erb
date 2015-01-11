@@ -1,4 +1,4 @@
 <% @categories.each do |category| %>
-  <%= check_box_tag category, "1", @user.has_permission(category) %> 
+  <%= check_box_tag category, "1", @permitted_entity.has_permission(category) %> 
   <%= label_tag category, t("permissions." + category) %> <br/>
 <% end %>

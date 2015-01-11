@@ -9,7 +9,7 @@ function updateUserPermissions() {
   $.ajax({
     url: '/permissions/user_permissions',
     type: 'POST',
-    data: { user_id: $('#user').val() },
+    data: { user: $('#user').val() },
     dataType: 'html',
     success: function(data) {
       $('#permissionDiv').html(data);

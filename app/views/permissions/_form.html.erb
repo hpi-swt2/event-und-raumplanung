@@ -1,18 +1,21 @@
 <%= form_tag({action: 'submit'}, {:class => "form-horizontal"}) do |f| %>
   <div class="control-group">
     <div class="controls">
-    <%= select_tag 'user', options_from_collection_for_select(@users, "id", "username"), {class: 'form-control'} %>
+    
+      <% permitted_entities_collection = @users.map {|x| [x.name, "User:#{x.id}"]} + @groups.map {|x| [x.name, "Group:#{x.id}"]} %> 
 
-    <div id="permissionDiv"></div>
-    <script>
-      $(function() {
-        $('#user').ready(updateUserPermissions);
-      })
-    </script>
+      <%= collection_select nil, :permitted_entity, permitted_entities_collection, :last, :first , {}, {class: 'form-control', id: 'user', name: 'user'} %>
+      
+      <div id="permissionDiv"></div>
+      <script>
+        $(function() {
+          $('#user').ready(updateUserPermissions);
+        })
+      </script>
 
-    <%= submit_tag nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            permissions_path, :class => 'btn btn-default' %>
+      <%= submit_tag nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              permissions_path, :class => 'btn btn-default' %>
 
     </div>
   </div>

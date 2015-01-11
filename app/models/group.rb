@@ -16,6 +16,6 @@ class Group < ActiveRecord::Base
   end
 
   def unpermit(category, room = nil)
-    self.permissions.find_by(category: Permission::categories[category], room: room).destroy
+    self.permissions.find_by(category: Permission::categories[category], room: room).try(:destroy)
   end
 end

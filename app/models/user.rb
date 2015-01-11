@@ -31,5 +31,4 @@ class User < ActiveRecord::Base
   def self.build_from_email(email)
     User.new(:email => email)
   end
-
 end
