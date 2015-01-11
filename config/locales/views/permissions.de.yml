@@ -12,3 +12,4 @@ de:
     manage_properties: Raumeigenschaften verwalten
     edit_properties: Raumeigenschaften bearbeiten
     assign_to_rooms: Equipment und Raumeigenschaften bearbeiten
+    updated: "Rechte für %{entity} wurden aktualisiert"

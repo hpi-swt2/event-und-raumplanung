@@ -1,8 +1,8 @@
-<%= form_tag({action: 'submit'}, {:class => "form-horizontal"}) do |f| %>
+<%= form_tag({action: 'submit'}, {remote: true, :'data-type' => 'json', id: "permissionsForm", :class => "form-horizontal"}) do |f| %>
   <div class="control-group">
     <div class="controls">
     
-      <% permitted_entities_collection = @users.map {|x| [x.name, "User:#{x.id}"]} + @groups.map {|x| [x.name, "Group:#{x.id}"]} %> 
+      <% permitted_entities_collection = @users.map {|x| [x.username, "User:#{x.id}"]} + @groups.map {|x| [x.name, "Group:#{x.id}"]} %> 
 
       <%= collection_select nil, :permitted_entity, permitted_entities_collection, :last, :first , {}, {class: 'form-control', id: 'user', name: 'user'} %>
       
@@ -10,6 +10,9 @@
       <script>
         $(function() {
           $('#user').ready(updateUserPermissions);
+          $(document).on('ajax:success', '#permissionsForm', function(event, data) {
+            $('#flash_messages').bootstrap_flash(data);
+          });
         })
       </script>
 

@@ -17,7 +17,11 @@ class PermissionsController < ApplicationController
         @permitted_entity.unpermit(category)
       end
     end
-    redirect_to permissions_path
+    name = @permitted_entity.username if @permitted_entity.is_a?(User)
+    name = @permitted_entity.name if @permitted_entity.is_a?(Group)
+    respond_to do |format|
+      format.json { render :json => '"' + I18n.t('permissions.updated', entity: name) + '"', :status => :ok }
+    end
   end
 
   def determine_permitted_entity
