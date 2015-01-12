@@ -67,6 +67,15 @@ RSpec.describe TasksController, type: :controller do
         event_id: event.id
       }
     }
+    let(:valid_parameters_with_user) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+        identity: "User:" + user.id.to_s,
+        event_id: event.id
+      }
+    }
     let(:invalid_attributes) {
       {
         name: '',
@@ -209,7 +218,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "sends an email if a user is assigned to a new task" do
-      post :create, { :task => valid_attributes_with_user }
+      post :create, { :task => valid_parameters_with_user }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 
@@ -219,15 +228,14 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "sends two emails if another user is assigned to task" do
-      task = Task.create! valid_attributes_with_user      
-      patch :update, id: task.to_param, task: { 
-        _id: anotherUser.id }
+      task = Task.create! valid_attributes_with_user
+      patch :update, id: task.to_param, task: { identity: "User:" + anotherUser.id.to_s }
       expect(ActionMailer::Base.deliveries.count).to eq(2)
     end
 
     it "sends an email if a user is assigned to an existing task" do
       task = Task.create! valid_attributes
-      patch :update, id: task.to_param, task: { identity: identity_dummy(task) }
+      patch :update, id: task.to_param, task: { identity: 'User:' + user.id.to_s }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 

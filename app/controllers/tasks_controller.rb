@@ -51,7 +51,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         if @task.identity
-          #@task.send_notification_to_assigned_user(current_user)
+          @task.send_notification_to_assigned_user(current_user)
         end
         upload_files if params[:uploads]
 
@@ -72,15 +72,17 @@ class TasksController < ApplicationController
     upload_files if params[:uploads]
     delete_files if params[:delete_uploads]
 
-    unless params[:task][:identity].blank?
+    if params[:task][:identity].blank?
+      params[:task][:identity_id] = nil
+      params[:task][:identity_type] = nil
+    else
       identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
-      @task.identity_id         =  identity_params[:id]
-      @task.identity_type       =  identity_params[:type]
+      params[:task][:identity_id] = identity_params[:id]
+      params[:task][:identity_type] = identity_params[:type]
     end
-    
+
     respond_to do |format|
-      #if @task.update_and_send_notification((set_status task_params), current_user)
-      if @task.update(set_status task_params)
+      if @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -157,11 +159,11 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :identity, :done, :deadline)
+      params.require(:task).permit(:name, :description, :event_id, :identity, :identity_id, :identity_type, :done, :deadline)
     end
 
     def task_params_with_attachments
-      params.require(:task).permit(:name, :description, :event_id, :identity, :done, :deadline, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :identity, :identity_id, :identity_type, :done, :deadline, :attachments_attributes => [ :title, :url ])
     end
 
     def task_update_order_params
@@ -190,7 +192,7 @@ class TasksController < ApplicationController
       else
         if updated_params[:identity].blank?
           updated_params[:status] = "not_assigned"
-        elsif updated_params[:identity] != @task.identity_type + ":" + @task.identity_id.to_s
+        elsif !@task.identity.nil? and updated_params[:identity] != @task.identity_type + ":" + @task.identity_id.to_s
           updated_params[:status] = "pending"
         end
       end

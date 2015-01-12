@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "no-reply@example.com"
 
-  def user_assigned_to_task_email(assigner, task, user) 
+  def user_assigned_to_task_email(assigner, task, user)
     @group_assignment = false
     @group_name = "Testgruppe"
   	@assigner = assigner

@@ -18,4 +18,8 @@ class User < ActiveRecord::Base
   def name
     return username
   end
+
+  def is_group
+    false
+  end
 end
