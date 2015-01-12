@@ -97,11 +97,16 @@ FactoryGirl.define do
     end
   end
 
-  factory :declined_event, parent: :event do
+  factory :event_today, parent: :event do
+    starts_at DateTime.current.advance(:minutes => +2)
+    ends_at DateTime.current.advance(:minutes => +3)
+  end
+
+  factory :declined_event, parent: :event_today do
     status 'declined'
   end
 
-  factory :approved_event, parent: :event do
+  factory :approved_event, parent: :event_today do
     status 'approved'
   end
 
