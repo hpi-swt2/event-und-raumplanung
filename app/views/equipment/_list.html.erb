@@ -4,6 +4,7 @@
     <%= page_entries_info equipment %>
   </div>
 
+<div class="table-responsive">
   <table class="table table-striped">
   <thead>
     <tr>
@@ -46,5 +47,6 @@
     <% end %>
   </tbody>
   </table>
+</div>
 <%= will_paginate equipment, renderer: BootstrapPagination::Rails %>
 </div>

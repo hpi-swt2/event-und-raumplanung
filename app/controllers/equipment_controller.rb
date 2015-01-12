@@ -11,7 +11,7 @@ class EquipmentController < ApplicationController
 
     @filterrific = Filterrific.new(
       Equipment, params[:filterrific])
-      @equipment = Equipment.filterrific_find(@filterrific).page(params[:page])
+      @equipment = Equipment.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
       
 
     respond_to do |format|
