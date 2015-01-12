@@ -5,26 +5,50 @@
   </head>
   <body>
     <p>English version below</p>
-    <h1>Hallo <%= @user.email %></h1>
+    <h1>Hallo <%= @user.username %></h1>
     <p>
-      <%= @assigner.email %> hat Ihnen den Task <%= link_to @task.name, task_url(@task) %> zugewiesen
+      <% if @group_assignment %>
+        <%= @assigner.username %> hat der Gruppe <%= @group_name %> den Task <%= link_to @task.name, task_url(@task) %> zugewiesen
+      <% else %>
+        <%= @assigner.username %> hat Ihnen den Task <%= link_to @task.name, task_url(@task) %> zugewiesen
+      <% end %>
     </p>
     <p>
-      Hier klicken, um die Zuweisung zu akzeptieren: <%= link_to "Akzeptieren", accept_task_url(@task) %>. <br/>
-      Hier klicken, um die Zuweisung zu abzulehnen: <%= link_to "Ablehnen", decline_task_url(@task) %>. <br/>
+      Hier klicken, um die Zuweisung
+      <% if @group_assignment %>
+        <b>im Namen der Gruppe</b>
+      <% end %>
+      zu akzeptieren: <%= link_to "Akzeptieren", accept_task_url(@task) %>. <br/>
+      Hier klicken, um die Zuweisung 
+      <% if @group_assignment %>
+        <b>im Namen der Gruppe</b>
+      <% end %>
+      abzulehnen: <%= link_to "Ablehnen", decline_task_url(@task) %>. <br/>
     </p>
     <p>Einen schönen Tag!</p>
     
     <hr/>
 
-    <h1>Hello <%= @user.email %></h1>
+    <h1>Hello <%= @user.username %></h1>
     <p>
-      <%= @assigner.email %> assigned the task <%= link_to @task.name, task_url(@task) %> to you
+      <% if @group_assignment %>
+        <%= @assigner.username %> assigned the task <%= link_to @task.name, task_url(@task) %> to the group <%= @group_name %>
+      <% else %>
+        <%= @assigner.username %> assigned the task <%= link_to @task.name, task_url(@task) %> to you
+      <% end %>
     </p>
     <p>
-      Click here to accept: <%= link_to "Accept", accept_task_url(@task) %>. <br/>
-      Click here to decline: <%= link_to "Decline", decline_task_url(@task) %>. <br/>
-    </p>
+        Click here to accept
+        <% if @group_assignment %>
+          <b>on behalf of the group</b>
+        <% end %>
+        : <%= link_to "Accept", accept_task_url(@task) %>. <br/>
+        Click here to decline
+        <% if @group_assignment %>
+          <b>on behalf of the group</b>
+        <% end %>
+        : <%= link_to "Decline", decline_task_url(@task) %>. <br/>
+      </p>
     <p>Thanks and have a great day!</p>
   </body>
 </html>

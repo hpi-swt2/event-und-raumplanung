@@ -39,10 +39,26 @@ class Task < ActiveRecord::Base
   end
 
   def send_notification_to_assigned_user(assigner)
-    UserMailer.user_assigned_to_task_email(assigner, self).deliver
+    group_assignment = false
+    if group_assignment
+      group_members = []
+      group_members.each do |recipient|
+        UserMailer.user_assigned_to_task_email(assigner, self, recipient).deliver  
+      end
+    else
+      UserMailer.user_assigned_to_task_email(assigner, self, user).deliver
+    end
   end
 
   def send_notification_to_previously_assigned_user(previousUser, assigner)
-    UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver  
+    group_assignment = false
+    if group_assignment
+      group_members = []
+      group_members.each do |recipient|
+        UserMailer.user_assignment_removed_email(assigner, recipient, self).deliver  
+      end
+    else
+      UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver
+    end
   end
 end
