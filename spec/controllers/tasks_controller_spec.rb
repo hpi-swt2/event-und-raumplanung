@@ -97,7 +97,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task that are marked as undone" do
-      post :create, task: { description: "description", name: "Test", done: true }
+      post :create, task: { description: "description", name: "Test" }
       expect(assigns(:task).done).to be false
     end
 
@@ -111,9 +111,25 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
+    context 'invalid upload' do
+      it "does not create task with upload in wrong format" do
+        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Upload.count }
+        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Task.count }
+        expect(response).to be_success  # redicrects to 'new' page with filled-in values
+      end
+
+      it "does not create task with too big upload" do
+        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Upload.count }
+        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Task.count }
+        expect(response).to be_success  # redicrects to 'new' page with filled-in values
+      end
+    end
+
     it "sets the event for a new task that should belong to the event" do
       get :new, event_id: 1
       expect(assigns(:task).event_id).to eq(1)
+      get :new
+      expect(assigns(:task).event_id).to eq(nil)
       expect(assigns(:event_field_readonly)).to be(:true)
     end
     
@@ -158,6 +174,18 @@ RSpec.describe TasksController, type: :controller do
       upload_id = Upload.find_by(file_file_name: 'test_pdf.pdf').id      
       expect { patch :update, id: task,  task: {description: "description", name: "Test"}, delete_uploads: Hash[upload_id, 'true'] }.to change { Upload.count }.from(1).to(0)
       expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    context 'invalid upload' do
+      it "updates a task with upload in wrong format" do
+        expect { patch :update, id: task, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Upload.count }
+        expect(response).to be_success  # redirect back to 'edit' page
+      end
+
+      it "updates a task with too big upload" do
+        expect { patch :update, id: task, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Upload.count }
+        expect(response).to be_success  # redirect back to 'edit' page
+      end
     end
 
     it "marks a task as done" do

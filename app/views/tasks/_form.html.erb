@@ -16,6 +16,22 @@
         </div>
       </div>
     <% end %>
+    <% unless @upload_errors.blank? %>
+      <div id="error_expl" class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <%= t('tasks.form.files') %>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <ul>
+            <% @upload_errors.each do |name, error| %>
+              <li><%= name %>: <%= error.full_messages_for(:file) %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
 
     <div class="control-group">
       <%= f.label :name, :class => 'control-label' %>
@@ -48,7 +64,8 @@
     <div class="control-group">
         <%= f.label :user_id, :class => 'control-label' %>
         <div class="controls">
-          <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none')}, :class => 'form-control' %>
+          <%= f.hidden_field :user_id %>
+          <input type="text" id="task_user_id_display", class="form-control", data-autocomplete-url="<%= users_autocomplete_path %>" value="<%= @task_user_name %>">
         </div>
         <%= error_span(@task[:user_id]) %>
     </div>

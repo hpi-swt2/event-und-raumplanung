@@ -29,6 +29,8 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
+  get "users/autocomplete" => "users#autocomplete"
+
   resources :attachments
 
   resources :room_properties
