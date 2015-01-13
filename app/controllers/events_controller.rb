@@ -224,6 +224,7 @@ class EventsController < ApplicationController
     end
 
     def show_activity_log
+      authorize! :show_activity_log, Event
       activities = @event.activities.order("created_at DESC")
       activities.each do |activity|
         @activity_messages.push(create_message(activity))

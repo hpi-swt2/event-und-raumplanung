@@ -37,7 +37,10 @@ class Task < ActiveRecord::Base
   end
 
   def send_notification_to_assigned_user(assigner)
-    UserMailer.user_assigned_to_task_email(assigner, self).deliver
+    begin
+      UserMailer.user_assigned_to_task_email(assigner, self).deliver
+    rescue
+    end
   end
 
   def send_notification_to_previously_assigned_user(previousUser, assigner)

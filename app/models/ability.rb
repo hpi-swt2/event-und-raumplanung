@@ -33,6 +33,9 @@ class Ability
     can [:update, :destroy, :edit, ], Event, :user_id => user.id
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
+    can :show_activity_log, Event do |event|
+        event.involved_users().include?(user)
+    end
     if user.username == load_admin
         can :manage, Group
         can :manage, Room
