@@ -14,15 +14,26 @@ RSpec.describe EventsHelper, :type => :helper do
   let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
 
   describe "events_between" do
-    it "finds 7 occurrences in a week for a weekly schedule" do
-      occurrences = events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
-      expect(occurrences.count).to eq(7)
-      expect(occurrences.first).to be_instance_of(EventOccurrence)
-      expect(occurrences.first.starts_occurring_at).to eq(daily_recurring_event.starts_at)
-      occurrences.each do |o|
-        expect(o.event).to eq(daily_recurring_event)
+    context "daily event present" do
+      it "finds 7 occurrences in a week for a weekly schedule" do
+        occurrences = events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(7)
+        expect(occurrences.first).to be_instance_of(EventOccurrence)
+        expect(occurrences.first.starts_occurring_at).to eq(daily_recurring_event.starts_at)
+        occurrences.each do |o|
+          expect(o.event).to eq(daily_recurring_event)
+        end
+        expect(occurrences.second.starts_occurring_at).to eq(daily_recurring_event.starts_at + 1.days)
       end
-      expect(occurrences.second.starts_occurring_at).to eq(daily_recurring_event.starts_at + 1.days)
+    end
+
+    context "daily and weekly event present" do      
+      it "finds 8 occurrences in a week" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        occurrences = events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(8)
+        expect(occurrences.first.event).to eq(weekly_recurring_event)
+      end
     end
   end
 end
