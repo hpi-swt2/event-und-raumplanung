@@ -3,6 +3,28 @@
 	line-height: 1.5em;
 }
 
-.activity {
+.activity-container {
+	
+}
+
+.activity-container:last-of-type {
+	
+}
+
+.activity-container .activity {
+	border-bottom: 1px solid #ddd;
+	padding: 10px 15px 10px 15px;
+	display: inline-block;
+}
+
+.activity-container .glyphicon {
+	padding: 10px 0 10px 15px;
+}
+
+.odd {
+	background-color: #f9f9f9;
+}
+
+.even {
 	
 }

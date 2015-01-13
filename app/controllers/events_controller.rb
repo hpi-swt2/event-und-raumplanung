@@ -135,14 +135,7 @@ class EventsController < ApplicationController
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
 
-    @activity_messages = []
-    activities = @event.activities.order("created_at DESC")
-
-    activities.each do |activity|
-      @activity_messages.push(create_message(activity))
-    end
-
-    @event.activities
+    @activities = @event.activities.order("created_at ASC")
   end
 
   # GET /events/new
@@ -248,43 +241,26 @@ class EventsController < ApplicationController
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
 
-    def create_message(activity)
-      message = "<strong>" + activity.username + "</strong>"
-      
-      if(activity.controller == "tasks")
-        message += " " + t('activities.marked') + " "
-        message += "<strong>"
-        message += " " + t('activities.the_task') + " " + activity.task_info[0]
-        message += "</strong>"
-        message += " " + t('activities.as')
+    def get_css_class(controller, action, attribute = "")
+      css_class = "glyphicon glyphicon-"
 
-        if activity.task_info[1]
-          message += " " + t('activities.done')
-        else
-          message += " " + t('activities.undone')
+      if controller == "tasks"
+        if attribute == "done"
+          css_class += "ok"
+        elsif attribute == "undone"
+          css_class += "remove"
         end
-      elsif(activity.controller == "events")
-        message += " " + t('activities.' + activity.action)
-        message += "<strong>"
-        message += " " + t('activities.the_event') + " " + @event.name
-        message += "</strong>"
-
-        if(activity.action == "update")
-          message += " ("
-
-          activity.changed_fields.each_with_index do |changed_field, index|
-            message += Event.human_attribute_name(changed_field)
-
-            if(activity.changed_fields.count > index + 1)
-              message += ", "
-            end
-          end
-
-          message += ")"
+      elsif(controller == "events")
+        case action
+        when "update"
+          css_class += "cog"
+        when "create"
+          css_class += "plus"
+        when "approve"
+          css_class += "ok"
+        when "decline"
+          css_class += "remove"
         end
       end
-
-      message += " " + t('activities.on_date') + " " + activity.created_at.strftime("%d.%m.%y")
-      message += " " + t('activities.at_time') + " " + activity.created_at.strftime("%T")
     end
 end
