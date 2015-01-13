@@ -1,6 +1,6 @@
-<div class="activity-container <%= (index % 2 != 0) ? ("odd") : ("even") %>">
-	<span></span>
-	<div class="activity">
+<div class="activity-container">
+	<div class="activity <%= (index % 2 != 0) ? ("odd") : ("even") %>">
+		<span class="<%= activity.get_css_class %>"></span>
 	  <strong><%= activity.username %></strong>
 	  <% if activity.controller == "tasks" %>
 	  	<span><%= t('activities.marked') + " " + t('activities.the_task') %> </span>

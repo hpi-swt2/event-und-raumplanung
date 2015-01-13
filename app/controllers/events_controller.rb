@@ -240,27 +240,4 @@ class EventsController < ApplicationController
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
-
-    def get_css_class(controller, action, attribute = "")
-      css_class = "glyphicon glyphicon-"
-
-      if controller == "tasks"
-        if attribute == "done"
-          css_class += "ok"
-        elsif attribute == "undone"
-          css_class += "remove"
-        end
-      elsif(controller == "events")
-        case action
-        when "update"
-          css_class += "cog"
-        when "create"
-          css_class += "plus"
-        when "approve"
-          css_class += "ok"
-        when "decline"
-          css_class += "remove"
-        end
-      end
-    end
 end

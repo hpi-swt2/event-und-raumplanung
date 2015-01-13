@@ -3,28 +3,45 @@
 	line-height: 1.5em;
 }
 
+.activity-log-container {
+	position: relative;
+}
+
+.activity-log:before {
+	background-color: #ddd;
+    bottom: 0;
+    content: "";
+    display: block;
+    left: 8px;
+    position: absolute;
+    top: 0;
+    width: 2px;
+    z-index: -1;
+}
+
 .activity-container {
-	
+	position: relative;
+	margin-left: 10px;
 }
 
 .activity-container:last-of-type {
 	
 }
 
-.activity-container .activity {
-	border-bottom: 1px solid #ddd;
-	padding: 10px 15px 10px 15px;
-	display: inline-block;
+.activity {
+	border-bottom: 2px solid #ddd;
+	padding: 10px 15px 10px 0;
 }
 
 .activity-container .glyphicon {
-	padding: 10px 0 10px 15px;
+	margin: 2px 15px 0 -7px;
+	float: left;
 }
 
-.odd {
+.activity-container .odd {
 	background-color: #f9f9f9;
 }
 
-.even {
+.activity-container .even {
 	
 }
