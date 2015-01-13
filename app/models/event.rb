@@ -164,7 +164,9 @@ class Event < ActiveRecord::Base
     self.tasks.each do | task |
       involved << task.user
     end
-    # Also append persons responisble for rooms in which event apperas (after merge)
+    self.rooms.each do |room|
+      involved += room.group.leaders
+    end
     involved
   end
 
