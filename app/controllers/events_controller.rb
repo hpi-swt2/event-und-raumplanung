@@ -134,16 +134,7 @@ class EventsController < ApplicationController
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
-
-    @activity_messages = []
-    # activities = @event.activities.order("created_at DESC")
-
-    # activities.each do |activity|
-    #   @activity_messages.push(create_message(activity))
-    # end
-
     show_activity_log()
-    @event.activities
   end
 
   # GET /events/new
@@ -225,10 +216,7 @@ class EventsController < ApplicationController
 
     def show_activity_log
       authorize! :show_activity_log, Event
-      activities = @event.activities.order("created_at DESC")
-      activities.each do |activity|
-        @activity_messages.push(create_message(activity))
-      end
+      @activities = @event.activities.order("created_at ASC")
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -255,45 +243,5 @@ class EventsController < ApplicationController
     def set_return_url
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
-    end
-
-    def create_message(activity)
-      message = "<strong>" + activity.username + "</strong>"
-      
-      if(activity.controller == "tasks")
-        message += " " + t('activities.marked') + " "
-        message += "<strong>"
-        message += " " + t('activities.the_task') + " " + activity.task_info[0]
-        message += "</strong>"
-        message += " " + t('activities.as')
-
-        if activity.task_info[1]
-          message += " " + t('activities.done')
-        else
-          message += " " + t('activities.undone')
-        end
-      elsif(activity.controller == "events")
-        message += " " + t('activities.' + activity.action)
-        message += "<strong>"
-        message += " " + t('activities.the_event') + " " + @event.name
-        message += "</strong>"
-
-        if(activity.action == "update")
-          message += " ("
-
-          activity.changed_fields.each_with_index do |changed_field, index|
-            message += Event.human_attribute_name(changed_field)
-
-            if(activity.changed_fields.count > index + 1)
-              message += ", "
-            end
-          end
-
-          message += ")"
-        end
-      end
-
-      message += " " + t('activities.on_date') + " " + activity.created_at.strftime("%d.%m.%y")
-      message += " " + t('activities.at_time') + " " + activity.created_at.strftime("%T")
     end
 end

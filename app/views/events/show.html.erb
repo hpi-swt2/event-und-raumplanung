@@ -64,11 +64,12 @@
 
 <% if can? :show_activity_log, @event %>
   <h4><%= t 'activities.activity_log' %></h4>
-  <ul>
-    <% @activity_messages.each do |activity_message| %>
-    <li class="activity">
-      <%= activity_message.html_safe %>
-    </li>
-  <% end %>
-  </ul>
+
+  <div class="activity-log-container">
+    <div class="activity-log">
+      <% @activities.each_with_index do |activity, index| %>
+        <%= render :partial => 'activity', :locals => { :activity => activity, :index => index } %>
+      <% end %>
+    </div>
+  </div> 
 <% end %>

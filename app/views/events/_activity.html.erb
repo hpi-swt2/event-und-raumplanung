@@ -1,0 +1,31 @@
+<div class="activity-container">
+	<div class="activity <%= (index % 2 != 0) ? ("odd") : ("even") %>">
+		<span class="<%= activity.get_css_class %>"></span>
+	  <strong><%= activity.username %></strong>
+	  <% if activity.controller == "tasks" %>
+	  	<span><%= t('activities.marked') + " " + t('activities.the_task') %> </span>
+	  	<strong><%= activity.task_info[0] %></strong>
+	  	<span><%= t('activities.as') %></span>
+      <% if activity.task_info[1] %>
+          <%= t('activities.done') %>
+      <% else %>
+          <%= t('activities.undone') %>
+      <% end %>
+	  <% elsif activity.controller == "events" %>
+	  	<span><%= t('activities.' + activity.action) %></span>
+	  	<span><%= t('activities.the_event') %></span>
+	  	<strong><%= @event.name %></strong>
+	  	<% if activity.action == "update" %>
+	      <% changed_fields = [] %>
+	      <% activity.changed_fields.each do |changed_field| %>
+	      	<% changed_fields.push(Event.human_attribute_name(changed_field)) %>
+	      <% end %>
+	      <span> (<%= changed_fields.join(", ") %>) </span>
+	    <% end %>
+	  <% end %>
+	  <span>
+	  	<%= t('activities.on_date') + " " + activity.created_at.strftime("%d.%m.%y") + " " %>
+      <%= t('activities.at_time') + " " + activity.created_at.strftime("%R") %>
+     </span>
+	</div>
+</div>

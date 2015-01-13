@@ -133,6 +133,22 @@ RSpec.describe EventsController, :type => :controller do
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:tasks)).to eq [secondTask, firstTask]
     end
+
+    it "shows the activity-log to involved users" do
+      context "when the user has created the event" do
+
+      end
+      context "when the user is assigned to a task of that event" do
+
+      end
+      conext "when a user is responsible for a room the event takes place in" do
+
+      end
+    end
+    it "does not show it to univolved ones" do
+
+    end
+
   end
 
   describe "GET new" do
