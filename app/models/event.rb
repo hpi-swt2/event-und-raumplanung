@@ -165,7 +165,9 @@ class Event < ActiveRecord::Base
       involved << task.user
     end
     self.rooms.each do |room|
-      involved += room.group.leaders
+      if room.group
+        involved += room.group.leaders
+      end
     end
     involved
   end
