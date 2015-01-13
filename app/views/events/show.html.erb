@@ -38,11 +38,11 @@
     <table class="table table-striped">
       <tbody>
         <tr>
-          <td>Beginn</td> <%# locals %>
+          <td><%= t('events.show.begin') %></td>
           <td><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
-          <td>Ende</td> <%# locals %>
+          <td><%= t('events.show.end') %></td> 
           <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
@@ -50,7 +50,7 @@
           <td><%= concat_rooms(@event) %></td>
         </tr>
         <tr>
-          <td><%= t('events.show.user') %></td> <%# change controller, we need the username %>
+          <td><%= t('events.show.creator') %></td>
           <td><%= @user %></td>
         </tr>
         <tr>

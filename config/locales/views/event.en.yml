@@ -1,0 +1,11 @@
+de:
+  events:
+    show:
+      name: 'Name'
+      creator: 'Creator'
+      rooms: 'Rooms'
+      participant_count: 'Participation count'
+      comments: 'Comments'
+      begin: 'Begin'
+      end: 'End'
+      tasks: 'Tasks'
