@@ -11,9 +11,10 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe EventsHelper, :type => :helper do
-  let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
 
   describe "events_between" do
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
+
     context "daily event present" do
       it "finds 7 occurrences in a week for a weekly schedule" do
         occurrences = events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
@@ -33,6 +34,31 @@ RSpec.describe EventsHelper, :type => :helper do
         occurrences = events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
         expect(occurrences.count).to eq(8)
         expect(occurrences.first.event).to eq(weekly_recurring_event)
+      end
+    end
+  end
+
+  describe "upcoming_events" do
+    context "daily event present" do
+      it "finds the next 5 upcoming event occurrences" do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        occurrences = upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        occurrences.each do |o|
+          expect(o.event).to eq(upcoming_daily_recurring_event)
+        end
+      end
+
+      it "finds the next 5 upcoming event occurrences from multiple events" do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        upcoming_daily_recurring_event2 = FactoryGirl.create(:upcoming_daily_recurring_event2)
+        occurrences = upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        expect(occurrences.first.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.second.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.third.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.fourth.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.fifth.event).to eq(upcoming_daily_recurring_event)
       end
     end
   end

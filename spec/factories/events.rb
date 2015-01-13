@@ -83,4 +83,30 @@ FactoryGirl.define do
     end
     f.schedule schedule
   end
+
+  factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
+    starts_at = Time.now + 1.hours
+    f.starts_at starts_at
+
+    ends_at = starts_at + 1.hours
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.daily)
+    end
+    f.schedule schedule
+  end
+
+  factory :upcoming_daily_recurring_event2, parent: :daily_recurring_event do |f|
+    starts_at = Time.now + 90.minutes
+    f.starts_at starts_at
+
+    ends_at = starts_at + 1.hours
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.daily)
+    end
+    f.schedule schedule
+  end
 end

@@ -197,4 +197,11 @@ class Event < ActiveRecord::Base
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
 
+  def self.events_between(start_datetime, end_datetime)
+    EventsController.helpers.events_between(start_datetime, end_datetime)
+  end
+
+  def self.upcoming_events(limit=5)
+    EventsController.helpers.upcoming_events(limit)
+  end
 end
