@@ -34,8 +34,11 @@
 }
 
 .activity-container .glyphicon {
-	margin: 2px 15px 0 -7px;
-	float: left;
+	background-color: #ddd;
+    border-radius: 50%;
+    float: left;
+    margin: -3px 15px 0 -12px;
+    padding: 5px;
 }
 
 .activity-container .odd {
