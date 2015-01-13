@@ -35,8 +35,9 @@ class Ability
     # end
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
+    can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-
+    can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 
     if user.username == load_admin
         can :manage, Group
         can :manage, Room

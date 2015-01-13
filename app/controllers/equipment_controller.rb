@@ -31,7 +31,7 @@ class EquipmentController < ApplicationController
     authorize! :create, @equipment
     respond_to do |format|
       if @equipment.save
-        format.html { redirect_to @equipment, notice: t('notices.successful_create', :model => Equipment.model_name.human) }
+        format.html { redirect_to equipment_index_url, notice: t('notices.successful_create', :model => Equipment.model_name.human) }
         format.json { render :show, status: :created, location: @equipment }
       else
         format.html { render :new }
@@ -46,7 +46,7 @@ class EquipmentController < ApplicationController
     authorize! :update, @equipment
     respond_to do |format|
       if @equipment.update(equipment_params)
-        format.html { redirect_to @equipment, notice: t('notices.successful_update', :model => Equipment.model_name.human) }
+        format.html { redirect_to equipment_index_url, notice: t('notices.successful_update', :model => Equipment.model_name.human) }
         format.json { render :show, status: :ok, location: @equipment }
       else
         format.html { render :edit }
