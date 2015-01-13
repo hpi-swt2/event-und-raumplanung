@@ -48,16 +48,21 @@ FactoryGirl.define do
     status 'approved'
   end
 
-  factory :weekly_recurring_event, :class => Event do |f|
-    f.name "Weekly recurring"
+  factory :daily_recurring_event, :class => Event do |f|
+    f.name "Daily recurring"
     f.description "Eventdescription"
     f.participant_count 15
-    f.starts_at Date.today + 1
-    f.ends_at Date.today + 1
     f.is_private false
-    schedule = IceCube::Schedule.new(now = Time.now) do |s|
+
+    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
-    f.schedule schedule.to_yaml
+    f.schedule schedule
   end
 end

@@ -26,9 +26,9 @@ describe Event do
     event.is_private == true or event.is_private == false
   end
 
-  context "schedule is nil" do
-    it "schedule returns nil" do
-      expect(event.schedule).to be_nil
+  context "schedule is not set" do
+    it "schedule returns single occurence schedule" do
+      expect(event.schedule).to_not be_nil
     end
 
     it "occurence rule returns nil" do
@@ -42,7 +42,7 @@ describe Event do
 
   context "schedule is non-recurring" do
     let(:schedule_not_recurring) { IceCube::Schedule.new(now = Time.now) }
-    let(:event_with_schedule) { FactoryGirl.create(:event, schedule: schedule_not_recurring.to_yaml) }
+    let(:event_with_schedule) { FactoryGirl.create(:event, schedule: schedule_not_recurring) }
 
     it "schedule is set" do
       expect(event_with_schedule.schedule.to_yaml).to eq(schedule_not_recurring.to_yaml)
@@ -58,14 +58,14 @@ describe Event do
   end
 
   context "schedule is recurring" do
-    let(:weekly_recurring_event) { FactoryGirl.create(:weekly_recurring_event) }
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
 
     it "and occurence rule is set" do
-      expect(weekly_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+      expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
     end
 
     it "and string formatting is valid" do
-      expect(weekly_recurring_event.pretty_schedule).to eq(weekly_recurring_event.schedule.to_s)
+      expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
     end
   end
 

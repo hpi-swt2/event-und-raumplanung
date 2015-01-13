@@ -153,7 +153,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params_without_occurence_rule event_params)
     @event.user_id = current_user_id
-    @event.schedule = create_yaml_schedule(@event, event_params[:occurence_rule])
+    @event.schedule_from_rule(event_params[:occurence_rule])
     logger.info @event.inspect
 
     respond_to do |format|
@@ -170,7 +170,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    @event.schedule = update_yaml_schedule(@event.schedule, event_params[:occurence_rule])
+    @event.schedule_from_rule(event_params[:occurence_rule])
     respond_to do |format|
       if @event.update(params_without_occurence_rule event_params)
         format.html { redirect_to @event, notice: t('notices.successful_update', :model => Event.model_name.human) }
@@ -206,20 +206,6 @@ class EventsController < ApplicationController
 
     def params_without_occurence_rule(params)
       params.reject {|k,v| k == "occurence_rule"}
-    end
-
-    def create_yaml_schedule(event, dirty_rule)
-      schedule = IceCube::Schedule.new(event.starts_at, end_time: event.ends_at)
-      schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
-      schedule.to_yaml
-    end
-
-    def update_yaml_schedule(schedule, dirty_rule)
-      if !schedule.nil?
-        schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
-        schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
-        schedule.to_yaml
-      end
     end
 
     def toggle_favorite

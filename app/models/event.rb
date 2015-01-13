@@ -36,6 +36,7 @@ class Event < ActiveRecord::Base
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
+  validate :validate_schedule
 
   def dates_cannot_be_in_the_past
     errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
@@ -46,13 +47,32 @@ class Event < ActiveRecord::Base
     errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
   end
 
+  def validate_schedule
+    self.schedule = IceCube::Schedule.new(self.starts_at, end_time: self.ends_at) if read_attribute(:schedule).nil?
+  end
+
+  def schedule=(new_schedule)
+    write_attribute(:schedule, new_schedule.to_yaml)
+  end
+
   def schedule
-    IceCube::Schedule.from_yaml(self[:schedule]) if self[:schedule]
+    IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
+  end
+
+  def schedule_from_rule(dirty_rule)
+    validate_schedule
+    schedule = self.schedule
+    schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
+    schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
   end
 
   def occurence_rule
     schedule = self.schedule
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
+  end
+
+  def duration
+    (self.ends_at - self.starts_at).seconds
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
