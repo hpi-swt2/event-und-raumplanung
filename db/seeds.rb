@@ -33,7 +33,7 @@ room13 = Room.create(name: 'HS 3', size: 99)
 ## Create Users
 user2 = User.find_by username: 'maxe1992'
 if user2.nil?
-	User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'maxe1992', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
+	user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'maxe1992', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
 end
 user3 = User.find_by username: 'eri1942'
 if user3.nil?
