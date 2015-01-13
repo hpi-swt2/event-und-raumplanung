@@ -136,12 +136,13 @@ class EventsController < ApplicationController
     @tasks = @event.tasks.rank(:task_order)
 
     @activity_messages = []
-    activities = @event.activities.order("created_at DESC")
+    # activities = @event.activities.order("created_at DESC")
 
-    activities.each do |activity|
-      @activity_messages.push(create_message(activity))
-    end
+    # activities.each do |activity|
+    #   @activity_messages.push(create_message(activity))
+    # end
 
+    show_activity_log()
     @event.activities
   end
 
@@ -220,6 +221,13 @@ class EventsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
+    end
+
+    def show_activity_log
+      activities = @event.activities.order("created_at DESC")
+      activities.each do |activity|
+        @activity_messages.push(create_message(activity))
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

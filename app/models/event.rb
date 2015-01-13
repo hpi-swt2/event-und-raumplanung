@@ -158,6 +158,15 @@ class Event < ActiveRecord::Base
     return colliding_events
   end
 
+  def involved_users
+    involved = Array.new
+    involved << self.user
+    self.tasks.each do | task |
+      involved << task.user
+    end
+    # Also append persons responisble for rooms in which event apperas (after merge)
+  end
+
   scope :open, -> { where.not status: ['approved', 'declined'] }
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
