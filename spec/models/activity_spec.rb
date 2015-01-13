@@ -2,9 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Activity, :type => :model do
 
-  # TODO: test für get_css_class schreiben
-  describe "when having an activity with certain values" do
-  	it "return the correct css class" do
+  describe "determinating the glyphicon class" do
+  	it "returns the correct css class" do
   		activity = Activity.new :controller => "tasks", :task_info => ["task", "done"]
   		expect(activity.get_css_class).to eq("glyphicon glyphicon-ok")
   		activity = Activity.new :controller => "tasks", :task_info => ["task", nil]
