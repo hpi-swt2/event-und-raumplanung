@@ -47,11 +47,12 @@ RSpec.describe TasksController, type: :controller do
   
   context "when user is logged-in" do
     let(:user) { create :user }
-    let(:event) { create :event, user_id: user.id }
-    let(:task) { create :task, event_id: event.id, identity: user }
-    let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:anotherUser) { create :user }
     let(:group) { create :group, users: [user, anotherUser]}
+    let(:event) { create :event, user_id: user.id }
+    let(:task) { create :task, event_id: event.id, identity: user }
+    let(:task_with_group) { create :task, event_id: event.id, identity: group }  
+    let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:valid_attributes) {
       {
         name: "Test",
@@ -211,10 +212,23 @@ RSpec.describe TasksController, type: :controller do
       expect(assigns(:return_url)).to eq('/')
     end
   
-    it "edits a task" do
+    it "edits a task without assigned identity" do
+      get :edit, id: unassigned_task
+      expect(assigns(:identity_name)).to eq ""
+      expect(response).to be_success
+    end
+
+    it "edits a task with assigned user" do
       get :edit, id: task
+      expect(assigns(:identity_name)).to eq "User: #{user.username}"
       expect(response).to be_success
     end   
+
+    it "edits a task with assigned group" do
+      get :edit, id: task_with_group
+      expect(assigns(:identity_name)).to eq "Group: #{group.name}"
+      expect(response).to be_success
+    end
 
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, done: task.done, identity: identity_dummy(task)}

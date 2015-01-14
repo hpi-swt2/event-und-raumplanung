@@ -47,8 +47,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(set_status task_params_with_attachments)
 
-    unless params[:task][:identity].blank? 
-      identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
+    if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
@@ -57,9 +56,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save && upload_files
-        if @task.identity
-          @task.send_notification_to_assigned_user(current_user)
-        end
+        @task.send_notification_to_assigned_user(current_user) if @task.identity
         
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
@@ -79,15 +76,9 @@ class TasksController < ApplicationController
     authorize! :update, @task
     delete_files if params[:delete_uploads]
 
-    if params[:task][:identity].blank?
-      params[:task][:identity_id] = nil
-      params[:task][:identity_type] = nil
-    else
-      identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
-      params[:task][:identity_id] = identity_params[:id]
-      params[:task][:identity_type] = identity_params[:type]
-    end
-
+    params[:task][:identity_id] = identity_params.blank? ? nil : identity_params[:id]
+    params[:task][:identity_type] = identity_params.blank? ? nil : identity_params[:type]
+    
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
@@ -183,11 +174,14 @@ class TasksController < ApplicationController
       params.require(:task).permit(:done)
     end
 
+    def identity_params
+      return nil if params[:task][:identity].blank?
+      params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)          
+    end
+
     def event_id
-      if params[:event]
-        return params[:event][:event_id] unless params[:event][:event_id].empty?
-      end
-      nil
+      return nil unless params[:event]
+      params[:event][:event_id] unless params[:event][:event_id].empty?
     end
 
     def set_status(params)
