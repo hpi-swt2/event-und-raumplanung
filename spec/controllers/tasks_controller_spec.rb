@@ -49,6 +49,7 @@ RSpec.describe TasksController, type: :controller do
     let(:user) { create :user }
     let(:event) { create :event, user_id: user.id }
     let(:task) { create :task, event_id: event.id, identity: user }
+    let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:anotherUser) { create :user }
     let(:group) { create :group, users: [user, anotherUser]}
     let(:valid_attributes) {
@@ -140,6 +141,16 @@ RSpec.describe TasksController, type: :controller do
       expect(assigns(:task).done).to be false
     end
 
+    it "creates task with status 'not assigned' if no one is assigned" do
+      post :create, task: valid_attributes
+      expect(assigns(:task).status).to eq 'not_assigned'
+    end
+
+    it "creates task with status 'pending' if a user is assigned" do
+      post :create, task: valid_parameters_with_user
+      expect(assigns(:task).status).to eq 'pending'
+    end
+
     it "creates task with attachments" do
       expect { post :create, task: { description: "description", name: "Test", event_id: event.id, 
         attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}
@@ -208,6 +219,17 @@ RSpec.describe TasksController, type: :controller do
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, done: task.done, identity: identity_dummy(task)}
       expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "updates the task status to 'not assigned' if no one is assigned" do
+      task.status = 'pending'
+      patch :update, id: task, task: { identity: nil }
+      expect(assigns(:task).status).to eq 'not_assigned'
+    end
+
+    it "updates the task status to 'pending' if a user is assigned" do
+      patch :update, id: unassigned_task, task: { identity: 'User:' + user.id.to_s }
+      expect(assigns(:task).status).to eq 'pending'
     end
 
     it "updates a task with uploads" do

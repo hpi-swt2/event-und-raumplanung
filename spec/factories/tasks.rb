@@ -15,6 +15,7 @@ FactoryGirl.define do
 
     factory :unassigned_task do
       status "not_assigned"
+      identity nil
     end
   end
 end
