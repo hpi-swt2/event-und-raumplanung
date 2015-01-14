@@ -33,7 +33,12 @@
   <dt><strong><%= t('events.show.updated_at') %>:</strong></dt>
   <dd><%= @event.updated_at.strftime("%d.%m.%Y %T") %></dd>
   <dt><strong><%= t('events.show.status') %>:</strong></dt>
-  <dd><%= @event.status %></dd>
+  <dd>
+      <%= @event.status %>
+      <% if @event.status = "approved" %>
+          <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
+      <%end%>
+  </dd>
   <% if @event.event_id %> 
       <dt><strong><%= t('events.show.suggested_for') %>:</strong></dt>
       <dd><%= link_to get_name_of_original_event(@event), event_path(@event.event_id), :target => "_blank" %></dd>
