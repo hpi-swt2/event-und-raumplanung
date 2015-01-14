@@ -56,4 +56,36 @@
 			</p>
 		<% end %>
 	</div>
+
+	<div class="panel-body">
+		<% unless group_pending_events.blank? %>
+			<% my_groups.each do |group| %>
+				<h5 class="task-list-group"><%= link_to group.name, group_path(group), class: 'hidden-link' %></h5>
+				<% group_pending_events.each do |event| %>
+					<h5 class="task-list-group-event task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
+					<table class="pending-tasks-table">
+						<% group_pending_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
+							<tr>
+								<td>
+			        				<%= link_to task.name, task_path(task) %>
+			        			</td>
+			        			<td>
+			        				<button class="btn btn-xs btn-success task-action" data-path="<%= accept_task_path(task) %>" >
+			        					<span class="glyphicon glyphicon-ok"></span>
+			        				</button>
+			        				<button class="btn btn-xs btn-danger task-action" data-path="<%= decline_task_path(task) %>" >
+			        					<span class="glyphicon glyphicon-remove"></span>
+			        				</button>
+			        			</td>
+			        		</tr>
+			        	<% end %>
+					</table>
+				<% end %>
+			<% end %>
+		<% else %>
+			<p>
+				<%= t('dashboard.no_pending_tasks') %>
+			</p>
+		<% end %>
+	</div>
 </div>

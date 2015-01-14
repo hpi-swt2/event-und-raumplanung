@@ -2,8 +2,12 @@
 	border-top: 1px solid #ddd;
 }
 
-.task-list-event {
+.task-list-event, .task-list-group {
 	font-weight: bold;
+}
+
+.task-list-group-event {
+	margin-left: 1em;
 }
 
 .task-list-list {

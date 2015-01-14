@@ -83,6 +83,9 @@ RSpec.describe DashboardController, type: :controller do
         expect(assigns(:my_pending_events).include? event). to eq(true)
         expect(assigns(:my_pending_events).include? past_event). to eq(false)
       end
+
+
+      
     end
 
     describe "My events widget on Dashboard" do
