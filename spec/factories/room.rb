@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :room do |f|
+  factory :room, :class => Room do |f|
     f.name "Room"
     f.size 1
     equipment []
