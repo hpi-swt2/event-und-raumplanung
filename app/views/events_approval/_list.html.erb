@@ -1,0 +1,75 @@
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th><%= Event.human_attribute_name(:user) %></th>
+    <th><%= Event.human_attribute_name(:name) %></th>
+    <th><%= Event.human_attribute_name(:description) %></th>
+    <th><%= Event.human_attribute_name(:rooms) %></th>
+    <th><%= t '.time' %></th>
+    <th><%= Event.human_attribute_name(:participant_count) %></th>
+    <% if events_type == 'open' %>
+      <th></th>
+      <th><%= t '.actions', :default => t("helpers.actions") %></th>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+  <% events.each do |event| %>
+    <tr>
+      <td><%= User.find(event.user_id).username if event.user_id %></td>
+      <td><%= link_to event.name, event_path(event) %></td>
+      <td><%= trimDescription event.description %></td>
+      <td><%= event.rooms.map(&:name).to_sentence %></td>
+      <td>
+        <%= events_type == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
+      </td>
+      <td><%= event.participant_count %></td>
+      <% if events_type == 'open' %>
+        <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
+          <td>
+            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
+            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
+          </td>
+      <% end %>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+<%= t('.no_' + events_type + '_events') unless events.exists? %>
+
+<% if events_type == 'open' %>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button events_type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Event</h4>
+        </div>
+        <div class="modal-body">
+  <dl class="dl-horizontal">
+    <dt><strong><%= Event.human_attribute_name(:id) %>:</strong></dt>
+    <dd id="event_id"></dd>
+    <dt><strong><%= Event.human_attribute_name(:name) %>:</strong></dt>
+    <dd id="event_name"></dd>
+    <dt><strong><%= Event.human_attribute_name(:description) %>:</strong></dt>
+    <dd id="event_description"></dd>
+    <dt><strong><%= Event.human_attribute_name(:rooms) %>:</strong></dt>
+    <dd id="event_rooms"></dd>
+    <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
+    <dd id="event_participant_count"></dd>
+    <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
+    <dd id="event_starts_at"></dd>
+    <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
+    <dd id="event_ends_at"></dd>
+    <dt><strong><%= Event.human_attribute_name(:user) %>:</strong></dt>
+    <dd id="event_user"></dd>
+  </dl>
+    </div>
+        <div class="modal-footer">
+          <a events_type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
+          <a events_type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

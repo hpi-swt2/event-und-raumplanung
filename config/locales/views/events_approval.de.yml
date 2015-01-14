@@ -1,0 +1,12 @@
+# ruby encoding: utf-8
+
+de:
+  events_approval:
+    index:
+      title: Offene Buchungen
+      decline: Ablehnen
+      approve: Genehmigen
+      approved_events: Genehmigte Buchungen
+      time: Zeit
+      no_open_events: Keine offenen Buchungen
+      no_approved_bookings: Keine genehmigten Buchungen

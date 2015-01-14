@@ -4,11 +4,25 @@
 </div>
 
 <dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt>
+  <dd><%= @event_template.id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @event_template.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= raw nl2br h @event_template.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:rooms) %>:</strong></dt>
+  <dd><%= concat_rooms(@event_template) %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:participant_count) %>:</strong></dt>
+  <dd><%= @event_template.participant_count %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:created_at) %>:</strong></dt>
+  <dd><%= @event_template.created_at.strftime("%d.%m.%Y %T") %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:updated_at) %>:</strong></dt>
+  <dd><%= @event_template.updated_at.strftime("%d.%m.%Y %T") %></dd>
 </dl>
+
+<h4><%= t '.tasks' %></h4>
+<% @event_template_id = @event_template.id %>
+<%= render :partial => '/tasks/tasks_box' %>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               event_templates_path, :class => 'btn btn-default'  %>

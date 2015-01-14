@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "events/index", :type => :view do
+#doesn't work with filterific
 =begin
   let(:user) { create :user }
   before(:each) do
@@ -30,4 +31,5 @@ RSpec.describe "events/index", :type => :view do
   it "renders a list of events" do
   end 
 =end
+
 end

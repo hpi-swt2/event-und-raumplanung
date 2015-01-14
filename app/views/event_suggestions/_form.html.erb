@@ -1,0 +1,59 @@
+<%= form_for @event, url: {action: "create_event_suggestion"}, :html => {:id => "sugguest-form" } do |f| %>
+  <% if @event.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Event.model_name.human, :count => @event.errors.count %></h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @event.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+<div class="control-group">
+    <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.date_field :starts_at_date, :class => 'form-control' %>
+         <%= error_span(@event[:starts_at_date]) %>
+      </div>
+      <div class="controls col-sm-6">
+        <%= f.time_field :starts_at_time, :class => 'form-control', value: @event.starts_at_time.strftime('%H:%M') %>
+        <%= error_span(@event[:starts_at_time]) %>
+      </div>
+    </div>
+    
+  </div>
+ <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:ends_at) , :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.date_field :ends_at_date, :class => 'form-control' %>
+        <%= error_span(@event[:ends_at_date]) %>
+      </div>
+      <div class="controls col-sm-6">
+        <%= f.time_field :ends_at_time, :class => 'form-control', value: @event.ends_at_time.strftime('%H:%M') %>
+        <%= error_span(@event[:ends_at_time]) %>
+      </div>
+    </div>
+  </div>
+ <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+    </div>
+    <%= error_span(@event[:rooms]) %>
+  </div>
+  <% unless @original_event_id.nil? %> 
+    <%= f.hidden_field :original_event_id, :value => @original_event_id, :readonly => true%>
+  <% end %>
+  <div class="notice"></div>
+  <div class="actions">
+  <%= f.submit t('helpers.links.suggest'), :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            events_path, :class => 'btn btn-default' %>
+  </div>
+<% end %>
