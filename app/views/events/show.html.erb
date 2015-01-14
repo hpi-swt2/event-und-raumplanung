@@ -57,3 +57,19 @@
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you  sure?')) },
                 :class => 'btn btn-danger' %>
 <% end %>
+
+
+
+<br />
+<h2>Kommentare</h2>
+
+<div class="commentsContainer">
+  <% Comments.where(event_id: @event.id).each do |comment| %>
+      <%= render :partial => 'comments_container', :locals => {comment: comment} %>
+  <% end %>
+</div>
+
+<%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
+  <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
+  <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
+<% end %>

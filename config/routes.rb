@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+  post 'events_create_comment' => 'events#create_comment', as: "create_comment"
+  post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'rooms/list'
