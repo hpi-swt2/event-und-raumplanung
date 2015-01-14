@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210144902) do
+ActiveRecord::Schema.define(version: 20150109153302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,15 +165,16 @@ ActiveRecord::Schema.define(version: 20141210144902) do
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "done",        default: false
-    t.integer  "user_id"
+    t.boolean  "done",          default: false
     t.string   "status"
     t.datetime "deadline"
     t.integer  "task_order"
+    t.integer  "identity_id"
+    t.string   "identity_type"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
-  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
+  add_index "tasks", ["identity_id", "identity_type"], name: "index_tasks_on_identity_id_and_identity_type", using: :btree
 
   create_table "uploads", force: true do |t|
     t.integer  "task_id"

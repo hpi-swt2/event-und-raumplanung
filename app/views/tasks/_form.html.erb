@@ -62,12 +62,12 @@
       <%= error_span(@task[:deadline]) %>  
     </div>
     <div class="control-group">
-        <%= f.label :user_id, :class => 'control-label' %>
+    <%= f.label :identity, :class => 'control-label' %>
         <div class="controls">
-          <%= f.hidden_field :user_id %>
-          <input type="text" id="task_user_id_display", class="form-control", data-autocomplete-url="<%= users_autocomplete_path %>" value="<%= @task_user_name %>">
+          <%= f.hidden_field :identity %>
+          <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
         </div>
-        <%= error_span(@task[:user_id]) %>
+        <%= error_span(@task[:identity]) %>
     </div>
     <% unless @task.new_record? %>
       <div class="control-group">

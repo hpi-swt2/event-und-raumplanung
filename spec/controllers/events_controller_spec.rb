@@ -132,6 +132,29 @@ RSpec.describe EventsController, :type => :controller do
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:tasks)).to eq [secondTask, firstTask]
     end
+
+    it "only shows tasks assigned to current user when he is not the event owner" do
+      assigned_user = create(:user)
+      sign_in assigned_user
+
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_user)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
+    it "shows all tasks of the event to the event owner" do
+      assigned_user = create(:user)
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_user)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      expect(assigns(:tasks)).to eq [firstTask, secondTask]
+    end
   end
 
   describe "GET new" do

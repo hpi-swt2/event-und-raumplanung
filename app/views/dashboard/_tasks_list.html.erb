@@ -9,7 +9,7 @@
 				<ul class="list-unstyled task-list-list">
 					<% my_accepted_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
 						<li>
-		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>"  data-user-id="<%= task.user_id %>">
+		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= set_task_done_path(task.id) %>">
 		        				<%= link_to task.name, task_path(task) %>
 		        			</input>
 		        		</li>

@@ -18,11 +18,10 @@ function handleTaskCheckboxClick()
 	{
 		var target = event.target;
 		var taskPath = $(target).attr('data-taskpath');
-        var taskUserId = $(target).attr('data-user-id');
 		$.ajax({
 			url: taskPath,
 			type: 'PUT',
-			data: {task: {done: target.checked, user_id: taskUserId}},
+			data: {task: {done: target.checked }},
 			dataType: 'json'
 		});
 	});
@@ -70,13 +69,13 @@ function removeTaskFile(target)
 
 function userAutocomplete()
 {
-    var autocomple_url = $("#task_user_id_display").data("autocomplete-url");
-    $("#task_user_id_display").autocomplete(
+    var autocomple_url = $("#task_identity_display").data("autocomplete-url");
+    $("#task_identity_display").autocomplete(
     {
         minLength: 2,
         select: function( event, ui ) 
         {
-            $("#task_user_id").val(ui.item.id);
+            $("#task_identity").val(ui.item.id);
         },
         source: function(request, response) 
         {
