@@ -11,4 +11,4 @@ en:
       you_already_accepted_this_task: You already accepted this task.
     show:
       new: New Task
-      no_tasks: There are no tasks for this event yet.
+      no_tasks: There are no tasks for this event yet or you aren't allowed to see them.
