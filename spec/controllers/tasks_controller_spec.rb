@@ -165,15 +165,15 @@ RSpec.describe TasksController, type: :controller do
 
     context 'invalid upload' do
       it "does not create task with upload in wrong format" do
-        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Upload.count }
-        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Task.count }
-        expect(response).to be_success  # redicrects to 'new' page with filled-in values
+        expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Upload.count }
+        expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_forbidden_format_goto.exe', 'application/x-dosexec')] }.to_not change { Task.count }
+        expect(response).to be_success  # redirects to 'new' page with filled-in values
       end
 
       it "does not create task with too big upload" do
-        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Upload.count }
-        expect { post :create, task: {description: "description", name: "Test"}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Task.count }
-        expect(response).to be_success  # redicrects to 'new' page with filled-in values
+        expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Upload.count }
+        expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/too_big_file.png', 'image/png')] }.to_not change { Task.count }
+        expect(response).to be_success  # redirects to 'new' page with filled-in values
       end
     end
 
