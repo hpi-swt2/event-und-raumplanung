@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   resources :event_suggestions
   resources :groups do
     member do
@@ -15,6 +14,8 @@ Rails.application.routes.draw do
   get 'events_approval/' => 'events_approval#index'
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
+  get 'events/changeChosenRooms' => 'events#change_chosen_rooms'
+
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
@@ -44,7 +45,7 @@ Rails.application.routes.draw do
   resources :equipment
 
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
-
+  
   resources :events do
     get :reset_filterrific, on: :collection
   end

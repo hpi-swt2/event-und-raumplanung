@@ -23,6 +23,7 @@ class EventsController < ApplicationController
       flash.discard
     end
   end
+  
 
   # GET /events/1/new_event_template
   def new_event_template
@@ -53,11 +54,25 @@ class EventsController < ApplicationController
     @event_suggestion.rooms = @event.rooms
     render "event_suggestions/new"
   end
+  
+  def change_chosen_rooms
+    #render nothing: true
+    respond_to do |format|
+      #if @user.save
+        #format.html {render :nothing => true} #redirect_to @user, notice: 'User was successfully created.' }
+        format.js {}
+        #format.json { render :nothing => true }
+      #else
+        #format.html { render action: "new" }
+      #  format.json { render json: @user.errors, status: :unprocessable_entity }
+    end
+    #render :nothing
+    #render :partial => 'events/chosen_rooms'#, locals: {model_class: model_class} 
+  end
 
   # GET /events
   # GET /events.json
   def index
-
 
      @filterrific = Filterrific.new(
       Event,

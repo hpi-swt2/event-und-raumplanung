@@ -30,16 +30,24 @@
     <%= error_span(@event[:description]) %>
   </div>
   <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
+
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+      <%= f.select :room_ids, 
+        options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, 
+        {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
     </div>
+
     <script>
     $('#selectpicker').selectpicker();
-    </script>
+    </script>  
     <%= error_span(@event[:rooms]) %>
   </div>
+  
+  <div class="control-group" id="chosen_rooms">
+  </div>
+  
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
     <div class="controls">
