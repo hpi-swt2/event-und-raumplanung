@@ -89,10 +89,11 @@ class SessionsController < Devise::SessionsController
 
           @user.save
 
-          
-          
-
-          respond_with resource, location: after_sign_in_path_for(resource)
+          if @user.firstlogin
+            redirect_to "/profile"
+          else
+            respond_with resource, location: after_sign_in_path_for(resource)
+          end
         end
         # Clear the session variable
         session[:email] = nil

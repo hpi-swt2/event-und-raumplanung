@@ -3,6 +3,12 @@
 
 <%= form_tag ( { :action => "update_profile", :controller => "profile"}) do %>
 	<h1> Max Mustermann </h1>
+    <% if auser.firstlogin %>
+        <p>Please fill in the following information if you want to, all information is optional.</p>
+        <% auser.firstlogin = false %>
+        <% auser.save %>
+        <p><%= link_to 'skip', "/", class: "btn btn-primary" %></p>
+    <% end %>
 	<p> Email Nodifications: </br><input type="checkbox" name="checkEmailNod" <% if auser.email_notification %>checked<% end %>></p>
 	<p> Full Name: </br><%= text_field_tag( :fullname, auser.fullname,  class: 'form-control' )%></p>
 	<p> Office Location:</br>	<%= text_field_tag :officelocation, auser.office_location ,  class: 'form-control' %></p>
