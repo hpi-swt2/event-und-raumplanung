@@ -187,6 +187,12 @@ ActiveRecord::Schema.define(version: 20141210144902) do
   create_table "users", force: true do |t|
     t.string   "email",                               null: false
     t.string   "username",               default: ""
+    t.string   "fullname",               default: ""
+    t.string   "office_location",        default: ""
+    t.string   "office_phone",           default: ""
+    t.string   "mobile_phone",           default: ""
+    t.string   "language",               default: "German"
+    t.boolean  "email_notification",     default: true
     t.string   "encrypted_password",     default: "", null: false
     t.string   "status"
     t.string   "reset_password_token"
