@@ -1,3 +1,5 @@
+require 'pp'
+
 class EventsController < ApplicationController
   skip_filter :verify_authenticity_token, :check_vacancy
  # skip_filter :authenticate_user, :check_vacancy
@@ -6,6 +8,7 @@ class EventsController < ApplicationController
 
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
+  before_action :set_activites, only: [:show]
 
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
@@ -134,8 +137,6 @@ class EventsController < ApplicationController
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
-
-    @activities = @event.activities.order("created_at ASC")
   end
 
   # GET /events/new
@@ -239,5 +240,9 @@ class EventsController < ApplicationController
     def set_return_url
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
+    end
+
+    def set_activites
+      @activities = @event.activities.all.order("created_at ASC")
     end
 end
