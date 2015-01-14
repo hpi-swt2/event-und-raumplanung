@@ -190,9 +190,10 @@ class TasksController < ApplicationController
           updated_params[:status] = "pending"
         end
       else
+        currentIdentity = @task.identity.nil? ? "" : @task.identity_type + ":" + @task.identity_id.to_s
         if updated_params[:identity].blank?
           updated_params[:status] = "not_assigned"
-        elsif !@task.identity.nil? and updated_params[:identity] != @task.identity_type + ":" + @task.identity_id.to_s
+        elsif updated_params[:identity] != currentIdentity
           updated_params[:status] = "pending"
         end
       end
