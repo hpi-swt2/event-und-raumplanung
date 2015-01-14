@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
-  get "users/autocomplete" => "users#autocomplete"
+  get "identities/autocomplete" => "identities#autocomplete"
 
   resources :attachments
 
@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
+  put 'tasks/:id/set_done' => 'tasks#set_done', :as => :set_task_done
 
   resources :bookings
 

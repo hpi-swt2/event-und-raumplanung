@@ -7,3 +7,5 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
+    decline:
+      you_already_accepted_this_task: Sie haben diesen Task bereits akzeptiert.
