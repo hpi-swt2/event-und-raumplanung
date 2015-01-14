@@ -12,4 +12,5 @@ en:
     manage_properties: Manage room properties
     edit_properties: Edit room properties
     assign_to_rooms: Edit equipment and room properties
-    updated: "Permissions for %{entity} were updated"
+    updated_entity: "Permissions for %{entity} were updated"
+    updated_permission: "Permission %{permission} were updated"

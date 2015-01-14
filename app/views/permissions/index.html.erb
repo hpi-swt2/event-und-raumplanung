@@ -4,5 +4,18 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
   
-  <%= render :partial => 'form' %>
+  <div class="tabbable tabs-left">
+  <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab1" data-toggle="tab">Filter by permitted entity</a></li>
+              <li><a href="#tab9" data-toggle="tab">Filter by right</a></li>
+  </ul>
+  <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+          <%= render :partial => 'form_permitted' %>
+      </div>
+      <div class="tab-pane" id="tab9">
+          <%= render :partial => 'form_permission' %>
+      </div>
+  </div>
+
 </div>

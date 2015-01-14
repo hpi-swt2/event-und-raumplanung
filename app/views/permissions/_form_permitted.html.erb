@@ -1,10 +1,8 @@
 <%= form_tag({action: 'submit'}, {remote: true, :'data-type' => 'json', id: "permissionsForm", :class => "form-horizontal"}) do |f| %>
   <div class="control-group">
     <div class="controls">
-    
-      <% permitted_entities_collection = @users.map {|x| [x.username, "User:#{x.id}"]} + @groups.map {|x| [x.name, "Group:#{x.id}"]} %> 
-
-      <%= collection_select nil, :permitted_entity, permitted_entities_collection, :last, :first , {}, {class: 'form-control', id: 'user', name: 'user'} %>
+      <%= hidden_field_tag 'type', 'entity' %>
+      <%= select_tag 'user', grouped_options_for_select([['Users', @users.map {|x| [x.username, "User:#{x.id}"]}], ['Groups', @groups.map {|x| [x.name, "Group:#{x.id}"]}]]), {class: 'form-control', id: 'user'}%>
       
       <div id="permissionDiv"></div>
       <script>

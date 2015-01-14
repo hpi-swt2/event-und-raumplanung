@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   post 'permissions/submit' => 'permissions#submit'
   post 'permissions/user_permissions' => 'permissions#user_permissions'
+  post 'permissions/permitted_entities' => 'permissions#permitted_entities'
 
   resources :event_suggestions
   resources :groups do

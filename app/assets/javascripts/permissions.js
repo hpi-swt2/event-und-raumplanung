@@ -3,6 +3,7 @@
 
 $(function() {
   $('#user').change(updateUserPermissions);
+  $('#permissions').change(updatePermittedEntities);
 })
 
 function updateUserPermissions() {
@@ -13,6 +14,18 @@ function updateUserPermissions() {
     dataType: 'html',
     success: function(data) {
       $('#permissionDiv').html(data);
+    }
+  });
+}
+
+function updatePermittedEntities() {
+  $.ajax({
+    url: '/permissions/permitted_entities',
+    type: 'POST',
+    data: { permission: $('#permissions').val() },
+    dataType: 'html',
+    success: function(data) {
+      $('#entitiesDiv').html(data);
     }
   });
 }
