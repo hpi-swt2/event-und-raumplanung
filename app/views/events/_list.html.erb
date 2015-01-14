@@ -42,9 +42,9 @@
                         :class => 'btn btn-xs btn-danger' %>
           <% end %>
           <% if @favorites.include?(event) %>
-            <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),index_toggle_favorite_from_event_path(event), :class => 'btn btn-xs btn-danger' %>
+            <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),index_toggle_favorite_from_event_path(event), remote: true, :class => 'btn btn-xs btn-danger' %>
           <% else %>
-            <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),index_toggle_favorite_from_event_path(event), :class => 'btn btn-xs btn-primary' %>
+            <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),index_toggle_favorite_from_event_path(event), remote: true, :class => 'btn btn-xs btn-primary' %>
           <% end %> 
         </td>
       </tr>

@@ -35,11 +35,7 @@
   <dt><strong><%= t('events.show.status') %>:</strong></dt>
   <dd><%= @event.status %></dd>
   <dd>
-    <% if @favorite.empty? %>
-      <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),show_toggle_favorite_from_event_path(@event), :class => 'btn btn-xs btn-primary' %>
-    <% else %>
-      <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),show_toggle_favorite_from_event_path(@event), :class => 'btn btn-xs btn-danger' %>
-    <% end %> 
+    <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
   </dd>
 </dl>
 
