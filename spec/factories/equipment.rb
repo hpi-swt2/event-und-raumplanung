@@ -1,4 +1,9 @@
 FactoryGirl.define do
+  factory :equipment do |f|
+    f.name 'beamer'
+    room
+  end
+  
   factory :correct_equipment, :class => Equipment do |f|
     f.name 'Beamer HD 1'
     f.category 'Beamer'
