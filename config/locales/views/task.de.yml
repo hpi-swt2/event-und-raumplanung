@@ -16,4 +16,4 @@ de:
       this_task_was_already_declined: Dieser Task wurde bereits abgelehnt.
     show:
       new: Neue Task
-      no_tasks: Es gibt für dieses Event noch keine Aufgaben.
+      no_tasks: Es gibt für dieses Event noch keine Aufgaben oder Sie dürfen sie nicht sehen.
