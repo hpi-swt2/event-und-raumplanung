@@ -50,6 +50,7 @@ RSpec.describe TasksController, type: :controller do
     let(:event) { create :event, user_id: user.id }
     let(:task) { create :task, event_id: event.id, identity: user }
     let(:anotherUser) { create :user }
+    let(:group) { create :group, users: [user, anotherUser]}
     let(:valid_attributes) {
       {
         name: "Test",
@@ -73,6 +74,24 @@ RSpec.describe TasksController, type: :controller do
         done: false,
         description: "description",
         identity: "User:" + user.id.to_s,
+        event_id: event.id
+      }
+    }
+    let(:valid_attributes_with_group) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+        identity: group,
+        event_id: event.id
+      }
+    }
+    let(:valid_parameters_with_group) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+        identity: "Group:" + group.id.to_s,
         event_id: event.id
       }
     }
@@ -267,10 +286,33 @@ RSpec.describe TasksController, type: :controller do
       expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
 
-    it "sends an email if the assignment of an existing task is removed" do
+    it "sends an email if the user assignment of an existing task is removed" do
       task = Task.create! valid_attributes_with_user
       patch :update, id: task.to_param, task: { identity: nil }
       expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+
+    it "sends an email to all group members if a group is assigned to a new task" do
+      post :create, { :task => valid_parameters_with_group }
+      expect(ActionMailer::Base.deliveries.count).to eq(2)
+    end
+
+    it "sends emails to user and group if assignment was changed from user to group" do
+      task = Task.create! valid_attributes_with_user
+      patch :update, id: task.to_param, task: { identity: 'Group:' + group.id.to_s }
+      expect(ActionMailer::Base.deliveries.count).to eq(3)
+    end
+
+    it "sends an email to all group members if a group is assigned to an existing task" do
+      task = Task.create! valid_attributes
+      patch :update, id: task.to_param, task: { identity: 'Group:' + group.id.to_s }
+      expect(ActionMailer::Base.deliveries.count).to eq(2)
+    end
+
+    it "sends an email if the group assignment of an existing task is removed" do
+      task = Task.create! valid_attributes_with_group
+      patch :update, id: task.to_param, task: { identity: nil }
+      expect(ActionMailer::Base.deliveries.count).to eq(2)
     end
 
     it "renders the 'new' template" do

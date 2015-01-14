@@ -43,10 +43,10 @@ RSpec.describe DashboardController, type: :controller do
     end
   
     describe "My tasks partial" do
-      let!(:task) { create :assigned_task, event_id: event.id, user_id: user.id, status: 'accepted' }
-      let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, user_id: other_user.id }
-      let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, user_id: user.id }
-      let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, user_id: user.id, status: 'accepted' }
+      let!(:task) { create :assigned_task, event_id: event.id, identity: user, status: 'accepted' }
+      let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, identity: other_user }
+      let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, identity: user }
+      let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, identity: user, status: 'accepted' }
 
       before do
         Timecop.freeze(Date.today + 3)

@@ -138,7 +138,7 @@ RSpec.describe EventsController, :type => :controller do
       sign_in assigned_user
 
       event = Event.create! valid_attributes
-      firstTask = create(:task, event_id: event.id, user_id: assigned_user.id)
+      firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
       get :show, {:id => event.to_param}, valid_session
@@ -149,7 +149,7 @@ RSpec.describe EventsController, :type => :controller do
       assigned_user = create(:user)
       
       event = Event.create! valid_attributes
-      firstTask = create(:task, event_id: event.id, user_id: assigned_user.id)
+      firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
       get :show, {:id => event.to_param}, valid_session
