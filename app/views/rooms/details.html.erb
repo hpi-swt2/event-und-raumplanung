@@ -62,17 +62,18 @@
 		<!-- <% end %> -->
 	<!-- </tbody> -->
 <!-- </table> -->
-<%= @calendar%>
 <script>$(document).ready(function() {
 			$('#calendar').fullCalendar({				
 				defaultView: 'agendaDay',
-				eventSources: [{
-				events:<%= @calendar%>
+				eventSources:[
+				{
+					url: '/events/json.json'
+				}
+				]
 				
-				}]
 				
-				});
 			});
+		})
 </script>
 <style type='text/css'>
 

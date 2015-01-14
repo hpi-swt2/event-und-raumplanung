@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'rooms/list'
   get 'rooms/:id' => 'rooms#details'
+  get 'events/json' => 'events#json'
   post 'rooms/list'
   post 'rooms/:id' => 'rooms#details'
 

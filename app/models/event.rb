@@ -81,5 +81,19 @@ class Event < ActiveRecord::Base
   ]
   end
 
+  def self.events_for_today_for_room(room_id)
+	events_for_today_for_room = self.where("events.room_id = room_id and events.starts_at >= ? and events.starts_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+	
+	return events_for_today_for_room.select(:name, :starts_at, :ends_at).as_json
+	
+  end
+  
+  def as_json(options = {})
+	{
+		:title => self.name,
+		:start => self.starts_at.utc.iso8601,
+		:end => self.ends_at.utc.iso8601
+	}
+  end
 
 end
