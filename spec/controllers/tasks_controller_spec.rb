@@ -259,13 +259,13 @@ RSpec.describe TasksController, type: :controller do
 
     it "edits a task with assigned user" do
       get :edit, id: task
-      expect(assigns(:identity_name)).to eq "User: #{user.username}"
+      expect(assigns(:identity_name)).to eq "#{user.username}"
       expect(response).to be_success
     end   
 
     it "edits a task with assigned group" do
       get :edit, id: task_with_group
-      expect(assigns(:identity_name)).to eq "Group: #{group.name}"
+      expect(assigns(:identity_name)).to eq "#{group.name} (#{I18n.t('groups.group')})"
       expect(response).to be_success
     end
 

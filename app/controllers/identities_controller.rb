@@ -7,8 +7,8 @@ class IdentitiesController < ApplicationController
 		if params[:search]
 			groups = Group.where("LOWER(name) LIKE ?", "%#{params[:search].downcase}%")
 			users = User.where("LOWER(username) LIKE ?", "%#{params[:search].downcase}%")
-			json_groups = groups.collect{ |g| {label: "Group: " + g.name, value: "Group: " + g.name, id: "Group:" + g.id.to_s} } 
-			json_users = users.collect{ |u| {label: "User: " + u.username, value: "User: " + u.username, id: "User:" + u.id.to_s} }
+			json_groups = groups.collect{ |g| {label: g.name + " (#{t('groups.group')})", value: g.name + " (#{t('groups.group')})", id: "Group:" + g.id.to_s} } 
+			json_users = users.collect{ |u| {label: u.username, value: u.username, id: "User:" + u.id.to_s} }
 			respond_with json_groups + json_users
 		end
 	end
