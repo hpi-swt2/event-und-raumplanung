@@ -1,8 +1,8 @@
 class UserMailer < ActionMailer::Base
   default from: "no-reply@example.com"
 
-  def user_assigned_to_task_email(assigner, task, user)
-    @group_assignment = false
+  def user_assigned_to_task_email(assigner, task, user, group_assignment)
+    @group_assignment = group_assignment
     @group_name = "Testgruppe"
   	@assigner = assigner
   	@user = user
@@ -11,8 +11,8 @@ class UserMailer < ActionMailer::Base
   	mail(to: @user.email, subject: @task.name + subject)
   end
 
-  def user_assignment_removed_email(assigner, user, task)
-    @group_assignment = false
+  def user_assignment_removed_email(assigner, user, task, group_assignment)
+    @group_assignment = group_assignment
     @group_name = "Testgruppe"
   	@assigner = assigner
   	@user = user
