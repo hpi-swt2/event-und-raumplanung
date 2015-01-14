@@ -63,12 +63,12 @@
         <%= error_span(@task[:deadline]) %>  
       </div>
       <div class="control-group">
-      <%= f.label :identity, :class => 'control-label' %>
-      <div class="controls">
-          <%= f.hidden_field :identity %>
-          <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
-      </div>
-      <%= error_span(@task[:identity]) %>
+        <%= f.label :identity, :class => 'control-label' %>
+        <div class="controls">
+            <%= f.hidden_field :identity %>
+            <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
+        </div>
+        <%= error_span(@task[:identity]) %>
       </div>
     <% end %>
     <% unless @task.new_record? or @for_event_template %>
@@ -90,7 +90,8 @@
               <%= file_field_tag "uploads[]", :id => 'uploads_template', :type => :file, :class => 'btn btn-default btn-file', :onchange => 'onUploadFileSelected(this)' %>
               <span class="task-upload-name"></span>
               <button id="delete_upload_template" name="delete_upload_template" type="button" class="btn btn-xs btn-danger" onclick="removeUploadFile(this)"><span class="glyphicon glyphicon-remove"></span></button>
-            </div><div class="task-upload" id="task_upload_1">
+            </div>
+            <div class="task-upload" id="task_upload_1">
               <%= file_field_tag "uploads[]", :id => 'uploads_1', :type => :file, :class => 'btn btn-default btn-file', :onchange => 'onUploadFileSelected(this)' %>
               <span class="task-upload-name"></span>
               <button id="delete_upload_1" name="delete_upload_1" type="button" class="btn btn-xs btn-danger" onclick="removeUploadFile(this)"><span class="glyphicon glyphicon-remove"></span></button>
@@ -108,7 +109,6 @@
             <% end %>
         <% end %>
     </ul>
-  <% end %>
 
     <h4><%= t('tasks.form.links') %></h4>
     <form id="attachment_form" data-bind="submit: addAttachment">
@@ -135,7 +135,7 @@
         <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
     </ul>  
     
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= submit_tag t('submit'), :class => 'btn btn-primary form_submit task_form_submit', :onclick => "$('.task_form').submit();" %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
   <% end %>
