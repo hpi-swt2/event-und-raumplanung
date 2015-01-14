@@ -2,16 +2,73 @@ require 'rails_helper'
 require 'pry'
 
 RSpec.describe TasksController, type: :controller do
-
-  describe "GET accept" do
     let(:event) { create :event }
     let(:user) { create :user }
     let(:another_user) { create :user }
+    let(:task) { FactoryGirl.create :task }
     let(:group) { create :group, users: [user, another_user]}
     let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:assigned_task_group) { create :assigned_task, event_id: event.id, identity: group}
-    
+    let(:valid_attributes) {
+      {
+        name: "Test",
+        done: false,
+        description: "description"
+      }
+    }
+
+    let(:valid_attributes_for_task_update) {
+      {
+        name: "Test",
+        done: false,
+        description: "new description"
+      }
+    }
+
+    let(:valid_attributes_with_user) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+        user_id: user.id
+      }
+    }
+
+    let(:valid_attributes_with_event_template_id) {
+        {
+        name: "Test",
+        description: "description",
+        event_template_id: 1
+      }
+    } 
+
+    let(:valid_attributes_with_event_id) {
+        {
+        name: "Test",
+        description: "description",
+        event_id: 1
+      }
+    } 
+
+    let(:valid_attributes_with_attachement) { 
+      {
+        name: "Test",
+        description: "description",
+        event_id: 1,
+        attachments_attributes: [ { title: "Example", url: "http://example.com"} ]
+      }
+    }
+
+    let(:invalid_attributes) {
+      {
+        name: '',
+      }
+    }
+
+  let(:valid_session) { {} }
+  
+  describe "GET accept" do  
     before(:each) { sign_in user }
 
     it 'should change tasks status of assigned task to accepted' do
@@ -164,10 +221,48 @@ RSpec.describe TasksController, type: :controller do
       get :index
       expect(assigns(:events)).not_to be_nil
     end
-  
-    it "gets new" do
-      get :new
-      expect(response).to be_success
+
+
+    describe "GET new" do
+      before(:all) do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it "gets new" do
+        get :new
+        expect(response).to be_success
+      end
+      it "renders the new template" do
+        get :new
+        expect(response).to render_template("new")
+      end
+
+      it "sets the event for @task that should belong to the event" do
+        get :new, { event_id: 1 }
+        expect(assigns(:task).event_id).to eq(1)
+      end
+
+      it "sets the event_template for @task that should belong to the event_template" do
+        get :new, { event_template_id: 1 }
+        expect(assigns(:task).event_template_id).to eq(1)
+      end
+
+      it "sets @for_event_template to true if task for an EventTemplate should be created" do
+        event_template = FactoryGirl.create :event_template
+        get :new, {:event_template_id => event_template.to_param}
+        expect(assigns(:for_event_template)).to eq(true)
+      end
+
+      it "sets @for_event_template to false if task for an Event should be created" do
+        event = FactoryGirl.create :event
+        get :new, {:event_id => event.to_param}
+        expect(assigns(:for_event_template)).to eq(false)
+      end
+
+      after(:all) do
+        DatabaseCleaner.clean
+      end
     end
   
     it "creates task" do

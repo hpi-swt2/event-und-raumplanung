@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :set_done, :destroy, :accept, :decline, :upload_file]
+  before_action :set_for_event_template, only: [:edit]
   before_action :set_return_url, only: [:show, :new, :edit]
 
   # GET /tasks
@@ -22,9 +23,15 @@ class TasksController < ApplicationController
   def new
     @task = Task.new
     unless params[:event_id].blank?
-      @task.event_id = params[:event_id] 
+      @task.event_id = params[:event_id]
+      @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
+    else
+      unless params[:event_template_id].blank?
+        @task.event_template_id = params[:event_template_id]
+        @for_event_template = true
+      end
     end
   end
 
@@ -187,11 +194,11 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :event_id, :identity, :identity_id, :identity_type, :done, :deadline)
+      params.require(:task).permit(:name, :description, :event_id, :event_template_id, :identity, :identity_type, :identity_id, :user_id, :done, :deadline)
     end
 
     def task_params_with_attachments
-      params.require(:task).permit(:name, :description, :event_id, :identity, :identity_id, :identity_type, :done, :deadline, :attachments_attributes => [ :title, :url ])
+      params.require(:task).permit(:name, :description, :event_id, :event_template_id, :identity, :identity_id, :identity_type, :done, :deadline, :attachments_attributes => [ :title, :url ])
     end
 
     def task_update_order_params
@@ -232,24 +239,28 @@ class TasksController < ApplicationController
       return updated_params
     end
 
+    def set_for_event_template 
+      @for_event_template = @task.event_id.nil? ? true : false
+    end
+
     def upload_files
       @uploads = []
       return true unless params[:uploads]
-      params[:uploads].each do |upload| 
+      params[:uploads].each do |upload|
         new_upload = @task.uploads.create(:file => upload)
         @uploads << new_upload
       end
       return (@uploads.any? { |u| u.errors.any? }) ? false : true
     end
-
+  
     def delete_files
       params[:delete_uploads].each { |id, value| Upload.find(id).destroy! if value == 'true' }
     end
-
+  
     def delete_new_uploads
       @uploads.each { |upload| upload.destroy } unless @uploads.blank?
     end
-
+  
     def get_upload_errors
       errors = Hash.new
       @uploads.each { |upload| errors[upload.file_file_name] = upload.errors if upload.errors.any? } unless @uploads.blank?

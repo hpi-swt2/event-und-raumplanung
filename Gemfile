@@ -124,4 +124,5 @@ group :test, :development  do
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
 	gem 'timecop'
+	gem 'rspec-activemodel-mocks'
 end

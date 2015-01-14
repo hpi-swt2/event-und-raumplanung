@@ -5,6 +5,7 @@ class Task < ActiveRecord::Base
 
   belongs_to :event
   belongs_to :identity, polymorphic: true # can be either user or group
+  belongs_to :event_template
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
   has_many :uploads, :dependent => :destroy

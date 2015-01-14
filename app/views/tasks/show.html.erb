@@ -8,18 +8,28 @@
   <dd><%= @task.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @task.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
-  <dd><%= @task.event_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:identity) %>:</strong></dt>
-  <dd><% if @task.identity %><%= @task.identity.name  %><% else %><%= t('tasks.user.none')  %><% end %></dd>
-  <% if @task.deadline %> 
-  <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
-  <dd><%= @task.deadline.strftime("%d.%m.%Y") %></dd>
+  <% unless @task.event_id.nil? %>
+    <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
+    <dd><%= @task.event_id %></dd>
   <% end %>
-  <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-  <dd class="<%= @task.status %>"><%= t('tasks.status.' + @task.status)%></dd>
-  <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
-  <dd><%= @task.done %></dd>
+  <% unless @task.event_template_id.nil? %>
+    <dt><strong><%= model_class.human_attribute_name(:event_template_id) %>:</strong></dt>
+    <dd><%= @task.event_template_id %></dd>
+  <% end %>
+  <% unless @task.identity_id.nil? %>
+    <dt><strong><%= model_class.human_attribute_name(:identity_id) %>:</strong></dt>
+    <dd><% if @task.identity %><%= @task.identity.name  %><% else %><%= t('tasks.user.none') %><% end %></dd>
+  <% end %>
+  <% if @task.deadline %> 
+    <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
+    <dd><%= @task.deadline.strftime("%d.%m.%Y") %></dd>
+  <% end %>
+  <% unless @task.event_id.nil? %>
+    <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
+    <dd class="<%= @task.status %>"><%= t('tasks.status.' + @task.status)%></dd>
+    <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
+    <dd><%= @task.done %></dd>
+  <% end %>
 </dl>
 
 <dl>

@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-<%= render(partial: 'form') %>
+<%= render :partial => 'form', :locals => {:for_event_template => @for_event_template} %>
 
 <script>
 	var viewModel = new TaskEditViewModel(true, <%= @task.id %>);
