@@ -21,8 +21,10 @@ RSpec.describe DashboardController, type: :controller do
   }}
 
   let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+  let(:other_event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
   let(:other_user) { create :user }
   let(:past_event) { create :event, name: 'Past Event', user_id: user.id }
+  let(:group) { create :group, users: [user] }
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -47,6 +49,8 @@ RSpec.describe DashboardController, type: :controller do
       let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, identity: other_user }
       let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, identity: user }
       let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, identity: user, status: 'accepted' }
+      let!(:another_group) { create :group }
+      let!(:group_task) { create :assigned_task, event_id: event.id, identity: group}
 
       before do
         Timecop.freeze(Date.today + 3)
@@ -84,7 +88,24 @@ RSpec.describe DashboardController, type: :controller do
         expect(assigns(:my_pending_events).include? past_event). to eq(false)
       end
 
+      it 'assigns only groups I am in to @my_groups' do
+        get :index, {}, valid_session
+        expect(assigns(:my_groups).include? group). to eq(true)
+        expect(assigns(:my_groups).include? another_group). to eq(false)
+        expect(assigns(:my_groups).first.users.include? user). to eq(true)
+      end
 
+      it 'assigns only the group task to @group_pending_tasks' do
+        get :index, {}, valid_session
+        expect(assigns(:group_pending_tasks).include? group_task). to eq(true)
+        expect(assigns(:group_pending_tasks).include? task). to eq(false)
+      end
+
+      it 'assigns only the event with group in which I am and have tasks to @group_pending_events' do
+        get :index, {}, valid_session
+        expect(assigns(:group_pending_events).include? event). to eq(true)
+        expect(assigns(:group_pending_events).include? other_event). to eq(false)
+      end
       
     end
 
