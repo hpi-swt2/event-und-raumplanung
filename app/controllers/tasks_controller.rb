@@ -32,9 +32,9 @@ class TasksController < ApplicationController
   def edit
     if @task.identity_type && @task.identity_id
       if @task.identity_type == "User"
-        @identity_name = "User: " + User.find(@task.identity_id).username
+        @identity_name = User.find(@task.identity_id).username
       else
-        @identity_name = "Group: " + Group.find(@task.identity_id).name
+        @identity_name = Group.find(@task.identity_id).name + " (#{t('groups.group')})"
       end
     else
       @identity_name = "" 
