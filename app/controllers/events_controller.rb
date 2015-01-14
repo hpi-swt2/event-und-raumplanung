@@ -128,6 +128,7 @@ class EventsController < ApplicationController
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite=true AND event_id = ?', current_user_id, @event.id);
     @user = User.find(@event.user_id).identity_url
+
     logger.info @event.rooms.inspect
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)

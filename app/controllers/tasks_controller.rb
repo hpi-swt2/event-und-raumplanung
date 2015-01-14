@@ -46,6 +46,7 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
+
     unless params[:task][:identity].blank? 
       identity_params = params[:task][:identity].match(/^(?<type>\w+):(?<id>\d+)$/)
       @task.identity_id =  identity_params[:id]
@@ -53,6 +54,7 @@ class TasksController < ApplicationController
     end
 
     authorize! :create, @task
+
     respond_to do |format|
       if @task.save && upload_files
         if @task.identity

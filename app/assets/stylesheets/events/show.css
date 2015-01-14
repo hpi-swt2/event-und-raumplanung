@@ -2,3 +2,36 @@
 	height: 1.5em;
 	line-height: 1.5em;
 }
+
+.event-page-header h1, .event-page-header h2, .event-page-header h3 {
+	margin: 5px;
+}
+
+.event-page-header {
+	margin: 3em 0;
+}
+
+.event-section-divider {
+	border-bottom: 2px solid #aaa;
+}
+
+.event-description {
+	font-size: 1.2em;
+	text-align: justify;
+}
+
+.event-view-section {
+	margin-bottom: 3em;
+}
+
+.event-favorite-icon-checked, .event-favorite-icon-checked:hover, .event-favorite-icon-checked:focus, .event-favorite-icon-checked:visited, .event-favorite-icon-checked:active {
+	color: #F8A902;
+}
+
+.event-favorite-icon-unchecked, .event-favorite-icon-unchecked:hover, .event-favorite-icon-unchecked:focus, .event-favorite-icon-unchecked:visited, .event-favorite-icon-unchecked:active {
+	color: #DDD;
+}
+
+.event-favorite-icon {
+	margin-left: 15px;
+}

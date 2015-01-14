@@ -117,7 +117,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task that are marked as undone" do
-      post :create, task: { description: "description", name: "Test", done: true }
+      post :create, task: { description: "description", name: "Test" }
       expect(assigns(:task).done).to be false
     end
 
@@ -150,6 +150,8 @@ RSpec.describe TasksController, type: :controller do
     it "sets the event for a new task that should belong to the event" do
       get :new, event_id: 1
       expect(assigns(:task).event_id).to eq(1)
+      get :new
+      expect(assigns(:task).event_id).to eq(nil)
       expect(assigns(:event_field_readonly)).to be(:true)
     end
     
