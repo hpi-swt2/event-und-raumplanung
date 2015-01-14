@@ -54,7 +54,7 @@ input.task-done-checkbox {
     color: whitesmoke !important;
 }
 
-.dropdown-menu {
+.navbar-nav .dropdown-menu {
     background-color: #8a9095 !important;
 	color: white !important;
 }

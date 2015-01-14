@@ -66,11 +66,6 @@
         <div class="controls">
           <%= f.hidden_field :identity %>
           <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
-          <!--<%#= f.select(
-            :identity, identity_collection,
-            {:include_blank => t('tasks.user.none'),
-            :selected => "#{f.object.identity_type}:#{f.object.identity_id}"},            
-            {:class => 'form-control'}) %>-->
         </div>
         <%= error_span(@task[:identity]) %>
     </div>
