@@ -133,7 +133,7 @@ class EventsController < GenericEventsController
   # GET /events/1.json
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).identity_url unless @event.user_id.nil?
+    @user = User.find(@event.user_id).name unless @event.user_id.nil?
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
