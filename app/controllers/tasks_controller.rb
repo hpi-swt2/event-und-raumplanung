@@ -120,8 +120,31 @@ class TasksController < ApplicationController
   end
 
   def accept
-    authorize! :accept, @task
     if @task.identity
+      if @task.identity.is_group and @task.identity.users.include?(current_user)
+        @task.identity = current_user
+      end
+
+      if !@task.identity.is_group and @task.identity.id != current_user.id
+        if @task.status == "accepted"
+          flash[:warning] = t(".this_task_was_already_accepted_by") + " " + @task.identity.name
+          redirect_to root_path
+        return
+        else  
+          flash[:warning] = t(".you_are_not_authorized_to_accept_this_task")
+          redirect_to root_path
+        return
+        end
+        redirect_to root_path
+        return
+      end
+
+      if @task.status == "declined"
+        flash[:warning] = t(".this_task_was_already_declined")
+        redirect_to root_path
+        return
+      end
+
       @task.status = "accepted"
       @task.save
     end
@@ -134,13 +157,18 @@ class TasksController < ApplicationController
   end
 
   def decline
-    authorize! :decline, @task
     if @task.identity
-      if @task.status == "accepted"
-        flash[:error] = t('.you_already_accepted_this_task')
+      if (@task.identity.is_group and @task.identity.users.include?(current_user)) or (!@task.identity.is_group and @task.identity.id == current_user.id)
+        if @task.status == "accepted"
+          flash[:error] = t('.you_already_accepted_this_task')
+        else
+          @task.status = "declined"
+          @task.save
+        end
       else
-        @task.status = "declined"
-        @task.save
+        flash[:warning] = t(".you_are_not_authorized_to_decline_this_task")
+        redirect_to root_path
+        return
       end
     end
     redirect_to @task

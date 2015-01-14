@@ -4,10 +4,13 @@ require 'pry'
 RSpec.describe TasksController, type: :controller do
 
   describe "GET accept" do
-    let(:event) { FactoryGirl.create(:event) }
-    let(:user) { FactoryGirl.create(:user) }
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: user }
-    let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
+    let(:event) { create :event }
+    let(:user) { create :user }
+    let(:another_user) { create :user }
+    let(:group) { create :group, users: [user, another_user]}
+    let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
+    let(:unassigned_task) { create :unassigned_task, event_id: event.id }
+    let(:assigned_task_group) { create :assigned_task, event_id: event.id, identity: group}
     
     before(:each) { sign_in user }
 
@@ -19,13 +22,38 @@ RSpec.describe TasksController, type: :controller do
       expect{get :accept, id: unassigned_task.id}.to_not change{Task.find(unassigned_task.id).status}
     end
 
+    it 'should change assigned person from group to accepting user' do 
+      get :accept, id: assigned_task_group.id
+      expect(Task.find(assigned_task_group.id).status).to eq 'accepted'
+      expect(Task.find(assigned_task_group.id).identity_id).to eq user.id
+      expect(Task.find(assigned_task_group.id).identity_type).to eq 'User'
+    end
+
+    it 'should promt an error message to another User from the assigned group who wants to accept an already accepted task' do 
+      pending("redirects to tasks/task.id and not to root_path & flash warning is nil")
+      get :accept, id: assigned_task_group.id
+      sign_in another_user
+      get :accept, id: assigned_task_group.id
+      expect(Task.find(assigned_task_group.id).identity_id).to_not eq another_user.id
+      expect(flash[:warning]).should_not be_nil
+      expect(response).to redirect_to root_path
+    end
+
+    it 'should not change declined task to accepted' do 
+      get :decline, id: assigned_task_group.id
+      get :accept, id: assigned_task_group.id
+      expect(Task.find(assigned_task_group.id).status).to eq 'declined'
+    end
   end
 
   describe "GET decline" do
     let(:event) { FactoryGirl.create(:event) }
     let(:user) { FactoryGirl.create(:user) }
+    let(:another_user) { create :user }
+    let(:group) { create :group, users: [user, another_user]}
     let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
+    let(:assigned_task_group) { create :assigned_task, event_id: event.id, identity: group}
     
     before(:each) { sign_in user }
 
@@ -35,6 +63,17 @@ RSpec.describe TasksController, type: :controller do
 
     it 'should not change tasks status of unassigned task to declined' do
       expect{get :decline, id: unassigned_task.id}.to_not change{Task.find(unassigned_task.id).status}
+    end
+
+    it 'should change task assigned to group from pending to declined' do 
+      get :decline, id: assigned_task_group.id
+      expect(Task.find(assigned_task_group.id).status).to eq 'declined'
+    end
+
+    it 'should not change accepted task to declined' do 
+      get :accept, id: assigned_task_group.id
+      get :decline, id: assigned_task_group.id
+      expect(Task.find(assigned_task_group.id).status).to eq 'accepted'
     end
   end
 
