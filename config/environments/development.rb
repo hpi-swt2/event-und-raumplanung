@@ -39,13 +39,6 @@ Rails.application.configure do
   # In production, :host should be set to the actual host of your application.
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   
-  config.action_mailer.perform_deliveries = true
-
-  config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    user_name:            'hpiswt2eur@gmail.com',
-    password:             'Tset1234',
-    authentication:       'plain',
-    enable_starttls_auto: true  }
+  config.action_mailer.perform_deliveries = false
+  
 end
