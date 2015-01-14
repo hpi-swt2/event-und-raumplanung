@@ -13,6 +13,7 @@ de:
     accept:
       this_task_was_already_accepted_by: Dieser Task wurde schon akzeptiert von
       you_are_not_authorized_to_accept_this_task: "Sie sind nicht berechtigt, diesen Task zu akzeptieren."
+      this_task_was_already_declined: Dieser Task wurde bereits abgelehnt.
     show:
       new: Neue Task
       no_tasks: Es gibt für dieses Event noch keine Aufgaben.
