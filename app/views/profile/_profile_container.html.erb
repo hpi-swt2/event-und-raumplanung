@@ -1,0 +1,20 @@
+<link href="bootstrap-switch.min.css" rel="stylesheet">
+<script src="bootstrap-switch.min.js"></script>
+
+<%= form_tag ( { :action => "update_profile", :controller => "profile"}) do %>
+	<h1> Max Mustermann </h1> 
+	<p> Email Nodifications: </br><input type="checkbox" name="checkEmailNod" checked></p>
+	<p> Full Name: </br><%= text_field_tag( :fullname, "",  class: 'form-control' )%></p>
+	<p> Office Location:</br>	<%= text_field_tag :officelocation, "" ,  class: 'form-control' %></p>
+	<p> Office Phone:</br>	<%= text_field_tag :officephone, "" ,  class: 'form-control' %> </p>
+	<p> Mobile Phone:</br> 	<%= text_field_tag :mobilephone, "" ,  class: 'form-control' %></p>
+	<p> Language: </br> <%= select_tag "language", "<option> German </option><option> English </option>".html_safe %></p></br>
+	<%= submit_tag "Save Profile" %>
+
+<% end %>
+
+
+
+		<script>
+		$("[name='checkEmailNod']").bootstrapSwitch();
+		</script>

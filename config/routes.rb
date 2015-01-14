@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'profile/index' => 'profile#index'
+  post 'profile_update_profile' => 'profile#update_profile', as: "update_profile"
+
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
   post 'events_create_comment' => 'events#create_comment', as: "create_comment"
@@ -52,6 +55,7 @@ Rails.application.routes.draw do
   end
 
   resources :maps
+  resources :profile
 
   resources :event_templates, :path => "templates"
   resources :event_templates do
