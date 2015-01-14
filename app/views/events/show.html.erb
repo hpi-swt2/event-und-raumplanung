@@ -63,9 +63,13 @@
 </div>
 
 <div class="event-view-section">
-  <h4><%= t '.tasks' %></h4>
+  <h3><%= t '.tasks' %></h3>
   <% @event_id = @event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
+  <% if @tasks.blank? %>
+    <div class="event-no-tasks"><%= t('tasks.show.no_tasks') %></div>
+  <% else %>
+    <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
+  <% end %>
 </div>
 
 <div class="event-view-section">
