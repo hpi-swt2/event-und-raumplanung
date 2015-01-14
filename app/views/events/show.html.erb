@@ -54,7 +54,7 @@
           <td><%= @user %></td>
         </tr>
         <tr>
-          <td><%= t('events.show.participant_count') %></td>
+          <td><%= t('.events.show.participant_count') %></td>
           <td><%= @event.participant_count %></td>
         </tr>
       </tbody>
@@ -65,7 +65,7 @@
 <div class="event-view-section">
   <h3><%= t '.tasks' %></h3>
   <% @event_id = @event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks })%>
+  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
 </div>
 
 <div class="event-view-section">
@@ -88,7 +88,7 @@
       <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                     event_path(@event),
                     :method => 'delete',
-                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you  sure?')) },
+                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                     :class => 'btn btn-danger' %>
     <% end %>
   </div>

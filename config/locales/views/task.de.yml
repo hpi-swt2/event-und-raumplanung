@@ -7,6 +7,8 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
+    decline:
+      you_already_accepted_this_task: Sie haben diesen Task bereits akzeptiert.
     show:
       new: Neue Task
-      no_tasks: Es gibt für dieses Event noch keine Aufgaben.
+      no_tasks: Es gibt für dieses Event noch keine Aufgaben oder Sie dürfen sie nicht sehen.

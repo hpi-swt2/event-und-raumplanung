@@ -12,3 +12,5 @@ en:
     my_events: My Events
     no_own_upcoming_events: You have not created any events.
     more: More
+    personal_tasks: Personal Tasks
+    group_tasks: Group Tasks

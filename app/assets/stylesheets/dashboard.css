@@ -44,3 +44,8 @@
 	display: block !important;
 	text-align: right !important;
 }
+
+.dashboard-pending-task-seperator {
+	margin-top: 0;
+	border: 1px solid black;
+}

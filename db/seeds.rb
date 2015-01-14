@@ -33,26 +33,30 @@ another_event = Event.create({name: 'Vorlesung',
 Task.create({name: 'An accepted Task', 
 			description: 'This is an accepted task.',
 			event_id: event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'accepted'})
 
 Task.create({name: 'Another accepted Task', 
 			description: 'This is a accepted task which is already done.',
 			event_id: another_event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'accepted',
 			done: true })
 
 Task.create({name: 'A pending Task', 
 			description: 'This is a pending task.',
 			event_id: event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'pending'})
 
 Task.create({name: 'A second pending Task', 
 			description: 'This is another pending task.',
 			event_id: another_event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'pending'})
 
 Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
