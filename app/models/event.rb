@@ -160,7 +160,7 @@ class Event < ActiveRecord::Base
 
   def involved_users()
     involved = Array.new
-    involved << self.user_id
+    involved << User.find(self.user_id)
     self.tasks.each do | task |
       involved << task.user
     end
