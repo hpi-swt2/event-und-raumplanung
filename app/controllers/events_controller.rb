@@ -125,6 +125,7 @@ class EventsController < GenericEventsController
   # GET /events/new
   def new
     super
+    @event.assign_attributes(params.permit(:name, :description, :participant_count, :starts_at, :ends_at, :is_private, :is_important, :room_ids => []))
   end 
 
   # GET /events/:id/new_event_suggestion

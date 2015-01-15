@@ -19,5 +19,7 @@
   </table>
 <% end %>
 <% if @events.size == 0 %>
-  <em><%=t '.no_upcoming_events' %></em><br/>
+  <em><%=t '.no_upcoming_events' %></em><br/><br/>
 <% end %>
+
+<%= link_to t('.create_event'),  new_event_path(room_ids: [@room.id]), :class => 'btn btn-default'  %>

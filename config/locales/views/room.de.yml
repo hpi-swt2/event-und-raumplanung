@@ -18,8 +18,9 @@ de:
       category: Kategorie
       available: Vorhanden
       no_equipment: Keine Ausstattung vorhanden
-    events:
+    upcoming_events:
       no_upcoming_events: Keine anstehenden Events
+      create_event: Event erstellen
     details:
       capacity: Kapazität
       equipment: Ausstattung
