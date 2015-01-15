@@ -11,33 +11,41 @@ class PermissionsController < ApplicationController
 
   def submit
     if params[:type] == 'entity'
-      @permitted_entity = determine_permitted_entity(params[:user])
-      Permission.categories.keys.each do |category|
-        if permission_params[category] == "1"
-          @permitted_entity.permit(category)
-        else
-          @permitted_entity.unpermit(category)
-        end
-      end
-      name = @permitted_entity.username if @permitted_entity.is_a?(User)
-      name = @permitted_entity.name if @permitted_entity.is_a?(Group)
-      respond_to do |format|
-        format.json { render :json => '"' + I18n.t('permissions.updated_entity', entity: name) + '"', :status => :ok }
-      end
+      submit_entities
     elsif params[:type] == 'permission'
-      entities = User.all + Group.all
-      entities.each do |entity|
-        form_name = 'User:' + entity.id.to_s if entity.is_a?(User)
-        form_name = 'Group:' + entity.id.to_s if entity.is_a?(Group)
-        if params[form_name] == "1"
-          entity.permit(params[:permission])
-        else
-          entity.unpermit(params[:permission])
-        end
+      submit_permissions
+    end      
+  end
+
+  def submit_permissions
+    entities = User.all + Group.all
+    entities.each do |entity|
+      form_name = 'User:' + entity.id.to_s if entity.is_a?(User)
+      form_name = 'Group:' + entity.id.to_s if entity.is_a?(Group)
+      if params[form_name] == "1"
+        entity.permit(params[:permission])
+      else
+        entity.unpermit(params[:permission])
       end
-      respond_to do |format|
-        format.json { render :json => '"' + I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + params[:permission])) + '"', :status => :ok }
+    end
+    respond_to do |format|
+      format.json { render :json => '"' + I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + params[:permission])) + '"', :status => :ok }
+    end
+  end
+
+  def submit_entities
+    @permitted_entity = determine_permitted_entity(params[:user])
+    Permission.categories.keys.each do |category|
+      if permission_params[category] == "1"
+        @permitted_entity.permit(category)
+      else
+        @permitted_entity.unpermit(category)
       end
+    end
+    name = @permitted_entity.username if @permitted_entity.is_a?(User)
+    name = @permitted_entity.name if @permitted_entity.is_a?(Group)
+    respond_to do |format|
+      format.json { render :json => '"' + I18n.t('permissions.updated_entity', entity: name) + '"', :status => :ok }
     end
   end
 
@@ -52,8 +60,7 @@ class PermissionsController < ApplicationController
 
   def permitted_entities
     @permission = params[:permission]
-    @permitted_entities = User.all + Group.all
-    render :partial => "permitted_entities"
+    render :partial => "permitted_entities", locals: {users: User.all, groups: Group.all}
   end
 
   def user_permissions

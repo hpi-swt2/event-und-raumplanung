@@ -2,3 +2,11 @@
   <%= check_box_tag category, "1", @permitted_entity.has_permission(category) %> 
   <%= label_tag category, t("permissions." + category) %> <br/>
 <% end %>
+<% selection = Room.all.select{|room| @permitted_entity.has_permission('approve_events', room)}.map(&:id) %>
+<%= select_tag 'rooms[]',
+    options_from_collection_for_select(Room.all, :id, :name, selected:selection),
+    { :class => 'selectpicker', :multiple => '', :'data-live-search' => "true" }%>
+
+<script>
+  $('.selectpicker').selectpicker();
+</script>

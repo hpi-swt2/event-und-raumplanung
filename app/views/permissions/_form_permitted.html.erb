@@ -2,9 +2,14 @@
   <div class="control-group">
     <div class="controls">
       <%= hidden_field_tag 'type', 'entity' %>
-      <%= select_tag 'user', grouped_options_for_select([['Users', @users.map {|x| [x.username, "User:#{x.id}"]}], ['Groups', @groups.map {|x| [x.name, "Group:#{x.id}"]}]]), {class: 'form-control', id: 'user'}%>
+      <%= select_tag 'user',
+        grouped_options_for_select([
+            [User.model_name.human.pluralize.titleize, @users.map {|x| [x.username, "User:#{x.id}"]}],
+            [Group.model_name.human.pluralize.titleize, @groups.map {|x| [x.name, "Group:#{x.id}"]}]
+          ]), {class: 'selectpicker', id: 'user', :'data-live-search' => "true"}%>
       
       <div id="permissionDiv"></div>
+
       <script>
         $(function() {
           $('#user').ready(updateUserPermissions);

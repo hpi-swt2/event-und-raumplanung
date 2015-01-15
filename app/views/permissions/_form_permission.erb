@@ -2,7 +2,7 @@
   <div class="control-group">
     <div class="controls">
       <%= hidden_field_tag 'type', 'permission' %>
-      <%= select_tag 'permission', options_for_select(@categories.map { |cat| [t('permissions.' + cat), cat]}), {class: 'form-control', id: 'permissions'} %>
+      <%= select_tag 'permission', options_for_select(@categories.map { |cat| [t('permissions.' + cat), cat]}), {class: 'selectpicker', id: 'permissions'} %>
       
       <div id="entitiesDiv"></div>
       <script>

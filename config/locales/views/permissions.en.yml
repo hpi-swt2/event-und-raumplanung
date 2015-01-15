@@ -4,6 +4,8 @@ en:
   permissions:
     index:
       title: Permissions
+      filter_by_entity: Filter by entities
+      filter_by_permission: Filter by permissions
     manage_rooms: Manage rooms
     edit_rooms: Edit rooms
     approve_events: Approve events
@@ -13,4 +15,4 @@ en:
     edit_properties: Edit room properties
     assign_to_rooms: Edit equipment and room properties
     updated_entity: "Permissions for %{entity} were updated"
-    updated_permission: "Permission %{permission} were updated"
+    updated_permission: "Permission %{permission} was updated"

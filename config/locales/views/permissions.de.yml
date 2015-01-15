@@ -3,7 +3,9 @@
 de:
   permissions:
     index:
-      title: Rechte
+      title: Berechtigungen
+      filter_by_entity: Nach Entitäten filtern
+      filter_by_permission: Nach Berechtigungen filtern
     manage_rooms: Räume verwalten
     edit_rooms: Räume bearbeiten
     approve_events: Events bestätigen
@@ -12,5 +14,5 @@ de:
     manage_properties: Raumeigenschaften verwalten
     edit_properties: Raumeigenschaften bearbeiten
     assign_to_rooms: Equipment und Raumeigenschaften bearbeiten
-    updated_entity: "Rechte für %{entity} wurden aktualisiert"
-    updated_permission: "Recht %{permission} wurde aktualisiert"
+    updated_entity: "Berechtigungen für %{entity} wurden aktualisiert"
+    updated_permission: "Berechtigung %{permission} wurde aktualisiert"
