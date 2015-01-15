@@ -51,6 +51,24 @@ ActiveRecord::Schema.define(version: 20150109153302) do
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
+  create_table "event_suggestions", force: true do |t|
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "room_id"
+    t.integer  "user_id"
+  end
+
+  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
+  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
+
+  create_table "event_suggestions_rooms", force: true do |t|
+    t.integer "event_suggestion_id"
+    t.integer "room_id"
+  end
+
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -111,6 +129,11 @@ ActiveRecord::Schema.define(version: 20150109153302) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "groups_users", id: false, force: true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
   end
 
   create_table "memberships", force: true do |t|
