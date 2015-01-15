@@ -11,7 +11,7 @@ function TaskEditViewModel(updateAttachmentsAjax, taskId) {
   }, this);
   this.deleteAttachment = function(attachment) {
     var _this = this;
-    if (!confirm("Are you sure?"))
+    if (!confirm("<%= I18n.t(".tasks.form.areYouSure") %>"))
       return;
 
     if (updateAttachmentsAjax) {
@@ -42,3 +42,25 @@ function TaskEditViewModel(updateAttachmentsAjax, taskId) {
       this.newAttachmentUrl("");
   }.bind(this);
 };
+
+function initializeAttachmentForm() {
+  var editForm = $('#task-form-edit')[0];
+  var createForm = $('#task-form-create')[0];
+
+  if (editForm) {
+    var taskId = $(editForm).data('task-id');
+    var viewModel = new TaskEditViewModel(true, taskId);
+    ko.cleanNode(editForm);
+    ko.applyBindings(viewModel, editForm);
+    var attachments_path = '<%= url.attachments_path %>';
+    $.getJSON(attachments_path, { task_id: taskId }, function(attachments) {
+      viewModel.attachments(attachments);
+    });
+  } else if (createForm) {
+    ko.cleanNode(createForm);
+    ko.applyBindings(new TaskEditViewModel(false, null), createForm);
+  }
+}
+
+$(initializeAttachmentForm);
+$(document).on('page:load', initializeAttachmentForm);

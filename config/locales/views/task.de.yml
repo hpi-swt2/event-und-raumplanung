@@ -17,3 +17,5 @@ de:
     show:
       new: Neue Task
       no_tasks: Es gibt für dieses Event noch keine Aufgaben oder Sie dürfen sie nicht sehen.
+    form:
+      areYouSure: Sind Sie sicher?

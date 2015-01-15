@@ -17,3 +17,5 @@ en:
     show:
       new: New Task
       no_tasks: There are no tasks for this event yet or you aren't allowed to see them.
+    form:
+      areYouSure: Are you sure?
