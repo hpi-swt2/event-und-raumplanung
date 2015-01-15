@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  before_action :authenticate_user!
 
   def show
   end
@@ -11,11 +12,10 @@ class CommentsController < ApplicationController
   end
 
   def create
-    puts "create new comment"
     @comment = Comments.new(comment_params)
-    respod_to do |format|
+    respond_to do |format|
       if @comment.save
-        format.html { redirect_to @comment, notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to event_path + "/" + @comment.event_id, notice: t('notices.successful_create', :model => Comments.model_name.human) }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
