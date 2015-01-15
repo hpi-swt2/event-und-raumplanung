@@ -56,26 +56,6 @@ class EventsController < GenericEventsController
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
-
-
-     @filterrific = Filterrific.new(
-      Event,
-      params[:filterrific] || session[:filterrific_events])
-      @filterrific.select_options =   {
-        sorted_by: Event.options_for_sorted_by
-      }
-      @filterrific.user = current_user_id if @filterrific.user == 1;
-      @filterrific.user = nil if @filterrific.user == 0;
-      @filterrific.room_ids = nil if @filterrific.room_ids && @filterrific.room_ids.size <=1
-      @events = Event.filterrific_find(@filterrific).page(params[:page])
-      @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
-      session[:filterrific_events] = @filterrific.to_hash
-
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   def reset_filterrific
