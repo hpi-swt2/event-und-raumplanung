@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
+  get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
 
 
 

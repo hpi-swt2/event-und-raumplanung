@@ -1,0 +1,8 @@
+en:
+  event_occurrences:
+    show:
+      title: 'Event Occurrence'
+      starts_occurring_at: 'Begins'
+      ends_occurring_at: 'Ends'
+      event_start: 'Event begins'
+      event_end: 'Event ends'

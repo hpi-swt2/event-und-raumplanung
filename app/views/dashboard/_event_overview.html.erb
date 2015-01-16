@@ -10,7 +10,7 @@
             <ul class="list-group">
                 <% @events.each do |event| %>
                     <li class="list-group-item">
-                        <%= link_to event.event.name, event_path(event.event) %>
+                        <%= link_to event.event.name, show_occurrence_path + "?" + { eventid: event.event.id.to_s, starting: event.starts_occurring_at.to_s, ending: event.ends_occurring_at.to_s }.to_param %>
                         (<%= event.starts_occurring_at.strftime("%A, %d.%m.%Y, %H:%M") if event.starts_occurring_at %>)
                     </li>
                 <% end %>
