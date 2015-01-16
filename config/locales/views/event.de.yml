@@ -34,3 +34,4 @@ de:
       created_at: 'Erstellt'
       updated_at: 'Geändert'
       schedule_not_recurring: 'Einmalig'
+      schedule: 'Wiederholungsmuster'
