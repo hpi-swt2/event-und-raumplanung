@@ -64,10 +64,20 @@
 
 <h4><%= t 'activities.activity_log' %></h4>
 
-<div class="activity-log-container">
-  <div class="activity-log">
-    <% @activities.each_with_index do |activity, index| %>
-      <%= render :partial => 'activity', :locals => { :activity => activity, :index => index } %>
+<div class="feed-container">
+  <div class="feed">
+    <% @feed_entries.each_with_index do |feed_entry, index| %>
+      <%= render :partial => 'feed_entry', :locals => { :feed_entry => feed_entry, :index => index } %>
     <% end %>
   </div>
 </div> 
+
+<div class="new-comment">
+  <h4><%= t 'comments.new_comment' %></h4>
+
+  <%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
+    <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
+    <div class="clearfix"></div>
+    <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
+  <% end %>  
+</div>

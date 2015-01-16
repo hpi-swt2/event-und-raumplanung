@@ -8,7 +8,7 @@ class EventsController < ApplicationController
 
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite]
   before_action :set_return_url, only: [:show, :new, :edit]
-  before_action :set_activites, only: [:show]
+  before_action :set_feed, only: [:show]
 
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
@@ -210,6 +210,31 @@ class EventsController < ApplicationController
     end
   end
 
+
+  def create_comment
+    @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  helper_method :create_comment
+
+  def delete_comment
+    @comment = Comments.find(params[:comment_id])
+    @comment.destroy
+    respond_to do |format|
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_destroy', :model => Event.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+    end
+  end
+  helper_method :delete_comment
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
@@ -242,7 +267,10 @@ class EventsController < ApplicationController
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
     end
 
-    def set_activites
+    def set_feed
       @activities = @event.activities.all.order("created_at ASC")
+      @comments = Comments.where(event_id: @event.id)
+      @feed_entries = @activities + @comments
+      @feed_entries = @feed_entries.sort_by(&:created_at)
     end
 end
