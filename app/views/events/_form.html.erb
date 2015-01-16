@@ -77,6 +77,17 @@
   </div>
   <div class="control-group">
 
+    <div class="control-group">
+    <%= f.label model_class.human_attribute_name(:owners), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :user_ids, options_from_collection_for_select(User.all, :id, :username, selected:@event.users.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+    </div>
+    <script>
+    $('#selectpicker').selectpicker();
+    </script>
+    <%= error_span(@event[:users]) %>
+  </div>
+
     <div class="row">
       <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
@@ -97,8 +108,5 @@
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
-
-  <%= f.label :owners %>
-<%= select_tag "owners", options_from_collection_for_select(User.all, 'id', 'username',@event.users.map{ |j| j.id }), :multiple => true %>
 
 <% end %>
