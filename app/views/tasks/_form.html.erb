@@ -65,7 +65,7 @@
       <div class="control-group">
         <%= f.label :identity, :class => 'control-label' %>
         <div class="controls">
-            <%= f.hidden_field :identity %>
+            <%= f.hidden_field :identity, value: "#{@task[:identity_type]}:#{@task[:identity_id]}" %>
             <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
         </div>
         <%= error_span(@task[:identity]) %>
