@@ -29,6 +29,7 @@ de:
       table_information: Tische auf Anfrage
       table_request: Tische anfragen
     list:
+      all_events: Alle Events
       room_selection: Raumauswahl
       requested_size: gewünschte Raumgröße
       necessary_equipment: Notwendige Ausstattung
@@ -40,3 +41,4 @@ de:
       room_size: maximale Personenzahl
       equipment: Ausstattung
       properties: Eigenschaften
+      create_event: Event erstellen

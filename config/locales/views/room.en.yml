@@ -21,6 +21,7 @@ en:
       table_information: Tables upon request
       table_request: Request tables
     list:
+      all_events: Alle Events
       room_selection: Room Selection
       requested_size: needed size of room
       necessary_equipment: Necessary equipment
@@ -32,3 +33,4 @@ en:
       room_size: Maximum number of persons
       equipment: Equipment
       properties: Properties
+      create_event: Create events
