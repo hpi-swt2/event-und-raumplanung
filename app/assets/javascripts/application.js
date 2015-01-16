@@ -28,3 +28,4 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/de
+//= require jquery-ui/autocomplete

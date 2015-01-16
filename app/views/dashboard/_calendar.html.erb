@@ -25,7 +25,7 @@
 						title: '<%= each.name %>',
 						start: '<%= each.starts_at %>'
 
-                    	<% if each.approved? %>
+                    	<% if each.is_approved %>
                         	, color: 'green'
                     	<% else %>
                     		, color: 'red'
@@ -43,7 +43,7 @@
 							title: '<%= @event.name %>',
 							start: '<%= @event.starts_at %>'
 							
-							<% if @event.approved? %>
+							<% if @event.is_approved %>
 		                       	, color: 'blue'
 		                    <% else %>
 		                    	, color: 'red'
