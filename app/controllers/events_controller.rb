@@ -6,6 +6,7 @@ class EventsController < GenericEventsController
 
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
+  before_action :set_feed, only: [:show]
 
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
@@ -51,16 +52,11 @@ class EventsController < GenericEventsController
   def index
     @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-    @filterrific.user = current_user_id if @filterrific.user == 1;
+    @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
     @filterrific.user = nil if @filterrific.user == 0;
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   def reset_filterrific
@@ -72,17 +68,23 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
+    @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    redirect_to :back
+  end
+
+  def decline
+    @event.decline
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
     redirect_to :back
   end
 
   def approve_event_suggestion
     @event.update(status: 'pending', event_id: nil)
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
-  end
-
-  def decline
-    @event.decline
-    redirect_to :back
   end
 
   def decline_event_suggestion
@@ -118,8 +120,12 @@ class EventsController < GenericEventsController
   # GET /events/1.json
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).identity_url unless @event.user_id.nil?
-    @tasks = @event.tasks.rank(:task_order)
+    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    if current_user_id == @event.user_id
+      @tasks = @event.tasks.rank(:task_order)
+    else
+      @tasks = @event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user_id).rank(:task_order)
+    end
   end
 
   # GET /events/new
@@ -155,6 +161,12 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
+    @event.attributes = event_params
+    
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => @event.changed)
+
     @update_result = @event.update(event_params)
     super
   end
@@ -164,6 +176,31 @@ class EventsController < GenericEventsController
   def destroy
     super
   end
+
+
+  def create_comment
+    @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  helper_method :create_comment
+
+  def delete_comment
+    @comment = Comments.find(params[:comment_id])
+    @comment.destroy
+    respond_to do |format|
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_destroy', :model => Event.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+    end
+  end
+  helper_method :delete_comment
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -186,6 +223,11 @@ class EventsController < GenericEventsController
       @event = Event.new(params)
       @event.user_id = current_user_id
       create_tasks @event_template_id
+
+      @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => "create", :controller => "events",
+                                          :changed_fields => @event.changed)
+
       respond_to do |format|
         if @event.save
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
@@ -256,6 +298,13 @@ class EventsController < GenericEventsController
     def set_return_url
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
+    end
+
+    def set_feed
+      @activities = @event.activities.all.order("created_at ASC")
+      @comments = Comments.where(event_id: @event.id)
+      @feed_entries = @activities + @comments
+      @feed_entries = @feed_entries.sort_by(&:created_at)
     end
 
     def build_conflicting_events_response conflicting_events 

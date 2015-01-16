@@ -60,26 +60,30 @@ another_event = Event.create({name: 'Vorlesung',
 Task.create({name: 'An accepted Task', 
 			description: 'This is an accepted task.',
 			event_id: event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'accepted'})
 
 Task.create({name: 'Another accepted Task', 
 			description: 'This is a accepted task which is already done.',
 			event_id: another_event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'accepted',
 			done: true })
 
 Task.create({name: 'A pending Task', 
 			description: 'This is a pending task.',
 			event_id: event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'pending'})
 
 Task.create({name: 'A second pending Task', 
 			description: 'This is another pending task.',
 			event_id: another_event.id,
-			user_id: 1,
+			identity_type: 'User',
+			identity_id: 1,
 			status: 'pending'})
 
 Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
@@ -96,8 +100,21 @@ equipment7 = Equipment.create(name: 'Beamer HD 1247912', description: 'Ein fest 
 equipment8 = Equipment.create(name: 'Whiteboard 234', description: 'Ein fest installierter Whiteboard zum Brainstorming', room_id: room7.id, category: 'Whiteboard')
 
 #
-# Create Event
+# create Task
+task = Task.create(id: 1, name: "Pizza Bestellen", description: "10 Pizzen von Call a Pizza bestlelen", event_id: "1", created_at: "2014-12-26 11:46:01", done: false, user_id: 1, status: "In Bearbeitung")
 
+#
+# create Comments
+comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", event_id: 1)
+comment = Comments.create(user_id: 1, content: "Ich will NOCH MEHR PIZZA!!!", created_at: "2014-12-26 15:37:42", event_id: 1)
+
+
+#
+# create User
+user = User.create(id: 1, email: "test@example.wtf", identity_url: "http:\\identity.com")
+
+#
+# Create Event
 event1 = Event.create(name: "Weihnachtsfeier", description: "Details zur Weihnachtsfeier 2015", participant_count: 10,  status: "In Bearbeitung", created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room1], is_private: false, is_important: true, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")
 event2 = Event.create(name: "Sommerfest", description: "Details zur Sommerfest 2015", participant_count: 10,  status: "In Bearbeitung", created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room2], is_private: false, is_important: false, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")
 event3 = Event.create(name: "Tribute von Panem", description: "Details zum Event Tribute von Panem 2015", participant_count: 10, created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room3], is_private: true, is_important: false, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")

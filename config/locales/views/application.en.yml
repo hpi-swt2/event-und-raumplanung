@@ -1,11 +1,13 @@
 en:
-  application:
-    student: student
-    staff: staff
-    navigation:
+  layouts:
+    application:
+      student: student
+      staff: staff
       events: Events
-      templates: Templates
       rooms: Rooms
       groups: Groups
       tasks: Tasks
-      open_requests: Open Requests
+      requests: Requests
+      room_mate: Room Mate
+      configuration: Configuration
+      equipment: Equipment

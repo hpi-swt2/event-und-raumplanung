@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :tasks
+  has_many :tasks, as: :identity
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # If you add an option, be sure to inspect the migration file
@@ -28,5 +28,14 @@ class User < ActiveRecord::Base
     
   def self.build_from_email(email)
     User.new(:email => email)
+  end
+
+  # similar to Group#name
+  def name
+    return username
+  end
+
+  def is_group
+    false
   end
 end

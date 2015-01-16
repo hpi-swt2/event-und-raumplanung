@@ -95,6 +95,8 @@ gem 'will_paginate-bootstrap'
 
 gem 'date_time_attribute'
 
+gem 'paperclip', '~> 4.2'
+
 gem 'ranked-model'
 gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
 
@@ -124,4 +126,3 @@ group :test, :development  do
 	gem 'timecop'
 	gem 'rspec-activemodel-mocks'
 end
-

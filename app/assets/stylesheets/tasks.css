@@ -18,3 +18,35 @@
 .task-done-checkbox {
 	vertical-align: top;
 }
+
+#attachment_form{
+    margin-top: 10px;
+    margin-bottom:  20px;
+}
+
+#attachment_form_submit {
+    margin-top: 10px;
+}
+
+#upload_div {
+    margin-top: 10px;
+    margin-bottom:  20px;
+}
+
+
+.task-upload
+{
+    margin: 5px 0px;
+}
+#task_upload_template
+{
+    display: none;
+}
+.task-upload .task-upload-name, .task-upload>button
+{
+    display: none;
+}
+
+.no-tasks-text {
+    margin: 1em 0em 2em 3em;
+}

@@ -24,6 +24,7 @@ class Event < ActiveRecord::Base
 
   has_many :bookings
   has_many :tasks
+  has_many :activities
 
   belongs_to :event
 

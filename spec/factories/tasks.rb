@@ -6,7 +6,7 @@ FactoryGirl.define do
     done false
     description 'This is a task.'
     association :event_id, factory: :event
-    association :user_id, factory: :user
+    association :identity, factory: :user
     association :event_template_id, factory: :event_template
     status "not_assigned"
 
@@ -16,6 +16,7 @@ FactoryGirl.define do
 
     factory :unassigned_task do
       status "not_assigned"
+      identity nil
     end
   end
 

@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107103750) do
+ActiveRecord::Schema.define(version: 20150116083543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "activities", force: true do |t|
+    t.string   "username"
+    t.string   "action"
+    t.string   "controller"
+    t.text     "task_info"
+    t.text     "changed_fields"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+  end
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -39,6 +50,16 @@ ActiveRecord::Schema.define(version: 20150107103750) do
 
   add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
+
+  create_table "comments", force: true do |t|
+    t.string   "author"
+    t.string   "content"
+    t.time     "timestamp"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+    t.integer  "user_id"
+  end
 
   create_table "equipment", force: true do |t|
     t.string   "name"
@@ -153,16 +174,28 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "done",              default: false
-    t.integer  "user_id"
     t.string   "status"
     t.datetime "deadline"
     t.integer  "task_order"
     t.integer  "event_template_id"
+    t.integer  "identity_id"
+    t.string   "identity_type"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
   add_index "tasks", ["event_template_id"], name: "index_tasks_on_event_template_id", using: :btree
-  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
+  add_index "tasks", ["identity_id", "identity_type"], name: "index_tasks_on_identity_id_and_identity_type", using: :btree
+
+  create_table "uploads", force: true do |t|
+    t.integer  "task_id"
+    t.string   "task_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                               null: false

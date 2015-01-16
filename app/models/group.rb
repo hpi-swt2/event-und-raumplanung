@@ -4,4 +4,9 @@ class Group < ActiveRecord::Base
 	  has_many :memberships
 	  has_many :users, through: :memberships
 	has_many :rooms
+	has_many :tasks, as: :identity
+
+	def is_group
+		true
+    end
 end
