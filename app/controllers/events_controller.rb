@@ -8,7 +8,7 @@ class EventsController < ApplicationController
   before_action :set_return_url, only: [:show, :new, :edit]
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :change_chosen_rooms]
   after_filter :flash_to_headers, :only => :check_vacancy
 
   def current_user_id
@@ -56,21 +56,12 @@ class EventsController < ApplicationController
   end
   
   def change_chosen_rooms
-    logger.info "test"
-    logger.debug "test"
-    puts "test";
-    #render nothing: true
+    room_ids = params[:event][:room_ids]
+    @chosen_rooms = Room.find(room_ids)
+    @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
     respond_to do |format|
-      #if @user.save
-        #format.html {render :nothing => true} #redirect_to @user, notice: 'User was successfully created.' }
         format.js {}
-        #format.json { render :nothing => true }
-      #else
-        #format.html { render action: "new" }
-      #  format.json { render json: @user.errors, status: :unprocessable_entity }
     end
-    #render :nothing
-    #render :partial => 'events/chosen_rooms'#, locals: {model_class: model_class} 
   end
 
   # GET /events
