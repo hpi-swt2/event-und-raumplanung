@@ -18,10 +18,16 @@ Rails.application.routes.draw do
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+  post 'events_create_comment' => 'events#create_comment', as: "create_comment"
+  post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
+  post 'events/:id/approve' => 'events#approve', as: "approve_event"
+  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"
   # get 'events/:id/approve_event_suggestion' => 'events#approve_event_suggestion', as: "approve_event_suggestion"
   # get 'events/:id/decline_event_suggestion' => 'events#decline_event_suggestion', as: "decline_event_suggestion"
+
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
