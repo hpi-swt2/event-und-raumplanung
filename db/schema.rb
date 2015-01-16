@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107103750) do
+ActiveRecord::Schema.define(version: 20150116120113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -96,6 +97,14 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.integer "room_id"
   end
 
+  create_table "events_users", id: false, force: true do |t|
+    t.integer "event_id"
+    t.integer "user_id"
+  end
+
+  add_index "events_users", ["event_id"], name: "index_events_users_on_event_id", using: :btree
+  add_index "events_users", ["user_id"], name: "index_events_users_on_user_id", using: :btree
+
   create_table "favorites", force: true do |t|
     t.integer  "user_id"
     t.integer  "event_id"
@@ -123,6 +132,16 @@ ActiveRecord::Schema.define(version: 20150107103750) do
 
   add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "ownerships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ownerships", ["event_id"], name: "index_ownerships_on_event_id", using: :btree
+  add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"

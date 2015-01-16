@@ -98,4 +98,7 @@
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
 
+  <%= f.label :owners %>
+<%= select_tag "owners", options_from_collection_for_select(User.all, 'id', 'username',@event.users.map{ |j| j.id }), :multiple => true %>
+
 <% end %>

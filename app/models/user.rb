@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships
   has_many :favorites
 
+  has_and_belongs_to_many :events
+
 
   def is_member_of_group (groupID)
     return Group.find(groupID).users.include?(self)

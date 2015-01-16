@@ -33,6 +33,8 @@ class Event < ActiveRecord::Base
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
 
+  has_and_belongs_to_many :users
+
   date_time_attribute :starts_at
   date_time_attribute :ends_at
 
