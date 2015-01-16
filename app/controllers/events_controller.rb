@@ -54,7 +54,7 @@ class EventsController < GenericEventsController
     @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
     @filterrific.user = nil if @filterrific.user == 0;
     @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
-    @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
+    @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
   end
 
