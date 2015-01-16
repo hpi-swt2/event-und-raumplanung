@@ -129,6 +129,11 @@ class Event < ActiveRecord::Base
   def is_approved
     return self.status == 'approved'
   end
+  
+  def exist_colliding_events
+    event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
+    return (event_count > 0)
+  end
 
   def set_status_to_pending_and_destroy_suggestion
     self.event_suggestion.destroy
