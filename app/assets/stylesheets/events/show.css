@@ -3,48 +3,49 @@
 	line-height: 1.5em;
 }
 
-.activity-log-container {
+.feed-container {
 	position: relative;
+	margin-bottom: 30px;
 }
 
-.activity-log:before {
+.feed:before {
 	background-color: #ddd;
-    bottom: 0;
-    content: "";
-    display: block;
-    left: 8px;
-    position: absolute;
-    top: 0;
-    width: 2px;
-    z-index: -1;
+	bottom: 0;
+	content: "";
+	display: block;
+	left: 8px;
+	position: absolute;
+	top: 0;
+	width: 2px;
+	z-index: -1;
 }
 
-.activity-container {
+.feed-entry-container {
 	position: relative;
 	margin-left: 10px;
 }
 
-.activity-container:last-of-type {
+.feed-entry-container:last-of-type {
 	
 }
 
-.activity {
+.feed-entry {
 	border-bottom: 2px solid #ddd;
 	padding: 10px 15px 10px 0;
 }
 
-.activity-container .glyphicon {
+.feed-entry-container .glyphicon {
 	background-color: #ddd;
-    border-radius: 50%;
-    float: left;
-    margin: -3px 15px 0 -12px;
-    padding: 5px;
+	border-radius: 50%;
+	float: left;
+	margin: -3px 15px 0 -12px;
+	padding: 5px;
 }
 
-.activity-container .odd {
+.feed-entry-container .odd {
 	background-color: #f9f9f9;
 }
 
-.activity-container .even {
+.feed-entry-container .even {
 	
 }
