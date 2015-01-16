@@ -31,7 +31,7 @@ function addUploadField()
 {
     var template = $("#task_upload_template");
     var newUpload = template.clone();
-    var uploadsCount = $("input[name='uploads[]'").size() + 1;
+    var uploadsCount = $("input[name='uploads[]']").size() + 1;
 
     newUpload.attr("id", "task_upload_" + uploadsCount);
     newUpload.children("input").attr("id", "uploads_" + uploadsCount);
