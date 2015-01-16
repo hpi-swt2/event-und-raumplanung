@@ -1,7 +1,54 @@
 <h1><%=t '.title' %></h1>
 
 <div id='open_events'>
-  <%= render partial: 'events_approval/list', locals: { events: @open_events, events_type: 'open' } %>
+    <table class="table">
+    <thead>
+    <tr>
+        <th><%= Event.human_attribute_name(:user) %></th>
+        <th><%= Event.human_attribute_name(:name) %></th>
+        <th><%= Event.human_attribute_name(:description) %></th>
+        <th><%= Event.human_attribute_name(:rooms) %></th>
+        <th><%= t '.time' %></th>
+        <th><%= Event.human_attribute_name(:participant_count) %></th>
+        <th></th>
+        <th><%= t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @open_events.each do |event| %>
+        <% conflict = false %>
+        <% if(@date >= event.starts_at.to_date && @date <= event.ends_at.to_date) %>
+            <%  @approved_events.each do |approved_event| %>
+                <% if (approved_event.starts_at <= event.ends_at && approved_event.ends_at>=event.starts_at) %>
+                         <% conflict = true %>
+                <% end %>
+            <% end %>
+        <% end %>
+        <% if(conflict) %>
+            <tr bgcolor="#FFFF00">
+        <% else %>
+            <tr>
+        <% end %>
+
+            <td><%= User.find(event.user_id).username if event.user_id %></td>
+            <td><%= link_to event.name, event_path(event) %></td>
+            <td><%= trimDescription event.description %></td>
+            <td><%= event.rooms.map(&:name).to_sentence %></td>
+            <td>
+                <%= 'open' == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
+            </td>
+            <td><%= event.participant_count %></td>
+            <% if 'open' == 'open' %>
+                <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
+                <td>
+                    <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
+                    <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
+                </td>
+            <% end %>
+        </tr>
+    <% end %>
+    </tbody>
+    </table>
 </div>
 <br>
 
