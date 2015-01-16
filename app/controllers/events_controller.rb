@@ -56,6 +56,9 @@ class EventsController < ApplicationController
   end
   
   def change_chosen_rooms
+    logger.info "test"
+    logger.debug "test"
+    puts "test";
     #render nothing: true
     respond_to do |format|
       #if @user.save

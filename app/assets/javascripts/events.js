@@ -63,7 +63,7 @@ $(function() {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(getValidRooms, doneTypingInterval);
     });
-    
+    /*
     $('#event-form #selectpicker ').change(function(e) {
         //update list with chosen rooms
         var rooms = $('#event-form #selectpicker').val();
@@ -82,7 +82,7 @@ $(function() {
         });
         debugger;
     });
-
+    */
 // }); head
 
 });
