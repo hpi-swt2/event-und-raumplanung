@@ -62,7 +62,7 @@
                 :class => 'btn btn-danger' %>
 <% end %>
 
-<% if can? :show_activity_log, @event %>
+<% unless @activities.nil? %>
   <h4><%= t 'activities.activity_log' %></h4>
 
   <div class="activity-log-container">

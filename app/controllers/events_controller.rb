@@ -134,7 +134,10 @@ class EventsController < ApplicationController
     @user = User.find(@event.user_id).identity_url
     logger.info @event.rooms.inspect
     @tasks = @event.tasks.rank(:task_order)
-    show_activity_log()
+
+    if @event.involved_users.include? current_user 
+      load_activity_log()
+    end
   end
 
   # GET /events/new
@@ -214,8 +217,7 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
     end
 
-    def show_activity_log
-      authorize! :show_activity_log, Event
+    def load_activity_log
       @activities = @event.activities.order("created_at ASC")
     end
 

@@ -36,9 +36,6 @@ class Ability
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-    can :show_activity_log, Event do |event|
-        event.involved_users().include?(user)
-    end
 
     if user.username == load_admin
         can :manage, Group
