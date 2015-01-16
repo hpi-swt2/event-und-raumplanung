@@ -18,7 +18,7 @@
         <td><%= link_to room.name, room_path(room) %></td>
         <td><%= room.size %></td>
         <td>
-          <%= link_to t('.all_events'),
+          <%= link_to t('.all_events', :default => t("helpers.links.all_events")),
                       room_events_path(room), :class => 'btn btn-default btn-xs' %>
           
           <% if can? :edit, Room %>
@@ -34,6 +34,8 @@
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
           <% end -%>
+          <%= link_to t('.create_event', :default => t("helpers.links.create_event")),
+                      new_event_path(room_ids: [room.id]), :class => 'btn btn-default btn-xs' %>
         </td>
       </tr>
     <% end %>

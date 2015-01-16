@@ -73,6 +73,7 @@ Rails.application.routes.draw do
 
     member do
       post :approve
+      post :decline
       get :decline
       get :approve_event_suggestion 
       get :decline_event_suggestion

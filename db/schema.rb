@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150109153302) do
+ActiveRecord::Schema.define(version: 20150116083543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "activities", force: true do |t|
+    t.string   "username"
+    t.string   "action"
+    t.string   "controller"
+    t.text     "task_info"
+    t.text     "changed_fields"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+  end
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -40,6 +51,16 @@ ActiveRecord::Schema.define(version: 20150109153302) do
   add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
+  create_table "comments", force: true do |t|
+    t.string   "author"
+    t.string   "content"
+    t.time     "timestamp"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+    t.integer  "user_id"
+  end
+
   create_table "equipment", force: true do |t|
     t.string   "name"
     t.string   "description"
@@ -50,24 +71,6 @@ ActiveRecord::Schema.define(version: 20150109153302) do
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
-
-  create_table "event_suggestions", force: true do |t|
-    t.datetime "starts_at"
-    t.datetime "ends_at"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "room_id"
-    t.integer  "user_id"
-  end
-
-  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
-  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
-
-  create_table "event_suggestions_rooms", force: true do |t|
-    t.integer "event_suggestion_id"
-    t.integer "room_id"
-  end
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
@@ -129,11 +132,6 @@ ActiveRecord::Schema.define(version: 20150109153302) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "groups_users", id: false, force: true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
   end
 
   create_table "memberships", force: true do |t|

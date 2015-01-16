@@ -1,6 +1,9 @@
 <table class="table table-striped">
 <thead>
   <tr>
+    <% if events_type == 'open' %>
+      <th/>
+    <% end %>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
     <th><%= Event.human_attribute_name(:description) %></th>
@@ -8,7 +11,7 @@
     <th><%= t '.time' %></th>
     <th><%= Event.human_attribute_name(:participant_count) %></th>
     <% if events_type == 'open' %>
-      <th></th>
+      <th/>
       <th><%= t '.actions', :default => t("helpers.actions") %></th>
     <% end %>
   </tr>
@@ -16,6 +19,21 @@
 <tbody>
   <% events.each do |event| %>
     <tr>
+      <% if events_type == 'open' %>
+        <% conflict = false %>
+        <% if @date >= event.starts_at.to_date && @date <= event.ends_at.to_date %>
+            <%  @approved_events.each do |approved_event| %>
+                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at %>
+                         <% conflict = true %>
+                <% end %>
+            <% end %>
+        <% end %>
+        <% if conflict %>
+            <td bgcolor="#FFFF00"/>
+        <% else %>
+            <td/>
+        <% end %>
+      <% end %>
       <td><%= User.find(event.user_id).username if event.user_id %></td>
       <td><%= link_to event.name, event_path(event) %></td>
       <td><%= trimDescription event.description %></td>
@@ -35,7 +53,8 @@
   <% end %>
 </tbody>
 </table>
-<%= t('.no_' + events_type + '_events') unless events.exists? %>
+
+<%= t('.no_' + events_type + '_events') if events.empty? %>
 
 <% if events_type == 'open' %>
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

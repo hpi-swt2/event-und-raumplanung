@@ -67,19 +67,19 @@ class EventsController < GenericEventsController
   end
 
   def approve
-    @event.update(status: 'approved')
+    @event.approve
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    redirect_to :back
   end
 
   def decline
-    @event.update(status: 'declined')
+    @event.decline
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to events_approval_path(date: params[:date]) #params are not checked as date is no attribute of event and passed on as a html parameter
+    redirect_to :back
   end
 
   def approve_event_suggestion
@@ -131,6 +131,7 @@ class EventsController < GenericEventsController
   # GET /events/new
   def new
     super
+    @event.assign_attributes(params.permit(:name, :description, :participant_count, :starts_at, :ends_at, :is_private, :is_important, :room_ids => []))
   end 
 
   # GET /events/:id/new_event_suggestion
