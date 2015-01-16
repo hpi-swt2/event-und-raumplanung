@@ -271,6 +271,15 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
+    it "creates an activity when a task is created with an event id" do
+      post :create, task: { description: "description", name: "Test", event_id: event.id } 
+      
+      activity = event.activities.last
+
+      expect(activity.action).to eq("create")
+      expect(activity.controller).to eq("tasks")
+    end
+
     it "creates task that are marked as undone" do
       post :create, task: { description: "description", name: "Test" }
       expect(assigns(:task).done).to be false
@@ -405,10 +414,32 @@ RSpec.describe TasksController, type: :controller do
       expect(assigns(:task).done).to be true
     end
 
+    it "creates an activity when a task is marked as done" do
+      task.done = false
+      patch :update, id: task, task: { event_id: event.id, done: true }
+      activity = event.activities.last
+
+      expect(activity.action).to eq("update")
+      expect(activity.controller).to eq("tasks")
+      expect(activity.task_info[0]).to eq(task.name)
+      expect(activity.task_info[1]).to eq(true)
+    end
+
     it "marks a task as undone" do
       task.done = true
       xhr :put, :set_done, id: task, task: { done: false }
       expect(assigns(:task).done).to be false
+    end
+
+    it "creates an activity when a task is marked as undone" do
+      task.done = false
+      patch :update, id: task, task: { event_id: event.id, done: false }
+      activity = event.activities.last
+
+      expect(activity.action).to eq("update")
+      expect(activity.controller).to eq("tasks")
+      expect(activity.task_info[0]).to eq(task.name)
+      expect(activity.task_info[1]).to eq(false)
     end
 
     it "sets the task position" do
