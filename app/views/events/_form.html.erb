@@ -88,7 +88,9 @@
       </div>
    </div>
   </div>
-
+  <% unless @event_template_id.nil? %> 
+     <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
+  <% end %>
  <div class="notice"></div> <!-- display conflicting events -->
 
 

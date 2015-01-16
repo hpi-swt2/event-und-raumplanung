@@ -3,16 +3,23 @@
 // All this logic will automatically be available in application.js.
 var EVENT_URL = '/events/',
     SUGGEST_URL = '/new_event_suggestion',
-    DECLINE_URL = '/decline';
+    DECLINE_URL = '/decline',
+    ready;
 
-var ready;
+function declineEvent(id) {
+    $.ajax({
+        url: EVENT_URL + id + DECLINE_URL,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')); },
+        success: function (data) {
+            return;
+        }
+    });
+}
 
 function insertSuggestLink(id) {
     $(".suggest-btn").attr("href", EVENT_URL + id + SUGGEST_URL);
-}
-
-function insertDeclineLink(id) {
-    $(".modal-decline-btn").attr("href", EVENT_URL + id + DECLINE_URL);
 }
 
 function getRoomNames(rooms) {
@@ -53,26 +60,27 @@ function insertEventIntoModal(data) {
 
 function clickHandler(e) {
     e.preventDefault();
-    var id = this.id,
-        event_id = id.split("#")[1];
+    var id = this.id, event_id = id.split("#")[1];
     $.ajax({
         url: EVENT_URL + event_id + ".json",
         type: 'GET',
         dataType: 'json',
         beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')); },
         success: function (data) {
-            // alert("success");
-            insertDeclineLink(data.id);
             insertSuggestLink(data.id);
             insertEventIntoModal(data);
             $('#myModal').modal('toggle');
+            declineEvent(data.id);
         }
     });
 }
 
+
+
 ready = function () {
-    $(".decline-btn").click(clickHandler);
+    $(".decline-btn").unbind("click").click(clickHandler);
 };
+
 
 $(document).ready(ready);
 $(document).on('page:load', ready);
