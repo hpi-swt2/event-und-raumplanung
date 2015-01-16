@@ -161,7 +161,7 @@ class RoomsController < ApplicationController
         @assigned_equipment = {}
       end
     end
-    
+
     def assign_equipment
       @available_equipment.each do |category, count|
         key = category+'_equipment_count'

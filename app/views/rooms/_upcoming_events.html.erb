@@ -1,23 +1,33 @@
-<% if @events.size != 0 %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><%= Event.human_attribute_name(:name) %></th>
-        <th><%= Event.human_attribute_name(:starts_at) %></th>
-        <th><%= Event.human_attribute_name(:ends_at) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td><%= link_to event.name, event_path(event) %></td>
-          <td><%=l event.starts_at %></td>
-          <td><%=l event.ends_at %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-<% if @events.size == 0 %>
-  <em><%=t '.no_upcoming_events' %></em><br/>
-<% end %>
+<% @calevents = Event.all %>
+
+<div id="calendar"></div>
+
+<script>
+  $(document).ready(function(){
+    $("#calendar").fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      events: [
+                <% @calevents.each do |each| %>
+                  <% if each.room_ids.include?(@room.id) %>
+                    {
+                      title: '<%= each.name %>',
+                      start: '<%= each.starts_at %>'
+
+                                <% if each.is_approved %>
+                                    , color: 'green'
+                                <% else %>
+                                  , color: 'red'
+                                <% end %> 
+                    
+                    },
+                  <% end %>
+                <% end %>
+      ],
+      theme: false
+    });
+  });
+</script>
