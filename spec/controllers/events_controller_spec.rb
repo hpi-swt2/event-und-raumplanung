@@ -476,6 +476,7 @@ RSpec.describe EventsController, :type => :controller do
   describe "POST approve" do
     it "creates activity when an event is approved" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :approve, {:id => event.to_param, :date => Date.today}
@@ -489,6 +490,7 @@ RSpec.describe EventsController, :type => :controller do
   describe "POST decline" do
     it "creates activity when an event is declined" do
       event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :decline, {:id => event.to_param, :date => Date.today}
