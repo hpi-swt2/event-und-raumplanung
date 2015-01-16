@@ -4,9 +4,10 @@ de:
   events_approval:
     index:
       title: Offene Buchungen
+      approved_events: Genehmigte Buchungen
+    list:
       decline: Ablehnen
       approve: Genehmigen
-      approved_events: Genehmigte Buchungen
       time: Zeit
       no_open_events: Keine offenen Buchungen
       no_approved_bookings: Keine genehmigten Buchungen
