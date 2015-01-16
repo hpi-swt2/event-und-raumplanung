@@ -14,38 +14,67 @@ class PermissionsController < ApplicationController
       submit_entities
     elsif params[:type] == 'permission'
       submit_permissions
-    end      
+    end
+  end
+
+  def permit_per_room(entity, category)
+    rooms_to_permit = []
+    rooms_to_permit = params[:rooms][category] if params[:rooms][category].present?
+    if rooms_to_permit.include?('all')
+      entity.permit(category)
+      rooms_to_permit = []
+    else
+      entity.unpermit(category)
+    end
+    Room.all.each do |room|
+      if rooms_to_permit.include?(room.id.to_s)
+        entity.permit(category, room)
+      else
+        entity.unpermit(category, room)
+      end
+    end
   end
 
   def submit_permissions
     entities = User.all + Group.all
+    permission = params[:permission]
     entities.each do |entity|
       form_name = 'User:' + entity.id.to_s if entity.is_a?(User)
       form_name = 'Group:' + entity.id.to_s if entity.is_a?(Group)
       if params[form_name] == "1"
-        entity.permit(params[:permission])
+        if permission != 'approve_events'
+          entity.permit(permission)
+        else
+          permit_per_room(entity, permission)
+        end
       else
-        entity.unpermit(params[:permission])
+        entity.unpermit_all(params[:permission])
       end
     end
     respond_to do |format|
-      format.json { render :json => '"' + I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + params[:permission])) + '"', :status => :ok }
+      data = {message: I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + params[:permission]))}
+      format.json { render :json => data, :status => :ok }
     end
   end
 
   def submit_entities
-    @permitted_entity = determine_permitted_entity(params[:user])
+    entity = determine_permitted_entity(params[:user])
     Permission.categories.keys.each do |category|
       if permission_params[category] == "1"
-        @permitted_entity.permit(category)
+        if category != 'approve_events'
+          entity.permit(category)
+        else
+          permit_per_room(entity, category)
+        end
       else
-        @permitted_entity.unpermit(category)
+        entity.unpermit_all(category)
       end
     end
-    name = @permitted_entity.username if @permitted_entity.is_a?(User)
-    name = @permitted_entity.name if @permitted_entity.is_a?(Group)
+    name = entity.username if entity.is_a?(User)
+    name = entity.name if entity.is_a?(Group)
     respond_to do |format|
-      format.json { render :json => '"' + I18n.t('permissions.updated_entity', entity: name) + '"', :status => :ok }
+      data = {message: I18n.t('permissions.updated_entity', entity: name)}
+      format.json { render :json => data, :status => :ok }
     end
   end
 
@@ -60,7 +89,14 @@ class PermissionsController < ApplicationController
 
   def permitted_entities
     @permission = params[:permission]
-    render :partial => "permitted_entities", locals: {users: User.all, groups: Group.all}
+    param_rooms = params[:rooms]['approve_events']
+    rooms = []
+    if param_rooms.include?('all')
+      rooms = Room.all
+    else
+      rooms = Room.all.select{ |room| param_rooms.include?(room.id.to_s)}
+    end
+    render :partial => "permitted_entities", locals: {users: User.all, groups: Group.all, rooms: rooms}
   end
 
   def user_permissions

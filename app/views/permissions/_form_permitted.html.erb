@@ -13,9 +13,7 @@
       <script>
         $(function() {
           $('#user').ready(updateUserPermissions);
-          $(document).on('ajax:success', '#permissionsForm', function(event, data) {
-            $('#flash_messages').bootstrap_flash(data);
-          });
+          $(document).on('ajax:success', '#permissionsForm', permissionSubmitSuccess);
         })
       </script>
 

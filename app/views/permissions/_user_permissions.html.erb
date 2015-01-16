@@ -1,12 +1,24 @@
 <% @categories.each do |category| %>
-  <%= check_box_tag category, "1", @permitted_entity.has_permission(category) %> 
+  <%= check_box_tag category, "1", @permitted_entity.has_any_permission(category) %> 
   <%= label_tag category, t("permissions." + category) %> <br/>
 <% end %>
-<% selection = Room.all.select{|room| @permitted_entity.has_permission('approve_events', room)}.map(&:id) %>
-<%= select_tag 'rooms[]',
-    options_from_collection_for_select(Room.all, :id, :name, selected:selection),
-    { :class => 'selectpicker', :multiple => '', :'data-live-search' => "true" }%>
+<% selection = Room.all.select{|room| @permitted_entity.has_permission('approve_events', room)}.map(&:id)
+  if selection.empty?
+    select_all = 'all'
+  end
+  if @permitted_entity.has_permission('approve_events')
+    selection = []
+    select_all = 'all'
+  end %>
+<h4><%= t('permissions.permission_on', permission: t('permissions.approve_events'), subject: Room.model_name.human.pluralize.titleize) %></h4>
+<%= select_tag 'rooms[approve_events][]',
+    options_for_select({'All' => 'all'}, select_all) + options_from_collection_for_select(Room.all, :id, :name, selected:selection),
+    { :class => 'selectpicker', id: 'rooms2', :multiple => '', :'data-live-search' => "true" }%>
 
 <script>
   $('.selectpicker').selectpicker();
+  $('#rooms2').prop('disabled', !$('[name="approve_events"]').is(':checked')).selectpicker('refresh');
+  $('[name="approve_events"]').change(function() {
+    $('#rooms2').prop('disabled', !$(this).is(':checked')).selectpicker('refresh');
+  })
 </script>

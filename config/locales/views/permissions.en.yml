@@ -16,3 +16,4 @@ en:
     assign_to_rooms: Edit equipment and room properties
     updated_entity: "Permissions for %{entity} were updated"
     updated_permission: "Permission %{permission} was updated"
+    permission_on: "%{permission} on %{subject}"

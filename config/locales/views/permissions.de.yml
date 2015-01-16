@@ -16,3 +16,4 @@ de:
     assign_to_rooms: Equipment und Raumeigenschaften bearbeiten
     updated_entity: "Berechtigungen für %{entity} wurden aktualisiert"
     updated_permission: "Berechtigung %{permission} wurde aktualisiert"
+    permission_on: "%{permission} für %{subject}"

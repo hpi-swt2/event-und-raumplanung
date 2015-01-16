@@ -11,11 +11,21 @@ class Group < ActiveRecord::Base
     }
   end
 
+  def has_any_permission(category)
+    return !self.permissions.for_category(category).empty?
+  end
+
   def permit(category, room = nil)
     self.permissions << Permission.new(category: category, room: room)
   end
 
   def unpermit(category, room = nil)
     self.permissions.find_by(category: Permission::categories[category], room: room).try(:destroy)
+  end
+
+  def unpermit_all(category)
+    self.permissions.find_all{ |permission| permission.category == category}.each do |permission|
+      permission.destroy
+    end
   end
 end

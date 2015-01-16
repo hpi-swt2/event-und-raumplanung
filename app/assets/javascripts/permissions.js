@@ -4,6 +4,7 @@
 $(function() {
   $('#user').change(updateUserPermissions);
   $('#permissions').change(updatePermittedEntities);
+  $('#rooms').change(updatePermittedEntities);
 })
 
 function updateUserPermissions() {
@@ -22,10 +23,19 @@ function updatePermittedEntities() {
   $.ajax({
     url: '/permissions/permitted_entities',
     type: 'POST',
-    data: { permission: $('#permissions').val() },
+    data: {
+      permission: $('#permissions').val(),
+      rooms: { approve_events: $('#rooms').val()}
+    },
     dataType: 'html',
     success: function(data) {
       $('#entitiesDiv').html(data);
     }
   });
+}
+
+function permissionSubmitSuccess(event, data) {
+  $('#flash_messages').bootstrap_flash(data.message, {type: data.type});
+  updateUserPermissions();
+  updatePermittedEntities();
 }
