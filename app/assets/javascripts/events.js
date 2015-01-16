@@ -64,23 +64,19 @@ $(function() {
         typingTimer = setTimeout(getValidRooms, doneTypingInterval);
     });
     
-    $('#event-form #selectpicker ').change(function(e) {
+    $('#event-form #selectpicker_rooms ').change(function(e) {
         //update list with chosen rooms
-        var rooms = $('#event-form #selectpicker').val();
+        var rooms = $('#event-form #selectpicker_rooms').val();
         //$('#event-form #chosen_rooms').html;
         $.ajax({
             url: '/events/changeChosenRooms',
             type: 'GET',
             data: rooms,
-            //dataType: 'html',
+            dataType: 'script',
             //beforeSend: function (xhr) {
                 //xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
             //},
-            success: function (data) {
-                $("#event-form #chosen_rooms").html(data);
-            }
         });
-        debugger;
     });
 
 // }); head

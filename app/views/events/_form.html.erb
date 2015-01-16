@@ -36,16 +36,14 @@
     <div class="controls">
       <%= f.select :room_ids, 
         options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, 
-        {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+        {:class=> 'selectpicker', :id => 'selectpicker_rooms', :multiple =>'' }%>
     </div>
 
-    <script>
-    $('#selectpicker').selectpicker();
-    </script>  
     <%= error_span(@event[:rooms]) %>
   </div>
   
   <div class="control-group" id="chosen_rooms">
+    <%= label_tag 'gewählte Räume', nil, class: 'control-label' %>
   </div>
   
   <div class="control-group">
