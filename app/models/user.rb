@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :username
   devise :openid_authenticatable, :rememberable
 
+  has_many :ownerships
 
   has_many :memberships
   has_many :groups, through: :memberships

@@ -118,7 +118,8 @@ class EventsController < GenericEventsController
   # GET /events/1.json
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).identity_url unless @event.user_id.nil?
+
+    @user = User.find(@event.users).identity_url unless @event.users.nil?
     @tasks = @event.tasks.rank(:task_order)
   end
 
@@ -183,7 +184,7 @@ class EventsController < GenericEventsController
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
       @event = Event.new(params)
-      @event.user_id = current_user_id
+      @event.users << User.find(current_user_id)
       create_tasks @event_template_id
       respond_to do |format|
         if @event.save

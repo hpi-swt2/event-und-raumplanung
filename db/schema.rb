@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107103750) do
+ActiveRecord::Schema.define(version: 20150116070109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -73,7 +74,6 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
     t.integer  "room_id"
     t.boolean  "is_private",        default: true
     t.string   "status",            default: "pending"
@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(version: 20150107103750) do
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "events_rooms", force: true do |t|
     t.integer "event_id"
@@ -124,6 +123,16 @@ ActiveRecord::Schema.define(version: 20150107103750) do
   add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
+  create_table "ownerships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ownerships", ["event_id"], name: "index_ownerships_on_event_id", using: :btree
+  add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
+
   create_table "room_properties", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -155,8 +164,8 @@ ActiveRecord::Schema.define(version: 20150107103750) do
     t.boolean  "done",              default: false
     t.integer  "user_id"
     t.string   "status"
-    t.integer  "task_order"
     t.datetime "deadline"
+    t.integer  "task_order"
     t.integer  "event_template_id"
   end
 

@@ -25,6 +25,9 @@ class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
 
+  has_many :ownerships
+  has_many :users, through: :ownerships 
+
   belongs_to :event
 
   has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
