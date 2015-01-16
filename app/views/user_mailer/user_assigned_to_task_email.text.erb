@@ -4,7 +4,7 @@ Hallo <%= @user.username %>
 ===========================
 
 <% if @group_assignment %>
-<%= @assigner.username %> hat der Gruppe <%= @group_name %> den Task <%= link_to @task.name, task_url(@task) %> zugewiesen
+<%= @assigner.username %> hat der Gruppe <%= @group_name %> den Task <%= @task.name %> zugewiesen
 <% else %>
 <%= @assigner.username %> hat Ihnen den Task <%= @task.name %> zugewiesen
 <% end %>
