@@ -4,7 +4,7 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
     #
-   user ||= User.new # guest user (not logged in)
+    user ||= User.new # guest user (not logged in)
 
     #   user.id = 0
     #   if user.admin?
@@ -35,8 +35,11 @@ class Ability
     # end
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
+    can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
-
+    can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 
+    can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event => { :user_id => user.id }
+    can [:read, :set_done], Task, :identity_id => user.id, :identity_type => 'User'
     if user.username == load_admin
         can :manage, Group
         can :manage, Room

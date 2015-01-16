@@ -1,4 +1,5 @@
 module EventsHelper
+
   def trimDescription(description)
     if description.length > 60
       return description[0, 55] + "[...]"
@@ -38,4 +39,8 @@ module EventsHelper
     list.sort_by! { |occurrence| occurrence.starts_occurring_at }
     list[0 .. limit-1]
   end
+
+	def get_name_of_original_event event 
+		return 'Event ' + event.event.name
+	end
 end

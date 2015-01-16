@@ -14,6 +14,8 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<%= render partial: 'tasks_list', locals: {my_accepted_tasks: @my_accepted_tasks, my_pending_tasks: @my_pending_tasks, my_accepted_events: @my_accepted_events, my_pending_events: @my_pending_events} %>
+		<%= render partial: 'my_events', locals: {my_upcoming_events: @my_upcoming_events} %>
+		<%= render partial: 'tasks_list', locals: {my_accepted_tasks: @my_accepted_tasks, my_pending_tasks: @my_pending_tasks, my_accepted_events: @my_accepted_events, my_pending_events: @my_pending_events, group_pending_tasks: @group_pending_tasks,
+			group_pending_events: @group_pending_events, my_groups: @my_groups} %>
 	</div>
 </div>

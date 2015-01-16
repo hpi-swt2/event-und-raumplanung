@@ -1,4 +1,7 @@
 de:
+  submit: Absenden
+  delete: Löschen
+  cancel: Abbrechen
   date:
     abbr_day_names:
     - So
@@ -147,6 +150,7 @@ de:
       suggest: ! 'Alternative vorschlagen'
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
+      task:    ! 'Aufgabe erstellen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:
@@ -211,11 +215,14 @@ de:
       default: ! '%A, %d. %B %Y, %H:%M Uhr'
       long: ! '%A, %d. %B %Y, %H:%M Uhr'
       short: ! '%d. %B, %H:%M Uhr'
+      time_only : ! '%H:%M Uhr'
     pm: nachmittags
     starts_at: Startzeitpunkt
     ends_at: Endzeitpunkt
   notices:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
+    successful_approve: ! '%{model} wurde erfolgreich akzeptiert.'
+    successful_decline: ! '%{model} wurde erfolgreich abgelehnt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
     successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
@@ -228,6 +235,24 @@ de:
   alert:
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
+  event: 
+    alert: 
+      conflict_same_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
+      conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
+      conflict_different_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
+      conflict_different_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
+    status: 
+      suggested: Vorschlag
+      approved: bestätigt
+      declined: abgelehnt
+      pending: In Bearbeitung
+      rejected_suggestion: Abgelehnter Vorschlag
+  events: 
+    show: 
+      suggested_for: 'Vorgeschlagen für'
+    links:
+      edit_original_event: 'Original editieren'
+      destroy_original_event: 'Original löschen'
   tasks:
     status:
       not_assigned: nicht zugewiesen

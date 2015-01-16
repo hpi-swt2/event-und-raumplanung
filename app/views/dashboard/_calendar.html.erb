@@ -4,7 +4,7 @@
        inside ruby tags to display the calendar on any page
 -->
 
-<% @calevents = Event.all %>
+<% @calevents = Event.events_between(Time.local(2015, 1, 1, 0, 0, 0), Time.local(2016, 1, 1, 0, 0, 0)) %>
 <% @favorites = Favorite.all %>
 
 <div id="calendar"></div>
@@ -20,12 +20,12 @@
 			events: [
                 <% @calevents.each do |each| %>
 					
-					<% if each.user_id === current_user.id %>
+					<% if each.event.user_id === current_user.id %>
 					{
-						title: '<%= each.name %>',
-						start: '<%= each.starts_at %>'
+						title: '<%= each.event.name %>',
+						start: '<%= each.starts_occurring_at %>'
 
-                    	<% if each.approved? %>
+                    	<% if each.event.is_approved %>
                         	, color: 'green'
                     	<% else %>
                     		, color: 'red'
@@ -43,7 +43,7 @@
 							title: '<%= @event.name %>',
 							start: '<%= @event.starts_at %>'
 							
-							<% if @event.approved? %>
+							<% if @event.is_approved %>
 		                       	, color: 'blue'
 		                    <% else %>
 		                    	, color: 'red'

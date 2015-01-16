@@ -18,6 +18,10 @@ describe Event do
     @upcoming_event.destroy
   end
 
+  it "should have options_for_sorted_by" do
+    Event::options_for_sorted_by
+  end
+
   it "has a valid factory" do
     expect(event).to be_valid
   end
@@ -90,7 +94,7 @@ describe Event do
   it 'should return events for a room' do
     room = FactoryGirl.create(:room)
     another_room = FactoryGirl.create(:room)
-    results = Event.room_ids(nil)
+    results = Event.room_ids([])
     expect(results).to include(@upcoming_event)
     @upcoming_event.rooms << room
     results = Event.room_ids([room.id, another_room.id])
@@ -149,48 +153,104 @@ describe Event do
 	  expect(results).not_to include(@approved_event, @open_event)
 	end
 
-	
-   it "should find time overlapping events" do
+	it ".approve should set approve status in an event" do
+    	event = build(:event)
+    	event.approve
+    	expect(Event.approved.find(event)).to eq(event)
+ 	end
+
+ 	it ".decline should set decline status in an event" do
+    	event = build(:event)
+    	event.decline
+    	expect(Event.declined.find(event)).to eq(event)
+ 	end
+
+ 	it ".is_approved should only return true for an approved event" do
+    	expect(@open_event.is_approved).to be false
+    	expect(@declined_event.is_approved).to be false
+    	expect(@approved_event.is_approved).to be true
+ 	end
+
+   it "should find overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
- 
+    @event1.name = "Party1"
     @event2 = FactoryGirl.create(:standardEvent)
+    @event2.name = "Party2"
+    @event1.save
+    @event2.save
 
-
-    ## the following line is taken from checkVacancy
-    events =  Event.other_to(@event2.id).not_approved.overlapping(@event2.starts_at,@event2.ends_at)
-    expect(events.size).to eq 1
-    expect(events[0].name).to eq @event1.name
-
-    @event1.destroy
-    @event2.destroy
-
-
-  end
-
-  it "SHOULD find overlapping events" do
-    ## THIS IS STILL IN PROGRESS
-    ## The test will fail, because there is no translation table for the rooms
-    @event1 = FactoryGirl.create(:standardEvent)
-    #@event1.name = "Party1"
-    @event2 = FactoryGirl.create(:standardEvent)
-    #@event2.name = "Party2"
-
-    ## Case 1: same timeslot 
-    #coliding_events = @event2.checkVacancy([@event1[:room_id]])
-    #expect(coliding_events.size).to eq 1
-    #expect(coliding_events[0].name).to eq "Party1" 
+    ## Case 1: same timeslot
+    coliding_events = @event2.check_vacancy(@event1.rooms.map(&:id))
+    expect(coliding_events.size).to eq 1
+    expect(coliding_events[0].name).to eq "Party1"
 
     ## Case 2: same timeslots, but different rooms, results to no conflicts (
-    #@event2.room_id = 2 
-    #coliding_events = @event2.checkVacancy([@event1[:room_id].to_s])
-    #expect(coliding_events.size).to eq 0
-    #puts coliding_events.inspect
-
-    ## Case 3: more than one room 
-  
+    @event2.rooms = []
+    coliding_events = @event2.check_vacancy([@event1[:room_id].to_s])
+    expect(coliding_events.size).to eq 0
 
     @event1.destroy
     @event2.destroy
-
   end
 end
+
+describe "event order" do
+    before(:all) do
+      Event.destroy_all
+      @event1 = FactoryGirl.create(:sortEvent1)
+      @event2 = FactoryGirl.create(:sortEvent2)
+      @event3 = FactoryGirl.create(:sortEvent3)
+    end
+
+    it "should sort by created at" do
+      @events = Event.sorted_by("created_at_desc")
+    end
+
+    it "should sort by name" do
+      @events = Event.sorted_by("name_desc")
+      @order = @events.map { |event| event.name[1,1] }
+      expect(@order).to eq ['2','3','1']
+    end
+
+    it "should sort by starts at" do
+      @events = Event.sorted_by("starts_at_desc")
+      @order = @events.map { |event| event.name[1,1] }
+      expect(@order).to eq ['2','1','3']
+    end
+
+    it "should sort by ends at" do
+      @events = Event.sorted_by("ends_at_desc")
+      @order = @events.map { |event| event.name[1,1] }
+      expect(@order).to eq ['1','2','3']
+    end
+
+    it "should sort by status" do
+      @events = Event.sorted_by("status_desc")
+      @order = @events.map { |event| event.name[1,1] }
+      expect(@order).to eq ['2','3','1']
+    end
+    it "unexpected should raise error " do
+      expect { Event.sorted_by("narf_desc") }.to raise_error
+    end
+  end
+
+  describe "event search" do
+    before(:all) do
+      @event1 = FactoryGirl.create(:sortEvent1)
+      @event2 = FactoryGirl.create(:sortEvent2)
+      @event3 = FactoryGirl.create(:sortEvent3)
+      @event = FactoryGirl.create(:standardEvent)
+    end
+
+    it "should find A1" do
+      @events = Event.search_query("A1");
+      expect(@events.size).to be >= 1
+      expect(@events).to include @event1
+    end
+    it "should find all in room" do
+      @events = Event.room_ids @event.rooms.map(&:id)
+      expect(@events.size).to be >= 1
+      expect(@events).to include @event
+    end
+
+  end

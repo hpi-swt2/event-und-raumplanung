@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
+  resources :uploads, :only => [:new, :create, :destroy]
+
   resources :event_suggestions
+
   resources :groups do
     member do
       get 'manage_rooms'
@@ -15,8 +18,10 @@ Rails.application.routes.draw do
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
-  post 'events/:id/approve' => 'events#approve', as: "approve_event"
-  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+  # post 'events/:id/approve' => 'events#approve', as: "approve_event"
+  # get 'events/:id/decline' => 'events#decline', as: "decline_event"
+  # get 'events/:id/approve_event_suggestion' => 'events#approve_event_suggestion', as: "approve_event_suggestion"
+  # get 'events/:id/decline_event_suggestion' => 'events#decline_event_suggestion', as: "decline_event_suggestion"
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
@@ -25,15 +30,19 @@ Rails.application.routes.draw do
   post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
 
-
+  post 'tasks/upload_file' => 'tasks#upload_file'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
+
+  get "identities/autocomplete" => "identities#autocomplete"
 
   resources :attachments
 
   resources :room_properties
 
-  resources :rooms
+  resources :rooms do
+    get :reset_filterrific, on: :collection
+  end
 
   resources :tasks do
     post :update_task_order, on: :collection
@@ -41,6 +50,7 @@ Rails.application.routes.draw do
 
   get 'tasks/:id/accept' => 'tasks#accept', :as => :accept_task
   get 'tasks/:id/decline' => 'tasks#decline', :as => :decline_task
+  put 'tasks/:id/set_done' => 'tasks#set_done', :as => :set_task_done
 
   resources :bookings
 
@@ -49,7 +59,23 @@ Rails.application.routes.draw do
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do
-    get :reset_filterrific, on: :collection
+    collection do 
+      get :create_event_suggestion
+      patch :create_event_suggestion 
+      post :creat_event_suggestion
+      get :reset_filterrific
+    end
+
+    member do
+      post :approve
+      get :decline
+      get :approve_event_suggestion 
+      get :decline_event_suggestion
+      get :new_event_template
+      get :new_event_suggestion
+      get :index_toggle_favorite
+      get :show_toggle_favorite
+    end
   end
 
   resources :maps
@@ -69,8 +95,6 @@ Rails.application.routes.draw do
   get 'templates/:id/new_event' => 'event_templates#new_event', as: :new_event_from_template
   get 'events/:id/new_event_template' => 'events#new_event_template', as: :new_event_template_from_event
   get 'events/:id/new_event_suggestion' => 'events#new_event_suggestion', as: :new_event_suggestion_from_event
-  get 'events/:id/sugguest' => 'events#sugguest', as: :sugguest_event
-
 
 
   get 'events/:id/index_toggle_favorite' => 'events#index_toggle_favorite', as: :index_toggle_favorite_from_event

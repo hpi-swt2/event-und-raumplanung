@@ -29,3 +29,4 @@
 //= require bootstrap-datetimepicker
 //= require moment/de
 //= require recurring_select
+//= require jquery-ui/autocomplete

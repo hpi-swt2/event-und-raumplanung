@@ -103,6 +103,8 @@ gem 'ice_cube'
 # It uses ice_cube recurring scheduling gem, see: https://github.com/GetJobber/recurring_select
 gem 'recurring_select'
 
+gem 'paperclip', '~> 4.2'
+
 gem 'ranked-model'
 gem 'bootstrap3-datetimepicker-rails', '~> 3.1.3'
 
@@ -130,5 +132,5 @@ group :test, :development  do
 	gem 'database_cleaner'
 	gem 'rails-dev-tweaks'
 	gem 'timecop'
+	gem 'rspec-activemodel-mocks'
 end
-
