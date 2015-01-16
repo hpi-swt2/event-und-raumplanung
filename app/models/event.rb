@@ -64,6 +64,7 @@ class Event < ActiveRecord::Base
     schedule = self.schedule
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+    self.schedule = schedule
   end
 
   def occurence_rule
