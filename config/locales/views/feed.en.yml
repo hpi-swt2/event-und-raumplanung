@@ -1,6 +1,9 @@
 # ruby encoding: utf-8
 
 en:
+  feed:
+    on_date: "on"
+    at_time: "at"
   activities:
     activity_log: "Activity Log"
     create: "created"
@@ -9,9 +12,11 @@ en:
     decline: "declined"
     the_task: "the task"
     the_event: "the event"
-    on_date: "on"
-    at_time: "at"
     marked: "marked"
     as: "as"
     done: "done"
     undone: "not done"
+  comments:
+    commented: "commented"
+    new_comment: "New comment"
+    

@@ -1,6 +1,9 @@
 # ruby encoding: utf-8
 
 de:
+  feed:
+    on_date: "am"
+    at_time: "um"
   activities:
     activity_log: "Ereignisprotokoll"
     create: "erstellte"
@@ -9,9 +12,11 @@ de:
     decline: "verweigerte"
     the_task: "die Aufgabe"
     the_event: "das Event"
-    on_date: "am"
-    at_time: "um"
     marked: "markierte"
     as: "als"
     done: "erledigt"
     undone: "nicht erledigt"
+  comments:
+    commented: "kommentierte"
+    new_comment: "Neuer Kommentar"
+    
