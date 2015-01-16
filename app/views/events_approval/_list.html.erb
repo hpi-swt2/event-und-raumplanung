@@ -35,7 +35,8 @@
   <% end %>
 </tbody>
 </table>
-<%= t('.no_' + events_type + '_events') unless events.exists? %>
+
+<%= t('.no_' + events_type + '_events') if events.empty? %>
 
 <% if events_type == 'open' %>
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

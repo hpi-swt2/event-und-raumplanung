@@ -596,11 +596,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('approved')
     end
 
-    it "redirects to events_approval_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :approve, {:id => event.to_param}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 
@@ -661,11 +661,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('declined')
     end
 
-    it "redirects to events_decline_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 
