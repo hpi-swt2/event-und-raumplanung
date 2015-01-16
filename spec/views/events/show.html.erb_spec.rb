@@ -3,7 +3,13 @@ require 'pp'
 
 RSpec.describe "events/show", :type => :view do
 
+  let(:user) { create :user }
+
   before(:each) do
+
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+
     @event = assign(:event, Event.create!(name:"Testeventname", description: "description of the testevent", participant_count:87,
                           created_at: DateTime.new(2000,02,25,4,5,6), updated_at: DateTime.new(2001,03,20,5,6,7),
                           starts_at: DateTime.new(2050, 05, 03, 15, 00),
@@ -15,6 +21,8 @@ RSpec.describe "events/show", :type => :view do
                                           :changed_fields => @event.changed)
     
     @activities = @event.activities
+    @feed_entries = @activities
+    @current_user = user
 
     @favorite = Favorite.where('user_id = 42 AND favorites.is_favorite = ? AND event_id = ?', true, @event.id);
 
