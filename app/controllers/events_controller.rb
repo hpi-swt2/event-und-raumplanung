@@ -72,7 +72,7 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
-    redirect_to events_approval_path
+    redirect_to :back
   end
 
   def approve_event_suggestion
@@ -82,7 +82,7 @@ class EventsController < GenericEventsController
 
   def decline
     @event.decline
-    redirect_to events_approval_path
+    redirect_to :back
   end
 
   def decline_event_suggestion
