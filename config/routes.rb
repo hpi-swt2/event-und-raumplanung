@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/change_locale/:locale', to: 'locale#change_locale', as: :change_locale
+
   resources :event_suggestions
   resources :groups do
     member do

@@ -142,6 +142,8 @@ de:
       suggest: ! 'Alternative vorschlagen'
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
+      remove_favorite: ! 'Aus Favoriten entfernen'
+      add_favorite: ! 'Zu Favoriten hinzufügen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:
@@ -213,9 +215,9 @@ de:
     successful_create: ! '%{model} wurde erfolgreich erstellt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
-    successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
+    successful_suggest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
   alert:
-    successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
+    successful_suggest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
   tasks:
     status:

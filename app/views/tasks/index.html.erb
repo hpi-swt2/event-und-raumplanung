@@ -4,7 +4,7 @@
 <div>
   <%= form_tag(tasks_path, :method => "get") do %>
     <%= collection_select :event, :event_id, @events, :id, :name, {:include_blank => "All events", :selected => @event_id} %>
-    <%= submit_tag 'Filtern' %>
+    <%= submit_tag t('tasks.filter') %>
   <% end %>
 </div>
 <%= render :partial => 'tasks_box', :locals => {:tasks => @tasks} %>

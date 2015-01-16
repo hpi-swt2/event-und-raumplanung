@@ -1,17 +1,25 @@
 # ruby encoding: utf-8
 
-de:
+en:
   rooms:
     index:
-      title: Raumübersicht
-      all_events: Alle Events
+      title: Room overview
+      all_events: All Events
+      sorted_by: 'Ordered by'
+      reset_filter: 'Reset Filter'
+      items_per_page: 'Rooms per Page'
+      search: 'Search'
     show:
       no_upcoming_events: Keine anstehenden Events
       upcoming_events: Anstehende Events
       all_events: Alle Events
       no_properties: Keine speziellen Eigenschaften
+      equipment: Equipment
+      category: Category
+      available: Available
+      no_equipment: No Equipment
     events:
-      no_upcoming_events: Keine anstehenden Events
+      no_upcoming_events: No upcoming Events
     details:
       capacity: Capacity
       equipment: Equipment
@@ -21,7 +29,7 @@ de:
       table_request: Request tables
     list:
       room_selection: Room Selection
-      requested_size: needed size of room
+      requested_size: Needed Room Size
       necessary_equipment: Necessary equipment
       necessary_properties: Necessary properties
       no_rooms_found: No rooms met the criteria

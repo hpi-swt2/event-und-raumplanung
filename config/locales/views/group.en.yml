@@ -9,9 +9,12 @@ en:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
+      unassign_user: Unassign User
       user_overview: User-overview
+      enter_email: enter Email-Address
     edit:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+      user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
