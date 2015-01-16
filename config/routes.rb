@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
 
-  resources :permissions, :only => [:index]
-
-  post 'permissions/submit' => 'permissions#submit'
-  post 'permissions/user_permissions' => 'permissions#user_permissions'
-  post 'permissions/permitted_entities' => 'permissions#permitted_entities'  
-  post 'permissions/entities_tab' => 'permissions#entities_tab'
-  post 'permissions/permissions_tab' => 'permissions#permissions_tab'
+  resources :permissions, :only => [:index] do
+    collection do
+      post :submit
+      post 'permissions_for_entity', action: 'checkboxes_by_entity'
+      post 'permitted_entities', action: 'checkboxes_by_permission'
+    end
+  end
 
   resources :event_suggestions
   resources :groups do

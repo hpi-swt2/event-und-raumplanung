@@ -2,19 +2,27 @@
 // All this logic will automatically be available in application.js.
 
 $(function() {
-  $('#user').change(updateUserPermissions);
+  $('#entity').change(updateUserPermissions);
   $('#permissions').change(updatePermittedEntities);
   $('#rooms').change(updatePermittedEntities);
+  $(document).on('ajax:success', '#permissionsByPermission', permissionSubmitSuccess);
+  $('#rooms').prop('disabled', !($('#permissions').val() == 'approve_events')).selectpicker('refresh');
+  $('#permissions').change(function() {
+    $('#rooms').prop('disabled', !($(this).val() == 'approve_events')).selectpicker('refresh');
+  });
+  $(document).on('ajax:success', '#permissionsByEntity', permissionSubmitSuccess);
+  updatePermittedEntities();
+  updateUserPermissions();
 })
 
 function updateUserPermissions() {
   $.ajax({
-    url: '/permissions/user_permissions',
+    url: '/permissions/permissions_for_entity',
     type: 'POST',
-    data: { user: $('#user').val() },
+    data: { entity: $('#entity').val() },
     dataType: 'html',
     success: function(data) {
-      $('#permissionDiv').html(data);
+      $('#permissionsDiv').html(data);
     }
   });
 }

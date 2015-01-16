@@ -17,27 +17,27 @@ class PermissionsController < ApplicationController
     end
   end
 
-  def permit_per_room(entity, category)
+  def permit_per_room(entity, permission)
     rooms_to_permit = []
-    rooms_to_permit = params[:rooms][category] if params[:rooms][category].present?
+    rooms_to_permit = params[:rooms][permission] if params[:rooms][permission].present?
     if rooms_to_permit.include?('all')
-      entity.permit(category)
+      entity.permit(permission)
       rooms_to_permit = []
     else
-      entity.unpermit(category)
+      entity.unpermit(permission)
     end
     Room.all.each do |room|
       if rooms_to_permit.include?(room.id.to_s)
-        entity.permit(category, room)
+        entity.permit(permission, room)
       else
-        entity.unpermit(category, room)
+        entity.unpermit(permission, room)
       end
     end
   end
 
   def submit_permissions
     entities = User.all + Group.all
-    permission = params[:permission]
+    permission = permission_params[:permission]
     entities.each do |entity|
       form_name = 'User:' + entity.id.to_s if entity.is_a?(User)
       form_name = 'Group:' + entity.id.to_s if entity.is_a?(Group)
@@ -48,26 +48,26 @@ class PermissionsController < ApplicationController
           permit_per_room(entity, permission)
         end
       else
-        entity.unpermit_all(params[:permission])
+        entity.unpermit_all(permission)
       end
     end
     respond_to do |format|
-      data = {message: I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + params[:permission]))}
+      data = {message: I18n.t('permissions.updated_permission', permission: I18n.t('permissions.' + permission))}
       format.json { render :json => data, :status => :ok }
     end
   end
 
   def submit_entities
-    entity = determine_permitted_entity(params[:user])
-    Permission.categories.keys.each do |category|
-      if permission_params[category] == "1"
-        if category != 'approve_events'
-          entity.permit(category)
+    entity = determine_permitted_entity(entity_params[:entity])
+    Permission.categories.keys.each do |permission|
+      if entity_params[permission] == "1"
+        if permission != 'approve_events'
+          entity.permit(permission)
         else
-          permit_per_room(entity, category)
+          permit_per_room(entity, permission)
         end
       else
-        entity.unpermit_all(category)
+        entity.unpermit_all(permission)
       end
     end
     name = entity.username if entity.is_a?(User)
@@ -87,33 +87,40 @@ class PermissionsController < ApplicationController
     end
   end
 
-  def permitted_entities
+  def checkboxes_by_permission
+    params.permit(:permission)
     @permission = params[:permission]
-    param_rooms = params[:rooms]['approve_events']
+    rooms_for_approve_events = params[:rooms]['approve_events']
     rooms = []
-    if param_rooms.include?('all')
+    if rooms_for_approve_events.include?('all')
       rooms = Room.all
     else
-      rooms = Room.all.select{ |room| param_rooms.include?(room.id.to_s)}
+      rooms = Room.all.select{ |room| rooms_for_approve_events.include?(room.id.to_s)}
     end
-    render :partial => "permitted_entities", locals: {users: User.all, groups: Group.all, rooms: rooms}
+    render :partial => "checkboxes_by_permission", locals: {users: User.all, groups: Group.all, rooms: rooms}
   end
 
-  def user_permissions
-    @permitted_entity = determine_permitted_entity(params[:user])
+  def checkboxes_by_entity
+    params.permit(:entity)
+    @permitted_entity = determine_permitted_entity(params[:entity])
     @categories = Permission.categories.keys
-    render :partial => "user_permissions"
+    render :partial => "checkboxes_by_entity"
   end
 
   def authorize_admin
     authorize! :manage, Permission
   end
 
-  def permission_params
-    params.permit(:user)
-    Permission.categories.keys.each do |category|
-      params.permit(category)
+  def entity_params
+    params.permit(:entity)
+    Permission.categories.keys.each do |permission|
+      params.permit(permission)
     end
+    return params
+  end
+
+  def permission_params
+    params.permit(:permission)
     return params
   end  
 
