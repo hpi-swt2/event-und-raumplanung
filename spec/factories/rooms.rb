@@ -26,7 +26,7 @@ FactoryGirl.define do
   factory :room_with_bookings, parent: :room do |f|
   	f.name 'HS1'
   	f.size 200
-  	f.bookings [
+  	f.events [
   		FactoryGirl.build(:gds),
   		FactoryGirl.build(:pt)]
   end
