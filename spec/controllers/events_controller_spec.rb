@@ -166,6 +166,21 @@ RSpec.describe EventsController, :type => :controller do
     { :status => false }.to_json
   }
 
+  let(:valid_attributes_weekly_recurring_event) {
+    {
+      name:'weekly',
+      description:'weekly recurring',
+      participant_count: 15,
+      starts_at_date: "2015-01-05",
+      starts_at_time: "09:00",
+      ends_at_date: "2015-01-05",
+      ends_at_time: "10:30",
+      is_private: false,
+      user_id: user.id,
+      occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
+    }
+  }
+
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -456,6 +471,19 @@ RSpec.describe EventsController, :type => :controller do
         expect(assigns(:event)).to be_a_new(Event)
       end
     end
+
+    describe "with valid weekly recurring occurrence rule parameters" do
+      it "creates a valid schedule" do
+        post :create, {:event => valid_attributes_weekly_recurring_event}, valid_session
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+      end
+    end
+
     after(:all) do 
       DatabaseCleaner.clean
     end
