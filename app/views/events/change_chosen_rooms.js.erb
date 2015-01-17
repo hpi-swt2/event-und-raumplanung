@@ -1,2 +1,2 @@
-alert("Hallo");
-$("<%= escape_javascript(render plain: 'OK') %>")
+$("#event-form #chosen_rooms").html('<%= escape_javascript(render :partial => 'events/event_rooms') %>');
+//$("<%= escape_javascript(render :partial => 'events/event_rooms') %>").appendTo("#chosen_rooms")
