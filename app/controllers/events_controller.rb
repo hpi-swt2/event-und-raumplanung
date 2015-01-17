@@ -56,13 +56,22 @@ class EventsController < ApplicationController
   end
   
   def change_chosen_rooms
-    room_ids = params[:event][:room_ids]
-    @chosen_rooms = Room.find(room_ids)
-    @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
+    if params[:event]
+      room_ids = params[:event][:room_ids]
+      @chosen_rooms = Room.find(room_ids)
+      @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
+
+      @room_equipment = Hash.new
+      for room in @chosen_rooms
+        @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+      end
+    end
+
     respond_to do |format|
       format.html
       format.js
     end
+
   end
 
   # GET /events
