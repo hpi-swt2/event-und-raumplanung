@@ -56,10 +56,9 @@ class EventsController < ApplicationController
   end
   
   def change_chosen_rooms
-    logger.info "test"
-    logger.debug "test"
-    puts "test";
-    #render nothing: true
+    room_ids = params[:event][:room_ids]
+    @chosen_rooms = Room.find(room_ids)
+    @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
     respond_to do |format|
       format.html
       format.js
