@@ -1,0 +1,19 @@
+# ruby encoding: utf-8
+
+en:
+  permissions:
+    index:
+      title: Permissions
+      filter_by_entity: Filter by entities
+      filter_by_permission: Filter by permissions
+    manage_rooms: Manage rooms
+    edit_rooms: Edit rooms
+    approve_events: Approve events
+    manage_equipment: Manage equipment
+    edit_equipment: Edit equipment
+    manage_properties: Manage room properties
+    edit_properties: Edit room properties
+    assign_to_rooms: Edit equipment and room properties
+    updated_entity: "Permissions for %{entity} were updated"
+    updated_permission: "Permission %{permission} was updated"
+    permission_on: "%{permission} on %{subject}"

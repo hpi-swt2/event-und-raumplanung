@@ -2,6 +2,14 @@ Rails.application.routes.draw do
 
   resources :uploads, :only => [:new, :create, :destroy]
 
+  resources :permissions, :only => [:index] do
+    collection do
+      post :submit
+      post 'permissions_for_entity', action: 'checkboxes_by_entity'
+      post 'entities_for_permission', action: 'checkboxes_by_permission'
+    end
+  end
+
   resources :event_suggestions
 
   resources :groups do
