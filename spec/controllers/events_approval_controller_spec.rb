@@ -6,15 +6,13 @@ RSpec.describe EventsApprovalController, :type => :controller do
 	  let(:user) { create :user }
 
 	before(:all) do
-		@open_event = FactoryGirl.create(:event, name: 'open_event')
+		@open_event = FactoryGirl.create(:event_today, name: 'open_event')
 		@approved_event = FactoryGirl.create(:approved_event, name: 'approved_event')
 		@declined_event = FactoryGirl.create(:declined_event, name: 'declined_event')
-	  	@approved_booking = FactoryGirl.create(:booking_today, name: 'approved_booking', event: @approved_event)
-		@open_booking = FactoryGirl.create(:booking_today, name: 'open_booking', event: @open_event)
-		@declined_booking = FactoryGirl.create(:booking_today, name: 'declined_booking', event: @declined_event)
-		@booking_yesterday = FactoryGirl.create(:booking_yesterday, name: 'booking_yesterday', event: @open_event)
-		@booking_today = FactoryGirl.create(:booking_today, name: 'booking_today', event: @open_event)
-		@booking_tomorrow = FactoryGirl.create(:booking_tomorrow, name: 'booking_tomorrow', event: @open_event)
+		@approved_event_yesterday = FactoryGirl.create(:approved_event, name: 'approved_event_yesterday')
+		@approved_event_yesterday.update_attribute(:starts_at, Date.current.yesterday.beginning_of_day)
+		@approved_event_yesterday.update_attribute(:ends_at, Date.current.yesterday.end_of_day)
+		@approved_event_tomorrow = FactoryGirl.create(:approved_event, name: 'approved_event_tomorrow' , starts_at: Date.current.tomorrow.beginning_of_day, ends_at: Date.current.tomorrow.end_of_day)
 	end
 
 	before(:each) do
@@ -23,15 +21,15 @@ RSpec.describe EventsApprovalController, :type => :controller do
   	end
 
 	describe "GET index" do
-		it "assigns all open events as @events" do
+		it "assigns all open events as @open_events" do
 			get :index, {}, valid_session
-			expect(assigns(:events)).to include(@open_event)
-			expect(assigns(:events)).not_to include(@approved_event, @declined_event)
+			expect(assigns(:open_events)).to include(@open_event)
+			expect(assigns(:open_events)).not_to include(@approved_event, @declined_event, @approved_event_yesterday, @approved_event_tomorrow)
 		end
-		it "assigns all approved bookings at specified date as @bookings" do
+		it "assigns all approved events at specified date as @approved_events" do
 			get :index, {}, valid_session
-			expect(assigns(:bookings)).to include(@approved_booking)
-			expect(assigns(:bookings)).not_to include(@open_bookings, @declined_bookings, @booking_yesterday, @booking_today, @booking_tomorrow)
+			expect(assigns(:approved_events)).to include(@approved_event)
+			expect(assigns(:approved_events)).not_to include(@open_event, @declined_event, @approved_event_yesterday, @approved_event_tomorrow)
 		end
 		it "assigns simple date parameter correctly as @date" do
 			date = Date.current.yesterday
@@ -63,12 +61,8 @@ RSpec.describe EventsApprovalController, :type => :controller do
 		@open_event.destroy
 		@approved_event.destroy
 		@declined_event.destroy
-		@approved_booking.destroy
-		@open_booking.destroy
-		@declined_booking.destroy
-		@booking_yesterday.destroy
-		@booking_today.destroy
-		@booking_tomorrow.destroy
+		@approved_event_yesterday.destroy
+		@approved_event_tomorrow.destroy
 	end
 
 end

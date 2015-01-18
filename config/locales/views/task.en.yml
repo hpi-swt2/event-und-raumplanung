@@ -7,3 +7,15 @@ en:
       declined: declined
     user:
       none: None
+    decline:
+      you_already_accepted_this_task: You already accepted this task.
+      you_are_not_authorized_to_decline_this_task: You are not authorized to decline this task.
+    accept:
+      this_task_was_already_accepted_by: This task was already accepted by
+      you_are_not_authorized_to_accept_this_task: You are not authorized to accept this task.
+      this_task_was_already_declined: This task was already declined.
+    show:
+      new: New Task
+      no_tasks: There are no tasks for this event yet or you aren't allowed to see them.
+    form:
+      areYouSure: Are you sure?

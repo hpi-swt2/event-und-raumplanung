@@ -1,6 +1,6 @@
 # ruby encoding: utf-8
 
-de:
+en:
   rooms:
     index:
       title: Raumübersicht
@@ -10,8 +10,9 @@ de:
       upcoming_events: Anstehende Events
       all_events: Alle Events
       no_properties: Keine speziellen Eigenschaften
-    events:
+    upcoming_events:
       no_upcoming_events: Keine anstehenden Events
+      create_event: Create Event
     details:
       capacity: Capacity
       equipment: Equipment
@@ -20,6 +21,7 @@ de:
       table_information: Tables upon request
       table_request: Request tables
     list:
+      all_events: Alle Events
       room_selection: Room Selection
       requested_size: needed size of room
       necessary_equipment: Necessary equipment
@@ -31,3 +33,4 @@ de:
       room_size: Maximum number of persons
       equipment: Equipment
       properties: Properties
+      create_event: Create events
