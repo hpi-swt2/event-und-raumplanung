@@ -15,6 +15,15 @@ FactoryGirl.define do
     	end
   	end
 
+    factory :groupMember do
+      after :create do |member|
+        member.sign_in_count = 1337
+        member.groups << FactoryGirl.create(:group_with_room)
+        member.save
+        member.reload
+      end
+    end
+
     sequence(:username) { |n| "test.user#{n}" }
     sequence(:email) { |n| "test.user#{n}@example.com" }
   end
