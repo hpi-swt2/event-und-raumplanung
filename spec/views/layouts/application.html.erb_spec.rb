@@ -15,7 +15,7 @@ RSpec.describe "layouts/application", :type => :view do
     render
 
     assert_select ".navbar-default" do 
-      #assert_select "a[href=?]", events_approval_path, false
+      assert_select "a[href=?]", events_approval_path, false
     end
   end
 

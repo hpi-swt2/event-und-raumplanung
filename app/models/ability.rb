@@ -77,14 +77,16 @@ class Ability
     end
 
     can [:assign_equipment, :assign_properties], Room do |room|
-        user.has_permission("assign_to_rooms", room)
+        user.has_permission("assign_to_rooms")
     end
 
-    can [:approve, :decline], Event do |event|
+    Event.all.each do |event|
         if event.rooms.empty?
-            user.has_permission("approve_events")
-        else
-            event.rooms.all? {|room| user.has_permission("approve_events", room)}
+            if user.has_permission("approve_events")
+                can [:approve, :decline], Event, :id => event.id
+            end
+        elsif event.rooms.all? {|room| user.has_permission("approve_events", room)}
+            can [:approve, :decline], Event, :id => event.id
         end
     end
   end
