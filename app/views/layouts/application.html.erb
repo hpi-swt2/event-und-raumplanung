@@ -38,7 +38,6 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "application" %>
-
   </head>
   <body>
 
@@ -48,10 +47,10 @@
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
           <%= link_to root_path, :class => "navbar-brand" do %>
             <%= image_tag("hpi-logo.png", :alt => "HPI", :id => "hpi_logo") %>
             <small><%= t('.room_mate') %></small>
@@ -73,7 +72,7 @@
                 <li><%= link_to t('.rooms'), rooms_path %></li>
                 <li><%= link_to t('.equipment'), equipment_index_path %></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
-              </ul>
+          </ul>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -83,7 +82,7 @@
               <% else %>
                 <li><a><%= @current_user.username + " (" + t(".staff") + ")" %></a></li>
               <% end %>
-              <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
+            <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>
         </div>
