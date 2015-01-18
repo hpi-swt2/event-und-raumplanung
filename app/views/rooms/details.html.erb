@@ -2,56 +2,60 @@
 <div class="page-header"/>
 	<h1><%=t '.title', :default => [:'helpers.title.details', 'Details of %{model}'], :model => @room.name %></h1>
 </div>
-<table class="table table-column">
-	<thead>
-		<tr>
-			<th><%= t'.capacity' %></th>
-			<th><%= t'.equipment' %></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><%= @room.size %> <%= t'.people' %><br><br>
-				<%= t'.table_information' %><br>
-				<%= link_to t('.table_request', :default => t("helpers.links.request now")),
-				@room, method: :list, :class => 'btn btn-default btn-xs' %>
-			</td>			
-			<td><table class="table table-column-group">
-				<tbody>
-					<% @room.equipment.each do |equipment| %>
-					<tr>
-						<td><%= equipment.name %></td>
-						<td><%= equipment.description %></td>
-					</tr>
-					<% end %>
-				</tbody>
-			</table></td>
-		</tr>
-	</tbody>
-</table>
-<table class="table table-column">
-	<thead>
-		<tr>
-			<th>Event</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% @room.bookings.each do |booking| %>
-			<tr>
-				<% if(booking.start.to_date == Date.today) %>
-					<td>
-						<%= booking.name %>
-					</td>
-					<td>
-						starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
-						ends at <%= model_class.human_attribute_name(booking.end.to_s(:time)) %>
-					<td>
-				<% end %>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-column">
+        <thead>
+            <tr>
+                <th><%= t'.capacity' %></th>
+                <th><%= t'.equipment' %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><%= @room.size %> <%= t'.people' %><br><br>
+                    <%= t'.table_information' %><br>
+                    <%= link_to t('.table_request', :default => t("helpers.links.request now")),
+                    @room, method: :list, :class => 'btn btn-default btn-xs' %>
+                </td>
+                <td><table class="table table-column-group">
+                    <tbody>
+                        <% @room.equipment.each do |equipment| %>
+                        <tr>
+                            <td><%= equipment.name %></td>
+                            <td><%= equipment.description %></td>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                </table></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-column">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @room.bookings.each do |booking| %>
+                <tr>
+                    <% if(booking.start.to_date == Date.today) %>
+                        <td>
+                            <%= booking.name %>
+                        </td>
+                        <td>
+                            starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
+                            ends at <%= model_class.human_attribute_name(booking.end.to_s(:time)) %>
+                        <td>
+                    <% end %>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),

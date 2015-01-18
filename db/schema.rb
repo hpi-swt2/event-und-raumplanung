@@ -40,6 +40,14 @@ ActiveRecord::Schema.define(version: 20141224115526) do
   add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
+  create_table "comments", force: true do |t|
+    t.integer  "user_id"
+    t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+  end
+
   create_table "equipment", force: true do |t|
     t.string   "name"
     t.string   "description"

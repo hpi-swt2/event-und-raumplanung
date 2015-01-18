@@ -1,0 +1,18 @@
+<div class="comment">
+  <div class="commentAuthor">
+    <% @user = User.where(id: comment.user_id).first %>
+    <%= @user.username + " (" + @user.email + ")" %>
+  </div>
+  <p class="commentContent">
+    <%= comment.content %>
+  </p>
+  <div class="commentTimestamp">
+    <%= comment.created_at %>
+
+    <% if @user.id === current_user.id %>
+        <%= form_tag( { :action => "delete_comment", :controller => "events", comment_id: comment.id, event_id: @event.id}, { :method => :post }) do %>
+            <%= submit_tag "Löschen", class: "btn btn-danger commentDeleteBtn" %>
+        <% end %>
+    <% end %>
+  </div>
+</div>

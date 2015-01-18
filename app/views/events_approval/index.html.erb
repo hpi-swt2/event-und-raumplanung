@@ -13,46 +13,48 @@
     </div>
   <%end%>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><%=t '.event' %></th>
-        <th></th>
-        <th><%=t '.bookings' %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-          <td>
-            <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
-            <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
-            <br>
-          	<%= link_to event.name, event_path(event) %> -
-          	<%= event.description %>
-            (<%= event.participant_count %>)
-          </td>
-          <td>
-            <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
-          </td>
-          <td>
-          	<% event.bookings.each do |booking| %>
-              <%= link_to booking.name, booking_path(booking) %>,
-              <%= booking.description %>
-              <br>
-              <%= timeslot_with_date_as_string(booking) %>,
-         			<%= link_to booking.room.name, booking.room unless booking.room.nil?%>
-              <% break unless event.bookings.last != booking %>
-          		<hr style="margin:0; padding:0;">
-          	<% end %>
-          </td>
-          <td>
-            <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
-            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%=t '.event' %></th>
+            <th></th>
+            <th><%=t '.bookings' %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @events.each do |event| %>
+              <td>
+                <%= t('.user') + ' '+ event.user_id.to_s + ' ' + t('.requests') %>
+                <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
+                <br>
+                <%= link_to event.name, event_path(event) %> -
+                <%= event.description %>
+                (<%= event.participant_count %>)
+              </td>
+              <td>
+                <%= image_tag("exclamation.jpg", :alt => "Important", :width => 9, :height => 36) unless not event.is_important %>
+              </td>
+              <td>
+                <% event.bookings.each do |booking| %>
+                  <%= link_to booking.name, booking_path(booking) %>,
+                  <%= booking.description %>
+                  <br>
+                  <%= timeslot_with_date_as_string(booking) %>,
+                        <%= link_to booking.room.name, booking.room unless booking.room.nil?%>
+                  <% break unless event.bookings.last != booking %>
+                    <hr style="margin:0; padding:0;">
+                <% end %>
+              </td>
+              <td>
+                <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
+                <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <%= t('.no_open_events') unless @events.exists? %>
 </div>
 

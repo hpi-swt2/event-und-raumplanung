@@ -1,0 +1,25 @@
+.commentsContainer {
+    padding: 10px;
+    margin: 10px 0px 10px 0px;
+    border: solid 1px #d3d3d3;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 300px;
+}
+
+.commentAuthor {
+    margin: 10px 0 10px 0;
+    font-weight: bold;
+}
+
+.commentTimestamp {
+    text-align: right;
+}
+
+.comment {
+    border-bottom: dashed 1px #d3d3d3;
+}
+
+.commentDeleteBtn {
+    margin: 10px;
+}
