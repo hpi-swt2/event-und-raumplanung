@@ -44,12 +44,14 @@ class Event < ActiveRecord::Base
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
-  after_save do
-    check_group 
-    if self.event_suggestion  and self.event_suggestion.status == 'rejected_suggestion' and self.status = 'declined'
-      set_status_to_pending_and_destroy_suggestion
-    end
-  end
+  after_save :set_status_to_pending_and_destroy_suggestion, :if => Proc.new {|event| event.event_suggestion and event.event_suggestion.status == 'rejected_suggestion' and event.status = 'declined'}
+  after_create :check_group
+  # after_save do 
+  #   if self.event_suggestion  and self.event_suggestion.status == 'rejected_suggestion' and self.status = 'declined'
+  #     set_status_to_pending_and_destroy_suggestion
+  #   end
+  #   check_group
+  # end
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
@@ -147,13 +149,15 @@ class Event < ActiveRecord::Base
 
   def check_group
     only_group_rooms = true
-    self.rooms.each do |room|
-      if not room.group_id or not User.find(self.user_id).is_member_of_group(room.group_id)
-        only_group_rooms = false
+    unless self.rooms.empty?
+      self.rooms.each do |room|
+        if not room.group_id or not User.find(self.user_id).is_member_of_group(room.group_id)
+          only_group_rooms = false
+        end
       end
-    end
-    if only_group_rooms
-      self.update_columns(:status => 'approved')
+      if only_group_rooms
+        self.update_columns(:status => 'approved')
+      end
     end
   end
 end
