@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20141224115526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "attachments", force: true do |t|
     t.string   "title"
@@ -145,6 +144,7 @@ ActiveRecord::Schema.define(version: 20141224115526) do
     t.datetime "updated_at"
   end
 
+  add_index "permissions", ["permitted_entity_id", "permitted_entity_type"], name: "index_permissions_on_permitted_entity", using: :btree
   add_index "permissions", ["room_id"], name: "index_permissions_on_room_id", using: :btree
 
   create_table "room_properties", force: true do |t|
