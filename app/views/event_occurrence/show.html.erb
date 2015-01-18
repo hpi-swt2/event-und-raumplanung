@@ -4,35 +4,35 @@
   <div class="row event-section-divider">
     <div class="col-xs-12 col-md-8">
       <h1>
-        <%= @event.event.name %>
+        <%= @event_occurrence.event.name %>
         <% if @favorite.empty? %>
-          <%= link_to show_toggle_favorite_from_event_path(@event.event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
+          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence.event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
             <span class="glyphicon glyphicon-star"></span>
           <% end %>
         <% else %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
+          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence), class: "event-favorite-icon-checked event-favorite-icon" do %>
             <span class="glyphicon glyphicon-star"></span>
           <% end %>
         <% end %>
       </h1>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h2><%= @event.starts_occurring_at.strftime("%d.%m.%Y") %></h2>
+      <h2><%= @event_occurrence.starts_occurring_at.strftime("%d.%m.%Y") %></h2>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-md-8">
-      <h3><%= @event.starts_occurring_at.strftime("%H:%M") %> Uhr - <%= @event.event.ends_at.strftime("%H:%M") %> Uhr</h3>
+      <h3><%= @event_occurrence.starts_occurring_at.strftime("%H:%M") %> Uhr - <%= @event_occurrence.event.ends_at.strftime("%H:%M") %> Uhr</h3>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h3><%= concat_rooms(@event.event) %></h3>
+      <h3><%= concat_rooms(@event_occurrence.event) %></h3>
     </div>
   </div>
 </div>
 
 <div class="row event-section-divider">
   <div class="col-xs-10 col-md-7 event-description">
-    <%= raw nl2br h @event.event.description %>
+    <%= raw nl2br h @event_occurrence.event.description %>
   </div>
   <div class="col-xs-8 col-md-5">
     <table class="table table-striped">
@@ -47,11 +47,11 @@
         </tr>
         <tr>
           <td><%= t('events.show.schedule') %></td>
-          <td><%= @event.event.pretty_schedule %></td>
+          <td><%= @event_occurrence.event.pretty_schedule %></td>
         </tr>
         <tr>
           <td><%= t('events.show.rooms') %></td>
-          <td><%= concat_rooms(@event.event) %></td>
+          <td><%= concat_rooms(@event_occurrence.event) %></td>
         </tr>
         <tr>
           <td><%= t('events.show.creator') %></td>
@@ -59,7 +59,7 @@
         </tr>
         <tr>
           <td><%= t('events.show.participant_count') %></td>
-          <td><%= @event.event.participant_count %></td>
+          <td><%= @event_occurrence.event.participant_count %></td>
         </tr>
       </tbody>
     </table>
@@ -68,8 +68,8 @@
 
 <div class="event-view-section">
   <h3><%= t '.tasks' %></h3>
-  <% @event_id = @event.event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event.event })%> 
+  <% @event_id = @event_occurrence.event.id %>
+  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event_occurrence.event })%>
 </div>
 
 <div class="event-view-section">
@@ -83,14 +83,14 @@
   </div>
   <div class="col-xs-14 col-md-9 text-right">
     <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
-                        new_event_template_from_event_path(@event.event), :class => 'btn btn-default' %>
-    <% if can? :edit, @event.event %>
+                        new_event_template_from_event_path(@event_occurrence.event), :class => 'btn btn-default' %>
+    <% if can? :edit, @event_occurrence.event %>
       <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                    edit_event_path(@event.event), :class => 'btn btn-default' %>
+                    edit_event_path(@event_occurrence.event), :class => 'btn btn-default' %>
     <% end %>
-    <% if can? :destroy, @event.event %>
+    <% if can? :destroy, @event_occurrence.event %>
       <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                    event_path(@event.event),
+                    event_path(@event_occurrence.event),
                     :method => 'delete',
                     :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                     :class => 'btn btn-danger' %>

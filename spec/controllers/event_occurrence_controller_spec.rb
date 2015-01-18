@@ -30,7 +30,7 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
       get :show, {:eventid => weekly_recurring_event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
       expect(response).to be_success
-      expect(assigns(:event)).to be_a(EventOccurrence)
+      expect(assigns(:event_occurrence)).to be_a(EventOccurrence)
     end
   end
 end

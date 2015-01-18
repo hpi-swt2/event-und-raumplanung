@@ -2,18 +2,12 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    #@events = next_five_events
-    @events = Event.upcoming_events(5)
+    @event_occurrences = Event.upcoming_events(5)
     @my_upcoming_events = next_five_own_events
     get_my_tasks
   end
 
   private
-
-  # To be replaced by upcoming_events from events_helper
-  #def next_five_events
-  #  return Event.where("starts_at >= '#{(Time.current.to_s(:db))}'").order('starts_at ASC').limit(5)
-  #end
 
   def get_my_tasks 
     @my_accepted_tasks = []
