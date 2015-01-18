@@ -185,12 +185,29 @@ class Event < ActiveRecord::Base
     return (event_count > 0)
   end
 
+  # we are aware of the aweful performance :), refactore it, if relevant
   def self.events_between(start_datetime, end_datetime)
-    EventsController.helpers.events_between(start_datetime, end_datetime)
+    list = []
+    events = Event.all
+    events.each do |e|
+      e.schedule.occurrences_between(start_datetime - e.duration, end_datetime).each do |time|
+        list << EventOccurrence.new({event: e, starts_occurring_at: time, ends_occurring_at: time + e.duration})
+      end
+    end
+    list
   end
 
+  # we are aware of the aweful performance :), refactore it, if relevant
   def self.upcoming_events(limit=5)
-    EventsController.helpers.upcoming_events(limit)
+    list = []
+    events = Event.all
+    events.each do |e|
+      e.schedule.next_occurrences(limit, Time.now).each do |time|
+        list << EventOccurrence.new({event: e, starts_occurring_at: time, ends_occurring_at: time + e.duration})
+      end
+    end
+    list.sort_by! { |occurrence| occurrence.starts_occurring_at }
+    list[0 .. limit-1]
   end
 
   def set_status_to_pending_and_destroy_suggestion

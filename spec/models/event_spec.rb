@@ -18,6 +18,66 @@ describe Event do
     @upcoming_event.destroy
   end
 
+  describe "events_between" do
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
+
+    before(:all) do
+      Event.destroy_all
+    end
+
+    context "daily event present" do
+      it "finds 7 occurrences in a week for a weekly schedule", skip_before: true do
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(7)
+        expect(occurrences.first).to be_instance_of(EventOccurrence)
+        expect(occurrences.first.starts_occurring_at).to eq(daily_recurring_event.starts_at)
+        occurrences.each do |o|
+          expect(o.event).to eq(daily_recurring_event)
+        end
+        expect(occurrences.second.starts_occurring_at).to eq(daily_recurring_event.starts_at + 1.days)
+      end
+    end
+
+    context "daily and weekly event present" do
+      it "finds 8 occurrences in a week", skip_before: true do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(8)
+        expect(occurrences.first.event).to eq(weekly_recurring_event)
+      end
+    end
+  end
+
+  describe "upcoming_events" do
+
+    before(:all) do
+      Event.destroy_all
+    end
+
+    context "daily event present" do
+      it "finds the next 5 upcoming event occurrences", skip_before: true do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        occurrences = Event.upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        occurrences.each do |o|
+          expect(o.event).to eq(upcoming_daily_recurring_event)
+        end
+      end
+
+      it "finds the next 5 upcoming event occurrences from multiple events", skip_before: true do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        upcoming_daily_recurring_event2 = FactoryGirl.create(:upcoming_daily_recurring_event2)
+        occurrences = Event.upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        expect(occurrences.first.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.second.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.third.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.fourth.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.fifth.event).to eq(upcoming_daily_recurring_event)
+      end
+    end
+  end
+
   it "should have options_for_sorted_by" do
     Event::options_for_sorted_by
   end
@@ -191,7 +251,7 @@ describe Event do
 
     @event1.destroy
     @event2.destroy
-  end
+   end
 end
 
 describe "event order" do
