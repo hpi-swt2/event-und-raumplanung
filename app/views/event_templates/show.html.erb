@@ -20,6 +20,10 @@
   <dd><%= @event_template.updated_at.strftime("%d.%m.%Y %T") %></dd>
 </dl>
 
+<h4><%= t '.tasks' %></h4>
+<% @event_template_id = @event_template.id %>
+<%= render :partial => '/tasks/tasks_box' %>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               event_templates_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),

@@ -2,6 +2,7 @@
 
 en:
   groups:
+    group: Group
     index:
       title: Group-overview
       all_groups: All groups

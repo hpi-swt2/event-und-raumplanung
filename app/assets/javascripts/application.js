@@ -28,6 +28,7 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/de
+//= require jquery-ui/autocomplete
 
 jQuery.fn.bootstrap_flash = function(message, options) {
   options = options || {};
@@ -37,7 +38,7 @@ jQuery.fn.bootstrap_flash = function(message, options) {
   options.type = options.type == 'alert'? 'warning' : options.type;
   options.type = options.type == 'error'? 'danger' : options.type;
   flashbox = $('<div />').addClass('alert fade in alert-' + options.type);
-  flashbox.append($('<button />').addClass('close').attr('data-dismiss', 'alert').text('Ã—'));
+  flashbox.append($('<button />').addClass('close').attr('data-dismiss', 'alert').text('×'));
   flashbox.append(message);
   this.append(flashbox);
   setTimeout(function(){

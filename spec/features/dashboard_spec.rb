@@ -2,7 +2,7 @@ feature 'Dashboard' do
 	describe 'My tasks partial' do
 		let(:user) { create :user }
 		let!(:event) { create :event, user_id: user.id }
-		let!(:task) { create :assigned_task, event_id: event.id, user_id: user.id }
+		let!(:task) { create :assigned_task, event_id: event.id, identity: user }
 
 		before(:each) do
 			login_as user, scope: :user
