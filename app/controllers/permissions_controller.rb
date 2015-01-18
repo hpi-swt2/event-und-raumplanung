@@ -19,7 +19,7 @@ class PermissionsController < ApplicationController
 
   def permit_per_room(entity, permission)
     rooms_to_permit = []
-    rooms_to_permit = params[:rooms][permission] if params[:rooms][permission].present?
+    rooms_to_permit = params[:rooms][permission] if params[:rooms].present? and params[:rooms][permission].present?
     if rooms_to_permit.include?('all')
       entity.permit(permission)
       rooms_to_permit = []

@@ -14,11 +14,5 @@
     { :class => 'selectpicker', id: 'rooms2', :multiple => '', :'data-live-search' => "true" } %>
 
 <script>
-  $('.selectpicker').selectpicker();
-  $('#rooms2').change(selectAll)
-  $('#rooms2').trigger('change');
-  $('#rooms2').prop('disabled', !$('[name="approve_events"]').is(':checked')).selectpicker('refresh');
-  $('[name="approve_events"]').change(function() {
-    $('#rooms2').prop('disabled', !$(this).is(':checked')).selectpicker('refresh');
-  })
+  initializeCheckboxesByEntity();
 </script>

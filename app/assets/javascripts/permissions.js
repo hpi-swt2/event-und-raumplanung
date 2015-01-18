@@ -2,22 +2,34 @@
 // All this logic will automatically be available in application.js.
 
 $(function() {
-  $('#entity').change(updateUserPermissions);
-  $('#permissions').change(updatePermittedEntities);
-  $('#rooms').change(updatePermittedEntities);
-  $(document).on('ajax:success', '#permissionsByPermission', permissionSubmitSuccess);
-  $('#rooms').prop('disabled', !($('#permissions').val() == 'approve_events')).selectpicker('refresh');
+  $('.selectpicker').selectpicker();
+  $('#entity').change(updatePermissionsForEntity);
+  $('#permissions').change(updateEntitiesForPermission);
+  $(document).on('ajax:success', '#permissionsByPermission, #permissionsByEntity', permissionSubmitSuccess);
+  $('#rooms')
+    .change(updateEntitiesForPermission)
+    .change(handleSelectAll)
+    .trigger('change');
+  handleEnabled($('#rooms'), approveEventsSelected);
   $('#permissions').change(function() {
-    $('#rooms').prop('disabled', !($(this).val() == 'approve_events')).selectpicker('refresh');
+    handleEnabled($('#rooms'), approveEventsSelected);
   });
-  $('#rooms').change(selectAll)
-  $('#rooms').trigger('change');
-  $(document).on('ajax:success', '#permissionsByEntity', permissionSubmitSuccess);
-  updatePermittedEntities();
-  updateUserPermissions();
+  updateEntitiesForPermission();
+  updatePermissionsForEntity();
 })
 
-function updateUserPermissions() {
+function initializeCheckboxesByEntity() {
+  $('.selectpicker').selectpicker();
+  $('#rooms2')
+    .change(handleSelectAll)
+    .trigger('change');
+  handleEnabled($('#rooms2'), approveEventsChecked);
+  $('[name="approve_events"]').change(function() {
+    handleEnabled($('#rooms2'), approveEventsChecked);
+  })
+}
+
+function updatePermissionsForEntity() {
   $.ajax({
     url: '/permissions/permissions_for_entity',
     type: 'POST',
@@ -29,13 +41,13 @@ function updateUserPermissions() {
   });
 }
 
-function updatePermittedEntities() {
+function updateEntitiesForPermission() {
   $.ajax({
-    url: '/permissions/permitted_entities',
+    url: '/permissions/entities_for_permission',
     type: 'POST',
     data: {
       permission: $('#permissions').val(),
-      rooms: { approve_events: $('#rooms').val()}
+      rooms: { approve_events: $('#rooms').val() }
     },
     dataType: 'html',
     success: function(data) {
@@ -46,37 +58,51 @@ function updatePermittedEntities() {
 
 function permissionSubmitSuccess(event, data) {
   $('#flash_messages').bootstrap_flash(data.message, {type: data.type});
-  updateUserPermissions();
-  updatePermittedEntities();
+  updatePermissionsForEntity();
+  updateEntitiesForPermission();
 }
 
-function selectAll() {
-  if ($(this).val() && $(this).val().indexOf('all') != -1) {
-    if ($(this).data('selectAll')) {
+function handleSelectAll() {
+  if (isElementOf($(this).val(), 'all')) {
+    if(isElementOf($(this).data('prevVal'), 'all')) {
       $(this).children('option[value="all"]').prop('selected', false);
-      $(this).selectpicker('refresh');
     }
-    if(!$(this).data('prevVal') || $(this).data('prevVal').indexOf('all') == -1) {
+    else {
       $(this).children('option').prop('selected', true);
-      $(this).selectpicker('refresh');
     }
   }
   else {
-    if(!$(this).data('selectAll')) {
-      allSelected = true;
-      $(this).children('option[value!="all"]').each(function() {
-        allSelected = allSelected && $(this).prop('selected')
-      })
-      if(allSelected) {
-        $(this).children('option[value="all"]').prop('selected', true);
-        $(this).selectpicker('refresh');
+    allSelected = true;
+    $(this).children('option[value!="all"]').each(function() {
+      if (!$(this).prop('selected')) {
+        allSelected = false;
+        return false;
       }
-    }
-    if ($(this).data('prevVal') && $(this).data('prevVal').indexOf('all') != -1) {
-     $(this).children('option').prop('selected', false);
-     $(this).selectpicker('refresh');
+    });
+    $(this).children('option[value="all"]').prop('selected', allSelected);
+    if (isElementOf($(this).data('prevVal'), 'all')) {
+      $(this).children('option').prop('selected', false);
     }
   }
-  $(this).data('selectAll', $(this).val() && $(this).val().indexOf('all') != -1)
-  $(this).data('prevVal', $(this).val());
+  $(this)
+    .data('prevVal', $(this).val())
+    .selectpicker('refresh');
+}
+
+function isElementOf(array, value) {
+  return array && array.indexOf(value) != -1
+}
+
+function handleEnabled(target, condition) {
+  target
+    .prop('disabled', !condition())
+    .selectpicker('refresh');
+}
+
+function approveEventsChecked() {
+  return $('[name="approve_events"]').is(':checked');
+}
+
+function approveEventsSelected() {
+  return $('#permissions').val() == 'approve_events';
 }

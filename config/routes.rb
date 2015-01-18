@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     collection do
       post :submit
       post 'permissions_for_entity', action: 'checkboxes_by_entity'
-      post 'permitted_entities', action: 'checkboxes_by_permission'
+      post 'entities_for_permission', action: 'checkboxes_by_permission'
     end
   end
 
