@@ -46,11 +46,72 @@ describe Permission do
     category = "edit_rooms"
     room = FactoryGirl.create(:room)
     user = FactoryGirl.create(:user)
+    expect(user.has_any_permission(category)).to be false
     expect(user.has_permission(category, room)).to be false
     user.permit(category, room)
+    expect(user.has_permission(category)).to be false
+    expect(user.has_any_permission(category)).to be true
     expect(user.has_permission(category, room)).to be true
     user.unpermit(category, room)
+    expect(user.has_any_permission(category)).to be false
     expect(user.has_permission(category, room)).to be false
+  end
+
+  it "should give a group a permission on a room" do
+    category = "edit_rooms"
+    room = FactoryGirl.create(:room)
+    group = FactoryGirl.create(:group)
+    expect(group.has_any_permission(category)).to be false
+    expect(group.has_permission(category, room)).to be false
+    group.permit(category, room)
+    expect(group.has_permission(category)).to be false
+    expect(group.has_any_permission(category)).to be true
+    expect(group.has_permission(category, room)).to be true
+    group.unpermit(category, room)
+    expect(group.has_any_permission(category)).to be false
+    expect(group.has_permission(category, room)).to be false
+  end
+
+  it "should unpermit a user on all rooms" do
+    category = "edit_rooms"
+    room = FactoryGirl.create(:room)
+    user = FactoryGirl.create(:user)
+    expect(user.has_any_permission(category)).to be false
+    expect(user.has_permission(category)).to be false
+    expect(user.has_permission(category, room)).to be false
+    user.permit(category, room)
+    expect(user.has_any_permission(category)).to be true
+    expect(user.has_permission(category)).to be false
+    expect(user.has_permission(category, room)).to be true
+    user.permit(category)
+    expect(user.has_any_permission(category)).to be true
+    expect(user.has_permission(category)).to be true
+    expect(user.has_permission(category, room)).to be true
+    user.unpermit_all(category)
+    expect(user.has_any_permission(category)).to be false
+    expect(user.has_permission(category)).to be false
+    expect(user.has_permission(category, room)).to be false    
+  end
+
+  it "should unpermit a group on all rooms" do
+    category = "edit_rooms"
+    room = FactoryGirl.create(:room)
+    group = FactoryGirl.create(:group)
+    expect(group.has_any_permission(category)).to be false
+    expect(group.has_permission(category)).to be false
+    expect(group.has_permission(category, room)).to be false
+    group.permit(category, room)
+    expect(group.has_any_permission(category)).to be true
+    expect(group.has_permission(category)).to be false
+    expect(group.has_permission(category, room)).to be true
+    group.permit(category)
+    expect(group.has_any_permission(category)).to be true
+    expect(group.has_permission(category)).to be true
+    expect(group.has_permission(category, room)).to be true
+    group.unpermit_all(category)
+    expect(group.has_any_permission(category)).to be false
+    expect(group.has_permission(category)).to be false
+    expect(group.has_permission(category, room)).to be false    
   end
 
 end

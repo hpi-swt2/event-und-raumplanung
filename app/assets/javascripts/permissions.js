@@ -1,23 +1,6 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-$(function() {
-  $('.selectpicker').selectpicker();
-  $('#entity').change(updatePermissionsForEntity);
-  $('#permissions').change(updateEntitiesForPermission);
-  $(document).on('ajax:success', '#permissionsByPermission, #permissionsByEntity', permissionSubmitSuccess);
-  $('#rooms')
-    .change(updateEntitiesForPermission)
-    .change(handleSelectAll)
-    .trigger('change');
-  handleEnabled($('#rooms'), approveEventsSelected);
-  $('#permissions').change(function() {
-    handleEnabled($('#rooms'), approveEventsSelected);
-  });
-  updateEntitiesForPermission();
-  updatePermissionsForEntity();
-})
-
 function initializeCheckboxesByEntity() {
   $('.selectpicker').selectpicker();
   $('#rooms2')
