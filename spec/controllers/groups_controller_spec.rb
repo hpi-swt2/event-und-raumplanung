@@ -388,38 +388,39 @@ RSpec.describe GroupsController, :type => :controller do
       let(:group1) { create :group, name: "group1"}
       let(:group2) { create :group, name: "group2"}
       let(:room1) { create :room}
-      let(:room2) { create :room }
+      let(:room2) { create :room}
 
+      before(:each) do
+        room1.update_attribute(:group_id,group2.id)
+      end
       describe "assigning a room" do
         context "that is already assigned" do
-          before(:each) do
-            get :assign_room, {:id => group2, :room => room1.to_param}
-          end
-          # it "does not assign a room" do
-          #   get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   # get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}, valid_session
-          #   expect(room1.group).to eq (group2.id)
-          # end
-        end
-
-        context "as normal user that is not assigned yet", :isAdmin => false do
-          it "does not assign the room" do
-            # puts group1.inspect
-            # room1.group = group1
+          it "does not assign a room (as admin)", :isAdmin => true do
             get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
-            # puts group1.reload.inspect
-            # puts Room.find(room1.id).inspect
-            # puts flash.inspect
-            # puts response.body
-
-            # RELOAD!! as room1 is just a local variable, get actual information from DB
-            expect(room1.reload.group_id).to eq (nil)
+            expect(room1.reload.group).to eq (group2)
+          end
+          it "does not assign a room (as normal user)", :isAdmin => false do
+            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+            expect(room1.reload.group).to eq (group2)
           end
         end
-
+        context "that is not yet assigned" do
+          it "does assign the room (as admin)", :isAdmin => true do
+            get :assign_room, {:id => group1.to_param, :room_id => room2.to_param}
+            expect(room2.reload.group).to eq (group1)
+          end
+          it "does not assign the room (as normal user)", :isAdmin => false do
+            get :assign_room, {:id => group1.to_param, :room_id => room2.to_param}
+            expect(room2.reload.group).to eq (nil)
+          end
+        end
         it "redirects to the start page when not authorized", :isAdmin => false do
           get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
           expect(response).to redirect_to(root_path)
+        end
+        it "redirects to the manage_rooms page when authorized", :isAdmin => true do
+          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+          expect(response).to redirect_to(manage_rooms_group_path(group1))
         end
       end
     end
