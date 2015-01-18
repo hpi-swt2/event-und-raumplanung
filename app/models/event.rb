@@ -24,6 +24,7 @@ class Event < ActiveRecord::Base
 
   has_many :bookings
   has_many :tasks
+  has_many :activities
 
   belongs_to :event
 
@@ -177,6 +178,11 @@ class Event < ActiveRecord::Base
   end
   def is_approved
     return self.status == 'approved'
+  end
+  
+  def exist_colliding_events
+    event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
+    return (event_count > 0)
   end
 
   def self.events_between(start_datetime, end_datetime)

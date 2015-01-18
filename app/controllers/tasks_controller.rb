@@ -53,6 +53,8 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
+    
+    create_activity(@task)
 
     if identity_params 
       @task.identity_id =  identity_params[:id]
@@ -88,6 +90,7 @@ class TasksController < ApplicationController
     
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
+        create_activity(@task)
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -238,6 +241,17 @@ class TasksController < ApplicationController
       end
       updated_params.delete(:identity)
       return updated_params
+    end
+
+    def create_activity(task)
+      if task.event_id
+        task_info = [task.name, task.done]
+        event = Event.find(task.event_id)
+        event.activities << Activity.create(:username => current_user.username, 
+                                            :action => params[:action],
+                                            :controller => params[:controller],
+                                            :task_info => task_info)
+      end
     end
 
     def set_for_event_template 

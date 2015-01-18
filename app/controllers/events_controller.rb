@@ -6,6 +6,7 @@ class EventsController < GenericEventsController
 
   before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
+  before_action :set_feed, only: [:show]
 
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
@@ -67,17 +68,23 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
-    redirect_to events_approval_path
+    @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    redirect_to :back
+  end
+
+  def decline
+    @event.decline
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    redirect_to :back
   end
 
   def approve_event_suggestion
     @event.update(status: 'pending', event_id: nil)
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
-  end
-
-  def decline
-    @event.decline
-    redirect_to events_approval_path
   end
 
   def decline_event_suggestion
@@ -124,6 +131,7 @@ class EventsController < GenericEventsController
   # GET /events/new
   def new
     super
+    @event.assign_attributes(params.permit(:name, :description, :participant_count, :starts_at, :ends_at, :is_private, :is_important, :room_ids => []))
   end 
 
   # GET /events/:id/new_event_suggestion
@@ -155,7 +163,14 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1.json
   def update
     @event.schedule_from_rule(event_params[:occurence_rule])
-    @update_result = @event.update(event_params)
+    filtered_params = params_without_occurence_rule(event_params)
+    @event.attributes = filtered_params
+    
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => @event.changed)
+
+    @update_result = @event.update(filtered_params)
     super
   end
 
@@ -164,6 +179,31 @@ class EventsController < GenericEventsController
   def destroy
     super
   end
+
+
+  def create_comment
+    @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  helper_method :create_comment
+
+  def delete_comment
+    @comment = Comments.find(params[:comment_id])
+    @comment.destroy
+    respond_to do |format|
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_destroy', :model => Event.model_name.human) }
+        format.json { render :show, status: :created, location: @comment }
+    end
+  end
+  helper_method :delete_comment
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -191,6 +231,11 @@ class EventsController < GenericEventsController
       @event.schedule_from_rule(params[:occurence_rule])
       @event.user_id = current_user_id
       create_tasks @event_template_id
+
+      @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => "create", :controller => "events",
+                                          :changed_fields => @event.changed)
+
       respond_to do |format|
         if @event.save
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
@@ -261,6 +306,13 @@ class EventsController < GenericEventsController
     def set_return_url
       @return_url = tasks_path
       @return_url = root_path if request.referrer && URI(request.referer).path == root_path
+    end
+
+    def set_feed
+      @activities = @event.activities.all.order("created_at ASC")
+      @comments = Comments.where(event_id: @event.id)
+      @feed_entries = @activities + @comments
+      @feed_entries = @feed_entries.sort_by(&:created_at)
     end
 
     def build_conflicting_events_response conflicting_events 

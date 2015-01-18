@@ -1,0 +1,39 @@
+.comments-container {
+  padding: 10px;
+  margin: 10px 0px 10px 0px;
+  border: solid 1px #d3d3d3;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 300px;
+}
+
+.comment-meta {
+  position: absolute;
+  padding: 0 0 0 25px;
+}
+
+.comment-author {
+  font-weight: bold;
+  float: left;
+}
+
+.comment-timestamp {
+  float: left;
+}
+
+.comment-content {
+  margin: 10px 0 0 25px;
+}
+
+.comment {
+  
+}
+
+.comment-delete-btn {
+  margin: 15px 0 0 25px;
+}
+
+.new-comment {
+  margin-left: 10px;
+  margin-top: 30px;
+}

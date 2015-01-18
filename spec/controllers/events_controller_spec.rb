@@ -360,6 +360,18 @@ RSpec.describe EventsController, :type => :controller do
         post :create, {:event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(Event.last)
       end
+
+      it "creates activity when an event is created" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        event = Event.last
+        create_event_activity = event.activities.first
+        expected_changed_fields = ["name", "description", "participant_count", "starts_at",
+        "ends_at", "is_private", "user_id"]
+        expect(event.activities.count).to eq(1)
+        expect(create_event_activity.action).to eq("create")
+        expect(create_event_activity.controller).to eq("events")
+        expect(create_event_activity.username).to eq(user.username)
+      end
     end
 
     describe "with invalid dates" do
@@ -489,7 +501,33 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "POST approve" do
+    it "creates activity when an event is approved" do
+      event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
+      activities = event.activities
+      expect{
+      post :approve, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+      expect(activities.last.action).to eq("approve")
+      expect(activities.last.controller).to eq("events")
+      expect(activities.last.username).to eq(user.username)
+    end
+  end
 
+  describe "POST decline" do
+    it "creates activity when an event is declined" do
+      event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
+      activities = event.activities
+      expect{
+      post :decline, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+      expect(activities.last.action).to eq("decline")
+      expect(activities.last.controller).to eq("events")
+      expect(activities.last.username).to eq(user.username)
+    end
+  end
 
   describe "POST create_even_suggestion" do
     before(:all) do 
@@ -622,6 +660,18 @@ RSpec.describe EventsController, :type => :controller do
           expect(event_suggestion).not_to exist_in_database
         end
       end
+
+      it "creates activity when an event is updated" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expected_changed_fields = ["name", "description", "participant_count"]
+        expect{
+        put :update, {:id => event.to_param, :event => new_attributes}, valid_session
+        }.to change(activities, :count).by(1)
+        expect(activities.last.action).to eq("update")
+        expect(activities.last.username).to eq(user.username)
+        expect(activities.last.changed_fields).to eq(expected_changed_fields)
+      end
     end
 
     describe "with invalid params" do
@@ -647,11 +697,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('approved')
     end
 
-    it "redirects to events_approval_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :approve, {:id => event.to_param}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 
@@ -712,11 +762,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('declined')
     end
 
-    it "redirects to events_decline_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 

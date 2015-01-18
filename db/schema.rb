@@ -16,6 +16,17 @@ ActiveRecord::Schema.define(version: 20150116151626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "activities", force: true do |t|
+    t.string   "username"
+    t.string   "action"
+    t.string   "controller"
+    t.text     "task_info"
+    t.text     "changed_fields"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+  end
+
   create_table "attachments", force: true do |t|
     t.string   "title"
     t.string   "url"
@@ -40,6 +51,16 @@ ActiveRecord::Schema.define(version: 20150116151626) do
   add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
+  create_table "comments", force: true do |t|
+    t.string   "author"
+    t.string   "content"
+    t.time     "timestamp"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
+    t.integer  "user_id"
+  end
+
   create_table "equipment", force: true do |t|
     t.string   "name"
     t.string   "description"
@@ -52,13 +73,13 @@ ActiveRecord::Schema.define(version: 20150116151626) do
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
   create_table "event_occurrences", force: true do |t|
-    t.integer  "event_id"
+    t.integer "event_id"
     t.datetime "starts_occurring_at"
     t.datetime "ends_occurring_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
+  
   add_index "event_occurrences", ["event_id"], name: "index_event_occurrences_on_event_id", using: :btree
 
   create_table "event_templates", force: true do |t|
@@ -94,7 +115,6 @@ ActiveRecord::Schema.define(version: 20150116151626) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.text     "schedule"
     t.integer  "event_id"
   end
 
