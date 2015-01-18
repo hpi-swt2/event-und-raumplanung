@@ -1,6 +1,6 @@
 class RoomPropertiesController < ApplicationController
-  
-  before_action :set_room_property, only: [:show, :edit, :update, :destroy]
+
+  before_action :authenticate_user!,:set_room_property, only: [:show, :edit, :update, :destroy]
 
   # GET /rooms
   # GET /rooms.json
