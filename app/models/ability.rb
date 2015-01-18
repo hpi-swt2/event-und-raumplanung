@@ -32,6 +32,7 @@ class Ability
 
     can [:update, :destroy, :edit, ], Event, :user_id => user.id
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
+    can [:create_comment, :delete_comment], Event
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     if user.username == load_admin
         can :manage, Group
