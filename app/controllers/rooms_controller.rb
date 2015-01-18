@@ -141,6 +141,30 @@ class RoomsController < ApplicationController
   render action: 'details'
   end
 
+  def fetch_event
+    if Event.exists?(params[:id])
+      event = Event.find(params[:id])
+      rooms = event.rooms.map(&:name).to_sentence
+      if event.starts_at
+        startTime = event.starts_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        startTime = ''
+      end
+      if event.ends_at
+        endTime = event.ends_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        endTime = ''
+      end
+      user = User.find(event.user_id).identity_url
+      declinePath = decline_event_suggestion_event_path(event)
+      approvePath = approve_event_suggestion_event_path(event)
+      render json: {success: true, body: {event: event, rooms: rooms, startTime: startTime, endTime: endTime, 
+                      user: user, approvePath: approvePath, declinePath: declinePath}}
+    else
+      render json: {success: false}
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room

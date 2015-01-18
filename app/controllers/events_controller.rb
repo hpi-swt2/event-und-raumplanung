@@ -94,6 +94,15 @@ class EventsController < GenericEventsController
     end
   end
 
+  def fetch_event
+    if Event.exists?(params[:id])
+      @event = Event.find(params[:id])
+      render json: {success: true, body: @event}
+    else
+      render json: {success: false}
+    end
+  end
+
   def check_vacancy
     @event = Event.new(event_params)
     @event.user_id = current_user_id

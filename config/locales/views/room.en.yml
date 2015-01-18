@@ -1,6 +1,6 @@
 # ruby encoding: utf-8
 
-de:
+en:
   rooms:
     index:
       title: Raumübersicht
@@ -10,6 +10,8 @@ de:
       upcoming_events: Anstehende Events
       all_events: Alle Events
       no_properties: Keine speziellen Eigenschaften
+      message_for_event_creator: Nachricht für den Ersteller des Events
+      close: Close
     events:
       no_upcoming_events: Keine anstehenden Events
     details:
