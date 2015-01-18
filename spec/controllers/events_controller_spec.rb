@@ -672,6 +672,18 @@ RSpec.describe EventsController, :type => :controller do
         expect(activities.last.username).to eq(user.username)
         expect(activities.last.changed_fields).to eq(expected_changed_fields)
       end
+
+      it "changes the specified schedule" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
+        put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+        expect(weekly_rule.validations_for(:day).size).to eq(2)
+      end
     end
 
     describe "with invalid params" do
