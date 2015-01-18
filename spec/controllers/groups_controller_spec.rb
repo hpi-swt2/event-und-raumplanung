@@ -423,6 +423,27 @@ RSpec.describe GroupsController, :type => :controller do
           expect(response).to redirect_to(manage_rooms_group_path(group1))
         end
       end
+
+      describe "unassigning a room" do
+        context "that is already assigned" do
+          it "does unassign a room (as admin)", :isAdmin => true do
+            get :unassign_room, {:id => group2.to_param, :room_id => room1.to_param}
+            expect(room1.reload.group).to eq (nil)
+          end
+          it "does not unassign a room (as normal user)", :isAdmin => false do
+            get :unassign_room, {:id => group2.to_param, :room_id => room1.to_param}
+            expect(room1.reload.group).to eq (group2)
+          end
+        end
+        it "redirects to the start page when not authorized", :isAdmin => false do
+          get :unassign_room, {:id => group2.to_param, :room_id => room1.to_param}
+          expect(response).to redirect_to(root_path)
+        end
+        it "redirects to the manage_rooms page when authorized", :isAdmin => true do
+          get :unassign_room, {:id => group2.to_param, :room_id => room1.to_param}
+          expect(response).to redirect_to(manage_rooms_group_path(group2))
+        end
+      end
     end
   end
 end
