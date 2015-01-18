@@ -1,4 +1,4 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
+﻿// This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
@@ -38,7 +38,7 @@ jQuery.fn.bootstrap_flash = function(message, options) {
   options.type = options.type == 'alert'? 'warning' : options.type;
   options.type = options.type == 'error'? 'danger' : options.type;
   flashbox = $('<div />').addClass('alert fade in alert-' + options.type);
-  flashbox.append($('<button />').addClass('close').attr('data-dismiss', 'alert').text('�'));
+  flashbox.append($('<button />').addClass('close').attr('data-dismiss', 'alert').text('×'));
   flashbox.append(message);
   this.append(flashbox);
   setTimeout(function(){

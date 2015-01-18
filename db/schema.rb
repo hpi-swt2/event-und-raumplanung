@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150116083543) do
+ActiveRecord::Schema.define(version: 20150118211407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20150116083543) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id"
-    t.integer  "user_id"
+    t.string   "user_id"
   end
 
   create_table "equipment", force: true do |t|
@@ -144,6 +144,18 @@ ActiveRecord::Schema.define(version: 20150116083543) do
 
   add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "permissions", force: true do |t|
+    t.integer  "room_id"
+    t.integer  "permitted_entity_id"
+    t.string   "permitted_entity_type"
+    t.integer  "category"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "permissions", ["permitted_entity_id", "permitted_entity_type"], name: "index_permissions_on_permitted_entity", using: :btree
+  add_index "permissions", ["room_id"], name: "index_permissions_on_room_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"

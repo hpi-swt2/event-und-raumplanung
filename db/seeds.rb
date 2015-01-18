@@ -9,6 +9,7 @@ if delete_old_records
 	Room.delete_all
 	Equipment.delete_all
 	Event.delete_all
+	Task.delete_all
 end
 
 #
@@ -100,18 +101,9 @@ equipment7 = Equipment.create(name: 'Beamer HD 1247912', description: 'Ein fest 
 equipment8 = Equipment.create(name: 'Whiteboard 234', description: 'Ein fest installierter Whiteboard zum Brainstorming', room_id: room7.id, category: 'Whiteboard')
 
 #
-# create Task
-task = Task.create(id: 1, name: "Pizza Bestellen", description: "10 Pizzen von Call a Pizza bestlelen", event_id: "1", created_at: "2014-12-26 11:46:01", done: false, user_id: 1, status: "In Bearbeitung")
-
-#
 # create Comments
 comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", event_id: 1)
 comment = Comments.create(user_id: 1, content: "Ich will NOCH MEHR PIZZA!!!", created_at: "2014-12-26 15:37:42", event_id: 1)
-
-
-#
-# create User
-user = User.create(id: 1, email: "test@example.wtf", identity_url: "http:\\identity.com")
 
 #
 # Create Event
