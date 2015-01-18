@@ -26,6 +26,9 @@ RSpec.describe EventsController, :type => :controller do
   }
   let(:task) { create :task }
   let(:user) { create :user }
+  let(:member) {create :groupMember}
+  let(:room) {create :groupRoom}
+
 
   let(:valid_attributes) {
     {name:'Michas GB',
@@ -39,7 +42,35 @@ RSpec.describe EventsController, :type => :controller do
     user_id: user.id
     }
   }
- 
+
+  let(:valid_attributes_with_room) {
+    {name:'Das Bo live',
+    description:'Türlich Türlich',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    user_id: user.id,
+    room_ids: ['1337']
+    }
+  }
+  
+  let(:valid_attributes_with_two_rooms) {
+    {name:'Das Bo live',
+    description:'Türlich Türlich',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    user_id: user.id,
+    rooms: ["1","1337"]
+    }
+  }
+
  let(:valid_attributes_for_request) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -184,6 +215,7 @@ RSpec.describe EventsController, :type => :controller do
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
+    room.update_attribute(:id,1337)
     sign_in user
   end
 
@@ -395,6 +427,26 @@ RSpec.describe EventsController, :type => :controller do
       it "re-renders the 'new' template" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(response).to render_template("new")
+      end
+    end
+    describe "for an event with only rooms of groups the user belongs to" do
+      it"directly approves the event" do
+        sign_in member
+        post :create, {:event => valid_attributes_with_room}, valid_session
+        expect(assigns(:event).status).to eq("approved")
+      end
+    end
+    describe "for an event with rooms of which at least one does NOT belong to a group the user belongs to" do
+      it"creates an event with status pending" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        expect(assigns(:event).status).to eq("pending")
+      end
+    end
+    describe "for an event with rooms of 1) groups the user belongs to and 2) another room" do
+      it"creates an event with status pending" do
+        sign_in member
+        post :create, {:event => valid_attributes_with_two_rooms}, valid_session
+        expect(assigns(:event).status).to eq("pending")
       end
     end
 

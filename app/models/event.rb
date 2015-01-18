@@ -47,16 +47,14 @@ class Event < ActiveRecord::Base
 
   validate :validate_schedule
 
-  after_save :set_status_to_pending_and_destroy_suggestion, :if => Proc.new {|event| event.event_suggestion  and event.event_suggestion.status == 'rejected_suggestion' and event.status = 'declined'}
-
-  def dates_cannot_be_in_the_past
-    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
-    errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at && ends_at < Date.today
-  end
-
-  def start_before_end_date
-    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
-  end
+  after_save :set_status_to_pending_and_destroy_suggestion, :if => Proc.new {|event| event.event_suggestion and event.event_suggestion.status == 'rejected_suggestion' and event.status = 'declined'}
+  after_create :check_group
+  # after_save do
+  #   if self.event_suggestion  and self.event_suggestion.status == 'rejected_suggestion' and self.status = 'declined'
+  #     set_status_to_pending_and_destroy_suggestion
+  #   end
+  #   check_group
+  # end
 
   def validate_schedule
     self.schedule = IceCube::Schedule.new(self.starts_at, end_time: self.ends_at) if read_attribute(:schedule).nil?
@@ -212,6 +210,25 @@ class Event < ActiveRecord::Base
 
   def set_status_to_pending_and_destroy_suggestion
     self.event_suggestion.destroy
+    # WEGEN FEHLERHAFTER VERSION IM DEV KAM IMMER ZUM RAUM UND EIN LEERER RAUM ZURÜCK 
+    # SOLLTE DAS GEFIXT WERDEN KANN ES SEIN, DASS DAS HIER FEHLER WIRFT UND GEFIXT WERDEN MUSS
+    # if params['room_ids'].count == 2  muss auf 1 geändert werden
+    # DON'T BLAME ME 
+    # @OLEGSFINEST
     self.update_columns(:status => 'pending')
+  end
+
+  def check_group
+    only_group_rooms = true
+    unless self.rooms.empty?
+      self.rooms.each do |room|
+        if not room.group_id or not User.find(self.user_id).is_member_of_group(room.group_id)
+          only_group_rooms = false
+        end
+      end
+      if only_group_rooms
+        self.update_columns(:status => 'approved')
+      end
+    end
   end
 end
