@@ -15,12 +15,15 @@ class EventOccurrenceController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_occurrence_params
-      params.permit(:eventid, :starting, :ending)
+      params.require(:eventid)
+      params.require(:starting)
+      params.require(:ending)
+      return params
     end
 
     def validate_params
       event_id = event_occurrence_params[:eventid].to_i
-      if event_id.nil? || Event.find(event_id).nil? || occurrence_invalid?(event_id, Time.parse(event_occurrence_params[:starting]), Time.parse(event_occurrence_params[:ending]))
+      if Event.find(event_id).nil? || occurrence_invalid?(event_id, Time.parse(event_occurrence_params[:starting]), Time.parse(event_occurrence_params[:ending]))
         raise ActionController::RoutingError.new('Not found')
       end
     end
