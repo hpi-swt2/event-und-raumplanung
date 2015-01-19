@@ -18,6 +18,8 @@ en:
       category: Category
       available: Available
       no_equipment: No Equipment
+      message_for_event_creator: Nachricht für den Ersteller des Events
+      close: Close
     events:
       no_upcoming_events: No upcoming Events
     details:

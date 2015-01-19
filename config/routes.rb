@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  get 'fetch_event' => 'rooms#fetch_event', as: :fetch_event
   
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
