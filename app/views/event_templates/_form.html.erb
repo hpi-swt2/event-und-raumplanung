@@ -46,6 +46,9 @@
     </div>
     <%= error_span(@event_template[:participant_count]) %>
   </div>
+  <% unless @event_id.nil? %> 
+     <%= f.hidden_field :event_id, :value => @event_id, :readonly => true%>
+  <% end %>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

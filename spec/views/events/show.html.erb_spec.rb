@@ -7,7 +7,7 @@ RSpec.describe "events/show", :type => :view do
                                           starts_at: DateTime.new(2050, 05, 03, 15, 00),
                                           ends_at:  DateTime.new(2050,05, 04, 16,45),
                                           user_id: 42, is_private: true))
-    @favorite = Favorite.where('user_id = 42 AND favorites.is_favorite=true AND event_id = ?',@event.id);
+    @favorite = Favorite.where('user_id = 42 AND favorites.is_favorite = ? AND event_id = ?', true, @event.id);
 
     @tasks = []
   end

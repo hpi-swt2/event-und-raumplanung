@@ -32,27 +32,29 @@
       <%= error_span(@task[:description]) %>
     </div>
     <div class="control-group">
-      <%= f.label :event_id, :class => 'control-label' %>
-      <div class="controls">
-        <%= f.text_field :event_id, :class => 'form-control' , :readonly => @event_field_readonly %>
-      </div>
-      <%= error_span(@task[:event_id]) %>
+      <% if @for_event_template %> 
+        <%= f.hidden_field :event_template_id, :value => @task.event_template_id, :readonly => true %>
+      <% else %>
+        <%= f.hidden_field :event_id, :value => @task.event_id, :readonly => true %>
+      <% end %>
     </div>
-    <div class="control-group">
-      <%= f.label :deadline, :class => 'control-label' %>
-      <div class="controls">
-          <%= f.date_field :deadline, :class => 'form-control' %>
-      </div>  
-      <%= error_span(@task[:deadline]) %>  
-    </div>
-    <div class="control-group">
-        <%= f.label :user_id, :class => 'control-label' %>
+    <% unless @for_event_template %> 
+      <div class="control-group">
+        <%= f.label :deadline, :class => 'control-label' %>
         <div class="controls">
-          <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none')}, :class => 'form-control' %>
-        </div>
-        <%= error_span(@task[:user_id]) %>
-    </div>
-    <% unless @task.new_record? %>
+            <%= f.date_field :deadline, :class => 'form-control' %>
+        </div>  
+        <%= error_span(@task[:deadline]) %>  
+      </div>
+      <div class="control-group">
+          <%= f.label :user_id, :class => 'control-label' %>
+          <div class="controls">
+            <%= f.collection_select :user_id, User.all, :id, :identity_url, {include_blank: t('tasks.user.none  ')}, :class => 'form-control' %>
+          </div>
+          <%= error_span(@task[:user_id]) %>
+      </div>
+    <% end %>
+    <% unless @task.new_record? or @for_event_template %>
       <div class="control-group">
         <%= f.label :done, :class => 'control-label' %>
         <div class="checkbox">
@@ -70,28 +72,28 @@
         <input name="task[attachments_attributes][][url]" type="hidden" data-bind="value: url" />
       </ul>
 
-      <form data-bind="submit: addAttachment">
-        <div class="control-group">
-          <label class="control-label" for="attachment_title">Titel</label>
-          <div class="controls">
-            <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
-          </div>
-        </div>    
-        <div class="control-group">
-          <label class="control-label" for="attachment_url">URL</label>
-          <div class="controls">
-            <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
-          </div>
-        </div>
-        <div class="control-group">
-          <input type="submit" value="<%= t('tasks.attachments.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
-        </div>
-      </form>
-
-      <br>
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
   <% end %>
 </div>
 
+<div class="col-lg-2">
+  <form data-bind="submit: addAttachment">
+    <div class="control-group">
+      <label class="control-label" for="attachment_title">Titel</label>
+      <div class="controls">
+        <input type="text" class="form-control" name="attachment_title" data-bind="value: newAttachmentTitle" />
+      </div>
+    </div>    
+    <div class="control-group">
+      <label class="control-label" for="attachment_url">URL</label>
+      <div class="controls">
+        <input type="text" class="form-control" name="attachment_url" data-bind="value: newAttachmentUrl" />
+      </div>
+    </div>
+    <div class="control-group">
+      <input type="submit" value="<%= t('tasks.attachments.add_attachment') %>" class="btn" data-bind="enable: isInputValid"/>
+    </div>
+  </form>
+</div>

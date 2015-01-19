@@ -158,6 +158,15 @@ en:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
+    links:
+      suggest: ! 'Suggest alternative'
+      decline: ! 'Decline'
+      approve: ! 'Approve'
+      remove_favorite: ! 'Remove from favorites'
+      add_favorite: ! 'Add to favorites'
+      task:    ! 'Create task'
+    titles:
+      suggest: 'Suggest alternative'
   number:
     currency:
       format:

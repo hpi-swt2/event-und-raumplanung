@@ -1,6 +1,8 @@
 class Event < ActiveRecord::Base
   include DateTimeAttribute
-
+  include EventModule
+  include PaginationModule
+  include FilteringModule
   # This directive enables Filterrific for the Student class.
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
@@ -23,6 +25,10 @@ class Event < ActiveRecord::Base
   has_many :bookings
   has_many :tasks
 
+  belongs_to :event
+
+  has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
+  
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
@@ -38,24 +44,11 @@ class Event < ActiveRecord::Base
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
 
-
-
-  def dates_cannot_be_in_the_past
-    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
-    errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at && ends_at < Date.today
-  end
-  def start_before_end_date
-    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
-  end
-
+  after_save :set_status_to_pending_and_destroy_suggestion, :if => Proc.new {|event| event.event_suggestion  and event.event_suggestion.status == 'rejected_suggestion' and event.status = 'declined'}
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
-  scope :search_query, lambda { |query|
-    terms = query.downcase.split(/\s+/)
-    terms = terms.map { |e| (e.gsub('*', '%') + '%').gsub(/%+/, '%')}
-    where( terms.map { |term| "LOWER(events.name) LIKE ?"}.join(' AND '), *terms.map { |e| [e]} )
-  }
+
   scope :items_per_page, lambda { |per|
     #workaround
   }
@@ -73,28 +66,34 @@ class Event < ActiveRecord::Base
       order("LOWER(events.name) #{ direction }")
     when /^status_/
       order("LOWER(events.status) #{ direction }")
-  else
-    raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
-  end
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+    end
   }
+
   scope :room_ids, lambda { |room_ids|
     room_ids = room_ids.select { |room_id| room_id!=''}
     joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
+
   scope :starts_after, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('starts_at >= ?', date)
   }
+
   scope :ends_before, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
     where('ends_at <= ?', date)
   }
+
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
   }
+
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
   }
+  
   scope :user, lambda { |id|
     if id.present?
       where(user_id: id)
@@ -103,19 +102,6 @@ class Event < ActiveRecord::Base
     end
   }
 
-  scope :other_to, lambda { |event_id|
-    where("id <> ?",event_id) if event_id
-  }
-
-  scope :not_approved, lambda {
-    where("approved is NULL OR approved = TRUE")
-  }
-
-  scope :overlapping, lambda { |start, ende|
-    where("     (:start BETWEEN starts_at AND ends_at)
-            OR  (:ende BETWEEN starts_at AND ends_at)
-            OR  (:start < starts_at AND :ende > ends_at)", {start:start, ende: ende})
-  }
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -128,38 +114,24 @@ class Event < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_status'), 'status_asc']
   ]
   end
-  def self.options_for_per_page
-  [
-    [5,5],
-    [10,10],
-    [15,15],
-    [25,25],
-    [50,50],
-    [100,100],
-    [500,500]
-  ]
-  end
-
-  def checkVacancy(rooms)
-
-    colliding_events = []
-    return colliding_events if rooms.nil?
-
-    rooms = rooms.collect{|i| i.to_i}
-    events =  Event.other_to(id).not_approved.overlapping(starts_at,ends_at)
-
-    return colliding_events if events.empty?
-
-    rooms_count = rooms.size
-    events.each do | event |
-      #kongruiert mindestents ein Raum?
-      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
-    end
-    return colliding_events
-  end
-
+  
   scope :open, -> { where.not status: ['approved', 'declined'] }
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
+  scope :not_declined, -> { where.not status: 'declined' }
+  
+  def approve
+    self.update(status: 'approved')
+  end
+  def decline
+    self.update(status: 'declined')
+  end
+  def is_approved
+    return self.status == 'approved'
+  end
 
+  def set_status_to_pending_and_destroy_suggestion
+    self.event_suggestion.destroy
+    self.update_columns(:status => 'pending')
+  end
 end

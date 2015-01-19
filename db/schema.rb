@@ -51,24 +51,6 @@ ActiveRecord::Schema.define(version: 20150115220523) do
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
-  create_table "event_suggestions", force: true do |t|
-    t.datetime "starts_at"
-    t.datetime "ends_at"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "room_id"
-    t.integer  "user_id"
-  end
-
-  add_index "event_suggestions", ["room_id"], name: "index_event_suggestions_on_room_id", using: :btree
-  add_index "event_suggestions", ["user_id"], name: "index_event_suggestions_on_user_id", using: :btree
-
-  create_table "event_suggestions_rooms", force: true do |t|
-    t.integer "event_suggestion_id"
-    t.integer "room_id"
-  end
-
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -93,9 +75,8 @@ ActiveRecord::Schema.define(version: 20150115220523) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "room_id"
-    t.boolean  "is_private"
-    t.boolean  "approved"
-    t.string   "status",            default: "In Bearbeitung"
+    t.boolean  "is_private",        default: true
+    t.string   "status",            default: "pending"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.date     "start_date"
@@ -103,8 +84,10 @@ ActiveRecord::Schema.define(version: 20150115220523) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
+    t.integer  "event_id"
   end
 
+  add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
   add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
@@ -130,10 +113,16 @@ ActiveRecord::Schema.define(version: 20150115220523) do
     t.datetime "updated_at"
   end
 
-  create_table "groups_users", id: false, force: true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
+  create_table "memberships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "isLeader",   default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"
@@ -153,10 +142,8 @@ ActiveRecord::Schema.define(version: 20150115220523) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
-    t.integer  "event_suggestion_id"
   end
 
-  add_index "rooms", ["event_suggestion_id"], name: "index_rooms_on_event_suggestion_id", using: :btree
   add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
 
   create_table "tasks", force: true do |t|
@@ -165,14 +152,16 @@ ActiveRecord::Schema.define(version: 20150115220523) do
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "done",        default: false
+    t.boolean  "done",              default: false
     t.integer  "user_id"
     t.string   "status"
     t.datetime "deadline"
     t.integer  "task_order"
+    t.integer  "event_template_id"
   end
 
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
+  add_index "tasks", ["event_template_id"], name: "index_tasks_on_event_template_id", using: :btree
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
   create_table "users", force: true do |t|

@@ -23,7 +23,6 @@ describe Event do
     @event.is_private == true or @event.is_private == false
   end
 
-
   it 'should return events after a certain date' do
     date = @upcoming_event.starts_at.advance(:hours => -1).strftime("%d.%m.%Y %H:%M Uhr")
     results = Event.starts_after(date)
@@ -45,7 +44,7 @@ describe Event do
   it 'should return events for a room' do
     room = FactoryGirl.create(:room)
     another_room = FactoryGirl.create(:room)
-    results = Event.room_ids(nil)
+    results = Event.room_ids([])
     expect(results).to include(@upcoming_event)
     @upcoming_event.rooms << room
     results = Event.room_ids([room.id, another_room.id])
@@ -104,19 +103,23 @@ describe Event do
 	  expect(results).not_to include(@approved_event, @open_event)
 	end
 
+	it ".approve should set approve status in an event" do
+    	event = build(:event)
+    	event.approve
+    	expect(Event.approved.find(event)).to eq(event)
+ 	end
 
-   it "should find time overlapping events" do
-    @event1 = FactoryGirl.create(:standardEvent)
-    @event2 = FactoryGirl.create(:standardEvent)
+ 	it ".decline should set decline status in an event" do
+    	event = build(:event)
+    	event.decline
+    	expect(Event.declined.find(event)).to eq(event)
+ 	end
 
-    ## the following line is taken from checkVacancy
-    events =  Event.other_to(@event2.id).not_approved.overlapping(@event2.starts_at,@event2.ends_at)
-    expect(events.size).to eq 1
-    expect(events[0].name).to eq @event1.name
-
-    @event1.destroy
-    @event2.destroy
-  end
+ 	it ".is_approved should only return true for an approved event" do
+    	expect(@open_event.is_approved).to be false
+    	expect(@declined_event.is_approved).to be false
+    	expect(@approved_event.is_approved).to be true
+ 	end
 
    it "should find overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
@@ -127,13 +130,13 @@ describe Event do
     @event2.save
 
     ## Case 1: same timeslot
-    coliding_events = @event2.checkVacancy(@event1.rooms.map(&:id))
+    coliding_events = @event2.check_vacancy(@event1.rooms.map(&:id))
     expect(coliding_events.size).to eq 1
     expect(coliding_events[0].name).to eq "Party1"
 
     ## Case 2: same timeslots, but different rooms, results to no conflicts (
     @event2.rooms = []
-    coliding_events = @event2.checkVacancy([@event1[:room_id].to_s])
+    coliding_events = @event2.check_vacancy([@event1[:room_id].to_s])
     expect(coliding_events.size).to eq 0
 
     @event1.destroy
@@ -141,16 +144,12 @@ describe Event do
   end
 
 
-
-after(:all) do
-
-		@open_event.destroy
-		@declined_event.destroy
-		@approved_event.destroy
+  after(:all) do
+	  @open_event.destroy
+	  @declined_event.destroy
+	  @approved_event.destroy
     @upcoming_event.destroy
-	end
-
-
+  end
 end
 
 describe "event order" do

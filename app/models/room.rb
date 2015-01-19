@@ -1,9 +1,10 @@
 class Room < ActiveRecord::Base
+  include PaginationModule
+  
   has_many :bookings
   has_many :equipment # The plural of 'equipment' is 'equipment'
   has_and_belongs_to_many :properties, :class_name => 'RoomProperty'
   has_and_belongs_to_many :events
-  has_and_belongs_to_many :event_suggestions
   belongs_to :group
 
   filterrific(
@@ -56,17 +57,6 @@ class Room < ActiveRecord::Base
     [(I18n.t 'sort_options.sort_created_at_asc'), 'created_at_asc'],
     [(I18n.t 'sort_options.sort_size_asc'), 'size_asc'],
     [(I18n.t 'sort_options.sort_size_desc'), 'size_desc']
-  ]
-  end
-  def self.options_for_per_page
-  [
-    [5,5],
-    [10,10],
-    [15,15],
-    [25,25],
-    [50,50],
-    [100,100],
-    [500,500]
   ]
   end
 end
