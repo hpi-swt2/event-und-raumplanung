@@ -1,0 +1,19 @@
+# ruby encoding: utf-8
+
+de:
+  permissions:
+    index:
+      title: Berechtigungen
+      filter_by_entity: Nach Entitäten filtern
+      filter_by_permission: Nach Berechtigungen filtern
+    manage_rooms: Räume verwalten
+    edit_rooms: Räume bearbeiten
+    approve_events: Events bestätigen
+    manage_equipment: Equipment verwalten
+    edit_equipment: Equipment bearbeiten
+    manage_properties: Raumeigenschaften verwalten
+    edit_properties: Raumeigenschaften bearbeiten
+    assign_to_rooms: Equipment und Raumeigenschaften bearbeiten
+    updated_entity: "Berechtigungen für %{entity} wurden aktualisiert"
+    updated_permission: "Berechtigung %{permission} wurde aktualisiert"
+    permission_on: "%{permission} für %{subject}"

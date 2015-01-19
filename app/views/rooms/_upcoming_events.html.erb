@@ -1,23 +1,27 @@
 <% if @events.size != 0 %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><%= Event.human_attribute_name(:name) %></th>
-        <th><%= Event.human_attribute_name(:starts_at) %></th>
-        <th><%= Event.human_attribute_name(:ends_at) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td><%= link_to event.name, event_path(event) %></td>
-          <td><%=l event.starts_at %></td>
-          <td><%=l event.ends_at %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= Event.human_attribute_name(:name) %></th>
+            <th><%= Event.human_attribute_name(:starts_at) %></th>
+            <th><%= Event.human_attribute_name(:ends_at) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @events.each do |event| %>
+            <tr>
+              <td><%= link_to event.name, event_path(event) %></td>
+              <td><%=l event.starts_at %></td>
+              <td><%=l event.ends_at %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
 <% end %>
 <% if @events.size == 0 %>
-  <em><%=t '.no_upcoming_events' %></em><br/>
+  <em><%=t '.no_upcoming_events' %></em><br/><br/>
 <% end %>
+
+<%= link_to t('.create_event'),  new_event_path(room_ids: [@room.id]), :class => 'btn btn-default'  %>

@@ -4,13 +4,10 @@ en:
   events_approval:
     index:
       title: Approve Events
-      event: Event
-      bookings: Bookings
+      approved_events: Approved Events
+    list:
       decline: Decline
       approve: Approve
-      approved_bookings: Approved Bookings
-      user: User
-      requests: fragt an
+      time: Time
       no_open_events: No open events
-      no_approved_bookings: No approved bookings
-      
+      no_approved_events: No approved events
