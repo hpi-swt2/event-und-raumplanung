@@ -1,3 +1,7 @@
+require 'event_module'
+require 'pagination_module'
+require 'filtering_module'
+
 class Event < ActiveRecord::Base
   include DateTimeAttribute
   include EventModule

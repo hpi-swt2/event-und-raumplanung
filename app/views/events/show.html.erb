@@ -61,10 +61,16 @@
           <td><%= t('events.show.participant_count') %></td>
           <td><%= @event.participant_count %></td>
         </tr>
+        <tr>
+          <td>
+            <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 
 <div class="event-view-section">
   <h3><%= t '.tasks' %></h3>

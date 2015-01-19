@@ -2,6 +2,14 @@ Rails.application.routes.draw do
 
   resources :uploads, :only => [:new, :create, :destroy]
 
+  resources :permissions, :only => [:index] do
+    collection do
+      post :submit
+      post 'permissions_for_entity', action: 'checkboxes_by_entity'
+      post 'entities_for_permission', action: 'checkboxes_by_permission'
+    end
+  end
+
   resources :event_suggestions
 
   resources :groups do
@@ -15,6 +23,9 @@ Rails.application.routes.draw do
       get 'degrade_user/:user_id', :action => 'degrade_user', :as => 'degrade_user'
     end
   end
+
+  get 'profile/index' => 'profile#index'
+  post 'profile_update_profile' => 'profile#update_profile', as: "update_profile"
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
@@ -86,6 +97,7 @@ Rails.application.routes.draw do
   end
 
   resources :maps
+  resources :profile
 
   resources :event_templates, :path => "templates"
   resources :event_templates do
