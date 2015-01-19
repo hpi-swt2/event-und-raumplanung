@@ -3,6 +3,9 @@ FactoryGirl.define do
     f.name "Room"
     f.size 1
     equipment []
+    factory :groupRoom do |g|
+      g.group_id 55
+    end
   end	
   
   factory :room1, parent: :room do |f|

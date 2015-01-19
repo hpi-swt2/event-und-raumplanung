@@ -16,6 +16,11 @@ de:
     decline_event: Ablehnen
     approve_event: Genehmigen
     show_all: Zeige alle
+    my_events: Meine Events
+    no_own_upcoming_events: Sie haben keine Events erstellt.
+    more: Mehr
+    personal_tasks: Persönliche Aufgaben
+    group_tasks: Gruppenaufgaben
     rooms: Räume
     date_and_time: Datum und Zeit
     to: bis

@@ -2,8 +2,12 @@
 	border-top: 1px solid #ddd;
 }
 
-.task-list-event {
+.task-list-event, .task-list-group {
 	font-weight: bold;
+}
+
+.task-list-group-event {
+	margin-left: 1em;
 }
 
 .task-list-list {
@@ -32,6 +36,16 @@
 	color: #333;
 }
 
-.hidden-link:hover,  .hidden-link:focus{
+.hidden-link:hover,  .hidden-link:focus {
 	color: #333;
+}
+
+.own-events {
+	display: block !important;
+	text-align: right !important;
+}
+
+.dashboard-pending-task-seperator {
+	margin-top: 0;
+	border: 1px solid black;
 }

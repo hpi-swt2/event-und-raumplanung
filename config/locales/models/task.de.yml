@@ -10,7 +10,8 @@ de:
       task:
         name: 'Name'
         description: 'Beschreibung'
-        user: 'Benutzer'
+        identity: 'Zugewiesen an'
         event: 'Event'
         status: 'Status'
         done: 'Erledigt'
+        assigned_to: 'Zugewiesen an'
