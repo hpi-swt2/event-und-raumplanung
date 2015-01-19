@@ -80,13 +80,11 @@ class Ability
         user.has_permission("assign_to_rooms", room)
     end
 
-    if user.has_permission("approve_events")
-        can [:approve, :decline], Event
-    end
-
-    Event.all.each do |event|
-        if !event.rooms.empty? and event.rooms.all? {|room| user.has_permission("approve_events", room)}
-            can [:approve, :decline], Event, :id => event.id
+    can [:approve, :decline], Event do |event|
+        if event.rooms.empty?
+            user.has_permission("approve_events")
+        else
+            event.rooms.all? {|room| user.has_permission("approve_events", room)}
         end
     end
   end
