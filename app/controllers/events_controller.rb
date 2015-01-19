@@ -115,9 +115,9 @@ class EventsController < GenericEventsController
   end
 
   def check_vacancy
-    @event = Event.new(event_params)
+    @event = Event.new(event_suggestion_params.except(:original_event_id))
     @event.user_id = current_user_id
-    conflicting_events = @event.check_vacancy event_params[:room_ids]
+    conflicting_events = @event.check_vacancy event_suggestion_params[:original_event_id], event_suggestion_params[:room_ids]
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
@@ -278,8 +278,9 @@ class EventsController < GenericEventsController
     end
 
     def build_conflicting_events_response conflicting_events 
+      logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = conflicting_event.name if (conflicting_event.user_id == current_user_id || !conflicting_event.is_private)
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]
