@@ -8,6 +8,8 @@ class EventsController < GenericEventsController
   before_action :set_return_url, only: [:show, :new, :edit]
   before_action :set_feed, only: [:show]
 
+  #respond_to :html, :js
+
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
   after_filter :flash_to_headers, :only => :check_vacancy
