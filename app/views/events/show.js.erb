@@ -1,0 +1,4 @@
+<% js = escape_javascript(
+  render(partial: 'events/favorite',  locals: { event: @event,  model_class:  Event }))
+%>
+$("#favorite-button").html("<%= js %>");
