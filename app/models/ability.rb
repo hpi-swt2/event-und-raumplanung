@@ -52,33 +52,21 @@ class Ability
         can :read, Group
     end
 
-    can [:create, :destroy], Room do |room|
-        user.has_permission("manage_rooms")        
-    end
+    can [:create, :destroy], Room if user.has_permission("manage_rooms")
 
-    can :update, Room do |room|
-        user.has_permission("edit_rooms", room)
-    end
+    can :update, Room if user.has_permission("edit_rooms")
 
-    can [:create, :destroy], Equipment do |equipment|
-        user.has_permission("manage_equipment")        
-    end
+    can [:create, :destroy], Equipment if user.has_permission("manage_equipment")
     
-    can :update, Equipment do |equipment|
-        user.has_permission("edit_equipment")        
-    end
+    can :update, Equipment if user.has_permission("edit_equipment")
 
-    can [:create, :destroy], RoomProperty do |property|
-        user.has_permission("manage_properties")        
-    end
+    can [:create, :destroy], RoomProperty if user.has_permission("manage_properties")
     
-    can :update, RoomProperty do |property|
-        user.has_permission("edit_properties")        
-    end
+    can :update, RoomProperty if user.has_permission("edit_properties")
 
-    can [:assign_equipment, :assign_properties], Room do |room|
-        user.has_permission("assign_to_rooms", room)
-    end
+    can [:assign_equipment, :assign_properties], Room if user.has_permission("assign_to_rooms")
+
+    can :approve_any, Event if user.has_any_permission("approve_events")
 
     can [:approve, :decline], Event do |event|
         if event.rooms.empty?

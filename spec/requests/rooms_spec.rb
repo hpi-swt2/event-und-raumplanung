@@ -85,6 +85,10 @@ describe "Rooms", :type => :request do
       expect(another_permitted_user_ability).not_to be_able_to(method, another_event)
       expect(@admin_ability).to be_able_to(method, another_event)
     }
+    expect(@normal_user_ability).not_to be_able_to(:approve_any, Event)
+    expect(permitted_user_ability).to be_able_to(:approve_any, Event)
+    expect(another_permitted_user_ability).to be_able_to(:approve_any, Event)
+    expect(@admin_ability).to be_able_to(:approve_any, Event)
   end
 
 end 
