@@ -212,6 +212,12 @@ ActiveRecord::Schema.define(version: 20150118211407) do
   create_table "users", force: true do |t|
     t.string   "email",                               null: false
     t.string   "username",               default: ""
+    t.string   "fullname",               default: ""
+    t.string   "office_location",        default: ""
+    t.string   "office_phone",           default: ""
+    t.string   "mobile_phone",           default: ""
+    t.string   "language",               default: "German"
+    t.boolean  "email_notification",     default: true
     t.string   "encrypted_password",     default: "", null: false
     t.string   "status"
     t.string   "reset_password_token"
@@ -226,6 +232,7 @@ ActiveRecord::Schema.define(version: 20150118211407) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "student"
+    t.boolean  "firstlogin",             default: true
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
