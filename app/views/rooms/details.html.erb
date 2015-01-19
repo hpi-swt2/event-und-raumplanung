@@ -31,31 +31,7 @@
         </tbody>
     </table>
 </div>
-<div class="table-responsive">
-    <table class="table table-column">
-        <thead>
-            <tr>
-                <th>Event</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @room.bookings.each do |booking| %>
-                <tr>
-                    <% if(booking.start.to_date == Date.today) %>
-                        <td>
-                            <%= booking.name %>
-                        </td>
-                        <td>
-                            starts at <%= model_class.human_attribute_name(booking.start.to_s(:time)) %>
-                            ends at <%= model_class.human_attribute_name(booking.end.to_s(:time)) %>
-                        <td>
-                    <% end %>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               rooms_list_path, :class => 'btn btn-default'  %>
 <%= link_to t('.request', :default => t("helpers.links.request booking")),

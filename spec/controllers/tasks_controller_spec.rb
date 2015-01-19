@@ -262,7 +262,6 @@ RSpec.describe TasksController, type: :controller do
 
       after(:all) do
         DatabaseCleaner.clean
-<<<<<<< HEAD
       end 
     end
 
@@ -386,8 +385,6 @@ RSpec.describe TasksController, type: :controller do
           post :create, { task: invalid_attributes }
           expect(assigns(:for_event_template)).to eq(false)
         end
-=======
->>>>>>> origin/dev
       end
     end
   
