@@ -45,7 +45,7 @@ class TasksController < ApplicationController
         if @task.user
           @task.send_notification_to_assigned_user(current_user)
         end
-        format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
+        format.html { redirect_to @task.event, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
       else
         format.html { render :new }

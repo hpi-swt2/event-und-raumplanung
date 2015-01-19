@@ -34,16 +34,16 @@
   <dd><%= @event.updated_at.strftime("%d.%m.%Y %T") %></dd>
   <dt><strong><%= t('events.show.status') %>:</strong></dt>
   <dd><%= @event.status %></dd>
-  <% if @event.event_id %> 
+  <% if @event.event_id %>
       <dt><strong><%= t('events.show.suggested_for') %>:</strong></dt>
       <dd><%= link_to get_name_of_original_event(@event), event_path(@event.event_id), :target => "_blank" %></dd>
-  <% end %> 
+  <% end %>
   <dd>
     <% if @favorite.empty? %>
       <%= link_to t('.toogle', :default => t("helpers.links.add_favorite")),show_toggle_favorite_event_path(@event), :class => 'btn btn-xs btn-primary' %>
     <% else %>
       <%= link_to t('.toogle', :default => t("helpers.links.remove_favorite")),show_toggle_favorite_event_path(@event), :class => 'btn btn-xs btn-danger' %>
-    <% end %> 
+    <% end %>
   </dd>
 </dl>
 

@@ -76,8 +76,18 @@ class EventsController < GenericEventsController
   end
 
   def approve_event_suggestion
+  #  if !params.has_key?(:message) or params[:message] == nil or params[:message].strip.empty?
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
+  #    end
+  #  else
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+  #    end
+  #  end
     @event.update(status: 'pending', event_id: nil)
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
+
   end
 
   def decline
@@ -86,6 +96,16 @@ class EventsController < GenericEventsController
   end
 
   def decline_event_suggestion
+  #  if !params.has_key?(:message) or params[:message] == nil or params[:message].strip.empty?
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
+  #    end
+  #  else
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+  #    end
+  #  end
+
     if @event.update(:status => 'rejected_suggestion')
       respond_to do |format|
         format.html { redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested')) }
@@ -176,7 +196,7 @@ class EventsController < GenericEventsController
     end
 
     def event_suggestion_params
-      params.require(:event).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :original_event_id, :room_ids => [])
+      params.require(:event).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :original_event_id, :message,:room_ids => [])
     end
 
     def create_event params, new_url, model
