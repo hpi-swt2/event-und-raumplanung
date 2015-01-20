@@ -311,7 +311,7 @@ class EventsController < GenericEventsController
     end
 
     def set_feed
-      if @event.involved_users.include? current_user 
+      if @event.involved_users.include? current_user or can? :manage, Event
         @activities = @event.activities.all.order("created_at ASC")
         @comments = Comments.where(event_id: @event.id)
         @feed_entries = @activities + @comments
