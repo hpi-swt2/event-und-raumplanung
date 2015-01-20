@@ -89,6 +89,29 @@ class Event < ActiveRecord::Base
     (self.ends_at - self.starts_at).seconds
   end
 
+  def involved_users()
+    involved = Array.new
+    involved << User.find(self.user_id)
+    self.tasks.each do | task |
+      if task.identity_type == 'User'
+        u = User.find(task.identity_id)
+        involved << u
+      end
+
+      if task.identity_type == 'Group'
+        g = Group.find(task.identity_id)
+        involved << g.users
+      end
+    end
+
+    self.rooms.each do |room|
+      if room.group
+        involved += room.group.leaders
+      end
+    end
+    involved
+  end
+
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.

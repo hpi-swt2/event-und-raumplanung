@@ -311,10 +311,12 @@ class EventsController < GenericEventsController
     end
 
     def set_feed
-      @activities = @event.activities.all.order("created_at ASC")
-      @comments = Comments.where(event_id: @event.id)
-      @feed_entries = @activities + @comments
-      @feed_entries = @feed_entries.sort_by(&:created_at)
+      if @event.involved_users.include? current_user 
+        @activities = @event.activities.all.order("created_at ASC")
+        @comments = Comments.where(event_id: @event.id)
+        @feed_entries = @activities + @comments
+        @feed_entries = @feed_entries.sort_by(&:created_at)
+      end
     end
 
     def build_conflicting_events_response conflicting_events 
