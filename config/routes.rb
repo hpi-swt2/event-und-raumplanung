@@ -97,7 +97,7 @@ Rails.application.routes.draw do
   end
 
   resources :maps
-  resources :profile
+  resources :users, only: [:edit, :show, :update]
 
   resources :event_templates, :path => "templates"
   resources :event_templates do

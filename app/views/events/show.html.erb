@@ -55,7 +55,7 @@
         </tr>
         <tr>
           <td><%= t('events.show.creator') %></td>
-          <td><%= @user %></td>
+          <td><%= link_to User.find(@event.user_id).display_name, user_path(User.find(@event.user_id)) %></td>
         </tr>
         <tr>
           <td><%= t('events.show.participant_count') %></td>

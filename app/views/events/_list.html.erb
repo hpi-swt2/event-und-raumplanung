@@ -27,7 +27,7 @@
             <td><%=l event.starts_at if event.starts_at  %> / <br />
             <%=l event.ends_at if event.ends_at %></td>
             <td><%=t "event.status.#{event.status}" %></td>
-                <td><%= event.user_id %></td>
+                <td><%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %></td>
                 <td>
             <% if event.event_id %>
               <%= render :partial => "event_suggestions/buttons", :locals => {:event => event} %>

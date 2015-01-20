@@ -34,7 +34,10 @@
             <td/>
         <% end %>
       <% end %>
-      <td><%= User.find(event.user_id).username if event.user_id %></td>
+      <td><% if event.user_id %>
+        <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+        <% end %>
+      </td>
       <td><%= link_to event.name, event_path(event) %></td>
       <td><%= trimDescription event.description %></td>
       <td><%= event.rooms.map(&:name).to_sentence %></td>
