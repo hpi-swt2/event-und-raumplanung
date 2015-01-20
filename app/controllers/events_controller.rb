@@ -270,7 +270,7 @@ class EventsController < GenericEventsController
       params['participant_count'] = @event.participant_count
       params['is_private'] = @event.is_private
       params['is_important'] = @event.is_important
-      params['status'] = 'suggested'
+      params['status'] = 'approved'
       return params
     end
 
