@@ -1,0 +1,13 @@
+# ruby encoding: utf-8
+
+en:
+  profile:
+    hints: 'Please fill in the following information if you want to, all information is optional.'
+    notification: 'Email Notification'
+    name: 'Name'
+    office_location: 'Office Location'
+    offife_phone: 'Office Phone'
+    mobile_phone: 'Mobile Phone'
+    language: 'Language'
+    skip: 'skip'
+    save: 'Save'
