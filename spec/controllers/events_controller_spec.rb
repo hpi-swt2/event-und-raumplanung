@@ -44,6 +44,19 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:valid_attributes_not_private) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    user_id: user.id
+    }
+  }
+
   let(:valid_attributes_with_room) {
     {name:'Das Bo live',
     description:'Türlich Türlich',
@@ -254,7 +267,7 @@ RSpec.describe EventsController, :type => :controller do
       assigned_user = create(:user)
       sign_in assigned_user
 
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_not_private
       firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
