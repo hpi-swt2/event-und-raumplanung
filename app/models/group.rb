@@ -11,6 +11,10 @@ class Group < ActiveRecord::Base
     end
   has_many :permissions, :as => :permitted_entity, :dependent => :destroy
 
+  def leaders
+    self.users.select{|user| user.is_leader_of_group(self.id)}
+  end
+
   def has_permission(category, room = nil)
     return self.permissions.for_category(category).any? { |permission|
       permission.room == room or permission.room.nil?

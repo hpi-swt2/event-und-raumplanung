@@ -72,6 +72,16 @@ ActiveRecord::Schema.define(version: 20150119124943) do
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
 
+  create_table "event_occurrences", force: true do |t|
+    t.integer  "event_id"
+    t.datetime "starts_occurring_at"
+    t.datetime "ends_occurring_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_occurrences", ["event_id"], name: "index_event_occurrences_on_event_id", using: :btree
+
   create_table "event_templates", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -105,6 +115,7 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
+    t.text     "schedule"
     t.integer  "event_id"
   end
 

@@ -58,7 +58,7 @@ class EventsController < GenericEventsController
     @filterrific.user = nil if @filterrific.user == 0;
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
-    @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite=true',current_user_id).select('events.id')
+    @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
   end
 
@@ -152,6 +152,7 @@ class EventsController < GenericEventsController
   # POST /events
   # POST /events.json
   def create
+
     create_event event_params, :new, Event.model_name.human
   end
 
@@ -165,13 +166,15 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    @event.attributes = event_params
+    @event.schedule_from_rule(event_params[:occurence_rule])
+    filtered_params = params_without_occurence_rule(event_params)
+    @event.attributes = filtered_params
     
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => @event.changed)
 
-    @update_result = @event.update(event_params)
+    @update_result = @event.update(filtered_params)
     super
   end
 
@@ -214,7 +217,11 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :commit, :event_template_id, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :room_ids => [])
+    end
+
+    def params_without_occurence_rule(params)
+      params.reject {|k,v| k == "occurence_rule"}
     end
 
     def event_suggestion_params
@@ -224,7 +231,8 @@ class EventsController < GenericEventsController
     def create_event params, new_url, model
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
-      @event = Event.new(params)
+      @event = Event.new(params_without_occurence_rule params)
+      @event.schedule_from_rule(params[:occurence_rule])
       @event.user_id = current_user_id
       create_tasks @event_template_id
 
@@ -305,10 +313,12 @@ class EventsController < GenericEventsController
     end
 
     def set_feed
-      @activities = @event.activities.all.order("created_at ASC")
-      @comments = Comments.where(event_id: @event.id)
-      @feed_entries = @activities + @comments
-      @feed_entries = @feed_entries.sort_by(&:created_at)
+      if @event.involved_users.include? current_user or can? :manage, Event
+        @activities = @event.activities.all.order("created_at ASC")
+        @comments = Comments.where(event_id: @event.id)
+        @feed_entries = @activities + @comments
+        @feed_entries = @feed_entries.sort_by(&:created_at)
+      end
     end
 
     def build_conflicting_events_response conflicting_events 
@@ -343,4 +353,5 @@ class EventsController < GenericEventsController
     def same_day starts_at, ends_at
       Time.at(starts_at).to_date === Time.at(ends_at).to_date
     end 
+
 end

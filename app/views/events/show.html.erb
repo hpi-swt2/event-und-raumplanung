@@ -46,6 +46,10 @@
           <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
+          <td><%= t('events.show.schedule') %></td>
+          <td><%= @event.pretty_schedule %></td>
+        </tr>
+        <tr>
           <td><%= t('events.show.rooms') %></td>
           <td><%= concat_rooms(@event) %></td>
         </tr>

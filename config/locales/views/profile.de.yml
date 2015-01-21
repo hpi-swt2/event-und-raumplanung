@@ -1,0 +1,13 @@
+# ruby encoding: utf-8
+
+de:
+  profile:
+    hints: 'Bitte füllen sie die folgenden Felder aus, wenn sie Angaben tätigen wollen. Alle Angaben sind optional.'
+    notification: 'Email Benachrichtigungen'
+    name: 'Name'
+    office_location: 'Büro Adresse'
+    offife_phone: 'Büro Telefonnummer'
+    mobile_phone: 'Mobil Telefonnummer'
+    language: 'Sprache'
+    skip: 'Überspringen'
+    save: 'Speichern'

@@ -26,6 +26,7 @@ RSpec.describe EventsController, :type => :controller do
   }
   let(:task) { create :task }
   let(:user) { create :user }
+  let(:user2) { create :user }
   let(:member) {create :groupMember}
   let(:room) {create :groupRoom}
 
@@ -108,7 +109,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time:'17:00',
     ends_at_time:'23:59',
     user_id: user.id
-	}
+    }
   }
 
   let(:invalid_attributes_for_request) {
@@ -125,7 +126,7 @@ RSpec.describe EventsController, :type => :controller do
 
    let(:invalid_participant_count) {
     {name:'Michas GB',
-   	participant_count:-100,
+    participant_count:-100,
     starts_at_date: Time.now.strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
@@ -197,6 +198,21 @@ RSpec.describe EventsController, :type => :controller do
     { :status => false }.to_json
   }
 
+  let(:valid_attributes_weekly_recurring_event) {
+    {
+      name:'weekly',
+      description:'weekly recurring',
+      participant_count: 15,
+      starts_at_date: "2015-01-05",
+      starts_at_time: "09:00",
+      ends_at_date: "2015-01-05",
+      ends_at_time: "10:30",
+      is_private: false,
+      user_id: user.id,
+      occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
+    }
+  }
+
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -256,6 +272,66 @@ RSpec.describe EventsController, :type => :controller do
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
+
+    context "if the user has created the event" do
+      it "shows the activity log" do
+        e = create(:event, user_id: user.id)
+        get :show, {:id => e.id}
+        # @activities is probably an empty list since acitivies
+        # would be created on controller level, but if it's not
+        # nil we've verified that it WOULD show acitivities
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+    
+    context "if the user `owns` the event's room" do
+      it "shows the activity log" do
+
+        # make user leader of group g
+        g = create(:group)
+        g.users << user
+        mem = g.memberships.last
+        mem.isLeader = true
+        mem.save
+
+        # create room r and assign it to group g
+        r = create(:room)
+        r.group = g
+        r.save
+
+        # create new event with r as room
+        e2 = create(:event, user_id: user2.id)
+        e2.rooms << r
+        e2.save
+
+        # verify that group leader is now able to see the log
+        get :show, {:id => e2.id}
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+
+    context "if the user has been assigned to any of the event's tasks" do
+      # this includes being implicitly assigned through group membership
+      it "shows the activity log" do
+        e3 = create(:event, user_id: user2.id)
+        t = create(:assigned_task, identity: user)
+        e3.tasks << t
+        e3.save
+        get :show, {:id => e3.id}
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+
+    context "if the user ist not involved" do
+      it "does not show or even transmit the activity log" do
+        # this is deliberately implemented as a controller test rather than
+        # on a view level to assure that acitivities don't even go there (@kaozente)
+        e4 = create(:event, user_id: user2.id)
+        get :show, {:id => e4.id}
+        expect(assigns(:feed_entries)).to be_nil
+      end
+    end
+
   end
 
   describe "GET new" do
@@ -403,7 +479,7 @@ RSpec.describe EventsController, :type => :controller do
       end
     end
 
-	  describe "with invalid participant count" do
+      describe "with invalid participant count" do
       it "assigns a newly created but unsaved event as @event" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
@@ -520,6 +596,19 @@ RSpec.describe EventsController, :type => :controller do
         expect(assigns(:event)).to be_a_new(Event)
       end
     end
+
+    describe "with valid weekly recurring occurrence rule parameters" do
+      it "creates a valid schedule" do
+        post :create, {:event => valid_attributes_weekly_recurring_event}, valid_session
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+      end
+    end
+
     after(:all) do 
       DatabaseCleaner.clean
     end
@@ -696,6 +785,18 @@ RSpec.describe EventsController, :type => :controller do
         expect(activities.last.username).to eq(user.username)
         expect(activities.last.changed_fields).to eq(expected_changed_fields)
       end
+
+      it "changes the specified schedule" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
+        put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+        expect(weekly_rule.validations_for(:day).size).to eq(2)
+      end
     end
 
     describe "with invalid params" do
@@ -811,7 +912,7 @@ RSpec.describe EventsController, :type => :controller do
 
     it "destroys the event_suggestion, but not the original event" do 
       event = Event.create! valid_attributes
-      event_suggestion = FactoryGirl.create :event_suggestion
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
       event = event_suggestion.event
       delete :destroy, {:id => event_suggestion.to_param}
       expect(event).to exist_in_database

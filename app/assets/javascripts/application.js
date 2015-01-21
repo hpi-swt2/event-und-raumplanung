@@ -28,6 +28,7 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/de
+//= require recurring_select
 //= require jquery-ui/autocomplete
 
 jQuery.fn.bootstrap_flash = function(message, options) {
