@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability, :assign_rooms]
-  before_action :set_room, only: [:assign_room ,:unassign_room]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability, :assign_rooms]
+  before_action :set_room, only: [:unassign_room]
   before_action :set_user, only: [:promote_user, :degrade_user, :current_ability]
   before_action :get_user_roles, only: [:show, :edit]
   before_action :load_user_from_email, only: [:assign_user]
@@ -89,18 +89,6 @@ class GroupsController < ApplicationController
     
     @unassigned_rooms = Room.where(:group_id => nil)
   end
-
-  # def assign_room
-  #   authorize! :manage_rooms, Group
-
-  #   if @room.group == nil  
-  #     @group.rooms << @room
-  #     flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
-  #   else
-  #     flash[:error] = "Raum "+@room.name+" bereits an Gruppe "+@room.group.name+" vergeben."
-  #   end
-  #   redirect_to manage_rooms_group_path(@group)
-  # end
 
   def assign_rooms
     authorize! :manage_rooms, Group
