@@ -1,28 +1,48 @@
-<h1><%= @group.name %> <br>
-<small>Gruppenräume zuweisen</small></h1> <br>
+<h1><%= @group.name %></h1>	
+<h1><small><%= t("groups.manage_rooms.currentRooms") %></small></h1> <br>
 
+    <table class="table table-striped">
+    <% if @group.rooms %>
+	     <thead>
+	        <tr>
+	          <th>Raum</th>
+	        </tr>
+	    </thead>
+	<% end %>
+	    <tbody>
+			<% if @group.rooms.each do |room| %>
+			<tr>
+				<td><%= room.name %>  <%= link_to t('.delete', :default => t("groups.manage_rooms.delete")), unassign_room_group_path(@group,room)%> </td>
+			</tr>
+			<% end.empty? %>
+				<p>Keine Räume zugewiesen </p>
+			<% end %>
+	    </tbody>
+	</table>
+<br>
+<h2><%= t("groups.manage_rooms.addRoom") %></h2> <br>
+<%= form_for @group, html: { :class => "form-horizontal event", :id => "assign-rooms-form" }, :url => assign_rooms_group_path(@group) do |f| %>
 
-
-<h2> Aktuelle Gruppenräume </h2>
-
-<ul>
-<% if @group.rooms.each do |room| %>
-	<li><%= room.name %>  <%= link_to 'Entfernen', unassign_room_group_path(@group,room)%> </li>
-<% end.empty? %>
-	<p>Keine Räume zugewiesen </p>
+  <div class="control-group">
+    <div class="controls">
+    	<%= f.select :room_ids, options_from_collection_for_select(@unassigned_rooms, :id, :name), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+    </div>
+    <script>
+    $('#selectpicker').selectpicker();
+    </script>
+  </div>
+<br>
+<%= f.submit t("groups.manage_rooms.add") , :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),:back, :class => 'btn btn-default' %>
 <% end %>
-</ul>
 
 
 
 
-<h2>Verfügbare Räume</h2>
-
-<ul>
+<!-- <ul>
 <% if @unassigned_rooms.each do |room| %>
 	<li><%= room.name %>    <%= link_to 'Hinzufügen', assign_room_group_path(@group,room)%> </li>
 <% end.empty? %>
 	<p>Keine Räume verfügbar </p>
 <% end %>
-</ul>
-
+</ul> -->
