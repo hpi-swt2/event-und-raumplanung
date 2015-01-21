@@ -5,6 +5,18 @@
       maxHeight: 250 })
     $(".multiselect ").parent().css("width","100%")
     $(".multiselect ").addClass("multiselectDropdown")
+
+    var availableTags=[
+      <% @categories= controller.getCategories %>
+      <% @categories.each do | cat | %>
+        "<%= cat[0]%>",
+      <% end %>
+    
+
+    ]
+    $( "#equipment_category" ).autocomplete({
+      source: availableTags
+    })
   })
 </script>
 
@@ -57,7 +69,7 @@
   <div class="control-group">
     <%= f.label t '.category', :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :category, :class => 'form-control' %>
+      <%= f.text_field :category, :autocomplete => :off, :class => 'form-control' %>
     </div>
     <%= error_span(@equipment[:category]) %>
   </div>
