@@ -44,6 +44,19 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:valid_attributes_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    user_id: user2.id
+    }
+  }
+
   let(:valid_attributes_not_private) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -54,6 +67,19 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: false,
     user_id: user.id
+    }
+  }
+
+  let(:valid_attributes_not_private_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    user_id: user2.id
     }
   }
 
@@ -246,6 +272,31 @@ RSpec.describe EventsController, :type => :controller do
       event = Event.create! valid_attributes
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:event)).to eq(event)
+    end
+
+    it "shows not private events to any user" do
+      event = Event.create! valid_attributes_not_private_user2
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to owner" do
+      event = Event.create! valid_attributes_user2
+      my_event = Event.create! valid_attributes
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).to redirect_to(root_path)
+      get :show, {:id => my_event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to involved user" do
+      event = Event.create! valid_attributes_user2
+      firstTask = create(:task)
+      firstTask.event = event
+      firstTask.identity = user
+      firstTask.save
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
     end
 
     it "assigns the tasks of the requested event as @tasks ordered by rank" do
