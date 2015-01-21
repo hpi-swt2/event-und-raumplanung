@@ -83,6 +83,19 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label t('events.form.series_end'), :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.date_field :schedule_ends_at_date, :class => 'form-control' %>
+        <%= error_span(@event[:schedule_ends_at_date]) %>
+      </div>
+      <div class="controls col-sm-6">
+        <%= f.time_field :schedule_ends_at_time, :class => 'form-control', value: @event.schedule_ends_at_time.strftime('%H:%M') %>
+        <%= error_span(@event[:schedule_ends_at_time]) %>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
     <div class="row">
       <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>

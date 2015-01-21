@@ -164,8 +164,8 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    @event.schedule_from_rule(event_params[:occurence_rule])
-    filtered_params = params_without_occurence_rule(event_params)
+    @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date], event_params[:schedule_ends_at_time])
+    filtered_params = params_without_schedule_related_params(event_params)
     @event.attributes = filtered_params
     
     @event.activities << Activity.create(:username => current_user.username, 
@@ -215,11 +215,11 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :schedule_ends_at_date, :schedule_ends_at_time, :room_ids => [])
     end
 
-    def params_without_occurence_rule(params)
-      params.reject {|k,v| k == "occurence_rule"}
+    def params_without_schedule_related_params(params)
+      params.reject {|k,v| k == "occurence_rule" || k == "schedule_ends_at_date" || k == "schedule_ends_at_time"}
     end
 
     def event_suggestion_params
@@ -229,8 +229,8 @@ class EventsController < GenericEventsController
     def create_event params, new_url, model
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
-      @event = Event.new(params_without_occurence_rule params)
-      @event.schedule_from_rule(params[:occurence_rule])
+      @event = Event.new(params_without_schedule_related_params params)
+      @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date], event_params[:schedule_ends_at_time])
       @event.user_id = current_user_id
       create_tasks @event_template_id
 
