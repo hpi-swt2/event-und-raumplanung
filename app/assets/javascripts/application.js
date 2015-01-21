@@ -21,7 +21,6 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
-//= require_tree .
 //= require fullcalendar
 //= require moment
 //= require filterrific/filterrific-jquery
@@ -29,6 +28,7 @@
 //= require bootstrap-datetimepicker
 //= require moment/de
 //= require recurring_select
+//= require_tree .
 //= require jquery-ui/autocomplete
 
 jQuery.fn.bootstrap_flash = function(message, options) {
