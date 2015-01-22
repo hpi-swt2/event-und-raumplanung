@@ -78,6 +78,7 @@
   <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
 </div>
 
+<% unless @feed_entries.nil? %>
 <div class="event-view-section">
   <h3><%= t 'activities.activity_log' %></h3>
 
@@ -99,6 +100,7 @@
     <% end %>  
   </div>
 </div>
+<% end %>
 
 <div class="row">
   <div class="col-xs-4 col-md-3">

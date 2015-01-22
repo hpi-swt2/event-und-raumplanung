@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
+    t.text     "schedule"
     t.integer  "event_id"
     t.text     "schedule"
   end
