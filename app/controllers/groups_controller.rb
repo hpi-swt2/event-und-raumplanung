@@ -100,9 +100,9 @@ class GroupsController < ApplicationController
           @group.rooms <<  Room.find(room_id)
         end
       end
-      flash[:notice] = "Räume erfolgreich hinzugefügt."
+      flash[:notice] = t("notices.successful_room_assign")
     else
-      flash[:error] = "Kein Raum ausgewählt."
+      flash[:error] = t("errors.messages.unsuccessful_room_assign")
     end
     redirect_to manage_rooms_group_path(@group)
   end
@@ -111,7 +111,7 @@ class GroupsController < ApplicationController
     authorize! :manage_rooms, Group
 
     @group.rooms.delete(@room)
-    flash[:notice] = "Raum "+@room.name+" erfolgreich gelöscht."
+    flash[:notice] = t('notices.successful_room_unassign', :room => @room.name)
     redirect_to manage_rooms_group_path(@group)
   end
 
