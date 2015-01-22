@@ -33,7 +33,7 @@
   </div>
 <br>
 <%= f.submit t("groups.manage_rooms.add") , :class => 'btn btn-primary' %>
-<%= link_to t('.back', :default => t("helpers.links.back")),:back, :class => 'btn btn-default' %>
+<%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
 <% end %>
 
 
