@@ -35,14 +35,3 @@
 <%= f.submit t("groups.manage_rooms.add") , :class => 'btn btn-primary' %>
 <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
 <% end %>
-
-
-
-
-<!-- <ul>
-<% if @unassigned_rooms.each do |room| %>
-	<li><%= room.name %>    <%= link_to 'Hinzufügen', assign_room_group_path(@group,room)%> </li>
-<% end.empty? %>
-	<p>Keine Räume verfügbar </p>
-<% end %>
-</ul> -->
