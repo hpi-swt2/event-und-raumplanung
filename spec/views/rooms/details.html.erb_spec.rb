@@ -46,9 +46,9 @@ RSpec.describe "rooms/details.html.erb" do
 	it "must not show both events, only the first" do
 		room = FactoryGirl.build(:room_with_bookings)
 		#This is here because you can't set the 'end' attribute in FactoryGirl, at least I can't
-		room.bookings.first.end = DateTime.now.advance(hours: 2)
-		room.bookings.last.end = DateTime.now.advance(days: 2, hours: 1)
-		room.bookings.first.start.to_date.should == Date.today
+		room.bookings.first.end = DateTime.current.advance(hours: 2)
+		room.bookings.last.end = DateTime.current.advance(days: 2, hours: 1)
+		room.bookings.first.start.to_date.should == Date.current
 		assign(:room, room)
 		render
 		expect(rendered).to include(room.bookings.first.name)
@@ -57,7 +57,7 @@ RSpec.describe "rooms/details.html.erb" do
 	
 	it "must show all information" do
 		room = FactoryGirl.build(:room_with_bookings)
-		room.bookings.first.end = DateTime.now
+		room.bookings.first.end = DateTime.current
 		assign(:room, room)
 		render
 		expect(rendered).to include(room.bookings.first.name)

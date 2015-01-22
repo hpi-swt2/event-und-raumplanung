@@ -42,7 +42,7 @@
         <tbody>
             <% @room.bookings.each do |booking| %>
                 <tr>
-                    <% if(booking.start.to_date == Date.today) %>
+                    <% if(booking.start.to_date == Date.current) %>
                         <td>
                             <%= booking.name %>
                         </td>
