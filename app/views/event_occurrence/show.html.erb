@@ -10,7 +10,7 @@
             <span class="glyphicon glyphicon-star"></span>
           <% end %>
         <% else %>
-          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence), class: "event-favorite-icon-checked event-favorite-icon" do %>
+          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence.event), class: "event-favorite-icon-checked event-favorite-icon" do %>
             <span class="glyphicon glyphicon-star"></span>
           <% end %>
         <% end %>
@@ -39,11 +39,11 @@
       <tbody>
         <tr>
           <td><%= t('event_occurrences.show.starts_occurring_at') %></td>
-          <td><%= @event.starts_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
+          <td><%= @event_occurrence.starts_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
           <td><%= t('event_occurrences.show.ends_occurring_at') %></td> 
-          <td><%= @event.ends_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
+          <td><%= @event_occurrence.ends_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
           <td><%= t('events.show.schedule') %></td>
