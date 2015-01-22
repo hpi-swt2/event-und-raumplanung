@@ -1,0 +1,24 @@
+<%= form_tag({action: 'submit'}, {remote: true, :'data-type' => 'json', id: "permissionsByEntity", :class => "form-horizontal"}) do |f| %>
+  
+  <div class="control-group">
+    <div class="controls">
+
+      <%= hidden_field_tag 'type', 'entity' %>
+
+      <%= select_tag 'entity',
+          grouped_options_for_select([
+              [User.model_name.human(count: 2).titleize, @users.map {|x| [x.username, "User:#{x.id}"]}],
+              [Group.model_name.human(count: 2).titleize, @groups.map {|x| [x.name, "Group:#{x.id}"]}]
+          ]),
+          {class: 'selectpicker', :'data-live-search' => "true"}%>
+      
+      <div id="permissionsDiv"></div>
+
+      <%= submit_tag nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              permissions_path, :class => 'btn btn-default' %>
+
+    </div>
+  </div>
+
+<% end %>

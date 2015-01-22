@@ -46,6 +46,10 @@
           <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
+          <td><%= t('events.show.schedule') %></td>
+          <td><%= @event.pretty_schedule %></td>
+        </tr>
+        <tr>
           <td><%= t('events.show.rooms') %></td>
           <td><%= concat_rooms(@event) %></td>
         </tr>
@@ -57,10 +61,16 @@
           <td><%= t('events.show.participant_count') %></td>
           <td><%= @event.participant_count %></td>
         </tr>
+        <tr>
+          <td>
+            <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 
 <div class="event-view-section">
   <h3><%= t '.tasks' %></h3>
@@ -68,6 +78,7 @@
   <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
 </div>
 
+<% unless @feed_entries.nil? %>
 <div class="event-view-section">
   <h3><%= t 'activities.activity_log' %></h3>
 
@@ -89,6 +100,7 @@
     <% end %>  
   </div>
 </div>
+<% end %>
 
 <div class="row">
   <div class="col-xs-4 col-md-3">

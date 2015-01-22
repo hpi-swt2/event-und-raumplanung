@@ -6,12 +6,12 @@
         <h3 class="panel-title"><%= t('dashboard.upcoming_events') %></h3>
     </div>
     <div class="panel-body">
-        <% if !@events.empty? %>
+        <% if !@event_occurrences.empty? %>
             <ul class="list-group">
-                <% @events.each do |event| %>
+                <% @event_occurrences.each do |event_occurrence| %>
                     <li class="list-group-item">
-                        <%= link_to event.name, event_path(event) %>
-                        (<%= event.starts_at.strftime("%A, %d.%m.%Y, %H:%M") if event.starts_at %>)
+                        <%= link_to event_occurrence.event.name, show_occurrence_path(:eventid => event_occurrence.event.id, :starting => event_occurrence.starts_occurring_at.to_s, :ending => event_occurrence.ends_occurring_at.to_s) %>
+                        (<%= event_occurrence.starts_occurring_at.strftime("%A, %d.%m.%Y, %H:%M") if event_occurrence.starts_occurring_at %>)
                     </li>
                 <% end %>
             </ul>

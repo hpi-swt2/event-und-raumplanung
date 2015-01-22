@@ -1,6 +1,9 @@
 en:
   events:
     show:
+      schedule_not_recurring: 'Once'
+      schedule: 'Schedule'
+      starts_at: 'Starts'
       name: 'Name'
       creator: 'Creator'
       rooms: 'Rooms'

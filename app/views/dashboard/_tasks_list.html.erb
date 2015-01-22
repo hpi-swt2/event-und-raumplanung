@@ -30,11 +30,12 @@
 	</div>
 	<% unless my_pending_events.blank? && group_pending_events.blank? %>
 		<% unless my_pending_events.blank? %>	
-			<div class="panel-body">
+	<div class="panel-body">
 				<%= t('dashboard.personal_tasks') %>
 				<hr class="dashboard-pending-task-seperator">
-				<% my_pending_events.each do |event| %>
-					<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
+			<% my_pending_events.each do |event| %>
+				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
+                <div class="table-responsive">
 					<table class="pending-tasks-table">
 						<% my_pending_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
 							<tr>
@@ -52,7 +53,7 @@
 			        		</tr>
 			        	<% end %>
 					</table>
-				<% end %>
+			<% end %>
 			</div>
 		<% end %>
 
@@ -85,9 +86,9 @@
 				<% end %>
 			</div>
 		<% end %>
-	<% else %>
-		<p>
-			<%= t('dashboard.no_pending_tasks') %>
-		</p>
-	<% end %>
+		<% else %>
+			<p>
+				<%= t('dashboard.no_pending_tasks') %>
+			</p>
+		<% end %>
 </div>

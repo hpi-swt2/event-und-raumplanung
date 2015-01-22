@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150116083543) do
+ActiveRecord::Schema.define(version: 20150119124943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20150116083543) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id"
-    t.integer  "user_id"
+    t.string   "user_id"
   end
 
   create_table "equipment", force: true do |t|
@@ -71,6 +71,16 @@ ActiveRecord::Schema.define(version: 20150116083543) do
   end
 
   add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
+
+  create_table "event_occurrences", force: true do |t|
+    t.integer  "event_id"
+    t.datetime "starts_occurring_at"
+    t.datetime "ends_occurring_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_occurrences", ["event_id"], name: "index_event_occurrences_on_event_id", using: :btree
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
@@ -105,6 +115,7 @@ ActiveRecord::Schema.define(version: 20150116083543) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
+    t.text     "schedule"
     t.integer  "event_id"
   end
 
@@ -144,6 +155,18 @@ ActiveRecord::Schema.define(version: 20150116083543) do
 
   add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "permissions", force: true do |t|
+    t.integer  "room_id"
+    t.integer  "permitted_entity_id"
+    t.string   "permitted_entity_type"
+    t.integer  "category"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "permissions", ["permitted_entity_id", "permitted_entity_type"], name: "index_permissions_on_permitted_entity", using: :btree
+  add_index "permissions", ["room_id"], name: "index_permissions_on_room_id", using: :btree
 
   create_table "room_properties", force: true do |t|
     t.string   "name"
@@ -198,14 +221,14 @@ ActiveRecord::Schema.define(version: 20150116083543) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                               null: false
+    t.string   "email",                                     null: false
     t.string   "username",               default: ""
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",     default: "",       null: false
     t.string   "status"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,        null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -214,6 +237,13 @@ ActiveRecord::Schema.define(version: 20150116083543) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "student"
+    t.string   "fullname",               default: ""
+    t.string   "office_location",        default: ""
+    t.string   "office_phone",           default: ""
+    t.string   "mobile_phone",           default: ""
+    t.string   "language",               default: "German"
+    t.boolean  "email_notification",     default: true
+    t.boolean  "firstlogin",             default: true
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

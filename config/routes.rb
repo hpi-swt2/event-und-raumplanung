@@ -2,6 +2,14 @@ Rails.application.routes.draw do
 
   resources :uploads, :only => [:new, :create, :destroy]
 
+  resources :permissions, :only => [:index] do
+    collection do
+      post :submit
+      post 'permissions_for_entity', action: 'checkboxes_by_entity'
+      post 'entities_for_permission', action: 'checkboxes_by_permission'
+    end
+  end
+
   resources :event_suggestions
 
   resources :groups do
@@ -9,6 +17,7 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
@@ -16,12 +25,17 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'profile/index' => 'profile#index'
+  post 'profile_update_profile' => 'profile#update_profile', as: "update_profile"
+
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+
   post 'events_create_comment' => 'events#create_comment', as: "create_comment"
   post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
+
 
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"
@@ -34,6 +48,7 @@ Rails.application.routes.draw do
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
+  get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 
@@ -85,6 +100,7 @@ Rails.application.routes.draw do
   end
 
   resources :maps
+  resources :profile
 
   resources :event_templates, :path => "templates"
   resources :event_templates do

@@ -1,12 +1,24 @@
 require 'rails_helper'
 
-describe EventsHelper, :type => :helper do
+# Specs in this file have access to a helper object that includes
+# the EventsHelper. For example:
+#
+# describe EventsHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe EventsHelper, :type => :helper do
+
   describe "function 'get_name_of_original_event'" do
     it "returns the name of the Event Suggestions original Event preceded by the word Event" do
       event = FactoryGirl.create(:event)
-      event_suggestion = FactoryGirl.create(:event_suggestion)
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
       original_event_name = get_name_of_original_event(event_suggestion)
-    	expect(original_event_name).to eq('Event ' + event.name)   
+      expect(original_event_name).to eq('Event ' + event.name)   
     end
   end
+
 end
