@@ -1,14 +1,13 @@
 <%- model_class = Task -%>
 <% return_url = request.env['PATH_INFO'] %>
 <div class="table-responsive">
-    <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
 
-<% if @tasks.empty? %>
+  <% if @tasks.empty? %>
     <div class="no-tasks-text">
         <%= t('tasks.show.no_tasks') %>
     </div>
-<% else %>
-  <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
+  <% else %>
+    <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
       <thead>
         <tr>
         <% if params[:controller] == 'events' %>
@@ -43,12 +42,13 @@
           </tr>
         <% end %>
       </tbody>
-  </table>
-<% end %>
-<% if can? :edit, @event or @event.nil? %>    
-  <% if params[:controller] == 'events' %>
-    <%= link_to t('helpers.links.task'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
-  <% else %> 
-    <%= link_to t('helpers.links.task'), new_task_path(event_template_id: @event_template_id), :class => 'btn btn-primary' %>
+    </table>
   <% end %>
-<% end %>
+  <% if can? :edit, @event or @event.nil? %>    
+    <% if params[:controller] == 'events' %>
+      <%= link_to t('helpers.links.task'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
+    <% else %> 
+      <%= link_to t('helpers.links.task'), new_task_path(event_template_id: @event_template_id), :class => 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+</div>
