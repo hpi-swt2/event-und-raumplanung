@@ -40,6 +40,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: true,
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -80,7 +81,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id
     }
@@ -94,7 +95,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id,
     event_template_id: 1
@@ -108,6 +109,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date:'2014-08-23',
     starts_at_time:'17:00',
     ends_at_time:'23:59',
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -119,7 +121,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: Date.today,
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: Time.now.strftime("%H:%M:%S"),
-    rooms:[],
+    rooms: [build(:room)],
     user_id: user.id
   }
   }
@@ -131,6 +133,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -142,7 +145,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: [],
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -155,6 +158,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   } 
@@ -166,6 +170,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   }
@@ -209,6 +214,7 @@ RSpec.describe EventsController, :type => :controller do
       ends_at_time: "10:30",
       is_private: false,
       user_id: user.id,
+      rooms: [build(:room)],
       occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
     }
   }
