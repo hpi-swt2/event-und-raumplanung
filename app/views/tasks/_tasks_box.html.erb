@@ -7,7 +7,8 @@
         <%= t('tasks.show.no_tasks') %>
     </div>
   <% else %>
-    <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
+    <% sortable = params[:controller] == 'events' %>
+    <table class="table table-striped" <%= 'id=tasks-sortable' if sortable %>>
       <thead>
         <tr>
         <% if params[:controller] == 'events' %>
@@ -18,6 +19,9 @@
         <% if params[:controller] == 'events' %>
           <th class="col-sm-5"><%= model_class.human_attribute_name(:assigned_to) %></th>
           <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
+        <% end %>
+        <% if sortable %>
+          <th class="col-sm-1"></th>
         <% end %>
         </tr>
       </thead>
@@ -38,6 +42,9 @@
               <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
             <% else %>
               <td></td>
+            <% end %>
+            <% if sortable %>
+              <td><%= image_tag "drag.png", size: "20" %></td>
             <% end %>
           </tr>
         <% end %>
