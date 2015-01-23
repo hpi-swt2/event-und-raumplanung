@@ -405,10 +405,10 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "GET show_toggle_favorite" do
-    it "redirects to event" do
+    it "executes successfully" do
       event = Event.create! valid_attributes
       get :show_toggle_favorite, {:id => event.to_param}, valid_session
-      expect(response).to redirect_to(event)
+      expect(response).to be_success
     end
     it "toggles the favorite event" do
       event = Event.create! valid_attributes

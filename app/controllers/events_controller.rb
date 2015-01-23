@@ -46,7 +46,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/show_toggle_favorite
   def show_toggle_favorite
     toggle_favorite
-    redirect_to event_url
+    render nothing: true
   end
 
   # GET /events

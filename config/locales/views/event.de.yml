@@ -35,3 +35,5 @@ de:
       begin: 'Beginn'
       end: 'Ende'
       tasks: 'Aufgaben'
+      mark_as_favorite: 'Als Favoriten markieren'
+      unmark_as_favorite: 'Favoritenmarkierung entfernen'
