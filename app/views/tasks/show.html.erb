@@ -17,7 +17,11 @@
       <h3><%= @event.name %> (<%= @event.starts_at.strftime("%d.%m.%Y") %>)</h3>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h3><%= @task.identity.name %></h3>
+      <h3>
+        <% if @task.identity %>
+          <%= @task.identity.name %> 
+        <% end %>  
+      </h3>
     </div>
   </div>
 </div>

@@ -466,7 +466,7 @@ RSpec.describe TasksController, type: :controller do
 
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today, identity: identity_dummy(task) }
-      expect(response).to redirect_to task_path(assigns(:task))
+      expect(response).to render_template("edit")
     end
   
     it "destroys a task" do
