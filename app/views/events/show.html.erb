@@ -62,8 +62,17 @@
           <td><%= @event.participant_count %></td>
         </tr>
         <tr>
+          <td><%= t('events.show.status') %></td>
+          <td><%= t 'event.status.'+@event.status %></td>
+        </tr>
+        <tr>
           <td>
             <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
+          </td>
+          <td>
+            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+              <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
+            <%end%>
           </td>
         </tr>
       </tbody>
