@@ -53,6 +53,7 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
+    @task.creator = current_user
     
     create_activity(@task)
 

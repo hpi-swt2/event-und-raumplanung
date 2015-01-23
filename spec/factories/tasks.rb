@@ -7,6 +7,7 @@ FactoryGirl.define do
     description 'This is a task.'
     association :event_id, factory: :event
     association :identity, factory: :user
+    association :creator, factory: :user
     association :event_template_id, factory: :event_template
     status "not_assigned"
 

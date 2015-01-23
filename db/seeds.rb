@@ -63,6 +63,7 @@ Task.create({name: 'An accepted Task',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'accepted'})
 
 Task.create({name: 'Another accepted Task', 
@@ -70,6 +71,7 @@ Task.create({name: 'Another accepted Task',
 			event_id: another_event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'accepted',
 			done: true })
 
@@ -78,6 +80,7 @@ Task.create({name: 'A pending Task',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'pending'})
 
 Task.create({name: 'A second pending Task', 
@@ -85,9 +88,10 @@ Task.create({name: 'A second pending Task',
 			event_id: another_event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'pending'})
 
-Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
+Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned", creator_id: user1.id})
 
 #
 # Create Equipment
