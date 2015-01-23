@@ -68,11 +68,18 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                 <%= t('.configuration') %> <span class="caret"></span>
               </a>
-              <ul class="dropdown-menu" role="menu">
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider">
+                <li><%= link_to t('.templates'), event_templates_path %></li>
+                <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.rooms'), rooms_path %></li>
                 <li><%= link_to t('.equipment'), equipment_index_path %></li>
+                <li><%= link_to t('.properties'), room_properties_path %></li>
+                <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
-          </ul>
+                <% if can? :manage, Permission %>
+                  <li><%= link_to t('.permissions'), permissions_path %></li>
+                <% end %>
+              </ul>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
