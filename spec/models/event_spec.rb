@@ -116,6 +116,14 @@ describe Event do
       expect(event_with_schedule.occurence_rule).to be_nil
     end
 
+    it "has no termination time" do
+      expect(event_with_schedule.schedule_ends_at_time).to be_nil
+    end
+
+    it "has no termination date" do
+      expect(event_with_schedule.schedule_ends_at_date).to be_nil
+    end
+
     it "string formatting is valid" do
       expect(event_with_schedule.pretty_schedule).to eq(I18n.t 'events.show.schedule_not_recurring')
     end
@@ -130,6 +138,19 @@ describe Event do
 
     it "and string formatting is valid" do
       expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
+    end
+  end
+
+  context "schedule is recurring and terminating" do
+    let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
+
+    it "and occurence rule is set" do
+      expect(daily_recurring_terminating_event.schedule_ends_at_time).to eq(Time.local(2015, 8, 16, 0, 0, 0))
+      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Time.local(2015, 8, 16, 0, 0, 0).to_date)
+    end
+
+    it "and there is no event occurrence after the termination date" do
+      expect(Event.events_between(daily_recurring_terminating_event.starts_at, Time.local(2015, 8, 16, 0, 0, 0).advance(weeks: 1)).size).to eq(15)
     end
   end
 

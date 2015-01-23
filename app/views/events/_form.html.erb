@@ -86,11 +86,11 @@
     <%= f.label t('events.form.series_end'), :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6">
-        <%= f.date_field :schedule_ends_at_date, :class => 'form-control' %>
+        <%= f.date_field :schedule_ends_at_date, :class => 'form-control', value: schedule_ends_at_date_not_nil(@event) %>
         <%= error_span(@event[:schedule_ends_at_date]) %>
       </div>
       <div class="controls col-sm-6">
-        <%= f.time_field :schedule_ends_at_time, :class => 'form-control', value: @event.schedule_ends_at_time.strftime('%H:%M') %>
+        <%= f.time_field :schedule_ends_at_time, :class => 'form-control', value: schedule_ends_at_time_not_nil(@event).strftime('%H:%M') %>
         <%= error_span(@event[:schedule_ends_at_time]) %>
       </div>
     </div>

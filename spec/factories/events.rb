@@ -154,6 +154,26 @@ FactoryGirl.define do
     f.schedule schedule
   end
 
+  factory :daily_recurring_terminating_event, :class => Event do |f|
+    f.name "Daily recurring until x"
+    f.description "Eventdescription terminating"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      rule = IceCube::Rule.daily
+      rule.until(Time.local(2015, 8, 16, 0, 0, 0))
+      s.add_recurrence_rule(rule)
+    end
+    f.schedule schedule
+  end
+
   factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
     starts_at = Time.now + 1.hours
     f.starts_at starts_at

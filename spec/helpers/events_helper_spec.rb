@@ -21,4 +21,27 @@ RSpec.describe EventsHelper, :type => :helper do
     end
   end
 
+  describe "schedule_ends_at_time_not_nil" do
+    it "returns Time.now if no termination time is set" do
+      event = FactoryGirl.create(:weekly_recurring_event)
+      expect(schedule_ends_at_time_not_nil(event)).not_to be_nil
+    end
+
+    it "returns the termination time if one is set" do
+      event = FactoryGirl.create(:daily_recurring_terminating_event)
+      expect(schedule_ends_at_time_not_nil(event)).to eq(event.schedule_ends_at_time)
+    end
+  end
+
+  describe "schedule_ends_at_date_not_nil" do
+    it "returns now as date if no termination time is set" do
+      event = FactoryGirl.create(:weekly_recurring_event)
+      expect(schedule_ends_at_date_not_nil(event)).not_to be_nil
+    end
+
+    it "returns the termination date if one is set" do
+      event = FactoryGirl.create(:daily_recurring_terminating_event)
+      expect(schedule_ends_at_date_not_nil(event)).to eq(event.schedule_ends_at_date)
+    end
+  end
 end

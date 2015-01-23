@@ -94,7 +94,6 @@ class Event < ActiveRecord::Base
     if schedule && !schedule.recurrence_rules.empty? && schedule.terminating?
       return schedule.recurrence_rules.first.until_time
     end
-    return Time.now
   end
 
   def schedule_ends_at_date
@@ -102,7 +101,6 @@ class Event < ActiveRecord::Base
     if schedule && !schedule.recurrence_rules.empty? && schedule.terminating?
       return schedule.recurrence_rules.first.until_time.to_date
     end
-    return Time.now.to_date
   end
 
   def duration
