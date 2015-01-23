@@ -104,7 +104,7 @@
 
 <div class="row">
   <div class="col-xs-4 col-md-3">
-    <%= link_to t('.back', :default => t("helpers.links.back")), @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
+    <%= link_to t('.back', :default => t("helpers.links.back")), :back, :class => 'btn btn-default'  %>
   </div>
   <div class="col-xs-14 col-md-9 text-right">
     <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),

@@ -462,7 +462,7 @@ RSpec.describe TasksController, type: :controller do
     it "destroys a task" do
       taskToDelete = create(:task, event_id: event.id)
       expect { delete :destroy, id: taskToDelete }.to change { Task.count }.by(-1)
-      expect(response).to redirect_to tasks_path
+      expect(response).to redirect_to event_path(taskToDelete.event_id)
     end
 
     it "sends an email if a user is assigned to a new task" do
