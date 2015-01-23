@@ -53,14 +53,12 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
 
     authorize! :create, @task
-
     respond_to do |format|
         if @task.save && upload_files
           @task.send_notification_to_assigned_user(current_user) if @task.identity
