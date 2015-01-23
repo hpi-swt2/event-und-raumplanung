@@ -396,30 +396,42 @@ RSpec.describe GroupsController, :type => :controller do
       describe "assigning a room" do
         context "that is already assigned" do
           it "does not assign a room (as admin)", :isAdmin => true do
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+            param = []
+            param << room1.id
+            patch :assign_rooms, id: group1.id, group: {room_ids: param}
             expect(room1.reload.group).to eq (group2)
           end
           it "does not assign a room (as normal user)", :isAdmin => false do
-            get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+            param = []
+            param << room1.id
+            patch :assign_rooms, id: group1.id, group: {room_ids: param}
             expect(room1.reload.group).to eq (group2)
           end
         end
         context "that is not yet assigned" do
           it "does assign the room (as admin)", :isAdmin => true do
-            get :assign_room, {:id => group1.to_param, :room_id => room2.to_param}
+            param = []
+            param << room2.id
+            patch :assign_rooms, id: group1.id, group: {room_ids: param}
             expect(room2.reload.group).to eq (group1)
           end
           it "does not assign the room (as normal user)", :isAdmin => false do
-            get :assign_room, {:id => group1.to_param, :room_id => room2.to_param}
+            param = []
+            param << room2.id
+            patch :assign_rooms, id: group1.id, group: {room_ids: param}
             expect(room2.reload.group).to eq (nil)
           end
         end
         it "redirects to the start page when not authorized", :isAdmin => false do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+          param = []
+          param << room2.id
+          patch :assign_rooms, id: group1.id, group: {room_ids: param}
           expect(response).to redirect_to(root_path)
         end
         it "redirects to the manage_rooms page when authorized", :isAdmin => true do
-          get :assign_room, {:id => group1.to_param, :room_id => room1.to_param}
+          param = []
+          param << room2.id
+          patch :assign_rooms, id: group1.id, group: {room_ids: param}
           expect(response).to redirect_to(manage_rooms_group_path(group1))
         end
       end
