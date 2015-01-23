@@ -24,16 +24,33 @@ RSpec.describe "Events", :type => :request do
     }
   end
 
-  it "only admin users can approve and decline events" do
-    normal_user = build(:user) 
-    admin = FactoryGirl.build(:adminUser)
+  it "only admin users and those with permissions can approve and decline events" do
+    normal_user = FactoryGirl.create(:user) 
+    permitted_user = FactoryGirl.create(:user)
+    another_permitted_user = FactoryGirl.create(:user)
+    a_room = FactoryGirl.create(:room)
+    permitted_user.permit("approve_events")
+    admin = FactoryGirl.create(:adminUser)
     normal_user_ability = Ability.new(normal_user)
+    permitted_user_ability = Ability.new(permitted_user)    
+    another_permitted_user_ability = Ability.new(another_permitted_user)
     admin_ability = Ability.new(admin)
     methods = [:approve, :decline]
-    event = build(:event)
+    event = FactoryGirl.create(:event)
+    another_event = FactoryGirl.create(:event)
+    another_event.rooms << a_room
+    another_permitted_user.permit("approve_events", a_room)
     methods.each { |method| 
       expect(admin_ability).to be_able_to(method, event)
       expect(normal_user_ability).not_to be_able_to(method, event)
+      expect(permitted_user_ability).to be_able_to(method, event)
+      expect(another_permitted_user_ability).not_to be_able_to(method, event)
+    }
+    methods.each { |method| 
+      expect(admin_ability).to be_able_to(method, another_event)
+      expect(normal_user_ability).not_to be_able_to(method, another_event)
+      expect(permitted_user_ability).to be_able_to(method, another_event)
+      expect(another_permitted_user_ability).to be_able_to(method, another_event)
     }
   end
 

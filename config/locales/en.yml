@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+<<<<<<< HEAD
   date:
     abbr_day_names:
     - Sun
@@ -262,3 +263,8 @@ en:
         zero: No %{model} found
     page_gap: "&hellip;"
     previous_label: "← Previous"
+=======
+  submit: Submit
+  delete: Delete
+  cancel: Cancel
+>>>>>>> Clownfish

@@ -2,6 +2,7 @@ require_relative '../../app/models/event'
 require 'spec_helper'
 
 describe Event do
+  let(:event) { FactoryGirl.create(:event) }
 
 	before(:all) do
 	  @open_event = FactoryGirl.create(:event)
@@ -10,17 +11,126 @@ describe Event do
 	  @approved_event = FactoryGirl.create(:approved_event)
 	end
 
+  after(:all) do
+    @open_event.destroy
+    @declined_event.destroy
+    @approved_event.destroy
+    @upcoming_event.destroy
+  end
+
+  describe "events_between" do
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
+
+    before(:all) do
+      Event.destroy_all
+    end
+
+    context "daily event present" do
+      it "finds 7 occurrences in a week for a weekly schedule", skip_before: true do
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(7)
+        expect(occurrences.first).to be_instance_of(EventOccurrence)
+        expect(occurrences.first.starts_occurring_at).to eq(daily_recurring_event.starts_at)
+        occurrences.each do |o|
+          expect(o.event).to eq(daily_recurring_event)
+        end
+        expect(occurrences.second.starts_occurring_at).to eq(daily_recurring_event.starts_at + 1.days)
+      end
+    end
+
+    context "daily and weekly event present" do
+      it "finds 8 occurrences in a week", skip_before: true do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        expect(occurrences.count).to eq(8)
+        expect(occurrences.first.event).to eq(weekly_recurring_event)
+      end
+    end
+  end
+
+  describe "upcoming_events" do
+
+    before(:all) do
+      Event.destroy_all
+    end
+
+    context "daily event present" do
+      it "finds the next 5 upcoming event occurrences", skip_before: true do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        occurrences = Event.upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        occurrences.each do |o|
+          expect(o.event).to eq(upcoming_daily_recurring_event)
+        end
+      end
+
+      it "finds the next 5 upcoming event occurrences from multiple events", skip_before: true do
+        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
+        upcoming_daily_recurring_event2 = FactoryGirl.create(:upcoming_daily_recurring_event2)
+        occurrences = Event.upcoming_events(5)
+        expect(occurrences.count).to eq(5)
+        expect(occurrences.first.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.second.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.third.event).to eq(upcoming_daily_recurring_event)
+        expect(occurrences.fourth.event).to eq(upcoming_daily_recurring_event2)
+        expect(occurrences.fifth.event).to eq(upcoming_daily_recurring_event)
+      end
+    end
+  end
+
   it "should have options_for_sorted_by" do
     Event::options_for_sorted_by
   end
+
   it "has a valid factory" do
-    factory = FactoryGirl.build(:event)
-    expect(factory).to be_valid
+    expect(event).to be_valid
   end
 
   it "should have the :is_private attribute" do
-    @event = FactoryGirl.build(:event)
-    @event.is_private == true or @event.is_private == false
+    event.is_private == true or event.is_private == false
+  end
+
+  context "schedule is not set" do
+    it "schedule returns single occurence schedule" do
+      expect(event.schedule).to_not be_nil
+    end
+
+    it "occurence rule returns nil" do
+      expect(event.occurence_rule).to be_nil
+    end
+
+    it "string formatting is valid" do
+      expect(event.pretty_schedule).to eq(I18n.t 'events.show.schedule_not_recurring')
+    end
+  end
+
+  context "schedule is non-recurring" do
+    let(:schedule_not_recurring) { IceCube::Schedule.new(now = Time.now) }
+    let(:event_with_schedule) { FactoryGirl.create(:event, schedule: schedule_not_recurring) }
+
+    it "schedule is set" do
+      expect(event_with_schedule.schedule.to_yaml).to eq(schedule_not_recurring.to_yaml)
+    end
+
+    it "occurence rule returns nil" do
+      expect(event_with_schedule.occurence_rule).to be_nil
+    end
+
+    it "string formatting is valid" do
+      expect(event_with_schedule.pretty_schedule).to eq(I18n.t 'events.show.schedule_not_recurring')
+    end
+  end
+
+  context "schedule is recurring" do
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
+
+    it "and occurence rule is set" do
+      expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+    end
+
+    it "and string formatting is valid" do
+      expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
+    end
   end
 
   it 'should return events after a certain date' do
@@ -141,15 +251,7 @@ describe Event do
 
     @event1.destroy
     @event2.destroy
-  end
-
-
-  after(:all) do
-	  @open_event.destroy
-	  @declined_event.destroy
-	  @approved_event.destroy
-    @upcoming_event.destroy
-  end
+   end
 end
 
 describe "event order" do

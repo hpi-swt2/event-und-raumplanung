@@ -3,6 +3,7 @@
 en:
   rooms:
     index:
+<<<<<<< HEAD
       title: Room overview
       all_events: All Events
       sorted_by: 'Ordered by'
@@ -22,6 +23,20 @@ en:
       close: Close
     events:
       no_upcoming_events: No upcoming Events
+=======
+      title: room overview
+      all_events: all events
+    show:
+      no_upcoming_events: no upcoming events
+      upcoming_events: upcoming events
+      all_events: all events
+      no_properties: no_properties
+      message_for_event_creator: message fpr event creator
+      close: close
+    upcoming_events:
+      no_upcoming_events: no upcoming events
+      create_event: Create Event
+>>>>>>> Clownfish
     details:
       capacity: Capacity
       equipment: Equipment
@@ -30,6 +45,7 @@ en:
       table_information: Tables upon request
       table_request: Request tables
     list:
+      all_events: Alle Events
       room_selection: Room Selection
       requested_size: Needed Room Size
       necessary_equipment: Necessary equipment
@@ -41,3 +57,4 @@ en:
       room_size: Maximum number of persons
       equipment: Equipment
       properties: Properties
+      create_event: Create events

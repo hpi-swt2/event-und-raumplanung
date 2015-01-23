@@ -1,0 +1,61 @@
+<div class="feed-entry-container">
+	<div class="feed-entry <%= (index % 2 != 0) ? ("odd") : ("even") %>">
+		<% if feed_entry.class == Activity %>
+			<span class="<%= feed_entry.get_css_class %>"></span>
+	  	<strong><%= feed_entry.username %></strong>
+	  	<% if feed_entry.controller == "tasks" %>
+	  		<% if feed_entry.action == "create" %>
+	  			<span><%= t('activities.' + feed_entry.action) + " " + t('activities.the_task') %></span>
+	  			<strong><%= feed_entry.task_info[0] %></strong>
+	  		<% elsif feed_entry.action == "update" %>
+		  		<span><%= t('activities.marked') + " " + t('activities.the_task') %> </span>
+		  		<strong><%= feed_entry.task_info[0] %></strong>
+		  		<span><%= t('activities.as') %></span>
+	      	<% if feed_entry.task_info[1] %>
+	      		<%= t('activities.done') %>
+	      	<% else %>
+	          <%= t('activities.undone') %>
+	        <% end %>
+	      <% end %>
+      <% elsif feed_entry.controller == "events" %>
+	  		<span><%= t('activities.' + feed_entry.action) %></span>
+	  		<span><%= t('activities.the_event') %></span>
+	  		<% if feed_entry.action == "update" %>
+	      	<% changed_fields = [] %>
+	      	<% feed_entry.changed_fields.each do |changed_field| %>
+	      	<% changed_fields.push(Event.human_attribute_name(changed_field)) %>
+	      <% end %>
+	      <span> (<%= changed_fields.join(", ") %>) </span>
+	    <% end %>
+	  <% end %>
+	  <span>
+	  	<%= t('feed.on_date') + " " + feed_entry.created_at.strftime("%d.%m.%y") + " " %>
+	    <%= t('feed.at_time') + " " + feed_entry.created_at.strftime("%R") %>
+	    </span>
+		<% elsif feed_entry.class == Comments %>
+			<span class="glyphicon glyphicon-comment"></span>
+			<div class="comment">
+				<div class="comment-meta">
+					<span class="comment-author">
+						<% @user = User.where(id: feed_entry.user_id).first %>
+						<span><%= @user.username %></span>
+					</span>
+				  <div class="comment-timestamp">
+				  	<span>&nbsp;<%= t('comments.commented') + " " %></span>
+				    <span><%= t('feed.on_date') + " " + feed_entry.created_at.strftime("%d.%m.%y") + " " %></span>
+			    	<span><%= t('feed.at_time') + " " + feed_entry.created_at.strftime("%R") %></span>
+				  </div>
+				</div>
+		  <div class="clearfix"></div>
+		  <p class="comment-content">
+		    <%= feed_entry.content %>
+		  </p>
+		  <% if @user.id === current_user.id %>
+	    	<%= form_tag( { :action => "delete_comment", :controller => "events", comment_id: feed_entry.id, event_id: @event.id}, { :method => :post }) do %>
+	    		<%= submit_tag "Löschen", class: "btn btn-xs btn-danger comment-delete-btn" %>
+	    	<% end %>
+	    <% end %>
+		</div>
+		<% end %>
+	</div>
+</div>

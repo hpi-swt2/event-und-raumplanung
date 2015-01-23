@@ -1,0 +1,14 @@
+en:
+  events:
+    show:
+      schedule_not_recurring: 'Once'
+      schedule: 'Schedule'
+      starts_at: 'Starts'
+      name: 'Name'
+      creator: 'Creator'
+      rooms: 'Rooms'
+      participant_count: 'Participation Count'
+      comments: 'Comments'
+      begin: 'Begin'
+      end: 'End'
+      tasks: 'Tasks'

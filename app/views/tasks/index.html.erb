@@ -7,4 +7,4 @@
     <%= submit_tag t('tasks.filter') %>
   <% end %>
 </div>
-<%= render :partial => 'tasks_box' %>
+<%= render :partial => 'tasks_box', :locals => {:tasks => @tasks, :event => nil} %>

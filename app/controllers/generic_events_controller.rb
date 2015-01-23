@@ -1,6 +1,4 @@
 class GenericEventsController < ApplicationController
-
-
   protected
   	def get_instance_variable
   	  @instance_variable = instance_variable_get("@#{controller_name.singularize}")

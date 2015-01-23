@@ -40,28 +40,30 @@
   <br></br>
   <div class="control-group">
     <%= f.label :equipment, :class => 'control-label' %>
-    <table class="table table-column">
-    <thead>
-    <tr>
-      <th><%= f.label :category, :class => 'control-label' %></th>
-      <th><%= f.label :available, :class => 'control-label' %></th>
-      <th><%= f.label :max_count, :class => 'control-label' %></th>
-    </tr>
-    </thead>
-    <tbody>
-      <% @available_equipment.each do |category, count| %>
+    <div class="table-responsive">
+        <table class="table table-column">
+        <thead>
         <tr>
-            <td><%= category%></td>
-            <% existing_count = 0 %>
-            <% if @assigned_equipment.has_key?(category) %>
-              <% existing_count = @assigned_equipment[category] %>
-            <% end %>
-            <td><%= number_field_tag category+'_equipment_count', existing_count, in: 0.0..count %></td>
-            <td><%= count %></td>
+          <th><%= f.label :category, :class => 'control-label' %></th>
+          <th><%= f.label :available, :class => 'control-label' %></th>
+          <th><%= f.label :max_count, :class => 'control-label' %></th>
         </tr>
-      <% end %>
-    </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @available_equipment.each do |category, count| %>
+            <tr>
+                <td><%= category%></td>
+                <% existing_count = 0 %>
+                <% if @assigned_equipment.has_key?(category) %>
+                  <% existing_count = @assigned_equipment[category] %>
+                <% end %>
+                <td><%= number_field_tag category+'_equipment_count', existing_count, in: 0.0..count %></td>
+                <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        </table>
+    </div>
   </div>
 
 
