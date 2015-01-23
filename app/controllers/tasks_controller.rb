@@ -124,7 +124,7 @@ class TasksController < ApplicationController
     authorize! :destroy, @task
     @task.destroy
     respond_to do |format|
-      format.html { redirect_to tasks_url, notice: t('notices.successful_destroy', :model => Task.model_name.human) }
+      format.html { redirect_to event_path(@task.event_id), notice: t('notices.successful_destroy', :model => Task.model_name.human) }
       format.json { head :no_content }
     end
   end
