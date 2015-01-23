@@ -238,7 +238,8 @@ de:
   alert:
     successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
-  event: 
+  event:
+    private: 'Privates Event'
     alert: 
       conflict_same_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
       conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'

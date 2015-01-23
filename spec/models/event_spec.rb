@@ -240,25 +240,35 @@ describe Event do
     	expect(@declined_event.is_approved).to be false
     	expect(@approved_event.is_approved).to be true
  	end
+end
 
-   it "should find overlapping events" do
-    @event1 = FactoryGirl.create(:standardEvent)
-    @event2 = FactoryGirl.create(:conflictingEvent, :rooms => @event1.rooms)
+describe "checkVacancy" do
+  before(:all) do 
+    FactoryGirl.create(:room1)
+    FactoryGirl.create(:room2)
+    @scheduledEvent = FactoryGirl.create(:scheduledEvent)
+  end 
 
+  it "should find overlapping events" do
     ## Case 1: same timeslot
-    colliding_events = @event2.check_vacancy(@event1.id, @event1.rooms.map(&:id))
+    @event2 = FactoryGirl.create(:conflictingEvent, :rooms => @scheduledEvent.rooms)
+    colliding_events = @event2.check_vacancy(@scheduledEvent.id, @scheduledEvent.rooms.map(&:id))
     expect(colliding_events.size).to eq 1
     expect(colliding_events[0].name).to eq "Eventname"
 
     ## Case 2: same timeslots, but different rooms, results to no conflicts (
     @event2.rooms = []
-    colliding_events = @event2.check_vacancy(@event1.id, [@event1[:room_id].to_s])
+    colliding_events = @event2.check_vacancy(@scheduledEvent.id, [@scheduledEvent[:room_id].to_s])
     expect(colliding_events.size).to eq 0
 
-    @event1.destroy
     @event2.destroy
-   end
-end
+  end
+
+  it "does not return the original event as a conflict" do 
+    colliding_events = @scheduledEvent.check_vacancy(@scheduledEvent.id, @scheduledEvent.rooms.map(&:id))
+    expect(colliding_events).not_to include(@scheduledEvent.id)
+  end 
+end 
 
 describe "event order" do
     before(:all) do

@@ -346,7 +346,7 @@ class EventsController < GenericEventsController
     def build_conflicting_events_response conflicting_events 
       logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]
