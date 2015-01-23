@@ -35,7 +35,7 @@
       <% end %>
       <td>
         <% username = User.find(event.user_id).username if event.user_id && !User.where(id: event.user_id).empty? %>
-        <%= username ? username : t('.unkown') %>
+        <%= username ? username.gsub('.',' ').titleize : t('.unkown') %>
       </td>
       <td><%= link_to event.name, event_path(event) %></td>
         <td><%= event.rooms.map(&:name).to_sentence %></td>

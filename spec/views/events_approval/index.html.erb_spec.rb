@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "events_approval/index", :type => :view do
 
 	before(:all) do
-		@user1 = FactoryGirl.create(:user, username: 'User239823049')
-		@user2 = FactoryGirl.create(:user, username: 'User237473247')
+		@user1 = FactoryGirl.create(:user, username: 'max.mustermann.User239823049')
+		@user2 = FactoryGirl.create(:user, username: 'max.mustermann.User237473247')
 		@unknown_user = FactoryGirl.create(:user, username: nil)
 		@room1 = FactoryGirl.create(:room, name: 'Room23922398')
 		@room2 = FactoryGirl.create(:room, name: 'Room56232323')
@@ -38,7 +38,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user1.username
+			expect(rendered).to include @user1.username.gsub('.',' ').titleize
 		end
 		it 'room name' do
 			render
@@ -53,7 +53,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user2.username
+			expect(rendered).to include @user2.username.gsub('.',' ').titleize
 		end
 		it 'room name' do
 			render
