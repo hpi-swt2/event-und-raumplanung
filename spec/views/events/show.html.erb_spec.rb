@@ -46,9 +46,14 @@ RSpec.describe "events/show", :type => :view do
     #expect(rendered).to include("<input checked=\"checked\" disabled=\"disabled\" id=\"private\" name=\"private\" type=\"checkbox\" value=\"private\" />")
   end
 
-  it "displays the favorite button" do
+  it "does display the favorite button for every user that is not event owner" do
     render
-    #expect(rendered).to include("Add Favorite")
-  end 
+    expect(rendered).to include('glyphicon-star')
+  end
 
+  it "doesn't display the favorite button for event owner" do
+    @event.user_id = user.id
+    render
+    expect(rendered).to_not include('glyphicon-star')
+  end
 end
