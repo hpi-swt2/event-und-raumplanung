@@ -72,8 +72,8 @@
                 <li><%= link_to t('.templates'), event_templates_path %></li>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.rooms'), rooms_path %></li>
-                <li><%= link_to t('.equipment'), equipment_index_path %></li>
-                <li><%= link_to t('.properties'), room_properties_path %></li>
+                <li class="dropdown-room-indent"><%= link_to t('.equipment'), equipment_index_path %></li>
+                <li class="dropdown-room-indent"><%= link_to t('.properties'), room_properties_path %></li>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
                 <% if can? :manage, Permission %>
