@@ -200,7 +200,16 @@ RSpec.describe TasksController, type: :controller do
         name: '',
         event_id: event.id 
       }
+    }    
+    let(:valid_attributes_with_out_event_id) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+      }
     }
+    
+
 
     let(:valid_session) { {} }
 
@@ -277,15 +286,14 @@ RSpec.describe TasksController, type: :controller do
         end
 
         it "assigns a newly created task as @task" do
-          event = 
           post :create, { task: valid_attributes }
           expect(assigns(:task)).to be_a(Task)
           expect(assigns(:task)).to be_persisted
         end 
 
-        it "redirects to the created task" do
+        it "redirects to the event of the created task" do
           post :create, { task: valid_attributes }
-          expect(response).to redirect_to(Task.last)
+          expect(response).to redirect_to Event.find(valid_attributes[:event_id])
         end
 
         it "creates task that are marked as undone" do
@@ -317,9 +325,9 @@ RSpec.describe TasksController, type: :controller do
             }.to change(Attachment, :count).by(1) 
           end 
 
-          it "redirects to the newly created @task" do 
+          it "redirects to the newly created @tasks event" do 
             post :create, { task: valid_attributes_with_attachement }
-            expect(response).to redirect_to(Task.last)
+            expect(response).to redirect_to(Event.find(valid_attributes[:event_id]))
           end
         end
 
@@ -343,7 +351,6 @@ RSpec.describe TasksController, type: :controller do
 
         it "creates task with uploads" do
           expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
-          expect(response).to redirect_to task_path(assigns(:task))
         end
 
         it "sets the event for a new task that should belong to the event" do
