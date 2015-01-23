@@ -348,12 +348,7 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
-    it "creates task with invalid deadline" do
-      expect { post :create, task: { description: "description", name: "Test", deadline: Date.today, event_id: event.id} }.to change { Task.count }.by(0)
-      expect(response).to render_template("new")
-    end
-
-    it "creates task with invalid deadline" do
+    it "does not create task with invalid deadline" do
       expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
       expect(response).to render_template("new")
     end
@@ -471,7 +466,7 @@ RSpec.describe TasksController, type: :controller do
 
     it "updates a task" do
       patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today, identity: identity_dummy(task) }
-      expect(response).to render_template("edit")
+      expect(response).to redirect_to task_path(assigns(:task))
     end
   
     it "destroys a task" do
