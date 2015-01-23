@@ -737,6 +737,14 @@ RSpec.describe EventsController, :type => :controller do
         }
       }
 
+      let(:new_invalid_attributes) {
+        {name:'',
+        description:'Keine coole Sache',
+        participant_count: 1,
+        rooms: []
+        }
+      }
+
       it "updates the requested event" do
         event = Event.create! valid_attributes
         expect {
@@ -784,6 +792,15 @@ RSpec.describe EventsController, :type => :controller do
         expect(activities.last.action).to eq("update")
         expect(activities.last.username).to eq(user.username)
         expect(activities.last.changed_fields).to eq(expected_changed_fields)
+      end
+
+      it "creates no activity when the event updating fails" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expected_changed_fields = ["name", "description", "participant_count"]
+        expect{
+        put :update, {:id => event.to_param, :event => new_invalid_attributes}, valid_session
+        }.to change(activities, :count).by(0)
       end
 
       it "changes the specified schedule" do

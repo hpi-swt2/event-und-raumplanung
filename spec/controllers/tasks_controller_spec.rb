@@ -280,6 +280,14 @@ RSpec.describe TasksController, type: :controller do
       expect(activity.controller).to eq("tasks")
     end
 
+    it "creates no activity when a task creation fails" do
+      post :create, task: { description: "description", name: "", event_id: event.id } 
+      
+      activity = event.activities.last
+
+      expect(activity).to eq(nil)
+    end
+
     it "creates task that are marked as undone" do
       post :create, task: { description: "description", name: "Test" }
       expect(assigns(:task).done).to be false
@@ -415,7 +423,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates an activity when a task is marked as done" do
-      task.done = false
+      xhr :put, :set_done, id: task, task: { done: false }
       patch :update, id: task, task: { event_id: event.id, done: true }
       activity = event.activities.last
 
@@ -432,7 +440,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates an activity when a task is marked as undone" do
-      task.done = false
+      xhr :put, :set_done, id: task, task: { done: true }
       patch :update, id: task, task: { event_id: event.id, done: false }
       activity = event.activities.last
 
