@@ -11,16 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20150115220523) do
-
-=======
-ActiveRecord::Schema.define(version: 20150119124943) do
->>>>>>> Clownfish
+ActiveRecord::Schema.define(version: 20150123115832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "activities", force: true do |t|
     t.string   "username"
@@ -107,8 +101,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.integer  "event_id"
     t.text     "schedule"
+    t.integer  "event_id"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
@@ -213,24 +207,14 @@ ActiveRecord::Schema.define(version: 20150119124943) do
   end
 
   create_table "users", force: true do |t|
-<<<<<<< HEAD
     t.string   "email",                                 null: false
     t.string   "username",               default: ""
     t.string   "encrypted_password",     default: "",   null: false
-=======
-    t.string   "email",                                     null: false
-    t.string   "username",               default: ""
-    t.string   "encrypted_password",     default: "",       null: false
->>>>>>> Clownfish
     t.string   "status"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-<<<<<<< HEAD
     t.integer  "sign_in_count",          default: 0,    null: false
-=======
-    t.integer  "sign_in_count",          default: 0,        null: false
->>>>>>> Clownfish
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -239,17 +223,13 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "student"
-<<<<<<< HEAD
-    t.string   "language",               default: "de"
-=======
     t.string   "fullname",               default: ""
     t.string   "office_location",        default: ""
     t.string   "office_phone",           default: ""
     t.string   "mobile_phone",           default: ""
-    t.string   "language",               default: "German"
+    t.string   "language",               default: "de"
     t.boolean  "email_notification",     default: true
     t.boolean  "firstlogin",             default: true
->>>>>>> Clownfish
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

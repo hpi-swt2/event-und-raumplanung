@@ -20,7 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-<<<<<<< HEAD
   date:
     abbr_day_names:
     - Sun
@@ -234,6 +233,7 @@ en:
     successful_update: ! '%{model} successfully updated.'
     successful_destroy: ! '%{model} successfully destroyed.'
     successful_suggest: ! '%{model} successfully suggested.'
+    set_language: 'Language successfully changed.'
   alert:
     successful_sugguest_conflict: ! '%{model} is in conflict with %{model}. %{model} was successfully suggested.'
     conflict_detected: ! '%{model} is in conflict with other %{model}.'
@@ -263,8 +263,10 @@ en:
         zero: No %{model} found
     page_gap: "&hellip;"
     previous_label: "← Previous"
-=======
   submit: Submit
   delete: Delete
   cancel: Cancel
->>>>>>> Clownfish
+  menu:
+    languages:
+      de: DE
+      en: EN

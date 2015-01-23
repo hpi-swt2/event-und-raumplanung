@@ -134,7 +134,6 @@ de:
       unsuccessful_promotion: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_degradation: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_room_assign: 'Kein Raum ausgewählt'
-
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
       header:
@@ -235,6 +234,7 @@ de:
     successful_degradation: 'Dem Benutzer %{email} wurde erfolgreich die Gruppenleiter entzogen'
     successful_room_assign: 'Räume erfolgreich hinzugefügt'
     successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
+    set_language: 'Sprache erfolgreich umgestellt.'
   tasks:
   alert:
     successful_suggest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
@@ -283,3 +283,7 @@ de:
         zero: Kein(e) %{model} gefunden
     page_gap: "&hellip;"
     previous_label: "← Vorige"
+  menu:
+    languages:
+      de: DE
+      en: EN

@@ -3,27 +3,6 @@
 en:
   rooms:
     index:
-<<<<<<< HEAD
-      title: Room overview
-      all_events: All Events
-      sorted_by: 'Ordered by'
-      reset_filter: 'Reset Filter'
-      items_per_page: 'Rooms per Page'
-      search: 'Search'
-    show:
-      no_upcoming_events: Keine anstehenden Events
-      upcoming_events: Anstehende Events
-      all_events: Alle Events
-      no_properties: Keine speziellen Eigenschaften
-      equipment: Equipment
-      category: Category
-      available: Available
-      no_equipment: No Equipment
-      message_for_event_creator: Nachricht für den Ersteller des Events
-      close: Close
-    events:
-      no_upcoming_events: No upcoming Events
-=======
       title: room overview
       all_events: all events
     show:
@@ -36,7 +15,6 @@ en:
     upcoming_events:
       no_upcoming_events: no upcoming events
       create_event: Create Event
->>>>>>> Clownfish
     details:
       capacity: Capacity
       equipment: Equipment

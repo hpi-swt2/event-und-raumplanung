@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
 
-<<<<<<< HEAD
-  get '/change_locale/:locale', to: 'locale#change_locale', as: :change_locale
-=======
+  get '/change_locale/:locale' => 'locale#change_locale', as: "change_locale"
+
   resources :uploads, :only => [:new, :create, :destroy]
 
   resources :permissions, :only => [:index] do
@@ -14,7 +13,6 @@ Rails.application.routes.draw do
   end
 
   resources :event_suggestions
->>>>>>> Clownfish
 
   resources :groups do
     member do
