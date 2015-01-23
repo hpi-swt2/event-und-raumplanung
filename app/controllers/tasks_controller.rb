@@ -87,11 +87,11 @@ class TasksController < ApplicationController
     params[:task][:identity_id] = identity_params.blank? ? nil : identity_params[:id]
     params[:task][:identity_type] = identity_params.blank? ? nil : identity_params[:type]
 
-    done_before_update = @task.done
+    cur_done_status = @task.done
 
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
-        create_activity(@task) if done_before_update != @task.done
+        create_activity(@task) if cur_done_status != @task.done
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
