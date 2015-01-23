@@ -38,7 +38,7 @@ class GenericEventsController < ApplicationController
     params = (method "#{controller_name.singularize + '_params'}").call
     respond_to do |format|
       if @update_result
-        conflicting_events = @instance_variable.check_vacancy params[:room_ids]
+        conflicting_events = @instance_variable.check_vacancy params[:original_event_id], params[:room_ids]
         if conflicting_events.size > 1 ## this event is also in the returned list
           format.html { redirect_to @instance_variable, alert: t('alert.conflict_detected', :model => @model.model_name.human) }
         else 
