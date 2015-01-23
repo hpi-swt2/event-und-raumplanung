@@ -26,7 +26,7 @@
       <% @tasks.each do |task| %>
           <tr data-item-id=<%= "#{task.id}" %> class="item">
         <%if params[:controller] == 'events' %>
-          <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user-id="<%= task.identity_id %>"></td>
+          <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= set_task_done_path(task.id) %>"></td>
         <% end %>
             <td class="col-sm-1">
               <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
