@@ -131,6 +131,10 @@ describe Event do
     it "and string formatting is valid" do
       expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
     end
+
+    context "and is terminating" do
+      it "cannot decline an invalid occurence"
+    end
   end
 
   it 'should return events after a certain date' do

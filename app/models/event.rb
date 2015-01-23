@@ -85,6 +85,13 @@ class Event < ActiveRecord::Base
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
   end
 
+  def decline_occurrence(time)
+    raise "Unable to decline an event occurrence. The schedule does not occure at that time: #{time}!" unless schedule.occurs_at?(time)
+
+    schedule = self.schedule
+    schedule.add_exception_time(time)
+  end
+
   def duration
     (self.ends_at - self.starts_at).seconds
   end
