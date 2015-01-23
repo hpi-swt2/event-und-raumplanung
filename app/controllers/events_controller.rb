@@ -166,6 +166,18 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     #authorize! :edit, @event
+
+    @chosen_rooms = Room.find(@event.room_ids)
+    @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
+    @room_equipment = Hash.new
+    for room in @chosen_rooms
+      @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+    end
+
+    @requested_equipment = Hash.new
+    for room in @chosen_rooms
+      #EquipmentRequest.where(room_id: room.id, event_id: @event.id).select(:category, :count)
+    end
   end
 
   def sugguest
@@ -177,9 +189,11 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     @event.user_id = current_user_id
     logger.info @event.inspect
+  
 
     respond_to do |format|
       if @event.save
+        create_equipment_requests
         format.html { redirect_to @event, notice: t('notices.successful_create', :model => Event.model_name.human) }
         format.json { render :show, status: :created, location: @event }
       else
@@ -239,7 +253,21 @@ class EventsController < ApplicationController
           favorite.last().save();
         end
       end
-  end
+    end
+
+    def create_equipment_requests
+      available_equipment = Equipment.where("room_id IS ? ", nil).select(:category).distinct
+      for room in @event.room_ids
+        for equipment in available_equipment
+          category = equipment.category
+          key = category+'_equipment_count_'+room.to_s
+          equipment_count = params[key].to_i
+          if equipment_count>0
+            EquipmentRequest.create(:event_id => @event.id, :room_id => room, :category => category, :count => params[key]) 
+          end
+        end
+      end
+    end
 
     def set_return_url
       @return_url = tasks_path

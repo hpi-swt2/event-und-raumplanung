@@ -1,4 +1,4 @@
-<% if rooms %>
+<% if @chosen_rooms %>
   <div class="row">
       <%= label_tag "Requestable Equipment: ", nil, :class => 'control-label' %>
   </div>
@@ -10,16 +10,16 @@
     </tr>
   </thead>
   <tbody>
-    <% equipment.each do |category, count| %>
+    <% @available_equipment.each do |category, count| %>
                 <tr>
                     <td><%= category%></td>
                     <td><%= count %></td>
                 </tr>
-              <% end %>
+    <% end %>
   </tbody>
   </table>
 
-  <%for room in rooms%>
+  <%for room in @chosen_rooms%>
     <div class="row">
       <%= label_tag room.name, nil, :class => 'control-label' %>
     </div>
@@ -30,32 +30,30 @@
     <div class="control-group">
         <table class="table table-column">
             <thead>
-            <tr>
-              <th>Category</th>
-              <th>Request</th>
-              <th>Present</th>
-            </tr>
+              <tr>
+                <th>Category</th>
+                <th>Request</th>
+                <th>Present</th>
+              </tr>
             </thead>
             <tbody>
-              <% merged_equipment = equipment.merge(room_equipment[room.id]) %>
-              <% merged_equipment.each do |category, count| %>
-                          <tr>
-                              <td><%= category%></td>
-                              <% existing_count = 0 %>
-                              <% if room_equipment[room.id].has_key?(category) %>
-                                <% existing_count = equipment[category] %>
-                              <td><%= number_field_tag category+'_equipment_count', existing_count, in: 0.0..count %></td>
-                              <td><%= count %></td>
-                              <% else %>
-                              <td><%= number_field_tag category+'_equipment_count', 0, in: 0.0..count %></td>
-                              <td>0</td>
-                              <% end %>
-                              
-                          </tr>
-                        <% end %>
+              <% @available_equipment.each do |category, count| %>
+                <tr>
+                  <td><%= category%></td>
+                  <% existing_count = 0 %>
+                  <% if @room_equipment[room.id].has_key?(category) %>
+                    <% existing_count = @available_equipment[category] %>
+                    <td><%= number_field_tag category+'_equipment_count_'+room.id.to_s, 0, min: 0 %></td>
+                    <td><%= count %></td>
+                  <% else %>
+                    <td><%= number_field_tag category+'_equipment_count_'+room.id.to_s, 0, min: 0 %></td>
+                    <td>0</td>
+                  <% end %> 
+                </tr>
+              <% end %>   
             </tbody>
-    </table>
-  </div>
-  <br>  
-  <%end%>
+      </table>
+    </div>
+    <br>  
+  <% end %>
 <% end %>
