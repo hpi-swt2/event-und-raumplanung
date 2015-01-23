@@ -65,6 +65,7 @@
 .event-description {
 	font-size: 1.2em;
 	text-align: justify;
+	margin-bottom: 1em;
 }
 
 .event-view-section {
@@ -89,4 +90,10 @@
 
 .glyphicon-star {
 	top: 5px;
+}
+
+.event-overview-table {
+	float: right;
+	width: 40%;
+	margin-left: 3em;
 }

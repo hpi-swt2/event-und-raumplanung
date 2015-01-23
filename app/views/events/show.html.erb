@@ -20,12 +20,20 @@
       </h1>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h2><%= @event.starts_at.strftime("%d.%m.%Y") %></h2>
+      <% if (@event.ends_at.to_date - @event.starts_at.to_date).to_i > 0 %>
+        <h2><%= @event.starts_at.strftime("%d.%m.%Y") %> - <%= @event.ends_at.strftime("%d.%m.%Y")%></h2>
+      <% else %>
+        <h2><%= @event.starts_at.strftime("%d.%m.%Y")%></h2>
+      <% end %>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-md-8">
-      <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr - <%= @event.ends_at.strftime("%H:%M") %> Uhr</h3>
+      <% if (@event.ends_at.to_date - @event.starts_at.to_date).to_i > 0 %>
+        <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr, <%= @event.starts_at.strftime("%d.%m.%Y") %> - <%= @event.ends_at.strftime("%H:%M") %> Uhr, <%= @event.ends_at.strftime("%d.%m.%Y")%></h3>
+      <% else %>
+        <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr - <%= @event.ends_at.strftime("%H:%M") %> Uhr</h3>
+      <% end %>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
       <h3><%= concat_rooms(@event) %></h3>
@@ -33,28 +41,13 @@
   </div>
 </div>
 
-<div class="row event-section-divider">
-  <div class="col-xs-10 col-md-7 event-description">
-    <%= raw nl2br h @event.description %>
-  </div>
-  <div class="col-xs-8 col-md-5">
+<div class="event-section-divider">
+  <div class="event-overview-table">
     <table class="table table-striped">
       <tbody>
         <tr>
-          <td><%= t('events.show.begin') %></td>
-          <td><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.end') %></td> 
-          <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
-        </tr>
-        <tr>
           <td><%= t('events.show.schedule') %></td>
           <td><%= @event.pretty_schedule %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.rooms') %></td>
-          <td><%= concat_rooms(@event) %></td>
         </tr>
         <tr>
           <td><%= t('events.show.creator') %></td>
@@ -65,21 +58,31 @@
           <td><%= @event.participant_count %></td>
         </tr>
         <tr>
-          <td>
-            <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
-          </td>
+          <td><%= t('events.show.last_update') %></td>
+          <td><%= @event.updated_at.strftime("%d.%m.%Y %H:%M") %></td>
         </tr>
+        <% if current_user.id == @event.user_id %>
+          <tr>
+            <td><%= t('events.show.status') %></td>
+            <td><%= t "event.status.#{@event.status}" %></td>
+          </tr>
+        <% end %>
       </tbody>
-    </table>
+    </table> 
+  </div>
+  <div class="event-description">
+    <%= raw nl2br h @event.description %>
   </div>
 </div>
 
-
-<div class="event-view-section">
-  <h3><%= t '.tasks' %></h3>
-  <% @event_id = @event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
-</div>
+<% if @event.tasks.include?(Task.where(user_id: current_user.id)) or current_user.id = @event.user_id %>
+  
+    <h3><%= t '.tasks' %></h3>
+    <div class="event-view-section">
+    <% @event_id = @event.id %>
+    <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
+  </div>
+<% end %>
 
 <% unless @feed_entries.nil? %>
 <div class="event-view-section">

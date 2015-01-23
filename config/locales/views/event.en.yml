@@ -12,3 +12,6 @@ en:
       begin: 'Begin'
       end: 'End'
       tasks: 'Tasks'
+      last_update: 'Last Update'
+      status: 'Status'
+

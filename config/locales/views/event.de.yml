@@ -35,3 +35,6 @@ de:
       begin: 'Beginn'
       end: 'Ende'
       tasks: 'Aufgaben'
+      last_update: 'Letzte Aktualisierung'
+      status: 'Status'
+      
