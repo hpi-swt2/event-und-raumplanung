@@ -3,19 +3,12 @@ class DashboardController < ApplicationController
 
   def index
     @event_occurrences = Event.upcoming_events(5)
-    @requests = five_most_urgent_requests
+    @my_upcoming_events = next_five_own_events
     get_my_tasks
   end
 
-  private
+ private
 
-    def next_five_events
-      return Event.where("starts_at >= '#{(Time.current.to_s(:db))}'").order('starts_at ASC').limit(5)
-    end
-
-    def five_most_urgent_requests
-    	return Event.open.order(:starts_at).limit(5)
-    end
   def get_my_tasks 
     @my_accepted_tasks = []
     @my_pending_tasks = []
@@ -35,7 +28,6 @@ class DashboardController < ApplicationController
     @my_pending_events = Event.find(pending_event_ids)
     @group_pending_events = Event.find(pending_group_event_ids)
   end
-
   def next_five_own_events
     return Event.where("(ends_at >= '#{(Time.current.to_s(:db))}') AND (user_id = #{current_user.id}) ").order('starts_at ASC').limit(5)
   end

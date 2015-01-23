@@ -6,7 +6,7 @@
         <h3 class="panel-title"><%= t('dashboard.urgent_event_suggestions') %></h3>
     </div>
     <div class="panel-body">
-        <% if !@requests.empty? %>
+        <% if @requests && !@requests.empty? %>
           <table class="table table-striped">
             <thead>
               <tr>

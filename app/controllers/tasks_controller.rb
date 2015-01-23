@@ -64,11 +64,9 @@ class TasksController < ApplicationController
     authorize! :create, @task
 
     respond_to do |format|
-      if @task.save && upload_files
-        @task.send_notification_to_assigned_user(current_user) if @task.identity
-        
+        if @task.save && upload_files
+          @task.send_notification_to_assigned_user(current_user) if @task.identity
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
-        format.json { render :show, status: :created, location: @task }
       else
         @upload_errors = get_upload_errors
         delete_new_uploads
