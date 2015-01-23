@@ -92,6 +92,10 @@ class Event < ActiveRecord::Base
     self.save!
   end
 
+  def single_occurrence_event?
+    occurence_rule.nil?
+  end
+
   def duration
     (self.ends_at - self.starts_at).seconds
   end
