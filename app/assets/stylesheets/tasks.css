@@ -71,29 +71,29 @@
 .task-glyphicon-done {
     font-size: 5em;
     color: green;
-    margin: 0 auto;
-    display: table;
 }
 
 .task-glyphicon-undone {
     font-size: 5em;
     color: grey;
-    margin: 0 auto;
-    display: table;
 }
 
 .task-done {
     font-size: 1.2em;
     color: green;
-    margin: 5px auto;
-    display: table;  
 }
 
 .task-undone {
     font-size: 1.2em; 
-    color: grey;
-    margin: 5px auto;
-    display: table;    
+    color: grey;  
+}
+
+.task-done-indicator {
+    text-align: center !important;
+}
+
+.task-done-indicator span {
+    text-align: right;
 }
 
 .task-section {

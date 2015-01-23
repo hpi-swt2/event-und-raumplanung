@@ -24,20 +24,16 @@
 
 
 <div class="row task-section-divider task-section">
-  <div class="col-xs-14 col-md-9 task-description">
+  <div class="col-xs-16 col-md-10 task-description">
     <%= raw nl2br h @task.description %>
   </div>
-  <div class="col-xs-4 col-md-3">
+  <div class="col-xs-2 col-md-2 task-done-indicator">
     <% if @task.done %>
-      <%= link_to set_task_done_path do %>
-        <span class="glyphicon glyphicon-check task-glyphicon-done"></span>
-        <span class="task-done"><%= t('tasks.show.done') %></span>
-      <% end %>  
+      <span class="glyphicon glyphicon-ok task-glyphicon-done"></span>
+      <br><span class="task-done"><%= t('tasks.show.done') %></span> 
     <% else %>
-      <%= link_to set_task_done_path do %>
-        <span class="glyphicon glyphicon-unchecked task-glyphicon-undone"></span>
-        <span class="task-undone"><%= t('tasks.show.not_done') %></span>
-      <% end %>  
+      <span class="glyphicon glyphicon-unchecked task-glyphicon-undone"></span>
+      <br><span class="task-undone"><%= t('tasks.show.not_done') %></span>  
     <% end %>
   </div>
 </div>
