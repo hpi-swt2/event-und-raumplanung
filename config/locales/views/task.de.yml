@@ -17,5 +17,9 @@ de:
     show:
       new: Neue Task
       no_tasks: Es gibt für dieses Event noch keine Aufgaben oder Sie dürfen sie nicht sehen.
+      done: Erledigt
+      not_done: Nicht erledigt
+      files: Dateianhänge
+      links: Links
     form:
       areYouSure: Sind Sie sicher?

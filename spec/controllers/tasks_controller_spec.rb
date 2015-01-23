@@ -344,8 +344,9 @@ RSpec.describe TasksController, type: :controller do
       expect(response).to render_template("new")
     end
 
-    it "shows a task" do
+    it "shows a task and assigns belonging event to @event" do
       get :show, id: task
+      expect(assigns(:event)).to eq(event)
       expect(response).to be_success
     end
 
