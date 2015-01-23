@@ -32,9 +32,9 @@ RSpec.describe "events_approval/index", :type => :view do
 	end
 
 	describe "shows open events with their" do
-		it 'name and description' do
+		it 'name' do
 			render
-			expect(rendered).to include @open_event.name, @open_event.description
+			expect(rendered).to include @open_event.name
 		end
 		it 'user name' do
 			render
@@ -47,9 +47,9 @@ RSpec.describe "events_approval/index", :type => :view do
 	end
 
 	describe "shows approved events with their" do
-		it 'name and description' do
+		it 'name' do
 			render
-			expect(rendered).to include @approved_event.name, @approved_event.description
+			expect(rendered).to include @approved_event.name
 		end
 		it 'user name' do
 			render

@@ -6,7 +6,6 @@
     <% end %>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
-    <th><%= Event.human_attribute_name(:description) %></th>
     <th><%= Event.human_attribute_name(:rooms) %></th>
     <th><%= t '.time' %></th>
     <th><%= Event.human_attribute_name(:participant_count) %></th>
@@ -39,8 +38,7 @@
         <%= username ? username : t('.unkown') %>
       </td>
       <td><%= link_to event.name, event_path(event) %></td>
-      <td><%= trimDescription event.description %></td>
-      <td><%= event.rooms.map(&:name).to_sentence %></td>
+        <td><%= event.rooms.map(&:name).to_sentence %></td>
       <td>
         <%= events_type == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
       </td>
