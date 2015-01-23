@@ -55,7 +55,7 @@
 }
 
 .event-page-header {
-	margin: 3em 0;
+	margin: 1em 0;
 }
 
 .event-section-divider {
@@ -69,7 +69,7 @@
 }
 
 .event-view-section {
-	margin-bottom: 3em;
+	margin-bottom: 1em;
 }
 
 .event-favorite-icon-checked, .event-favorite-icon-checked:hover, .event-favorite-icon-checked:focus, .event-favorite-icon-checked:visited, .event-favorite-icon-checked:active {

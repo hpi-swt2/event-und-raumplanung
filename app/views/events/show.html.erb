@@ -41,47 +41,42 @@
   </div>
 </div>
 
-<div class="event-section-divider">
-  <div class="event-overview-table">
-    <table class="table table-striped">
-      <tbody>
+<div class="event-overview-table">
+  <table class="table table-striped">
+    <tbody>
+      <tr>
+        <td><%= t('events.show.schedule') %></td>
+        <td><%= @event.pretty_schedule %></td>
+      </tr>
+      <tr>
+        <td><%= t('events.show.creator') %></td>
+        <td><%= @user %></td>
+      </tr>
+      <tr>
+        <td><%= t('events.show.participant_count') %></td>
+        <td><%= @event.participant_count %></td>
+      </tr>
+      <tr>
+        <td><%= t('events.show.last_update') %></td>
+        <td><%= @event.updated_at.strftime("%d.%m.%Y %H:%M") %></td>
+      </tr>
+      <% if current_user.id == @event.user_id %>
         <tr>
-          <td><%= t('events.show.schedule') %></td>
-          <td><%= @event.pretty_schedule %></td>
+          <td><%= t('events.show.status') %></td>
+          <td><%= t "event.status.#{@event.status}" %></td>
         </tr>
-        <tr>
-          <td><%= t('events.show.creator') %></td>
-          <td><%= @user %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.participant_count') %></td>
-          <td><%= @event.participant_count %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.last_update') %></td>
-          <td><%= @event.updated_at.strftime("%d.%m.%Y %H:%M") %></td>
-        </tr>
-        <% if current_user.id == @event.user_id %>
-          <tr>
-            <td><%= t('events.show.status') %></td>
-            <td><%= t "event.status.#{@event.status}" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table> 
-  </div>
-  <div class="event-description">
-    <%= raw nl2br h @event.description %>
-  </div>
+      <% end %>
+    </tbody>
+  </table> 
+</div>
+<div class="event-description">
+  <%= raw nl2br h @event.description %>
 </div>
 
 <% if @event.tasks.include?(Task.where(user_id: current_user.id)) or current_user.id = @event.user_id %>
-  
-    <h3><%= t '.tasks' %></h3>
-    <div class="event-view-section">
-    <% @event_id = @event.id %>
-    <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
-  </div>
+  <h3><%= t '.tasks' %></h3>
+  <% @event_id = @event.id %>
+  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
 <% end %>
 
 <% unless @feed_entries.nil? %>
