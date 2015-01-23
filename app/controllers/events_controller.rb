@@ -167,12 +167,16 @@ class EventsController < GenericEventsController
     @event.schedule_from_rule(event_params[:occurence_rule])
     filtered_params = params_without_occurence_rule(event_params)
     @event.attributes = filtered_params
-    
-    @event.activities << Activity.create(:username => current_user.username, 
-                                          :action => params[:action], :controller => params[:controller],
-                                          :changed_fields => @event.changed)
+
+    changed_attributes = @event.changed
 
     @update_result = @event.update(filtered_params)
+
+    if @update_result
+      @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => changed_attributes)
+    end
     super
   end
 
@@ -234,12 +238,12 @@ class EventsController < GenericEventsController
       @event.user_id = current_user_id
       create_tasks @event_template_id
 
-      @event.activities << Activity.create(:username => current_user.username, 
+      respond_to do |format|
+        if @event.save
+          @event.activities << Activity.create(:username => current_user.username, 
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
 
-      respond_to do |format|
-        if @event.save
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
