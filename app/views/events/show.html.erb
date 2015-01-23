@@ -5,13 +5,15 @@
     <div class="col-xs-12 col-md-8">
       <h1>
         <%= @event.name %>
-        <% if @favorite.empty? %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
-          <% end %>
-        <% else %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
+        <% if current_user.id != @event.user_id %>
+          <% if @favorite.empty? %>
+            <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
+              <span class="glyphicon glyphicon-star"></span>
+            <% end %>
+          <% else %>
+            <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
+              <span class="glyphicon glyphicon-star"></span>
+            <% end %>
           <% end %>
         <% end %>
       </h1>
