@@ -280,7 +280,7 @@ RSpec.describe TasksController, type: :controller do
       expect(activity.controller).to eq("tasks")
     end
 
-    it "creates no activity when a task is creation fails" do
+    it "creates no activity when a task creation fails" do
       post :create, task: { description: "description", name: "", event_id: event.id } 
       
       activity = event.activities.last
