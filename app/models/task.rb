@@ -10,7 +10,7 @@ class Task < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   has_many :uploads, :dependent => :destroy
   accepts_nested_attributes_for :uploads
-  validates_presence_of :name
+  validates_presence_of :name, :deadline
   ranks :task_order, :with_same => :event_id
   date_time_attribute :deadline
   validate :deadline_cannot_be_in_the_past

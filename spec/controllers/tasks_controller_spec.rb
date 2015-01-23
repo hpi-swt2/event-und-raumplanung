@@ -14,7 +14,8 @@ RSpec.describe TasksController, type: :controller do
       {
         name: "Test",
         done: false,
-        description: "description"
+        description: "description",
+        deadline: "2099-01-01"
       }
     }
 
@@ -22,7 +23,8 @@ RSpec.describe TasksController, type: :controller do
       {
         name: "Test",
         done: false,
-        description: "new description"
+        description: "new description",
+        deadline: "2099-01-01"
       }
     }
 
@@ -31,7 +33,8 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         done: false,
         description: "description",
-        user_id: user.id
+        user_id: user.id,
+        deadline: "2099-01-01"
       }
     }
 
@@ -39,7 +42,8 @@ RSpec.describe TasksController, type: :controller do
         {
         name: "Test",
         description: "description",
-        event_template_id: 1
+        event_template_id: 1,
+        deadline: "2099-01-01"
       }
     } 
 
@@ -47,7 +51,8 @@ RSpec.describe TasksController, type: :controller do
         {
         name: "Test",
         description: "description",
-        event_id: 1
+        event_id: 1,
+        deadline: "2099-01-01"
       }
     } 
 
@@ -56,13 +61,15 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         description: "description",
         event_id: 1,
-        attachments_attributes: [ { title: "Example", url: "http://example.com"} ]
+        attachments_attributes: [ { title: "Example", url: "http://example.com"} ],
+        deadline: "2099-01-01"
       }
     }
 
     let(:invalid_attributes) {
       {
         name: '',
+        deadline: ''
       }
     }
 
@@ -154,7 +161,8 @@ RSpec.describe TasksController, type: :controller do
         name: "Test",
         done: false,
         description: "description",
-        event_id: event.id
+        event_id: event.id,
+        deadline: "2099-01-01"
       }
     }
     let(:valid_attributes_with_user) {
@@ -163,7 +171,8 @@ RSpec.describe TasksController, type: :controller do
         done: false,
         description: "description",
         identity: user,
-        event_id: event.id
+        event_id: event.id,
+        deadline: "2099-01-01"
       }
     }
     let(:valid_parameters_with_user) {
@@ -172,7 +181,8 @@ RSpec.describe TasksController, type: :controller do
         done: false,
         description: "description",
         identity: "User:" + user.id.to_s,
-        event_id: event.id
+        event_id: event.id,
+        deadline: "2099-01-01"
       }
     }
     let(:valid_attributes_with_group) {
@@ -181,7 +191,8 @@ RSpec.describe TasksController, type: :controller do
         done: false,
         description: "description",
         identity: group,
-        event_id: event.id
+        event_id: event.id,
+        deadline: "2099-01-01"
       }
     }
     let(:valid_parameters_with_group) {
@@ -190,13 +201,15 @@ RSpec.describe TasksController, type: :controller do
         done: false,
         description: "description",
         identity: "Group:" + group.id.to_s,
-        event_id: event.id
+        event_id: event.id,
+        deadline: "2099-01-01"
       }
     }
     let(:invalid_attributes) {
       {
         name: '',
-        event_id: event.id 
+        event_id: event.id,
+        deadline: ''
       }
     }
 
@@ -266,13 +279,13 @@ RSpec.describe TasksController, type: :controller do
     end
   
     it "creates task" do
-      expect { post :create, task: { description: "description", name: "Test", event_id: event.id } }
+      expect { post :create, task: valid_attributes }
         .to change { Task.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "creates an activity when a task is created with an event id" do
-      post :create, task: { description: "description", name: "Test", event_id: event.id } 
+      post :create, task: valid_attributes
       
       activity = event.activities.last
 
@@ -281,7 +294,8 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task that are marked as undone" do
-      post :create, task: { description: "description", name: "Test" }
+      post :create, task: { name: "Test", done: true, event_id: event.id, deadline: "2099-01-01" }
+      expect(response).to redirect_to task_path(assigns(:task))
       expect(assigns(:task).done).to be false
     end
 
@@ -296,14 +310,14 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task with attachments" do
-      expect { post :create, task: { description: "description", name: "Test", event_id: event.id, 
+      expect { post :create, task: { description: "description", name: "Test", event_id: event.id, deadline: '2099-01-01',
         attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}
         .to change { Attachment.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
     it "creates task with uploads" do
-      expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      expect { post :create, task: {description: "description", name: "Test", event_id: event.id, deadline: '2099-01-01'}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 

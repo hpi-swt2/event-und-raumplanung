@@ -9,6 +9,7 @@ FactoryGirl.define do
     association :identity, factory: :user
     association :event_template_id, factory: :event_template
     status "not_assigned"
+    deadline "2099-01-01"
 
     factory :assigned_task do
       status "pending"

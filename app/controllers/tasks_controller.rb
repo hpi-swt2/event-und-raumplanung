@@ -27,6 +27,7 @@ class TasksController < ApplicationController
       @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
+      @task.deadline = @task.event.starts_at
     else
       unless params[:event_template_id].blank?
         @task.event_template_id = params[:event_template_id]
@@ -53,19 +54,19 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-    
-    create_activity(@task)
 
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
+    @task.done = false
 
     authorize! :create, @task
 
     respond_to do |format|
       if @task.save && upload_files
         @task.send_notification_to_assigned_user(current_user) if @task.identity
+        create_activity(@task)
         
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
         format.json { render :show, status: :created, location: @task }
