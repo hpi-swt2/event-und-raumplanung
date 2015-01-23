@@ -90,6 +90,7 @@ class Event < ActiveRecord::Base
 
     schedule = self.schedule
     schedule.add_exception_time(time)
+    self.schedule = schedule
   end
 
   def duration
