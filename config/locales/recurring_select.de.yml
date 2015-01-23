@@ -1,0 +1,8 @@
+de:
+  recurring_select:
+    not_recurring: "Nicht wiederholend"
+    change_schedule: "Change schedule..."
+    set_schedule: "Neues Wiederholungsmuster..."
+    new_custom_schedule: "New custom schedule..."
+    custom_schedule: "Custom schedule..."
+    or: "oder"

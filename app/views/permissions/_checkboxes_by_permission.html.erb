@@ -1,0 +1,13 @@
+<h4><%= t User.model_name.human(count: 2).titleize %></h4>
+<% @users.each do |user| %>
+  <% form_name = 'User:' + user.id.to_s %>
+  <%= check_box_tag form_name, "1", @rooms.all?{ |room| user.has_permission(@permission, room) } %> 
+  <%= label_tag form_name, user.username %> <br/>
+<% end %>
+
+<h4><%= t Group.model_name.human(count: 2).titleize %></h4>
+<% @groups.each do |group| %>
+  <% form_name = 'Group:' + group.id.to_s %>
+  <%= check_box_tag form_name, "1", @rooms.all?{ |room| group.has_permission(@permission, room) } %> 
+  <%= label_tag form_name, group.name %> <br/>
+<% end %>

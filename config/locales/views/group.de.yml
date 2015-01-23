@@ -2,6 +2,7 @@
 
 de:
   groups:
+    group: Gruppe
     index:
       title: Gruppenübersicht
       all_groups: Alle Gruppen
@@ -29,3 +30,8 @@ de:
       assign_user: Nutzer zuweisen
       actions: Aktionen
       role: Rolle
+    manage_rooms:
+      currentRooms: Aktuelle Gruppenräume
+      addRoom: Räume Hinzufügen
+      add: Hinzufügen
+      delete: Entfernen
