@@ -1,58 +1,58 @@
 <%- model_class = Task -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+<div class="task-page-header">
+  <div class="row task-section-divider">
+    <div class="col-xs-12 col-md-8">
+      <h1>
+        <%=t '.title', :default => model_class.model_name.human.titleize %>:
+        <%= @task.name %>
+      </h1>
+    </div>
+    <div class="col-xs-6 col-md-4" style="text-align: right">
+      <h2><%= @task.deadline.strftime("%d.%m.%Y") %></h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <h3><%= @event.name %> (<%= @event.starts_at.strftime("%d.%m.%Y") %>)</h3>
+    </div>
+    <div class="col-xs-6 col-md-4" style="text-align: right">
+      <h3><%= @task.identity.name %></h3>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @task.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
-  <dd><%= @task.description %></dd>
-  <% unless @task.event_id.nil? %>
-    <dt><strong><%= model_class.human_attribute_name(:event_id) %>:</strong></dt>
-    <dd><%= @task.event_id %></dd>
-  <% end %>
-  <% unless @task.event_template_id.nil? %>
-    <dt><strong><%= model_class.human_attribute_name(:event_template_id) %>:</strong></dt>
-    <dd><%= @task.event_template_id %></dd>
-  <% end %>
-  <% unless @task.identity_id.nil? %>
-    <dt><strong><%= model_class.human_attribute_name(:identity_id) %>:</strong></dt>
-    <dd><% if @task.identity %><%= @task.identity.name  %><% else %><%= t('tasks.user.none') %><% end %></dd>
-  <% end %>
-  <% if @task.deadline %> 
-    <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
-    <dd><%= @task.deadline.strftime("%d.%m.%Y") %></dd>
-  <% end %>
-  <% unless @task.event_id.nil? %>
-    <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-    <dd class="<%= @task.status %>"><%= t('tasks.status.' + @task.status)%></dd>
-    <dt><strong><%= model_class.human_attribute_name(:done) %>:</strong></dt>
-    <dd><%= @task.done %></dd>
-  <% end %>
-</dl>
 
-<dl>
-  <h3><%= t('.attachments') %></h3>
-  <% if has_attached_items? @task %>
-    <% if @task.uploads.count() > 0 %>
-      <h4><%= t('tasks.show.files') %></h4>
-      <% @task.uploads.each do |upload| %>
-          <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item' %>
-      <% end %>
-    <% else %>
-      <%= t('tasks.attachments.none') %>
+
+<div class="row task-section-divider">
+  <div class="col-xs-10 col-md-7 task-description">
+    <%= raw nl2br h @task.description %>
+  </div>
+  <div class="col-xs-8 col-md-5">
+   Platzhalter
+  </div>
+</div>
+
+
+<% if @task.uploads.count() > 0 %>
+  <div class="row">
+    <h3><%= t('tasks.show.files') %></h3>
+    <% @task.uploads.each do |upload| %>
+      <%= link_to upload.file_file_name, public_url(upload.id, upload.file_file_name), :class => 'list-group-item' %>
     <% end %>
-    <% if @task.attachments.count() > 0 %>
-    <h4><%= t('tasks.show.links') %></h4>
-        <% @task.attachments.each do |attachment| %>
-            <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
-        <% end %>
+  </div>
+<% end %>
+
+<% if @task.attachments.count() > 0 %>
+  <div class="row">
+    <h3><%= t('tasks.show.links') %></h3>
+    <% @task.attachments.each do |attachment| %>
+      <%= link_to attachment.title, attachment.url, :class => 'list-group-item' %>
     <% end %>
-  <% else %>
-    <%= t('tasks.attachments.none') %>
-  <% end %>
-</dl>
+  </div>
+<% end %>
+
+
+
 <%= link_to t('.back', :default => t("helpers.links.back")), event_path(@task.event_id), :class => 'btn btn-default'  %>
 <% if can? :edit, Task %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),

@@ -50,3 +50,20 @@
 .no-tasks-text {
     margin: 1em 0em 2em 3em;
 }
+
+.task-section-divider {
+    border-bottom: 2px solid #aaa;
+}
+
+.task-page-header h1, .task-page-header h2, .task-page-header h3 {
+    margin: 5px;
+}
+
+.task-page-header {
+    margin: 3em 0;
+}
+
+.task-description {
+    font-size: 1.2em;
+    text-align: justify;
+}

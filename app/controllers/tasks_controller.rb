@@ -17,6 +17,7 @@ class TasksController < ApplicationController
   # GET /tasks/1.json
   def show
     authorize! :read, @task
+    @event = Event.find(@task.event_id)
   end
 
   # GET /tasks/new
