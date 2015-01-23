@@ -135,12 +135,13 @@ describe Event do
     context "and is terminating" do
       let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
 
-      it "cannot decline an invalid occurrence" do
-        expect {
-          daily_recurring_terminating_event.decline_occurrence(Time.local(2003, 1, 1, 0, 0, 0))
-          daily_recurring_terminating_event.decline_occurrence(Time.local(2015, 8, 16, 0, 0, 0).advance(days: 1))
-        }.to raise_error
-      end
+      # Logic moved to event_occurrence_controller
+      #it "cannot decline an invalid occurrence" do
+      #  expect {
+      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2003, 1, 1, 0, 0, 0))
+      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2015, 8, 16, 0, 0, 0).advance(days: 1))
+      #  }.to raise_error
+      #end
 
       it "declines a valid occurrence" do
         next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence

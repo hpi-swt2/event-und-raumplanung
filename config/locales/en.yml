@@ -23,3 +23,6 @@ en:
   submit: Submit
   delete: Delete
   cancel: Cancel
+  event:
+    altert:
+      single_occurrence_successful_delete: 'You successfully deleted the event occurrence.'

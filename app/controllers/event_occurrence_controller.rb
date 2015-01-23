@@ -1,17 +1,34 @@
 class EventOccurrenceController < ApplicationController
   before_action :authenticate_user!
-  before_action :validate_params, only: :show
+  before_action :validate_params, only: [ :show, :destroy ]
+  before_action :event_occurrence_from_params, only: [ :show, :destroy ]
 
   def show
-    @event_occurrence = EventOccurrence.new( { event_id: event_occurrence_params[:eventid].to_i, starts_occurring_at: DateTime.parse(event_occurrence_params[:starting]), ends_occurring_at: DateTime.parse(event_occurrence_params[:ending]) } )
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user.id, true, @event_occurrence.event.id);
-    @user = User.find(@event_occurrence.event.user_id).username
-    logger.info @event_occurrence.event.rooms.inspect
-    @tasks = @event_occurrence.event.tasks.rank(:task_order)
+    @user = User.find(@event_occurrence.event.user_id).name unless @event_occurrence.event.user_id.nil?
+    if current_user.id == @event_occurrence.event.user_id
+      @tasks = @event_occurrence.event.tasks.rank(:task_order)
+    else
+      @tasks = @event_occurrence.event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user.id).rank(:task_order)
+    end
     # @return_url = ... (currently root_path by default)
   end
 
+  def destroy
+    if can? :destroy, @event_occurrence.event
+      @event_occurrence.event.decline_occurrence(@event_occurrence.starts_occurring_at)
+    else
+      raise ActionController::RoutingError.new('Not found')
+    end
+    flash[:notice] = t("event.alert.single_occurrence_successful_delete")
+    redirect_to root_path
+  end
+
   private
+
+    def event_occurrence_from_params
+      @event_occurrence = EventOccurrence.new( { event_id: event_occurrence_params[:eventid].to_i, starts_occurring_at: Time.parse(event_occurrence_params[:starting]), ends_occurring_at: Time.parse(event_occurrence_params[:ending]) } )
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_occurrence_params
