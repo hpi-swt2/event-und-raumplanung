@@ -24,6 +24,7 @@
 /log/*.log
 /tmp
 /.vagrant
+Vagrantfile
 
 # ignore simplecov data
 /coverage/*
