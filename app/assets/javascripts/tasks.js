@@ -73,6 +73,15 @@ function userAutocomplete()
     $("#task_identity_display").autocomplete(
     {
         minLength: 2,
+        change: function(event, ui)
+        {
+            console.log("changed: " + ui.item);
+            if (ui.item == null || ui.item == undefined)
+            {
+                $("#task_identity").val("");
+                $("#task_identity_display").val("");
+            }
+        },
         select: function( event, ui ) 
         {
             $("#task_identity").val(ui.item.id);
