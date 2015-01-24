@@ -75,11 +75,21 @@ function userAutocomplete()
         minLength: 2,
         change: function(event, ui)
         {
-            console.log("changed: " + ui.item);
             if (ui.item == null || ui.item == undefined)
             {
                 $("#task_identity").val("");
-                $("#task_identity_display").val("");
+                if ($("#task_identity_display").val() != "")
+                {
+                    $("#task_identity_display").val("");
+                    $("#task_identity_display").parent().addClass("has-error");
+                    setTimeout(function(){
+                        $('#task_identity_display').parent().removeClass("has-error");
+                    },1000);
+                }
+                else
+                {
+                    $("#task_identity_display").parent().removeClass("has-error");
+                }
             }
         },
         select: function( event, ui ) 
