@@ -2,5 +2,5 @@ admin:
   email: test_admin@example.com
   username: test_admin
   password: test_admin
-identity_url: 
+identity_url: https://openid.hpi.uni-potsdam.de/
 domains: {"student.hpi.uni-potsdam.de","hpi.uni-potsdam.de","hpi.de","student.hpi.de"}
