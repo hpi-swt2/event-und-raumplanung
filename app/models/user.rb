@@ -55,8 +55,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.build_from_email(email)
-    User.new(:email => email)
+  def self.build_from_username(username)
+    User.new(:username => username)
   end
 
   # similar to Group#name
