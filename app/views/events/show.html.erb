@@ -46,6 +46,10 @@
           <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
         </tr>
         <tr>
+          <td><%= t('events.show.schedule') %></td>
+          <td><%= @event.pretty_schedule %></td>
+        </tr>
+        <tr>
           <td><%= t('events.show.rooms') %></td>
           <td><%= concat_rooms(@event) %></td>
         </tr>
@@ -57,10 +61,16 @@
           <td><%= t('events.show.participant_count') %></td>
           <td><%= @event.participant_count %></td>
         </tr>
+        <tr>
+          <td>
+            <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 
 <div class="event-view-section">
   <h3><%= t '.tasks' %></h3>
@@ -68,10 +78,29 @@
   <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
 </div>
 
+<% unless @feed_entries.nil? %>
 <div class="event-view-section">
-  <h3><%= t '.comments' %></h3>
-  tbd: Comment section
+  <h3><%= t 'activities.activity_log' %></h3>
+
+  <div class="feed-container">
+    <div class="feed">
+      <% @feed_entries.each_with_index do |feed_entry, index| %>
+        <%= render :partial => 'feed_entry', :locals => { :feed_entry => feed_entry, :index => index } %>
+      <% end %>
+    </div>
+  </div> 
+
+  <div class="new-comment">
+    <h4><%= t 'comments.new_comment' %></h4>
+
+    <%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
+      <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
+      <div class="clearfix"></div>
+      <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
+    <% end %>  
+  </div>
 </div>
+<% end %>
 
 <div class="row">
   <div class="col-xs-4 col-md-3">
@@ -84,6 +113,7 @@
       <%= link_to t('.edit', :default => t("helpers.links.edit")),
                     edit_event_path(@event), :class => 'btn btn-default' %>
     <% end %>
+
     <% if can? :destroy, @event %>
       <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                     event_path(@event),

@@ -26,6 +26,10 @@ RSpec.describe EventsController, :type => :controller do
   }
   let(:task) { create :task }
   let(:user) { create :user }
+  let(:user2) { create :user }
+  let(:member) {create :groupMember}
+  let(:room) {create :groupRoom}
+
 
   let(:valid_attributes) {
     {name:'Michas GB',
@@ -39,7 +43,35 @@ RSpec.describe EventsController, :type => :controller do
     user_id: user.id
     }
   }
- 
+
+  let(:valid_attributes_with_room) {
+    {name:'Das Bo live',
+    description:'Türlich Türlich',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    user_id: user.id,
+    room_ids: ['1337']
+    }
+  }
+  
+  let(:valid_attributes_with_two_rooms) {
+    {name:'Das Bo live',
+    description:'Türlich Türlich',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    user_id: user.id,
+    rooms: ["1","1337"]
+    }
+  }
+
  let(:valid_attributes_for_request) {
     {name:'Michas GB',
     description:'Coole Sache',
@@ -77,7 +109,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time:'17:00',
     ends_at_time:'23:59',
     user_id: user.id
-	}
+    }
   }
 
   let(:invalid_attributes_for_request) {
@@ -94,7 +126,7 @@ RSpec.describe EventsController, :type => :controller do
 
    let(:invalid_participant_count) {
     {name:'Michas GB',
-   	participant_count:-100,
+    participant_count:-100,
     starts_at_date: Time.now.strftime("%Y-%m-%d"),
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
@@ -166,9 +198,25 @@ RSpec.describe EventsController, :type => :controller do
     { :status => false }.to_json
   }
 
+  let(:valid_attributes_weekly_recurring_event) {
+    {
+      name:'weekly',
+      description:'weekly recurring',
+      participant_count: 15,
+      starts_at_date: "2015-01-05",
+      starts_at_time: "09:00",
+      ends_at_date: "2015-01-05",
+      ends_at_time: "10:30",
+      is_private: false,
+      user_id: user.id,
+      occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
+    }
+  }
+
 
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
+    room.update_attribute(:id,1337)
     sign_in user
   end
 
@@ -224,6 +272,66 @@ RSpec.describe EventsController, :type => :controller do
       get :show, {:id => event.to_param}, valid_session
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
+
+    context "if the user has created the event" do
+      it "shows the activity log" do
+        e = create(:event, user_id: user.id)
+        get :show, {:id => e.id}
+        # @activities is probably an empty list since acitivies
+        # would be created on controller level, but if it's not
+        # nil we've verified that it WOULD show acitivities
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+    
+    context "if the user `owns` the event's room" do
+      it "shows the activity log" do
+
+        # make user leader of group g
+        g = create(:group)
+        g.users << user
+        mem = g.memberships.last
+        mem.isLeader = true
+        mem.save
+
+        # create room r and assign it to group g
+        r = create(:room)
+        r.group = g
+        r.save
+
+        # create new event with r as room
+        e2 = create(:event, user_id: user2.id)
+        e2.rooms << r
+        e2.save
+
+        # verify that group leader is now able to see the log
+        get :show, {:id => e2.id}
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+
+    context "if the user has been assigned to any of the event's tasks" do
+      # this includes being implicitly assigned through group membership
+      it "shows the activity log" do
+        e3 = create(:event, user_id: user2.id)
+        t = create(:assigned_task, identity: user)
+        e3.tasks << t
+        e3.save
+        get :show, {:id => e3.id}
+        expect(assigns(:feed_entries)).not_to be_nil
+      end
+    end
+
+    context "if the user ist not involved" do
+      it "does not show or even transmit the activity log" do
+        # this is deliberately implemented as a controller test rather than
+        # on a view level to assure that acitivities don't even go there (@kaozente)
+        e4 = create(:event, user_id: user2.id)
+        get :show, {:id => e4.id}
+        expect(assigns(:feed_entries)).to be_nil
+      end
+    end
+
   end
 
   describe "GET new" do
@@ -345,6 +453,18 @@ RSpec.describe EventsController, :type => :controller do
         post :create, {:event => valid_attributes_for_request}, valid_session
         expect(response).to redirect_to(Event.last)
       end
+
+      it "creates activity when an event is created" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        event = Event.last
+        create_event_activity = event.activities.first
+        expected_changed_fields = ["name", "description", "participant_count", "starts_at",
+        "ends_at", "is_private", "user_id"]
+        expect(event.activities.count).to eq(1)
+        expect(create_event_activity.action).to eq("create")
+        expect(create_event_activity.controller).to eq("events")
+        expect(create_event_activity.username).to eq(user.username)
+      end
     end
 
     describe "with invalid dates" do
@@ -359,7 +479,7 @@ RSpec.describe EventsController, :type => :controller do
       end
     end
 
-	  describe "with invalid participant count" do
+      describe "with invalid participant count" do
       it "assigns a newly created but unsaved event as @event" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(assigns(:event)).to be_a_new(Event)
@@ -368,6 +488,26 @@ RSpec.describe EventsController, :type => :controller do
       it "re-renders the 'new' template" do
         post :create, {:event => invalid_participant_count_for_request}, valid_session
         expect(response).to render_template("new")
+      end
+    end
+    describe "for an event with only rooms of groups the user belongs to" do
+      it"directly approves the event" do
+        sign_in member
+        post :create, {:event => valid_attributes_with_room}, valid_session
+        expect(assigns(:event).status).to eq("approved")
+      end
+    end
+    describe "for an event with rooms of which at least one does NOT belong to a group the user belongs to" do
+      it"creates an event with status pending" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        expect(assigns(:event).status).to eq("pending")
+      end
+    end
+    describe "for an event with rooms of 1) groups the user belongs to and 2) another room" do
+      it"creates an event with status pending" do
+        sign_in member
+        post :create, {:event => valid_attributes_with_two_rooms}, valid_session
+        expect(assigns(:event).status).to eq("pending")
       end
     end
 
@@ -456,12 +596,51 @@ RSpec.describe EventsController, :type => :controller do
         expect(assigns(:event)).to be_a_new(Event)
       end
     end
+
+    describe "with valid weekly recurring occurrence rule parameters" do
+      it "creates a valid schedule" do
+        post :create, {:event => valid_attributes_weekly_recurring_event}, valid_session
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+      end
+    end
+
     after(:all) do 
       DatabaseCleaner.clean
     end
   end
 
+  describe "POST approve" do
+    it "creates activity when an event is approved" do
+      event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
+      activities = event.activities
+      expect{
+      post :approve, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+      expect(activities.last.action).to eq("approve")
+      expect(activities.last.controller).to eq("events")
+      expect(activities.last.username).to eq(user.username)
+    end
+  end
 
+  describe "POST decline" do
+    it "creates activity when an event is declined" do
+      event = Event.create! valid_attributes
+      @request.env['HTTP_REFERER'] = 'http://test.com/'
+      activities = event.activities
+      expect{
+      post :decline, {:id => event.to_param, :date => Date.today}
+      }.to change(activities, :count).by(1)
+      expect(activities.last.action).to eq("decline")
+      expect(activities.last.controller).to eq("events")
+      expect(activities.last.username).to eq(user.username)
+    end
+  end
 
   describe "POST create_even_suggestion" do
     before(:all) do 
@@ -558,6 +737,14 @@ RSpec.describe EventsController, :type => :controller do
         }
       }
 
+      let(:new_invalid_attributes) {
+        {name:'',
+        description:'Keine coole Sache',
+        participant_count: 1,
+        rooms: []
+        }
+      }
+
       it "updates the requested event" do
         event = Event.create! valid_attributes
         expect {
@@ -594,6 +781,39 @@ RSpec.describe EventsController, :type => :controller do
           expect(event_suggestion).not_to exist_in_database
         end
       end
+
+      it "creates activity when an event is updated" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expected_changed_fields = ["name", "description", "participant_count"]
+        expect{
+        put :update, {:id => event.to_param, :event => new_attributes}, valid_session
+        }.to change(activities, :count).by(1)
+        expect(activities.last.action).to eq("update")
+        expect(activities.last.username).to eq(user.username)
+        expect(activities.last.changed_fields).to eq(expected_changed_fields)
+      end
+
+      it "creates no activity when the event updating fails" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expected_changed_fields = ["name", "description", "participant_count"]
+        expect{
+        put :update, {:id => event.to_param, :event => new_invalid_attributes}, valid_session
+        }.to change(activities, :count).by(0)
+      end
+
+      it "changes the specified schedule" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
+        put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
+        expect(response).to be_success
+        schedule = assigns(:event).schedule
+        expect(schedule).to be_a(IceCube::Schedule)
+        expect(schedule.recurrence_rules).not_to be_empty
+        weekly_rule = schedule.recurrence_rules.first
+        expect(weekly_rule).to be_a(IceCube::WeeklyRule)
+        expect(weekly_rule.validations_for(:day).size).to eq(2)
+      end
     end
 
     describe "with invalid params" do
@@ -619,11 +839,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('approved')
     end
 
-    it "redirects to events_approval_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :approve, {:id => event.to_param}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 
@@ -684,11 +904,11 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event).status).to eq('declined')
     end
 
-    it "redirects to events_decline_path" do
+    it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
       get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-      expect(response).to redirect_to(events_approval_path)
+      expect(response).to redirect_to(:back)
     end
   end
 
@@ -709,7 +929,7 @@ RSpec.describe EventsController, :type => :controller do
 
     it "destroys the event_suggestion, but not the original event" do 
       event = Event.create! valid_attributes
-      event_suggestion = FactoryGirl.create :event_suggestion
+      event_suggestion = FactoryGirl.create(:event_suggestion, :event_id => event.id)
       event = event_suggestion.event
       delete :destroy, {:id => event_suggestion.to_param}
       expect(event).to exist_in_database

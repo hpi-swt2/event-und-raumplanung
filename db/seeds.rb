@@ -9,6 +9,7 @@ if delete_old_records
 	Room.delete_all
 	Equipment.delete_all
 	Event.delete_all
+	Task.delete_all
 end
 
 #
@@ -100,8 +101,13 @@ equipment7 = Equipment.create(name: 'Beamer HD 1247912', description: 'Ein fest 
 equipment8 = Equipment.create(name: 'Whiteboard 234', description: 'Ein fest installierter Whiteboard zum Brainstorming', room_id: room7.id, category: 'Whiteboard')
 
 #
-# Create Event
+# create Comments
+comment = Comments.create(user_id: 1, content: "Ich will MEHR PIZZA!!!", created_at: "2014-12-26 13:37:42", event_id: 1)
+comment = Comments.create(user_id: 1, content: "Ich will NOCH MEHR PIZZA!!!", created_at: "2014-12-26 15:37:42", event_id: 1)
 
+#
+# Create Event
+# watch out! some Events aren't created anymore, because of validation failures, but Event.create without an "!" doesn't throw an exception
 event1 = Event.create(name: "Weihnachtsfeier", description: "Details zur Weihnachtsfeier 2015", participant_count: 10,  status: "In Bearbeitung", created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room1], is_private: false, is_important: true, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")
 event2 = Event.create(name: "Sommerfest", description: "Details zur Sommerfest 2015", participant_count: 10,  status: "In Bearbeitung", created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room2], is_private: false, is_important: false, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")
 event3 = Event.create(name: "Tribute von Panem", description: "Details zum Event Tribute von Panem 2015", participant_count: 10, created_at: "2015-11-20 12:20:20", user_id: user2.id, rooms: [room3], is_private: true, is_important: false, starts_at: "2014-12-26 11:46:01", ends_at: "2014-12-26 12:46:01")
@@ -113,13 +119,26 @@ event8 = Event.create(name: 'HCI II', description: 'Vorlesung', participant_coun
 event9 = Event.create(name: 'HCI II', description: 'Vorlesung 1', starts_at: DateTime.now, ends_at: DateTime.now.advance(hours: 3), rooms: [room13])
 event10 = Event.create(name: 'HCI II', description: 'Vorlesung 2', starts_at: DateTime.now.advance(days: 2), ends_at: DateTime.now.advance(days: 2, hours: 3), rooms: [room13])
 event11 = Event.create(name: 'Connect Club Treffen', description: 'Clubtreffen', starts_at: DateTime.now.advance(days: 2), ends_at: DateTime.now.advance(days: 2, hours: 3), rooms: [room1])
-event12 = Event.create(name: 'Vorlesung PT', description: 'Vorlesung 1', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.change(hour: 11), ends_at: DateTime.now.change(hour: 12, min: 30), rooms: [room12, room2], is_important: true)
-event13 = Event.create(name: 'Vorlesung POIS', description: 'Vorlesung 1', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.change(hour: 11), ends_at: DateTime.now.change(hour: 12, min: 30), rooms: [room7])
-event14 = Event.create(name: 'Vorlesung POIS', description: 'Vorlesung 2', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.advance(days: 1).change(hour: 13, min: 30), ends_at: DateTime.now.advance(days: 1).change(hour: 14, min: 30), rooms: [room1])
-event15 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 1', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.change(hour: 11), ends_at: DateTime.now.change(hour: 12, min: 30), rooms: [room12], is_important: true)
-event16 = Event.create(name: 'Vorlesung Mathe', description: 'Vorlesung 1', participant_count: 20, user_id: user2.id, starts_at: DateTime.now.change(hour: 11), ends_at: DateTime.now.change(hour: 12, min: 30), rooms: [room13])
-event17 = Event.create(name: 'Vorlesung PT', description: 'Vorlesung 2', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.change(hour: 13, min: 30), ends_at: DateTime.now.change(hour: 15), rooms: [room12, room5, room6])
-event18 = Event.create(name: 'Vorlesung POIS', description: 'Vorlesung 3', participant_count: 20, user_id: user1.id, starts_at: DateTime.now.change(hour: 13, min: 30), ends_at: DateTime.now.change(hour: 15), rooms: [room7], is_important: true)
-event19 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 2', participant_count: 20, user_id: user2.id, status: "approved", starts_at: DateTime.now.advance(days: 1).change(hour: 8), ends_at: DateTime.now.advance(days: 1).change(hour: 9), rooms: [room12])
-event20 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 3', participant_count: 20, user_id: user2.id, starts_at: DateTime.now.advance(days: 1).change(hour: 13, min: 30), ends_at: DateTime.now.advance(days: 1).change(hour: 15), rooms: [room12], is_important: true)
-event21 = Event.create(name: 'Vorlesung Mathe', description: 'Vorlesung 2', participant_count: 20, user_id: user2.id, status: "approved", starts_at: DateTime.now.advance(days: 2).change(hour: 13, min: 30), ends_at: DateTime.now.advance(days: 2).change(hour: 15), rooms: [room13])
+
+#
+# Create recurring events
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 11).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 12, min: 30).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[1, 4]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event12 = Event.create!(name: 'Vorlesung PT', description: 'Vorlesung PT Montag/Donnerstag', participant_count: 20, user_id: user1.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room12, room2], is_important: true, schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 13, min: 30).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 15).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[1]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event13 = Event.create!(name: 'Vorlesung POIS', description: 'Vorlesung 1 Montag', participant_count: 20, user_id: user1.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room7], schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 11).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 12, min: 30).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[3]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event14 = Event.create(name: 'Vorlesung POIS', description: 'Vorlesung 2 Mittwoch', participant_count: 20, user_id: user1.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room1], schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 15, min: 15).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 16, min: 45).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[3]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event15 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 1 Mittwoch', participant_count: 20, user_id: user1.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room12], is_important: true, schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 9, min: 15).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 10, min: 45).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[4]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event16 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 2 Donnerstag', participant_count: 20, user_id: user2.id, status: "approved", starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room12], schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 11, min: 00).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 12, min: 30).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[5]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event17 = Event.create(name: 'Vorlesung ISEC', description: 'Vorlesung 3 Freitag', participant_count: 20, user_id: user2.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room12], is_important: true, schedule: schedule)
+
+schedule = IceCube::Schedule.from_hash({:start_time=>Time.now.change(hour: 11, min: 00).advance(days: 1).to_s, :end_time=>Time.now.change(hour: 12, min: 30).advance(days: 1).to_s, :rrules=>[{:validations=>{:day=>[2, 4]}, :rule_type=>"IceCube::WeeklyRule", :interval=>1, :week_start=>0}], :rtimes=>[], :extimes=>[]})
+event18 = Event.create(name: 'Vorlesung Mathe', description: 'Vorlesung 1 Dienstag/Donnerstag', participant_count: 20, user_id: user2.id, starts_at: schedule.start_time, ends_at: schedule.end_time, rooms: [room13], schedule: schedule)

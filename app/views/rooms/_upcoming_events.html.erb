@@ -1,23 +1,105 @@
-<% if @events.size != 0 %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><%= Event.human_attribute_name(:name) %></th>
-        <th><%= Event.human_attribute_name(:starts_at) %></th>
-        <th><%= Event.human_attribute_name(:ends_at) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td><%= link_to event.name, event_path(event) %></td>
-          <td><%=l event.starts_at %></td>
-          <td><%=l event.ends_at %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-<% if @events.size == 0 %>
-  <em><%=t '.no_upcoming_events' %></em><br/>
-<% end %>
+<% @calevents = Event.all %>
+
+<div id="calendar" class="room-events-calendar"></div>
+
+<script>
+  $(document).ready(function(){
+    $("#calendar").fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      events: [
+                <% @calevents.each do |each| %>
+                  <% if each.room_ids.include?(@room.id) %>
+                    {
+                      id : '<%= each.id %>',
+                      title: '<%= each.name %>',
+                      start: '<%= each.starts_at %>',
+
+                                <% if each.is_approved %>
+                                    color: 'green'
+                                <% else %>
+                                    color: 'red'
+                                <% end %> 
+                    
+                    },
+                  <% end %>
+                <% end %>
+      ],
+      theme: false,
+      eventClick: function(calevent, jsEvent, view) {
+
+        $.ajax({
+        url: ("/fetch_event?id=" + calevent.id),
+        type: "GET",
+        dataType: "json",
+        success: function(result){
+            var event = result.body.event;
+
+            var a = document.createElement('a');
+            a.setAttribute('href',"/events/" + event.id);
+            a.innerHTML = event.id;
+
+            $("#modalEventName").html(event.name);
+            $("#modalEventPath").html(a.outerHTML);
+            $("#modalEventRooms").html(result.body.rooms);
+            $("#modalEventParticipantCount").html(event.participant_count);
+            $("#modalEventStart").html(result.body.startTime);
+            $("#modalEventEnd").html(result.body.endTime);
+            $("#modalEventUser").html(result.body.user);
+            $("#modalEventStatus").html(event.status);
+            $("#modalApproveLink").attr("href", result.body.approvePath);
+            $("#modalDeclineLink").attr("href", result.body.declinePath);
+            $("#eventModal").modal('show');
+            
+          }
+        });
+      }
+    });
+  });
+
+</script>
+
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="modalEventName"></h4>
+          </div>
+          <div class="modal-body">
+            <dl class="dl-horizontal">
+              <dt><strong><%= Event.human_attribute_name(:id) %>:</strong></dt>
+              <dd id="modalEventPath"></dd>
+              <dt><strong><%= Event.human_attribute_name(:rooms) %>:</strong></dt>
+              <dd id="modalEventRooms"></dd>
+              <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
+              <dd id="modalEventParticipantCount"></dd>
+              <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
+              <dd id="modalEventStart"></dd>
+              <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
+              <dd id="modalEventEnd"></dd>
+              <dt><strong><%= Event.human_attribute_name(:user) %>:</strong></dt>
+              <dd id="modalEventUser"></dd>
+              <dt><strong><%= Event.human_attribute_name(:status) %>:</strong></dt>
+              <dd id="modalEventStatus"></dd>
+            </dl>
+            <div class="form-group">
+                  <%= label_tag(:q, t('rooms.show.message_for_event_creator') + ":") %><br />
+                  <%= text_area_tag("message", '', rows: '3', :class => 'form-control') %>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-s" data-dismiss="modal"><span><%= t('rooms.show.close') %></span></button>
+            <a id="modalDeclineLink" href="" class="btn btn-danger btn-s"><%= t('.decline', :default => t("helpers.links.decline")) %></a>
+            <a id="modalApproveLink" href="" class="btn btn-success btn-s"><%= t('.approve', :default => t("helpers.links.approve")) %></a>
+          </div>
+
+    </div>
+  </div>
+</div>
+
+<%= link_to t('.create_event'),  new_event_path(room_ids: [@room.id]), :class => 'btn btn-default' %>

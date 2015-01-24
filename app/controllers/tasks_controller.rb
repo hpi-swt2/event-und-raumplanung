@@ -53,20 +53,17 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
 
     authorize! :create, @task
-
     respond_to do |format|
-      if @task.save && upload_files
-        @task.send_notification_to_assigned_user(current_user) if @task.identity
-        
+        if @task.save && upload_files
+          @task.send_notification_to_assigned_user(current_user) if @task.identity
+        create_activity(@task)
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
-        format.json { render :show, status: :created, location: @task }
       else
         @upload_errors = get_upload_errors
         delete_new_uploads
@@ -85,9 +82,12 @@ class TasksController < ApplicationController
 
     params[:task][:identity_id] = identity_params.blank? ? nil : identity_params[:id]
     params[:task][:identity_type] = identity_params.blank? ? nil : identity_params[:type]
-    
+
+    cur_done_status = @task.done
+
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
+        create_activity(@task) if cur_done_status != @task.done
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -238,6 +238,17 @@ class TasksController < ApplicationController
       end
       updated_params.delete(:identity)
       return updated_params
+    end
+
+    def create_activity(task)
+      if task.event_id
+        task_info = [task.name, task.done]
+        event = Event.find(task.event_id)
+        event.activities << Activity.create(:username => current_user.username, 
+                                            :action => params[:action],
+                                            :controller => params[:controller],
+                                            :task_info => task_info)
+      end
     end
 
     def set_for_event_template 

@@ -30,18 +30,11 @@ FactoryGirl.define do
     sequence(:user_id) { |id| id }
   end
 
-  factory :standardEvent, :class => Event do 
+  factory :standardEvent, parent: :event, :class => Event do 
     
    sequence(:name) { |n| "Party#{n}" }
    description "All night long glühwein for free"
    participant_count 80
-   created_at DateTime.new(2014, 8, 1, 22, 35, 0)
-   updated_at DateTime.new(2014, 8, 1, 22, 35, 0)
-   user_id 767770
-   is_private false 
-   status "In Bearbeitung"
-   starts_at DateTime.new(2015, 8, 1, 22, 35, 0)
-   ends_at DateTime.new(2016, 8, 1, 22, 35, 0)
    rooms { build_list :room, 3 }
  end 
 
@@ -84,7 +77,6 @@ FactoryGirl.define do
     user_id 122
     name 'Test'
     description 'Event Suggestion test instance'
-    event_id 1
     participant_count 12
     status 'suggested'
     rooms { build_list :room, 3 }
@@ -119,6 +111,68 @@ FactoryGirl.define do
     status 'approved'
   end
 
+  factory :daily_recurring_event, :class => Event do |f|
+    f.name "Daily recurring"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.daily)
+    end
+    f.schedule schedule
+  end
+
+  factory :weekly_recurring_event, :class => Event do |f|
+    f.name "Weekly recurring"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.local(2015, 2, 1, 11, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 2, 1, 12, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.weekly)
+    end
+    f.schedule schedule
+  end
+
+  factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
+    starts_at = Time.now + 1.hours
+    f.starts_at starts_at
+
+    ends_at = starts_at + 1.hours
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.daily)
+    end
+    f.schedule schedule
+  end
+
+  factory :upcoming_daily_recurring_event2, parent: :daily_recurring_event do |f|
+    starts_at = Time.now + 90.minutes
+    f.starts_at starts_at
+
+    ends_at = starts_at + 1.hours
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.daily)
+    end
+    f.schedule schedule
+  end 
+
   factory :sortEvent1, parent: :event do
     name "A1"
     starts_at Date.new(2111,1,1)
@@ -139,4 +193,11 @@ FactoryGirl.define do
     ends_at Date.new(2111,1,1)
     status "BIn Bearbeitung"
   end
+
+  factory :conflictingEvent, parent: :event do 
+      starts_at_date Time.now.strftime("%Y-%m-%d")
+      ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
+      starts_at_time Time.now.strftime("%H:%M:%S")
+      ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
+  end 
 end

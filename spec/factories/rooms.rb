@@ -3,6 +3,9 @@ FactoryGirl.define do
     f.name "Room"
     f.size 1
     equipment []
+    factory :groupRoom do |g|
+      g.group_id 55
+    end
   end	
   
   factory :room1, parent: :room do |f|
@@ -21,13 +24,5 @@ FactoryGirl.define do
   	f.equipment [
   		FactoryGirl.build(:beamer),
   		FactoryGirl.build(:wlan)]
-  end
-  
-  factory :room_with_bookings, parent: :room do |f|
-  	f.name 'HS1'
-  	f.size 200
-  	f.bookings [
-  		FactoryGirl.build(:gds),
-  		FactoryGirl.build(:pt)]
-  end
+  end 
 end

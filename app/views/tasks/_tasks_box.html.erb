@@ -1,46 +1,48 @@
 <%- model_class = Task -%>
 <% return_url = request.env['PATH_INFO'] %>
+<div class="table-responsive">
+    <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
 
-<% if tasks.empty? %>
+<% if @tasks.empty? %>
     <div class="no-tasks-text">
         <%= t('tasks.show.no_tasks') %>
     </div>
 <% else %>
   <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
-    <thead>
-      <tr>
+      <thead>
+        <tr>
         <% if params[:controller] == 'events' %>
           <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
         <% end %>
-        <th class="col-sm-1"></th>
-        <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
+          <th class="col-sm-1"></th>
+          <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
         <% if params[:controller] == 'events' %>
           <th class="col-sm-5"><%= model_class.human_attribute_name(:assigned_to) %></th>
           <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
         <% end %>
-      </tr>
-    </thead>
-    <tbody>
+        </tr>
+      </thead>
+      <tbody>
       <% @tasks.each do |task| %>
-        <tr data-item-id=<%= "#{task.id}" %> class="item">
+          <tr data-item-id=<%= "#{task.id}" %> class="item">
         <%if params[:controller] == 'events' %>
           <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= task_path(task.id) %>" data-user-id="<%= task.identity_id %>"></td>
         <% end %>
-          <td class="col-sm-1">
-            <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
-          </td>
-          <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
+            <td class="col-sm-1">
+              <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
+            </td>
+            <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
         <%if params[:controller] == 'events' %>
           <td class="<%= task.status %> col-sm-5"><%= (task.identity.blank?) ? t('tasks.status.not_assigned') : (task.identity.name) %></td>
         <% end %>
-          <% if task.deadline %> 
-            <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
-          <% else %>
-            <td></td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
+            <% if task.deadline %>
+              <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
+            <% else %>
+              <td></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
   </table>
 <% end %>
 <% if can? :edit, @event or @event.nil? %>    

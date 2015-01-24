@@ -1,0 +1,22 @@
+# ruby encoding: utf-8
+
+en:
+  feed:
+    on_date: "on"
+    at_time: "at"
+  activities:
+    activity_log: "Activity Log"
+    create: "created"
+    update: "updated"
+    approve: "approved"
+    decline: "declined"
+    the_task: "the task"
+    the_event: "the event"
+    marked: "marked"
+    as: "as"
+    done: "done"
+    undone: "not done"
+  comments:
+    commented: "commented"
+    new_comment: "New comment"
+    

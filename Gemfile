@@ -86,6 +86,8 @@ gem 'knockoutjs-rails'
 
 gem 'mocha'
 
+gem 'icalendar'
+
 gem 'fullcalendar-rails', '~> 2.0.2.0'
 gem 'momentjs-rails'
 gem 'filterrific'
@@ -94,6 +96,14 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 
 gem 'date_time_attribute'
+
+# ice_cube is a ruby library for easily handling repeated events (schedules),
+# see: https://github.com/seejohnrun/ice_cube
+gem 'ice_cube'
+
+# This gem adds selectors and helpers for working with recurring schedules in a Rails app.
+# It uses ice_cube recurring scheduling gem, see: https://github.com/GetJobber/recurring_select
+gem 'recurring_select'
 
 gem 'paperclip', '~> 4.2'
 

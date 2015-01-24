@@ -3,6 +3,53 @@
 	line-height: 1.5em;
 }
 
+.feed-container {
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.feed:before {
+	background-color: #ddd;
+	bottom: 0;
+	content: "";
+	display: block;
+	left: 8px;
+	position: absolute;
+	top: 0;
+	width: 2px;
+	z-index: -1;
+}
+
+.feed-entry-container {
+	position: relative;
+	margin-left: 10px;
+}
+
+.feed-entry-container:last-of-type {
+	
+}
+
+.feed-entry {
+	border-bottom: 2px solid #ddd;
+	padding: 10px 15px 10px 0;
+}
+
+.feed-entry-container .glyphicon {
+	background-color: #ddd;
+	border-radius: 50%;
+	float: left;
+	margin: -3px 15px 0 -12px;
+	padding: 5px;
+}
+
+.feed-entry-container .odd {
+	background-color: #f9f9f9;
+}
+
+.feed-entry-container .even {
+	
+}
+
 .event-page-header h1, .event-page-header h2, .event-page-header h3 {
 	margin: 5px;
 }

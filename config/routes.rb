@@ -2,6 +2,14 @@ Rails.application.routes.draw do
 
   resources :uploads, :only => [:new, :create, :destroy]
 
+  resources :permissions, :only => [:index] do
+    collection do
+      post :submit
+      post 'permissions_for_entity', action: 'checkboxes_by_entity'
+      post 'entities_for_permission', action: 'checkboxes_by_permission'
+    end
+  end
+
   resources :event_suggestions
 
   resources :groups do
@@ -9,6 +17,7 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
@@ -16,18 +25,30 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'profile/index' => 'profile#index'
+  post 'profile_update_profile' => 'profile#update_profile', as: "update_profile"
+
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+
+  post 'events_create_comment' => 'events#create_comment', as: "create_comment"
+  post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
+  post 'events/:id/approve' => 'events#approve', as: "approve_event"
+  post 'events/:id/decline' => 'events#decline', as: "decline_event"
+
+
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"
   # get 'events/:id/approve_event_suggestion' => 'events#approve_event_suggestion', as: "approve_event_suggestion"
   # get 'events/:id/decline_event_suggestion' => 'events#decline_event_suggestion', as: "decline_event_suggestion"
+
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
+  get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 
@@ -55,20 +76,23 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  get 'fetch_event' => 'rooms#fetch_event', as: :fetch_event
+
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do
-    collection do 
+    collection do
       get :create_event_suggestion
-      patch :create_event_suggestion 
+      patch :create_event_suggestion
       post :creat_event_suggestion
       get :reset_filterrific
     end
 
     member do
       post :approve
+      post :decline
       get :decline
-      get :approve_event_suggestion 
+      get :approve_event_suggestion
       get :decline_event_suggestion
       get :new_event_template
       get :new_event_suggestion
@@ -78,13 +102,15 @@ Rails.application.routes.draw do
   end
 
   resources :maps
+  resources :profile
 
   resources :event_templates, :path => "templates"
   resources :event_templates do
     get :reset_filterrific, on: :collection
   end
 
-
+  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
+  get 'ical/' => 'ical#show_my_events'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

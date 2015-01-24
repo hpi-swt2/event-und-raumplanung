@@ -1,0 +1,18 @@
+<% @categories.each do |category| %>
+  <%= check_box_tag category, "1", @permitted_entity.has_any_permission(category) %> 
+  <%= label_tag category, t("permissions." + category) %> <br/>
+<% end %>
+
+<% selection = Room.all.select{|room| @permitted_entity.has_permission('approve_events', room)}.map(&:id)
+  if selection.empty? or @permitted_entity.has_permission('approve_events')
+    select_all = 'all'
+  end %>
+  
+<h4><%= t('permissions.permission_on', permission: t('permissions.approve_events'), subject: Room.model_name.human(count: 2).titleize) %></h4>
+<%= select_tag 'rooms[approve_events][]',
+    options_for_select({'All' => 'all'}, select_all) + options_from_collection_for_select(Room.all, :id, :name, selected: selection),
+    { :class => 'selectpicker', id: 'rooms2', :multiple => '', :'data-live-search' => "true" } %>
+
+<script>
+  initializeCheckboxesByEntity();
+</script>
