@@ -57,11 +57,11 @@
     <% unless @for_event_template %> 
       <div class="control-group">
         <%= f.label :deadline, :class => 'control-label' %>
-        <div class="controls" id="datePicker">
-          <%= f.date_field :deadline, {:class => 'form-control', :id => 'datetimepicker'}%>
+        <div class="controls" id="Deadline">
+          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput'}%>
         </div>
         <script type="text/javascript">
-          $('#datetimepicker').datetimepicker({
+          $('#Deadline').datetimepicker({
             format: 'DD/MM/YYYY',
             pickTime: false
           });
