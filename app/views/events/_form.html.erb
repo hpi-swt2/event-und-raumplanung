@@ -33,7 +33,7 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
     </div>
     <script>
     $('#selectpicker').selectpicker();
@@ -76,7 +76,13 @@
      
   </div>
   <div class="control-group">
-
+    <%= f.label model_class.human_attribute_name(:schedule), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select_recurring :occurence_rule, nil, :allow_blank => true %>
+      <%= error_span(@event[:schedule]) %>
+    </div>
+  </div>
+  <div class="control-group">
     <div class="row">
       <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
@@ -88,12 +94,14 @@
       </div>
    </div>
   </div>
-
+  <% unless @event_template_id.nil? %> 
+     <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
+  <% end %>
  <div class="notice"></div> <!-- display conflicting events -->
 
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            events_path, :class => 'btn btn-default' %>
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+            :back, :class => 'btn btn-default' %>
 
 <% end %>

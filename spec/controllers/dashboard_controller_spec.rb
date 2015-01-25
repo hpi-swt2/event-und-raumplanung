@@ -20,6 +20,12 @@ RSpec.describe DashboardController, type: :controller do
     user_id: user.id
   }}
 
+  let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+  let(:other_event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+  let(:other_user) { create :user }
+  let(:past_event) { create :event, name: 'Past Event', user_id: user.id }
+  let(:group) { create :group, users: [user] }
+
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     sign_in user
@@ -29,23 +35,23 @@ RSpec.describe DashboardController, type: :controller do
     it "assigns upcoming event to @events" do
       event = Event.create! valid_attributes
       get :index, {}, valid_session
-      expect(assigns(:events)).to eq([event])
+      event_occurrence = EventOccurrence.new({ event: event, starts_occurring_at: event.starts_at, ends_occurring_at: event.ends_at })
+      expect(assigns(:event_occurrences).to_s).to eq([event_occurrence].to_s)
     end
 
     it "assigns max 5 upcoming events as @events" do
       6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s) }
       get :index, {}, valid_session
-      expect(assigns(:events).size).to eq(5)
+      expect(assigns(:event_occurrences).size).to eq(5)
     end
   
     describe "My tasks partial" do
-      let!(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
-      let!(:other_user) { create :user }
-      let!(:task) { create :assigned_task, event_id: event.id, user_id: user.id, status: 'accepted' }
-      let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, user_id: other_user.id }
-      let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, user_id: user.id }
-      let!(:past_event) { create :event, name: 'Past Event', user_id: user.id }
-      let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, user_id: user.id, status: 'accepted' }
+      let!(:task) { create :assigned_task, event_id: event.id, identity: user, status: 'accepted' }
+      let!(:other_task) { create :assigned_task, name: 'Other Task', event_id: event.id, identity: other_user }
+      let!(:pending_task) { create :assigned_task, name: 'Pending Task', event_id: event.id, identity: user }
+      let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, identity: user, status: 'accepted' }
+      let!(:another_group) { create :group }
+      let!(:group_task) { create :assigned_task, event_id: event.id, identity: group}
 
       before do
         Timecop.freeze(Date.today + 3)
@@ -81,6 +87,48 @@ RSpec.describe DashboardController, type: :controller do
         get :index, {}, valid_session
         expect(assigns(:my_pending_events).include? event). to eq(true)
         expect(assigns(:my_pending_events).include? past_event). to eq(false)
+      end
+
+      it 'assigns only groups I am in to @my_groups' do
+        get :index, {}, valid_session
+        expect(assigns(:my_groups).include? group). to eq(true)
+        expect(assigns(:my_groups).include? another_group). to eq(false)
+        expect(assigns(:my_groups).first.users.include? user). to eq(true)
+      end
+
+      it 'assigns only the group task to @group_pending_tasks' do
+        get :index, {}, valid_session
+        expect(assigns(:group_pending_tasks).include? group_task). to eq(true)
+        expect(assigns(:group_pending_tasks).include? task). to eq(false)
+      end
+
+      it 'assigns only the event with group in which I am and have tasks to @group_pending_events' do
+        get :index, {}, valid_session
+        expect(assigns(:group_pending_events).include? event). to eq(true)
+        expect(assigns(:group_pending_events).include? other_event). to eq(false)
+      end
+      
+    end
+
+    describe "My events widget on Dashboard" do
+      let(:other_user_event) { create :event, user_id: other_user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
+
+      it 'assigns max 5 upcoming events as @my_upcoming_events' do
+        6.times { |i| FactoryGirl.create(:my_upcoming_event, name: i.to_s, user_id: user.id) }
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).size).to eq(5)
+      end
+
+      it 'should only assign upcoming events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? past_event). to eq(false)
+      end
+
+      it 'should only assign my events' do
+        get :index, {}, valid_session
+        expect(assigns(:my_upcoming_events).include? event). to eq(true)
+        expect(assigns(:my_upcoming_events).include? other_user_event). to eq(false)
       end
     end
   end

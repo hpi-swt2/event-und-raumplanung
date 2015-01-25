@@ -14,8 +14,57 @@
  *= require_self
  *= require fullcalendar
  *= require bootstrap-datetimepicker
+ *= require recurring_select
+ *= require jquery-ui/autocomplete
  */
 
 footer {
     margin-top: 20px;
 }
+
+#hpi_logo {
+    display: inline-block;
+    height:32px;
+    width:32px;
+    z-index: 99999999;
+}
+
+.navbar-brand {
+    line-height: 32px;
+    padding-top: 8px;
+}
+
+a, a:hover {
+    color: #b1063a;
+}
+
+.navbar-default, .panel-heading {
+    background-color: #5a6065 !important;
+}
+
+input.task-done-checkbox {
+    color: #b1063a;
+    background-color: #b1063a;
+}
+
+.task-list-list li a {
+    color: black;
+}
+
+.navbar-nav a, .navbar-brand, .panel-heading {
+    color: whitesmoke !important;
+}
+
+.navbar-nav .dropdown-menu {
+    background-color: #8a9095 !important;
+	color: white !important;
+}
+
+li.dropdown.open a {
+	background-color: #8a9095 !important;
+	color: white !important;
+}
+
+.ui-autocomplete-loading {
+    background: white url("/assets/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
