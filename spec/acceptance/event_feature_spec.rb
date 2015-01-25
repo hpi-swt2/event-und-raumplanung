@@ -8,7 +8,7 @@ RSpec.feature "Event" do
 
     before(:each) do
 	    page.set_rack_session(:user_id => @user.id) 
-	    load Rails.root + "db/seeds.rb" 
+	    load Rails.root + "spec/support/seeds.rb" 
     end
 
     let!(:authed_user) { create_logged_in_user }
@@ -26,7 +26,7 @@ RSpec.feature "Event" do
 		#page.fill_in "event_starts_at_date", with: "2020-12-09"
 		#page.fill_in "event_ends_at_date", with: "2020-12-09"
 		page.fill_in "event_starts_at_time", with: "12:30"
-		page.fill_in "event_ends_at_date", with: "16:30"
+		page.fill_in "event_ends_at_time", with: "16:30"
 		page.click_button "Event erstellen"
 		page.should have_content("Event wurde erfolgreich erstellt")
     end
@@ -53,4 +53,40 @@ RSpec.feature "Event" do
 		page.should have_content("Sind sie sicher?")			
 		#page.should have_content("Event wurde erfolgreich gelöscht.")
     end
+
+    scenario "comment on an Event" do
+  		page.visit "/events"
+		have_text("Eventübersicht")
+ 		page.click_link "Weihnachtsfeier"
+		have_text("Details zur Weihnachtsfeier 2015")
+		page.fill_in "commentContent", with: "Going to modify this Event"
+		page.first(:link, "Kommentieren").click
+		have_text("Kommentar wurde erfolgreich erstellt.")
+    end
+
+    scenario "create a task for an Event" do
+  		page.visit "/events"
+		have_text("Eventübersicht")
+ 		page.click_link "Weihnachtsfeier"
+		have_text("Details zur Weihnachtsfeier 2015")
+		page.first(:link, "Aufgabe erstellen").click
+		have_text("Aufgabe hinzufügen")
+		page.fill_in "task_name", with: "Acceptance Tests schreiben"
+		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben."
+		page.click_button "Absenden"
+		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
+    end
+
+    scenario "edit an already approved Event" do
+  		page.visit "/events"
+		have_text("Eventübersicht")
+ 		page.click_link "Weihnachtsfeier"
+		have_text("Details zur Weihnachtsfeier 2015")
+		page.first(:link, "Editieren").click
+		have_text("Event editieren")
+		page.fill_in "event_ends_at_time", with: "16:31"
+		page.click_button "Event aktualisieren"
+		page.should have_content("Event wurde erfolgreich aktualisiert.")
+    end
+
 end
