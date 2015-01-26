@@ -7,7 +7,7 @@
     $(".multiselect ").addClass("multiselectDropdown")
 
     var availableTags=[
-      <% @categories= controller.getCategories %>
+      <% @categories= getCategories %>
       <% @categories.each do | cat | %>
         "<%= cat[0]%>",
       <% end %>
