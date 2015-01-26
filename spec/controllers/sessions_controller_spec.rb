@@ -72,7 +72,7 @@ RSpec.describe SessionsController, :type => :controller do
         controller.store_location_for(:user, root_path)
         
         post :create, :user => { :email => hpi_user.email }, :authenticity_token => "abc"
-        expect(response).to redirect_to("/profile")
+        expect(response).to redirect_to(edit_user_path(hpi_user))
         expect(controller.signed_in?).to be true
       end
     end

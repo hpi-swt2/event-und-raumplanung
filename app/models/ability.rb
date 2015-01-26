@@ -43,6 +43,7 @@ class Ability
     can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 
     can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event => { :user_id => user.id }
     can [:read, :set_done], Task, :identity_id => user.id, :identity_type => 'User'
+    can [:edit], User, :id => user.id
     if user.username == load_admin
         can :manage, Group
         can :manage, Room

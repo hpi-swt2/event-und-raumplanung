@@ -67,4 +67,12 @@ class User < ActiveRecord::Base
   def is_group
     false
   end
+
+  def display_name
+    if !self.fullname.blank?
+      self.fullname
+    else
+      self.username
+    end
+  end
 end
