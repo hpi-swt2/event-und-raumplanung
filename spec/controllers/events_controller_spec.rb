@@ -665,10 +665,10 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(Event, :count).by(1)
       end  
 
-      it "creates a new Event with the status approved" do
+      it "creates a new Event with the status suggested" do
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
-        expect(assigns(:event)[:status]).to eq('approved')
+        expect(assigns(:event)[:status]).to eq('suggested')
       end
 
       it "creates a new Event with the name, description, participant_count, importance and privacy of the old event" do
