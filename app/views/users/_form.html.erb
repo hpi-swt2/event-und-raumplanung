@@ -1,3 +1,4 @@
+<%- model_class = User -%>
 <%= form_for @user, :html => { :class => "form-horizontal user" } do |f| %>
 
   <link href="bootstrap-switch.min.css" rel="stylesheet">
@@ -23,15 +24,13 @@
     </div>
   <% end %>
   
-  <% if @user.firstlogin %>
-        <p>Bitte füllen sie die folgenden Felder aus, wenn sie Angaben tätigen wollen. Alle Angaben sind optional. <br>Please fill in the following information if you want to, all information is optional.</p>
-        <% @user.firstlogin = false %>
-        <% @user.save %>
-        <%= link_to 'skip', root_path, class: "btn btn-primary" %>
+  <% if @firstlogin %>
+        <p><%= t('user.hints') %></p>
+        <%= link_to t('.skip', :default => t("helpers.links.skip")), root_path, class: "btn btn-primary" %>
   <% end %>
 
   <div class="control-group">
-    <%= f.label :email_notification, :class => 'control-label' %>
+    <%= f.label :email_notification, model_class.human_attribute_name(:email_notification), :class => 'control-label' %>
   <div class="controls">
     <%= f.check_box :email_notification, :class => 'bootstrap-switch' %>
   </div>
@@ -39,7 +38,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :fullname, :class => 'control-label' %>
+    <%= f.label :fullname, model_class.human_attribute_name(:fullname), :class => 'control-label' %>
   <div class="controls">
     <%= f.text_field :fullname, :class => 'form-control' %>
   </div>
@@ -47,7 +46,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :office_location, :class => 'control-label' %>
+    <%= f.label :office_location, model_class.human_attribute_name(:office_location), :class => 'control-label' %>
   <div class="controls">
     <%= f.text_field :office_location, :class => 'form-control' %>
   </div>
@@ -55,7 +54,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :office_phone, :class => 'control-label' %>
+    <%= f.label :office_phone, model_class.human_attribute_name(:office_phone), :class => 'control-label' %>
   <div class="controls">
     <%= f.text_field :office_phone, :class => 'form-control' %>
   </div>
@@ -63,7 +62,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :mobile_phone, :class => 'control-label' %>
+    <%= f.label :mobile_phone, model_class.human_attribute_name(:mobile_phone), :class => 'control-label' %>
   <div class="controls">
     <%= f.text_field :mobile_phone, :class => 'form-control' %>
   </div>
@@ -71,14 +70,14 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :language, :class => 'control-label' %>
+    <%= f.label :language, model_class.human_attribute_name(:language), :class => 'control-label' %>
   <div class="controls">
     <%= f.select :language, %w[German English], {}, { :class => 'form-control' } %>
   </div>
     <%= error_span(@user[:language]) %>
   </div>
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit t('.submit', :default => t("helpers.links.save")), :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             user_path(@user), :class => 'btn btn-default' %>
 

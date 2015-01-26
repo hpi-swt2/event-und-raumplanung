@@ -8,6 +8,9 @@ class UsersController < ApplicationController
 
   def edit
     authorize! :edit, @user
+    @firstlogin = @user.firstlogin
+    @user.firstlogin = false
+    @user.save
   end
 
   def update
