@@ -2,8 +2,8 @@
 module EventModule
   def self.included(base)
     base.class_eval do
-      scope :other_to, lambda { |event_id|
-        where("id <> ?",event_id) if event_id
+      scope :other_to, lambda { |id|
+        where("id <> ?", id) if id
       }
 
   	  scope :overlapping, lambda { |starts, ends|
@@ -30,7 +30,8 @@ module EventModule
     self.ends_at = (time+(60*60))
   end
 
-  def check_vacancy(rooms)
+  def check_vacancy id, rooms
+    logger.info id
     colliding_events = []
     return colliding_events if rooms.nil?
 

@@ -33,18 +33,11 @@ FactoryGirl.define do
     rooms { build_list :room, 1 }
   end
 
-  factory :standardEvent, :class => Event do 
+  factory :standardEvent, parent: :event, :class => Event do 
     
    sequence(:name) { |n| "Party#{n}" }
    description "All night long glühwein for free"
    participant_count 80
-   created_at DateTime.new(2014, 8, 1, 22, 35, 0)
-   updated_at DateTime.new(2014, 8, 1, 22, 35, 0)
-   user_id 767770
-   is_private false 
-   status "In Bearbeitung"
-   starts_at DateTime.new(2015, 8, 1, 22, 35, 0)
-   ends_at DateTime.new(2016, 8, 1, 22, 35, 0)
    rooms { build_list :room, 3 }
  end 
 
@@ -210,5 +203,12 @@ FactoryGirl.define do
     room_ids []
     rooms []
   end
+
+  factory :conflictingEvent, parent: :event do 
+      starts_at_date Time.now.strftime("%Y-%m-%d")
+      ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
+      starts_at_time Time.now.strftime("%H:%M:%S")
+      ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
+  end 
 
 end
