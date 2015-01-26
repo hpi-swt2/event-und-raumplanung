@@ -335,7 +335,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "creates task with valid deadline" do
-      expect { post :create, task: { description: "description", name: "Test", deadline: Date.today, event_id: event.id} }.to change { Task.count }.by(1)
+      expect { post :create, task: { description: "description", name: "Test", deadline: Date.current, event_id: event.id} }.to change { Task.count }.by(1)
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
@@ -455,7 +455,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "updates a task with another valid deadline" do
-      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.today, identity: identity_dummy(task) }
+      patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.current, identity: identity_dummy(task) }
       expect(response).to redirect_to task_path(assigns(:task))
     end
 
