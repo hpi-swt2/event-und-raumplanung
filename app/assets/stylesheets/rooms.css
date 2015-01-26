@@ -14,3 +14,7 @@
 tr[data-link]:hover {
     cursor: pointer;
 }
+
+.fc-event-inner{
+    cursor: pointer;
+}
