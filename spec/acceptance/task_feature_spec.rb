@@ -20,7 +20,7 @@ RSpec.feature "Task" do
     #  - Attachments url ist nicht gültig"
 
 
-    scenario "create minimal Task" do
+    scenario "create minimal Task", :create_minimal_task => true do
   		page.visit "/tasks"
 		page.should have_text("Aufgaben")
 		#page.click_button "Hinzufügen"
@@ -32,7 +32,7 @@ RSpec.feature "Task" do
 		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
     end
 
-    scenario "create a task for an Event witout mandatory fields" do
+    scenario "create a task for an Event witout mandatory fields", :create_task_for_Event_witout_mandatory_fields => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
  		page.click_link "Weihnachtsfeier"
@@ -43,7 +43,7 @@ RSpec.feature "Task" do
 		page.should have_content("muss ausgefüllt werden.")
     end
 
-    scenario "create Task with deadline and assignment" do
+    scenario "create Task with deadline and assignment", :create_task_with_deadline_assignment => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
  		page.click_link "Weihnachtsfeier"
@@ -59,7 +59,7 @@ RSpec.feature "Task" do
 		have_text("test_admin")
     end
 
-    scenario "create Task with attachment" do
+    scenario "create Task with attachment", :create_task_with_attachment => true do
   		page.visit "/tasks"
 		page.should have_text("Task")
 		#page.click_button "Hinzufügen"

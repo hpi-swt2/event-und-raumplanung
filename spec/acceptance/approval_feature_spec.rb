@@ -13,7 +13,7 @@ RSpec.feature "Event approval" do
 
     let!(:authed_user) { create_logged_in_user }
 
-	scenario "Approve an unprocessed Event" do
+	scenario "Approve an unprocessed Event", :approval_of_unprocessed_event => true do
 		page.visit "/events_approval"
 		have_text("Klubtreffen des PR-Klubs")
 		have_text("Klubtreffen")
@@ -23,7 +23,7 @@ RSpec.feature "Event approval" do
 		page.should have_content("approved")
 	end
 
-	scenario "Reject an unprocessed Event" do
+	scenario "Reject an unprocessed Event", :reject_of_unprocessed_event => true do
   		page.visit "/events_approval"
 		have_text("Klubtreffen des PR-Klubs")
 		have_text("Klubtreffen")
@@ -36,7 +36,7 @@ RSpec.feature "Event approval" do
 		page.should have_content("declined")
 	end
 	
-	scenario "suggest an alternative for an unprocessed Event" do
+	scenario "suggest an alternative for an unprocessed Event", :suggest_alternative_for_unprocessed_event => true do
   		page.visit "/events_approval"
 		have_text("Klubtreffen des PR-Klubs")
 		have_text("Klubtreffen")
@@ -58,7 +58,7 @@ RSpec.feature "Event approval" do
 		page.should have_content("28")
 	end
 DOC
-	scenario "View details for Event" do
+	scenario "View details for Event", :view_details_for_event => true do
   		page.visit "/events_approval"
 		page.first(:link, "Klubtreffen").click
 		page.should have_content("Klubtreffen des PR-Klubs")

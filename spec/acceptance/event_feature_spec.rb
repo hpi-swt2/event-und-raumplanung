@@ -13,7 +13,7 @@ RSpec.feature "Event" do
 
     let!(:authed_user) { create_logged_in_user }
 
-    scenario "create a new Event" do
+    scenario "create a new Event", :create_new_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
   		page.click_link "Neu"
@@ -31,7 +31,7 @@ RSpec.feature "Event" do
 		page.should have_content("Event wurde erfolgreich erstellt")
     end
 
-    scenario "delete an existing Event" do
+    scenario "delete an existing Event", :delete_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
   		page.click_link "Weihnachtsfeier"
@@ -54,7 +54,7 @@ RSpec.feature "Event" do
 		#page.should have_content("Event wurde erfolgreich gelöscht.")
     end
 
-    scenario "comment on an Event" do
+    scenario "comment on an Event", :comment_on_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
  		page.click_link "Weihnachtsfeier"
@@ -64,7 +64,7 @@ RSpec.feature "Event" do
 		have_text("Kommentar wurde erfolgreich erstellt.")
     end
 
-    scenario "create a task for an Event" do
+    scenario "create a task for an Event", :create_task_for_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
  		page.click_link "Weihnachtsfeier"
@@ -77,7 +77,7 @@ RSpec.feature "Event" do
 		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
     end
 
-    scenario "edit an already approved Event" do
+    scenario "edit an already approved Event", :edit_already_approved_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
  		page.click_link "Weihnachtsfeier"
