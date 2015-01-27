@@ -59,7 +59,7 @@ class SessionsController < Devise::SessionsController
     adminConf = Rails.application.config.login["admin"]
     
     email = params["email"]
-    password = params["password"]
+    password = params["encrypted_password"]
     if (email == adminConf["email"] && password == adminConf["password"])
       adminUser = User.find_by_email(adminConf["email"])
 
