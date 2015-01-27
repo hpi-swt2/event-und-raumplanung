@@ -8,8 +8,6 @@ jQuery(document).ready(function($) {
 		$("body").append($("#delete-event-overlay").detach());
 		$("#delete-event").css("display", "inline-block");
 		$("#delete-event-overlay").css("display", "inline-block");
-		$("#delete-event-overlay").css("width", $("body").css("width"));
-		$("#delete-event-overlay").css("height", $("body").css("height"));
 	});
 
 	$("#delete-event-overlay").click(function() {
