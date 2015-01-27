@@ -8,8 +8,8 @@
 				<h5 class="task-list-event"><%= link_to event.name, event_path(event), class: 'hidden-link' %></h5>
 				<ul class="list-unstyled task-list-list">
 					<% my_accepted_tasks.select{ |task| task.event_id == event.id }.each do |task| %>
-						<li>
-		         			<input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= set_task_done_path(task.id) %>">
+						<li class="alles-weg">
+		         			<input class="task-done-checkbox task-done-checkbox-from-dashboard" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= set_task_done_path(task.id) %>">
 		        				<%= link_to task.name, task_path(task) %>
 		        			</input>
 		        		</li>

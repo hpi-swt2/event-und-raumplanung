@@ -23,6 +23,8 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    @assignable_entities = Group.all
+    @assignable_entities.concat(User.all)
     unless params[:event_id].blank?
       @task.event_id = params[:event_id]
       @for_event_template = false

@@ -16,7 +16,7 @@ class DashboardController < ApplicationController
     @my_groups = current_user.groups
     current_events = Event.where("ends_at >= '#{(Time.current.to_s(:db))}'") 
     current_events.each do |event|
-      @my_accepted_tasks += Task.where identity_type: 'User', identity_id: current_user.id, status: 'accepted', event_id: event.id
+      @my_accepted_tasks += Task.where identity_type: 'User', identity_id: current_user.id, status: 'accepted', event_id: event.id, done: false
       @my_pending_tasks += Task.where identity_type: 'User', identity_id: current_user.id, status: 'pending', event_id: event.id
       @group_pending_tasks += Task.where identity_type: 'Group', identity_id: @my_groups, status: 'pending', event_id: event.id
     end
