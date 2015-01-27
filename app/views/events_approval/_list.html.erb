@@ -1,12 +1,8 @@
 <table class="table table-striped">
 <thead>
   <tr>
-    <% if events_type == 'open' %>
-      <th/>
-    <% end %>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
-    <th><%= Event.human_attribute_name(:description) %></th>
     <th><%= Event.human_attribute_name(:rooms) %></th>
     <th><%= t '.time' %></th>
     <th><%= Event.human_attribute_name(:participant_count) %></th>
@@ -19,25 +15,12 @@
 <tbody>
   <% events.each do |event| %>
     <tr>
-      <% if events_type == 'open' %>
-        <% conflict = false %>
-        <% if @date >= event.starts_at.to_date && @date <= event.ends_at.to_date %>
-            <%  @approved_events.each do |approved_event| %>
-                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at %>
-                         <% conflict = true %>
-                <% end %>
-            <% end %>
-        <% end %>
-        <% if conflict %>
-            <td bgcolor="#FFFF00"/>
-        <% else %>
-            <td/>
-        <% end %>
-      <% end %>
-      <td><%= User.find(event.user_id).username if event.user_id %></td>
+      <td>
+        <% username = User.find(event.user_id).username if event.user_id && !User.where(id: event.user_id).empty? %>
+        <%= username ? username.gsub('.',' ').titleize : t('.unkown') %>
+      </td>
       <td><%= link_to event.name, event_path(event) %></td>
-      <td><%= trimDescription event.description %></td>
-      <td><%= event.rooms.map(&:name).to_sentence %></td>
+        <td><%= event.rooms.map(&:name).to_sentence %></td>
       <td>
         <%= events_type == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
       </td>

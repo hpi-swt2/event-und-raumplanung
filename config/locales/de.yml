@@ -133,6 +133,7 @@ de:
       unsuccessful_user_unassign: 'Benutzer %{email} kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist.'
       unsuccessful_promotion: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_degradation: 'Benutzer %{email} ist kein Mitglied der Gruppe'
+      unsuccessful_room_assign: 'Kein Raum ausgewählt'
 
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
@@ -230,6 +231,8 @@ de:
     successful_user_unassign: 'Benutzer %{email} erfolgreich aus Gruppe entfernt'
     successful_promotion: 'Benutzer %{email} erfolgreich zum Gruppenleiter ernannt'
     successful_degradation: 'Dem Benutzer %{email} wurde erfolgreich die Gruppenleiter entzogen'
+    successful_room_assign: 'Räume erfolgreich hinzugefügt'
+    successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
   tasks:
     
   alert:
