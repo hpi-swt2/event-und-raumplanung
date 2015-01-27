@@ -54,7 +54,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get 'admin', controller: 'sessions', action: 'show_admin_login'
-    post 'admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
+    post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
   end
 
   # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
