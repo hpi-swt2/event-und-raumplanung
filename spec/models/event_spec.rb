@@ -124,6 +124,7 @@ describe Event do
 
     it "occurence rule returns nil" do
       expect(event_with_schedule.occurence_rule).to be_nil
+      expect(event_with_schedule.single_occurrence_event?).to be
     end
 
     it "string formatting is valid" do
@@ -136,6 +137,7 @@ describe Event do
 
     it "and occurence rule is set" do
       expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+      expect(daily_recurring_event.single_occurrence_event?).not_to be
     end
 
     it "and string formatting is valid" do
