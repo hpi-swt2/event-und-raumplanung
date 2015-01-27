@@ -170,6 +170,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(rule)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
@@ -183,6 +184,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_daily_recurring_event2, parent: :daily_recurring_event do |f|
@@ -196,6 +198,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end 
 
   factory :sortEvent1, parent: :event do
