@@ -9,7 +9,14 @@
 </script>
 
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+    <table width="100%">
+        <td>
+            <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+        </td>
+        <td align="right">
+            <%= link_to t('.new', :default => t("helpers.links.new")), new_event_path, :class => 'btn btn-primary' %>
+        </td>
+    </table>
 </div>
 <div class="well">
   <%= form_for @filterrific do |f| %>
@@ -131,9 +138,7 @@
   </div>
   <% end %>
 </div>
-            <%= link_to t('.new', :default => t("helpers.links.new")),
-                        new_event_path,
-                        :class => 'btn btn-primary' %>
+
 <%= render(partial: 'events/list', locals: { events: @events,  model_class:  model_class }) %>
 
 <div class="clear"></div>
