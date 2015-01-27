@@ -41,10 +41,7 @@ class Event < ActiveRecord::Base
   date_time_attribute :starts_at
   date_time_attribute :ends_at
 
-
-  validates :name, presence: true
-  validates :starts_at, presence: true
-  validates :ends_at, presence: true
+  validates_presence_of :name, :starts_at, :ends_at, :rooms
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
   validate :dates_cannot_be_in_the_past,:start_before_end_date
