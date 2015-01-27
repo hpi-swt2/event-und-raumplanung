@@ -4,7 +4,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # If you add an option, be sure to inspect the migration file
   # "devise_create_user" and uncomment the appropriate section
-  validates_uniqueness_of :email
   validates_uniqueness_of :username
   devise :openid_authenticatable, :rememberable
 

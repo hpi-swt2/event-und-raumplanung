@@ -7,10 +7,6 @@ class SessionsController < Devise::SessionsController
   end
 
   def create
-    # kind_of? OpenID::Consumer::FailureResponse
-    # kind_of? OpenID::Consumer::SuccessResponse
-
-
     # The create methode is called every time a user needs to be created with Open ID
       # First time: When the submit button of the session form is clicked
       # Second time: When the response from OpenID must be handled
@@ -52,30 +48,26 @@ class SessionsController < Devise::SessionsController
   end
 
   def show_admin_login
-    render "admin"
+    render :admin
   end
 
   def authenticate_admin
-    adminConf = Rails.application.config.login["admin"]
+    admin_conf = Rails.application.config.login["admin"]
     
     email = params["email"]
     password = params["encrypted_password"]
-    if (email == adminConf["email"] && password == adminConf["password"])
-      adminUser = User.find_by_email(adminConf["email"])
+    if (email == admin_conf["email"] && password == admin_conf["password"])
+      admin_user = User.find_by_email(admin_conf["email"])
 
-      if adminUser.nil?
-        adminUser = User.create(:username => adminConf["username"], :email => adminConf["email"])
+      if admin_user.nil?
+        admin_user = User.create(:username => admin_conf["username"], :email => admin_conf["email"])
       end
 
-      sign_in adminUser
+      sign_in admin_user
       redirect_to root_path
     else
       flash[:error] = t('devise.failure.invalid')
       redirect_to admin_path
     end
-  end
-
-  def sign_out
-    super
   end
 end

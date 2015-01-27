@@ -19,6 +19,8 @@
             <h1><%= @firstname + " " + @lastname %></h1>
         <% end %>
     <% end %>
+    <%= label_tag auser.email, User.human_attribute_name(:email) %>
+    <%= text_field_tag( :email, auser.email,  class: 'form-control' )%>
 	<p> Email Nodifications: </br><input type="checkbox" name="checkEmailNod" <% if auser.email_notification %>checked<% end %>></p>
 	<p> Full Name: </br><%= text_field_tag( :fullname, auser.fullname,  class: 'form-control' )%></p>
 	<p> Office Location:</br>	<%= text_field_tag :officelocation, auser.office_location ,  class: 'form-control' %></p>
