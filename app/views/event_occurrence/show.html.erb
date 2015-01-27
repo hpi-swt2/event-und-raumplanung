@@ -95,8 +95,8 @@
                     :method => 'delete',
                     :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                     :class => 'btn btn-danger' %>
-      <% else %>
-        Hier soll der Button hin, der den Delete dialog oeffnet
+      <% else %> 
+        <button id="trigger-delete-dialog" class="btn btn-danger"><%= t("helpers.links.destroy") %></button>
       <% end %>
     <% end %>
   </div>
@@ -104,25 +104,30 @@
 
 
   <!-- DeleteDialog start -->
-  <div id="delete-event" class="row">
+  <div id="delete-event">
     <% if can? :destroy, @event_occurrence.event %>
-      <!-- delete single occurrence -->
-      <%= link_to t('.destroy', :default => t("event_occurrences.show.delete_occurrence")),
-                    delete_occurrence_path(:eventid => @event_occurrence.event.id, :starting => @event_occurrence.starts_occurring_at.to_s, :ending => @event_occurrence.ends_occurring_at.to_s),
-                    :method => 'delete',
-                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                    :class => 'btn btn-danger' %>
-      <div><%= t("event_occurrences.show.delete_occurrence_description") %></div>
+      <div class="delete-button-container">
+        <!-- delete single occurrence -->
+        <%= link_to t('.destroy', :default => t("event_occurrences.show.delete_occurrence")),
+                      delete_occurrence_path(:eventid => @event_occurrence.event.id, :starting => @event_occurrence.starts_occurring_at.to_s, :ending => @event_occurrence.ends_occurring_at.to_s),
+                      :method => 'delete',
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-danger' %>
+        <span><%= t("event_occurrences.show.delete_occurrence_description") %></span>
+      </div>
 
-      <!-- delete series, i.e. the whole event -->
-      <%= link_to t('.destroy', :default => t("event_occurrences.show.delete_series")),
-                    event_path(@event_occurrence.event),
-                    :method => 'delete',
-                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                    :class => 'btn btn-danger' %>
-      <div><%= t("event_occurrences.show.delete_series_description") %></div>
+      <div class="delete-button-container">
+        <!-- delete series, i.e. the whole event -->
+        <%= link_to t('.destroy', :default => t("event_occurrences.show.delete_series")),
+                      event_path(@event_occurrence.event),
+                      :method => 'delete',
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-danger' %>
+        <span><%= t("event_occurrences.show.delete_series_description") %></span>
+      </div>
     <% end %>
   </div>
+  <div id="delete-event-overlay"></div>
   <!-- DeleteDialog ende -->
 
 
