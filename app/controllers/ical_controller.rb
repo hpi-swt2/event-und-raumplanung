@@ -1,4 +1,4 @@
-class IcalController < AppilcationController
+class IcalController < ApplicationController
   before_action :authenticate_user!
 
   Mime::Type.register_alias "text/calendar", :ical
