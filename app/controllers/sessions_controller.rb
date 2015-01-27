@@ -51,19 +51,27 @@ class SessionsController < Devise::SessionsController
     end
   end
 
+  def show_admin_login
+    render "admin"
+  end
+
   def authenticate_admin
     adminConf = Rails.application.config.login["admin"]
-    authenticate_or_request_with_http_basic do |email, password|
-      if (email == adminConf["email"] && password == adminConf["password"])
-        adminUser = User.find_by_email(adminConf["email"])
+    
+    email = params["email"]
+    password = params["password"]
+    if (email == adminConf["email"] && password == adminConf["password"])
+      adminUser = User.find_by_email(adminConf["email"])
 
-        if adminUser.nil?
-          adminUser = User.create(:username => adminConf["username"], :email => adminConf["email"])
-        end
-
-        sign_in adminUser
-        redirect_to root_path
+      if adminUser.nil?
+        adminUser = User.create(:username => adminConf["username"], :email => adminConf["email"])
       end
+
+      sign_in adminUser
+      redirect_to root_path
+    else
+      flash[:error] = t('devise.failure.invalid')
+      redirect_to admin_path
     end
   end
 

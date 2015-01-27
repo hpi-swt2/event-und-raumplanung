@@ -53,8 +53,11 @@ Rails.application.routes.draw do
   post 'tasks/upload_file' => 'tasks#upload_file'
 
   devise_scope :user do
-    get 'admin', controller: 'sessions', action: 'authenticate_admin'
+    get 'admin', controller: 'sessions', action: 'show_admin_login'
+    post 'admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
   end
+
+  # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
