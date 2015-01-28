@@ -40,13 +40,15 @@
               <% @available_equipment.each do |category, count| %>
                 <tr>
                   <td><%= category%></td>
-                  <% existing_count = 0 %>
+                  <% requested_count = 0 %>
+                  <% if @requested_equipment && @requested_equipment.has_key?(room.id) && @requested_equipment[room.id].has_key?(category) %>
+                    <% requested_count = @requested_equipment[room.id][category] %>
+                  <% end %>                   
+                  <td> <%= number_field_tag category+'_equipment_count_'+room.id.to_s, 
+                        requested_count, min: 0 %></td>
                   <% if @room_equipment[room.id].has_key?(category) %>
-                    <% existing_count = @available_equipment[category] %>
-                    <td><%= number_field_tag category+'_equipment_count_'+room.id.to_s, 0, min: 0 %></td>
                     <td><%= count %></td>
-                  <% else %>
-                    <td><%= number_field_tag category+'_equipment_count_'+room.id.to_s, 0, min: 0 %></td>
+                  <% else %>    
                     <td>0</td>
                   <% end %> 
                 </tr>

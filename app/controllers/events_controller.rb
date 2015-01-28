@@ -65,7 +65,13 @@ class EventsController < ApplicationController
       for room in @chosen_rooms
         @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
       end
+      if params[:id]
+        set_event
+        set_requested_equipment
+      end
     end
+
+
 
     respond_to do |format|
       format.html
@@ -173,11 +179,7 @@ class EventsController < ApplicationController
     for room in @chosen_rooms
       @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
     end
-
-    @requested_equipment = Hash.new
-    for room in @chosen_rooms
-      #EquipmentRequest.where(room_id: room.id, event_id: @event.id).select(:category, :count)
-    end
+    set_requested_equipment
   end
 
   def sugguest
@@ -229,6 +231,17 @@ class EventsController < ApplicationController
   end
 
   private
+    def set_requested_equipment
+      @requested_equipment = Hash.new
+      for room in @chosen_rooms
+        temp = EquipmentRequest.where(room_id: room.id, event_id: @event.id).select(:category, :count)
+        @requested_equipment[room.id] = Hash.new
+
+        temp.each do |element|
+          @requested_equipment[room.id][element.category] = element.count
+        end
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])

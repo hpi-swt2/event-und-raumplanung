@@ -37,7 +37,7 @@
       <%= f.select :room_ids, 
           options_from_collection_for_select(Room.all, :id, :name, selected:@event.rooms.map(&:id)), 
           {}, 
-          {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'', :data => { :remote => true, :url => url_for(:controller => "events", :action => "change_chosen_rooms") }} 
+          {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'', :data => { :remote => true, :url => url_for(:controller => "events", :action => "change_chosen_rooms", :id => @event.id) }} 
       %>
     </div>
 
