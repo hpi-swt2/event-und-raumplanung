@@ -35,19 +35,20 @@ RSpec.feature "Task" do
     scenario "create a task for an Event witout mandatory fields", :create_task_for_Event_witout_mandatory_fields => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
- 		page.click_link "Weihnachtsfeier"
-		have_text("Details zur Weihnachtsfeier 2015")
+   		page.click_link "Klubtreffen"
+		have_text("Klubtreffen des PR-Klubs")
 		page.first(:link, "Aufgabe erstellen").click
 		have_text("Aufgabe hinzufügen")
 		page.click_button "Absenden"
+		save_and_open_page
 		page.should have_content("muss ausgefüllt werden.")
     end
 
     scenario "create Task with deadline and assignment", :create_task_with_deadline_assignment => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
- 		page.click_link "Weihnachtsfeier"
-		have_text("Details zur Weihnachtsfeier 2015")
+ 		page.click_link "Klubtreffen"
+		have_text("Klubtreffen des PR-Klubs")
 		page.first(:link, "Aufgabe erstellen").click
 		have_text("Aufgabe hinzufügen")
 		page.fill_in "task_name", with: "Acceptance Tests schreiben"
@@ -55,6 +56,7 @@ RSpec.feature "Task" do
 		page.fill_in "datetimepicker", with: Date.tomorrow
 		page.fill_in "task_identify_display", with: "test_admin"
 		page.click_button "Absenden"
+		save_and_open_page
 		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
 		have_text("test_admin")
     end
@@ -76,6 +78,7 @@ RSpec.feature "Task" do
 		page.click_button "Anhang hinzufügen"
 		page.click_button "Löschen" #would delete Anhang
 		page.click_button "Absenden"
+		save_and_open_page
 		page.should have_content("Aufgabe wurde erfolgreich aktualisiert.")
     end
 

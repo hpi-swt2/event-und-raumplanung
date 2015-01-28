@@ -20,7 +20,7 @@ RSpec.feature "Event approval" do
 		page.driver.options[:respect_data_method] = false
 		page.click_on("Genehmigen", :match => :first) # we are using own acceptance test seeds, otherwise selecting first would be a bad choice.
 		page.visit "/events/1"
-		page.should have_content("approved")
+		page.should have_content("bestätigt")
 	end
 
 	scenario "Reject an unprocessed Event", :reject_of_unprocessed_event => true do
@@ -47,7 +47,7 @@ RSpec.feature "Event approval" do
 		page.find('a[class="btn btn-warning suggest-btn"]').click
 		page.fill_in "event_ends_at_date", with: Date.tomorrow + 1
 		page.visit "/events/1"
-		page.should have_content("approved")
+		page.should have_content("bestätigt")
 	end
 
 <<-DOC	
