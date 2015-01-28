@@ -28,7 +28,7 @@ event = Event.create({name: 'Klubtreffen',
 					starts_at: Date.today + 1,
 					ends_at: Date.today + 1,
 					participant_count: 12,
-					user_id: 1,
+					identity_id: 1,
 					room_id: room1.id,
 					rooms: [room1]})
 
@@ -37,7 +37,7 @@ event = Event.create({name: 'Klubtreffen',
 Task.create({name: 'An accepted Task', 
 			description: 'This is an accepted task.',
 			event_id: event.id,
-			identity_id: 1,
+			user_id: 1,
 			status: 'accepted'})
 
 Task.create({:name => 'A Task', 
