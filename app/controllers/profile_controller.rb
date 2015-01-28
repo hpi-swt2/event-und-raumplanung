@@ -26,7 +26,7 @@ class ProfileController < ApplicationController
     @me.student = is_student(params["email"])
 
     if not is_valid_email(params["email"], @me.username)
-      flash[:error] = t('devise.sessions.email_invalid')
+      flash[:error] = t('devise.sessions.wrong_email')
       redirect_to "/profile"
     else
       respond_to do |format|

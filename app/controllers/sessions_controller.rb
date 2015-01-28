@@ -36,7 +36,7 @@ class SessionsController < Devise::SessionsController
         @user.save
       end
 
-      if @user.firstlogin
+      if not is_valid_email(@user.email, @user.username)
         redirect_to "/profile"
       else
         respond_with resource, location: after_sign_in_path_for(resource)
@@ -68,6 +68,16 @@ class SessionsController < Devise::SessionsController
     else
       flash[:error] = t('devise.failure.invalid')
       redirect_to admin_path
+    end
+  end
+
+  def is_valid_email(email, username)
+    domains = Rails.application.config.login["domains"]
+
+    if email && domains.include?(email.split('@').last) && username == email.split('@').first
+      return true
+    else
+      return false
     end
   end
 end
