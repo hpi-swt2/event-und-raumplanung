@@ -6,9 +6,8 @@ class EventsApprovalController < ApplicationController
 
   def index
     read_and_exec_params
-    check_admin_status
-    @events = Event.open.order(:starts_at)
-		@bookings = Booking.start_at_day(@date).approved.order(:start, :event_id)
+    @open_events = Event.open.order(:starts_at, :user_id, :id)
+		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id)
   end
 
   private
@@ -21,13 +20,6 @@ class EventsApprovalController < ApplicationController
         end
       rescue
       end  
-      @date = Date.today unless !@date.nil? && @date.acts_like_date?
+      @date = Date.current unless !@date.nil? && @date.acts_like_date?
     end
-
-    def check_admin_status
-      config = YAML.load_file(Rails.root.join('config', 'config.yml'))
-      admin_identity = config['admin']['identity_url']
-      @user_is_admin = (current_user.identity_url == admin_identity)
-    end
-
 end

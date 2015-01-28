@@ -6,16 +6,28 @@
   <body>
     <p>English version below</p>
 
-    <h1>Hallo <%= @user.email %></h1>
+    <h1>Hallo <%= @user.username %></h1>
     <p>
-      <%= @assigner.email %> hat Ihre Zuordnung zum Task <%= link_to @task.name, task_url(@task) %> gelöscht.
+      <%= @assigner.username %> hat 
+      <% if @group_assigment %>
+        die Zuordnung der Gruppe <%= @group_name %>
+      <% else %>
+        Ihre Zuordnung
+      <% end %>
+      zum Task <%= link_to @task.name, task_url(@task) %> gelöscht.
     </p>
     <p>Einen schönen Tag!</p>
     <hr/>
 
-    <h1>Hello <%= @user.email %></h1>
+    <h1>Hello <%= @user.username %></h1>
     <p>
-      <%= @assigner.email %> removed your assignment to the task <%= link_to @task.name, task_url(@task) %>
+      <%= @assigner.username %> removed 
+      <% if @group_assigment %>
+        the assignment of the group <%= @group_name %>
+      <% else %>
+        your assignment 
+      <% end %>
+      to the task <%= link_to @task.name, task_url(@task) %>
     </p>
     <p>Thanks and have a great day!</p>
   </body>

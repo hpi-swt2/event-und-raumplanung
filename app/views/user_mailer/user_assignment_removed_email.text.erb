@@ -1,8 +1,8 @@
 English version below
 
-Hallo <%= @user.email %>
+Hallo <%= @user.username %>
 ===========================
-<%= @assigner.email %> hat Ihre Zuordnung zum Task <%= @task.name %> gelöscht.
+<%= @assigner.username %> hat <% if @group_assigment %> die Zuordnung der Gruppe <%= @group_name %><% else %>Ihre Zuordnung<% end %> zum Task <%= @task.name %> gelöscht.
 
 Rufen Sie diese Seite auf, um den Task anzusehen: <%= task_url(@task)%>.
 
@@ -10,9 +10,9 @@ Einen schönen Tag!
 
 ============================================
 
-Hello <%= @user.email %>
+Hello <%= @user.username %>
 ===========================
-<%= @assigner.email %> removed your assignment to the task <%= @task.name %>
+<%= @assigner.username %> removed <% if @group_assigment %> the assignment of the group <%= @group_name %><% else %>your assigment<% end %> to the task <%= @task.name %>
 
 Visit this URL to see the task: <%= task_url(@task)%>.
 

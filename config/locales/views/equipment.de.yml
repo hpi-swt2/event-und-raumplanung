@@ -1,0 +1,30 @@
+de:
+  equipment:
+    index:
+      title: Equipmentübersicht
+      search_name: Suche nach Name
+      search_category: Suche nach Kategorie
+      search_room: Suche nach Raum
+      new: Neu
+    list: 
+      description: Beschreibung
+      room: Raum
+      category: Kategorie
+      action: Aktionen
+      new: Neu  
+      edit: Editieren
+      delete: Löschen
+    show:
+      description: Beschreibung
+      room: Raum
+      back: Zurück
+      edit: Editieren
+      delete: Löschen
+    form:
+      name: Name
+      description: Beschreibung
+      room: Raum
+      category: Kategorie
+      cancel: Abbrechen
+    edit:
+      title: Equipment aktualisieren

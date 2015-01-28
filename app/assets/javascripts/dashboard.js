@@ -6,7 +6,7 @@ $(document).on('page:load', handleTaskAction);
 
 function handleTaskAction()
 {
-	$(".task-action").click(function(event)
+	$(".task-action").click(function()
 	{
 		var path = $(this).attr('data-path');
 		var request = $.ajax({
@@ -14,7 +14,7 @@ function handleTaskAction()
 			method: 'GET',
 			dataType: 'json'
 		});
-		request.done(function(response)
+		request.done(function()
 			{
 				location.reload();
 			});

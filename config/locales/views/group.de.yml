@@ -2,6 +2,7 @@
 
 de:
   groups:
+    group: Gruppe
     index:
       title: Gruppenübersicht
       all_groups: Alle Gruppen
@@ -24,8 +25,13 @@ de:
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen
       back: Zurück
-      rename: Gruppe Umbenennen
+      rename: Gruppe umbenennen
       user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
       assign_user: Nutzer zuweisen
       actions: Aktionen
       role: Rolle
+    manage_rooms:
+      currentRooms: Aktuelle Gruppenräume
+      addRoom: Räume hinzufügen
+      add: Hinzufügen
+      delete: Entfernen

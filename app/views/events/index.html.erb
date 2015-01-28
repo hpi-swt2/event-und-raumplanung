@@ -1,7 +1,7 @@
 <%- model_class = Event -%>
 
 <script type="text/javascript">
-  $(function() {  
+  $(function() {
     $('.datetimepicker').datetimepicker({
       language: '<%= I18n.default_locale %>'
     });
@@ -35,7 +35,7 @@
           <%= f.check_box :user %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
@@ -44,7 +44,7 @@
           <%# See below for the Student.options_for_sorted_by presenter method %>
        </div>
       </div>
-    </div> 
+    </div>
     <div class="col-md-3">
       <div class="form-group">
         <div class="chardin_box">
@@ -52,7 +52,7 @@
           <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @filterrific.room_ids) , {}, {:class=> 'selectpicker form-control', :multiple =>'' }%>
        </div>
       </div>
-    </div> 
+    </div>
   </div>
   <div class="row">
     <div class="col-md-3">
@@ -84,6 +84,14 @@
             :ends_before,
             class: 'datetimepicker form-control'
           ) %>
+       </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <div class="chardin_box">
+          <%= t '.items_per_page' %>
+          <%= f.select(:items_per_page, @filterrific.select_options[:items_per_page], {}, {class: 'form-control'}) %>
        </div>
       </div>
     </div>
