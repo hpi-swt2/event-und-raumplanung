@@ -13,101 +13,71 @@ class SessionsController < Devise::SessionsController
     # First: We need an OpenID independent admin user
     # Second: We can not rely on an email given by OpenID 
 
-    adminConf = Rails.application.config.login["admin"]
-    domains = Rails.application.config.login["domains"]
+    # Devise specfic code (just take a look at the gems create method)
+    provider_response = env[Rack::OpenID::RESPONSE]
+    identity_url_temp = ""
 
-    # Check if admin username was entered in the session form
-    if params.include?("user") and params["user"]["email"] == adminConf["email"]
-      flash[:notice] = t('devise.sessions.admin_password')
-      redirect_to(new_user_session_path(:admin => ""))
-    # Check the enter admin password in the session form
+    if provider_response.kind_of? OpenID::Consumer::SuccessResponse
+      identity_url_temp = provider_response.endpoint.claimed_id
+      username_temp = identity_url_temp.split('/').last
+      session[:username] = username_temp
+    end
 
-    elsif params.include?("user") and params["user"].include?("encrypted_password")
-      # Check correctness of the admin password
-      if(params["user"]["encrypted_password"] == adminConf["password"])
-        # Check if admin user is already existing
-        if User.all.find_by_email(adminConf["email"])
-          @user = User.all.find_by_email(adminConf["email"])
-          sign_in @user
-        else
-          @user = User.new(:username => adminConf["username"], :email => adminConf["email"])
-          @user.save
-          sign_in @user
-        end
+    self.resource = warden.authenticate!(auth_options)
+    set_flash_message(:notice, :signed_in) if is_flashing_format?
+    sign_in(resource_name, resource)
+    yield resource if block_given?
 
-        # Log in admin user and redirect to root
-        flash[:notice] = t('devise.sessions.signed_in')
-        redirect_to root_path
+    if provider_response.kind_of? OpenID::Consumer::SuccessResponse
+      # Custom email and username
+      if @user.username == "" &&  @user.identity_url == nil
+        @user.identity_url = identity_url_temp
+        @user.email = @user.username + Time.now.to_s
+        @user.save
+      end
+
+      if not is_valid_email(@user.email, @user.username)
+        redirect_to "/profile"
       else
-        # Admin log in failed, redirect to log in
-        flash[:error] = t('devise.failure.invalid')
-        redirect_to root_path
-      end
-    # Proceed with normal Open ID log in 
-    else
-      # This token is set by devise-openidauthenticable when the session form is submitted
-      if(params["authenticity_token"] != nil)
-        session[:email] = params[:user][:email] 
+        respond_with resource, location: after_sign_in_path_for(resource)
       end
 
-      # check mail-domain for a valid HPI domain
-      if not domains.include?(session[:email].split('@').last)
-          flash[:error] = t('devise.sessions.wrong_domain')
-          flash[:notice] = "";
-          redirect_to root_path
-      else
-        
-        # Devise specfic code (just take a look at the gems create method)
-        self.resource = warden.authenticate!(auth_options)
-        set_flash_message(:notice, :signed_in) if is_flashing_format?
-        sign_in(resource_name, resource)
-        yield resource if block_given?
-        #check if the user has registered with a different email in the past
-        if session[:email].split('@').last.split('.').first == 'student'
-          @user.student = true
-        else
-          @user.student = false
-        end
-        
-        if(@user.email != nil and @user.email != session[:email] and @user.email != '')
-          flash[:error] = t('devise.sessions.email_invalid')
-          flash[:notice] = "";
-          sign_out @user
-          redirect_to root_path
-        else
-
-          # Custom email, username and status creation
-          @user.username = build_name_from_email(session[:email]);
-          @user.identity_url = "https://openid.hpi.uni-potsdam.de/" + @user.username;
-          if (@user.username != build_name_from_identity_url(current_user.identity_url))
-            flash[:error] = t('devise.sessions.wrong_username')
-            flash[:notice] = "";
-            sign_out @user
-            redirect_to root_path
-          end
-          
-
-          @user.save
-
-          if @user.firstlogin
-            redirect_to "/profile"
-          else
-            respond_with resource, location: after_sign_in_path_for(resource)
-          end
-        end
-        # Clear the session variable
-        session[:email] = nil
-      end
+      # Clear the session variable
+      session[:username] = nil
     end
   end
 
-  def build_name_from_identity_url(identity_url)
-    identity_url.split('/').last
+  def show_admin_login
+    render :admin
   end
 
+  def authenticate_admin
+    admin_conf = Rails.application.config.login["admin"]
+    
+    email = params["email"]
+    password = params["encrypted_password"]
+    if (email == admin_conf["email"] && password == admin_conf["password"])
+      admin_user = User.find_by_email(admin_conf["email"])
 
-  def build_name_from_email(email)
-    # Create the user email from given name and status
-    email.split('@').first
+      if admin_user.nil?
+        admin_user = User.create(:username => admin_conf["username"], :email => admin_conf["email"])
+      end
+
+      sign_in admin_user
+      redirect_to root_path
+    else
+      flash[:error] = t('devise.failure.invalid')
+      redirect_to admin_path
+    end
+  end
+
+  def is_valid_email(email, username)
+    domains = Rails.application.config.login["domains"]
+
+    if email && domains.include?(email.split('@').last) && username == email.split('@').first
+      return true
+    else
+      return false
+    end
   end
 end
