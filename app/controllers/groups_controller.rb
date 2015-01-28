@@ -9,6 +9,21 @@ class GroupsController < ApplicationController
 
   def index
     @groups = Group.all
+    @myGroups = Group.get_all_groups_of_current_user (current_user.id)
+    @otherGroups = @groups-@myGroups
+
+    @filterrific = Filterrific.new(
+      Group, params[:filterrific])
+      @groups = Group.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
+
+    @myGroups = @myGroups & @groups 
+    @otherGroups = @otherGroups & @groups 
+    
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def show
