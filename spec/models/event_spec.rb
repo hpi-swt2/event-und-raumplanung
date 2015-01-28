@@ -88,6 +88,18 @@ describe Event do
     end
   end
 
+  describe "schedule_from_rule" do
+    it "sets a schedule and rule" do
+      weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+      termination_date = weekly_recurring_event.starts_at.to_date.advance(weeks: 1)
+      dirty_rule = '{"interval":1, "validations": {"day": [0,1,2,3,4,5,6]}, "rule_type": "IceCube::WeeklyRule"}'
+      weekly_recurring_event.schedule_from_rule(dirty_rule, termination_date.to_s)
+      expect(weekly_recurring_event.schedule.occurs_on?(termination_date)).to be
+      expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1))).to be
+      expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1, days: 1))).not_to be
+    end
+  end
+
   it "should have options_for_sorted_by" do
     Event::options_for_sorted_by
   end
@@ -126,10 +138,6 @@ describe Event do
       expect(event_with_schedule.occurence_rule).to be_nil
     end
 
-    it "has no termination time" do
-      expect(event_with_schedule.schedule_ends_at_time).to be_nil
-    end
-
     it "has no termination date" do
       expect(event_with_schedule.schedule_ends_at_date).to be_nil
     end
@@ -155,12 +163,12 @@ describe Event do
     let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
 
     it "and occurence rule is set" do
-      expect(daily_recurring_terminating_event.schedule_ends_at_time).to eq(Time.local(2015, 8, 16, 0, 0, 0))
-      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Time.local(2015, 8, 16, 0, 0, 0).to_date)
+      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 15))
     end
 
-    it "and there is no event occurrence after the termination date" do
-      expect(Event.events_between(daily_recurring_terminating_event.starts_at, Time.local(2015, 8, 16, 0, 0, 0).advance(weeks: 1)).size).to eq(15)
+    it "and there is no event occurrence after the termination date (inclusive)" do
+      event_times = Event.events_between(daily_recurring_terminating_event.starts_at, Date.new(2015, 8, 15).advance(weeks: 1))
+      expect(event_times.size).to eq(15)
     end
   end
 

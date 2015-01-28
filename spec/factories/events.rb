@@ -166,7 +166,7 @@ FactoryGirl.define do
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
       rule = IceCube::Rule.daily
-      rule.until(Time.local(2015, 8, 16, 0, 0, 0))
+      rule.until(Date.new(2015, 8, 15))
       s.add_recurrence_rule(rule)
     end
     f.schedule schedule
