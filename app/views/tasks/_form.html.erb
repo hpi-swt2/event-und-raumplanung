@@ -57,9 +57,15 @@
     <% unless @for_event_template %> 
       <div class="control-group">
         <%= f.label :deadline, :class => 'control-label' %>
-        <div class="controls">
-            <%= f.date_field :deadline, :class => 'form-control' %>
-        </div>  
+        <div class="controls" id="Deadline">
+          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput'}%>
+        </div>
+        <script type="text/javascript">
+          $('#Deadline').datetimepicker({
+            format: 'DD/MM/YYYY',
+            pickTime: false
+          });
+        </script>
         <%= error_span(@task[:deadline]) %>  
       </div>
       <div class="control-group">

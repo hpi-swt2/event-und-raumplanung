@@ -62,10 +62,9 @@ describe "Rooms", :type => :request do
     room = FactoryGirl.create(:room)
     another_room = FactoryGirl.create(:room)
     event = FactoryGirl.create(:event)
-    event.rooms << room
+    event.rooms = [room]
     another_event = FactoryGirl.create(:event)
-    another_event.rooms << room
-    another_event.rooms << another_room
+    another_event.rooms = [room, another_room]
     permitted_user = FactoryGirl.create(:user)
     permitted_user.permit("approve_events")
     permitted_user_ability = Ability.new(permitted_user)

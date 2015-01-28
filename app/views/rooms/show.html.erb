@@ -32,15 +32,6 @@
               :class => 'btn btn-danger' %>
 <% end %>
 
-<div id="events">
-  <div class="page-header upcoming-events">
-    <h2><%=t '.upcoming_events' %></h2>
-    <%= link_to t('.all_events'),
-                  room_events_path(@room), :class => 'btn btn-default' %>
-  </div>
-
-  <%= render :partial => 'upcoming_events' %>
-</div>
 <div class "page-header">
     <h2><%=t '.equipment' %> </h2>
     <% if @assigned_equipment != {} %>
@@ -65,6 +56,15 @@
     <% else %>
       <em><%=t '.no_equipment' %></em><br/>
     <% end %>
+</div>
+<div id="events">
+  <div class="page-header upcoming-events">
+    <h2><%=t '.upcoming_events' %></h2>
+    <%= link_to t('.all_events'),
+                  room_events_path(@room), :class => 'btn btn-default' %>
+  </div>
+
+  <%= render :partial => 'upcoming_events' %>
 </div>
 <br></br>
 

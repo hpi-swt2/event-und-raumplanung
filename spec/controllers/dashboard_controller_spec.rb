@@ -17,7 +17,8 @@ RSpec.describe DashboardController, type: :controller do
     starts_at_time:'17:00',
     ends_at_time:'23:59',
     is_private: true,
-    user_id: user.id
+    user_id: user.id,
+    rooms: [FactoryGirl.build(:room)]
   }}
 
   let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }

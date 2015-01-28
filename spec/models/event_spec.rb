@@ -18,6 +18,16 @@ describe Event do
     @upcoming_event.destroy
   end
 
+  let(:conflicting_event) { 
+    { 
+      starts_at_date: Time.now.strftime("%Y-%m-%d"),
+      ends_at_date: (Time.now + 3600).strftime("%Y-%m-%d"),
+      starts_at_time: Time.now.strftime("%H:%M:%S"),
+      ends_at_time: (Time.now + 3600).strftime("%H:%M:%S"),
+      room_ids: ['1'], 
+    }
+  }
+
   describe "events_between" do
     let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
 
@@ -233,21 +243,17 @@ describe Event do
 
    it "should find overlapping events" do
     @event1 = FactoryGirl.create(:standardEvent)
-    @event1.name = "Party1"
-    @event2 = FactoryGirl.create(:standardEvent)
-    @event2.name = "Party2"
-    @event1.save
-    @event2.save
+    @event2 = FactoryGirl.create(:conflictingEvent, :rooms => @event1.rooms)
 
     ## Case 1: same timeslot
-    coliding_events = @event2.check_vacancy(@event1.rooms.map(&:id))
-    expect(coliding_events.size).to eq 1
-    expect(coliding_events[0].name).to eq "Party1"
+    colliding_events = @event2.check_vacancy(@event1.id, @event1.rooms.map(&:id))
+    expect(colliding_events.size).to eq 1
+    expect(colliding_events[0].name).to eq "Eventname"
 
     ## Case 2: same timeslots, but different rooms, results to no conflicts (
     @event2.rooms = []
-    coliding_events = @event2.check_vacancy([@event1[:room_id].to_s])
-    expect(coliding_events.size).to eq 0
+    colliding_events = @event2.check_vacancy(@event1.id, [@event1[:room_id].to_s])
+    expect(colliding_events.size).to eq 0
 
     @event1.destroy
     @event2.destroy
@@ -311,6 +317,11 @@ describe "event order" do
       @events = Event.room_ids @event.rooms.map(&:id)
       expect(@events.size).to be >= 1
       expect(@events).to include @event
+    end
+
+    it "without rooms should be invalid" do
+        invalid_event = build(:invalid_event_without_rooms)
+        expect(invalid_event).not_to be_valid
     end
 
   end
