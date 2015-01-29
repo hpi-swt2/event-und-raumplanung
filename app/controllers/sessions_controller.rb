@@ -1,12 +1,6 @@
 class SessionsController < Devise::SessionsController
   before_filter :require_no_authentication, only: :new
 
-  def new
-    # Needed as attribute for admin password input
-    @admin = params.include?("admin")
-    super 
-  end
-
   def create
     # The create methode is called every time a user needs to be created with Open ID
       # First time: When the submit button of the session form is clicked
