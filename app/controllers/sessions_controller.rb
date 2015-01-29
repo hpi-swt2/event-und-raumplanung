@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-  before_filter :require_no_authentication, only: :new
+  before_filter :require_no_authentication, only: [:new, :show_admin_login]
 
   def create
     # The create methode is called every time a user needs to be created with Open ID
