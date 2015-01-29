@@ -83,12 +83,14 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  get 'fetch_event' => 'rooms#fetch_event', as: :fetch_event
+
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do
-    collection do 
+    collection do
       get :create_event_suggestion
-      patch :create_event_suggestion 
+      patch :create_event_suggestion
       post :creat_event_suggestion
       get :reset_filterrific
     end
@@ -97,7 +99,7 @@ Rails.application.routes.draw do
       post :approve
       post :decline
       get :decline
-      get :approve_event_suggestion 
+      get :approve_event_suggestion
       get :decline_event_suggestion
       get :new_event_template
       get :new_event_suggestion
@@ -114,7 +116,8 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
-
+  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
+  get 'ical/' => 'ical#show_my_events'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

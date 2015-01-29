@@ -1,7 +1,7 @@
 <h1><%=t '.title' %></h1>
 
 <div id='open_events'>
-  <%= render partial: 'events_approval/list', locals: { events: @open_events, events_type: 'open' } %>
+  <%= render partial: 'list', locals: { events: @open_events, events_type: 'open' } %>
 </div>
 <br>
 
@@ -18,5 +18,5 @@
       <td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
     </table>
   </center>
-<%= render partial: 'events_approval/list', locals: { events: @approved_events, events_type: 'approved' } %>
+<%= render partial: 'list', locals: { events: @approved_events, events_type: 'approved' } %>
 </div>

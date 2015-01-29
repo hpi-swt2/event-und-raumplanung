@@ -3,7 +3,7 @@
 <div class="table-responsive">
     <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
 
-<% if tasks.empty? %>
+<% if @tasks.empty? %>
     <div class="no-tasks-text">
         <%= t('tasks.show.no_tasks') %>
     </div>
