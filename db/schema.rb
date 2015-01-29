@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20150119124943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "activities", force: true do |t|
     t.string   "username"
@@ -101,8 +102,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.text     "schedule"
     t.integer  "event_id"
+    t.text     "schedule"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
@@ -184,8 +185,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.datetime "updated_at"
     t.boolean  "done",              default: false
     t.string   "status"
-    t.datetime "deadline"
     t.integer  "task_order"
+    t.datetime "deadline"
     t.integer  "event_template_id"
     t.integer  "identity_id"
     t.string   "identity_type"
