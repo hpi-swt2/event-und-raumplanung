@@ -4,6 +4,7 @@ SimpleCov.start 'rails'
 require 'rails_helper'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'capybara/webkit/matchers' # for JS support
 require 'helpers/user_helper_spec'
 require 'factory_girl_rails'
 
@@ -31,6 +32,8 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 RSpec.configure do |config|
+
+  config.use_transactional_fixtures = false
 
   config.before(:suite) do
    DatabaseCleaner.strategy = :transaction
@@ -80,6 +83,7 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
- # Capybara.javascript_driver = :webkit
+  Capybara.javascript_driver = :webkit
+  #config.include(Capybara::Webkit::RspecMatchers, :type => :feature)
 
 end

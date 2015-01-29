@@ -130,7 +130,7 @@ gem 'jquery-turbolinks'
 
 group :test, :development  do 
 	gem 'capybara'
-	#gem 'capybara-webkit', '~> 0.7.2' # for JS support
+	gem 'capybara-webkit' #, '~> 0.7.2' # for JS support
 	gem 'guard-rspec'
 	gem 'database_cleaner'
 	gem 'rack_session_access'

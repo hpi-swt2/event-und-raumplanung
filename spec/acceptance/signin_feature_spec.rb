@@ -2,6 +2,8 @@ require 'spec_helper'
 
 RSpec.feature "User signin" do 
 
+  	#
+    	#
 	scenario "Signing in with correct eMail", :user_signin_correct => true do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
@@ -10,6 +12,8 @@ RSpec.feature "User signin" do
 		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/"
 	end
 
+  	#
+    	#
 	scenario "Signing in with incorrect eMail", :user_signin_incorrect => true do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
@@ -18,6 +22,8 @@ RSpec.feature "User signin" do
 		page.should have_content("Bitte benutze eine gültige HPI E-Mail Adresse")
 	end
 
+  	#
+    	#
 	scenario "Signing in admin eMail", :user_signin_admin => true do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
@@ -28,7 +34,9 @@ RSpec.feature "User signin" do
 		page.should have_content("Erfolgreich angemeldet")
 	end
 
-<<-DOC	
+<<-DOC	# OLD TESTS: not necessary anymore due to change in login process
+  	#
+    	#
 	scenario "Signing in with simple button", :user_signin_single_button => true do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
@@ -36,6 +44,8 @@ RSpec.feature "User signin" do
 		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/serve"
 	end
 
+  	#
+    	#
 	scenario "Signing in with correct openID URL" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
@@ -44,6 +54,8 @@ RSpec.feature "User signin" do
 		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/serve"
 	end
 
+  	#
+    	#
 	scenario "Signing in with incorrect openID URL" do
 		page.visit "/users/sign_in"
 		page.should have_text("Log in")
