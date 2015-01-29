@@ -1,0 +1,54 @@
+<%-
+  model_class = Room
+-%>
+<style type="text/css">
+  @page {
+  size: landscape;
+}
+  .page {
+    width: 267mm;
+    height: 190mm;
+  }
+</style>
+<div class="page">
+<h1 style="position:absolute; margin-top:0px; margin-left:10px;"><%=@room.name%></h1>
+<div id="calendar" class="room-events-calendar" style="page-break-after: always"></div>
+</div>
+<script>
+  $(document).ready(function(){
+    $("#calendar").fullCalendar({
+      header: {
+        left: '',
+        center: 'title',
+        right: ''
+      },
+      lang: 'de',
+      events: [
+       <% @calevents.each do |each| %>
+          {
+            id : '<%= each.id %>',
+            title: '<%= each.name %>',
+            start: '<%= each.starts_at %>',
+            <% if each.is_approved %>
+                color: 'green'
+            <% else %>
+                color: 'red'
+            <% end %>             
+          },
+        <% end %>
+      ],
+      businessHours:
+        {
+            start: '08:00', 
+            end: '18:00', 
+            dow: [ 1, 2, 3, 4, 5 ]
+        },
+      minTime: "07:00",
+      maxTime: "20:00",
+      theme: false,
+      defaultView:'agendaWeek',
+      firstDay: 1,
+    });
+  });
+
+</script>

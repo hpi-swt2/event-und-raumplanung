@@ -139,6 +139,9 @@ class Event < ActiveRecord::Base
     room_ids = room_ids.select { |room_id| room_id!=''}
     joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
+  scope :approved, lambda { 
+    where("status = 'approved'")
+  }
 
   scope :starts_after, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
