@@ -20,15 +20,19 @@
     <tr>
       <% if events_type == 'open' %>
         <% conflict = false %>
-        <% if @date >= event.starts_at.to_date && @date <= event.ends_at.to_date %>
-            <%  @approved_events.each do |approved_event| %>
-                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at %>
-                         <% conflict = true %>
+            <%  @conflict_events.each do |approved_event| %>
+                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at%>
+                    <% approved_event.rooms.each do |room| %>
+                        <% event.rooms.each do |room2| %>
+                            <% if room2.id == room.id %>
+                                <% conflict = true %>
+                            <% end %>
+                        <% end %>
+                    <% end %>
                 <% end %>
             <% end %>
-        <% end %>
         <% if conflict %>
-            <td bgcolor="#FFFF00"/>
+            <td bgcolor="#E91010"/>
         <% else %>
             <td/>
         <% end %>

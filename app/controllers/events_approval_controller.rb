@@ -8,6 +8,7 @@ class EventsApprovalController < ApplicationController
     read_and_exec_params
     @open_events = Event.open.order(:starts_at, :user_id, :id)
 		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id)
+    @conflict_events = Event.approved.where('starts_at >= ?', Date.current)
   end
 
   private
