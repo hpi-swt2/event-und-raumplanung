@@ -1,6 +1,7 @@
 class EventsApprovalController < ApplicationController
 
   before_action :authenticate_user!
+  before_action :authorize_user
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index] #this line needs to be removed in the future as only admins should be able to view this page
 
@@ -21,5 +22,8 @@ class EventsApprovalController < ApplicationController
       rescue
       end  
       @date = Date.current unless !@date.nil? && @date.acts_like_date?
+    end
+    def authorize_user
+      authorize! :approve_any, Event
     end
 end
