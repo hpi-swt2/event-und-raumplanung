@@ -89,27 +89,28 @@ class Event < ActiveRecord::Base
     (self.ends_at - self.starts_at).seconds
   end
 
-  def involved_users()
+  def involved_users
     involved = Array.new
     involved << User.find(self.user_id)
     self.tasks.each do | task |
       if task.identity_type == 'User'
-        u = User.find(task.identity_id)
-        involved << u
-      end
-
-      if task.identity_type == 'Group'
-        g = Group.find(task.identity_id)
-        involved << g.users
+        involved << User.find(task.identity_id)
+      elsif task.identity_type == 'Group'
+        Group.find(task.identity_id).users.each {|user| involved << user}
       end
     end
+    involved += get_involved_group_leaders
+    return involved
+  end
 
+  def get_involved_group_leaders
+    involved = Array.new
     self.rooms.each do |room|
       if room.group
         involved += room.group.leaders
       end
     end
-    involved
+    return involved
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
@@ -206,8 +207,8 @@ class Event < ActiveRecord::Base
   end
   
   def exist_colliding_events
-    event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
-    return (event_count > 0)
+    #event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
+    #return (event_count > 0)
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant

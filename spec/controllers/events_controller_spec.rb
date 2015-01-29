@@ -273,6 +273,23 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
 
+    it "shows all tasks of the event to the event owner" do
+      skip ("Group members cannnot see tasks that are assigned to that group")
+      assigned_group = create(:group)
+      group_member = create(:user)
+      assigned_group.users << group_member
+      sign_in group_member
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_group)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      puts (assigns(:tasks).inspect)
+      puts (firstTask.inspect)
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
     context "if the user has created the event" do
       it "shows the activity log" do
         e = create(:event, user_id: user.id)
