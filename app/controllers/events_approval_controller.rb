@@ -2,9 +2,7 @@ class EventsApprovalController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authorize_user
-  load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index] #this line needs to be removed in the future as only admins should be able to view this page
-
+  
   def index
     read_and_exec_params
     @open_events = Event.open.order(:starts_at, :user_id, :id)
