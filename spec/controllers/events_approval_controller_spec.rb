@@ -116,6 +116,39 @@ RSpec.describe EventsApprovalController, :type => :controller do
 		end
 	end
 
+	describe "GET index as group member" do
+		before(:all) do
+			@group = FactoryGirl.create(:group)
+			@room = FactoryGirl.create(:room)
+			@group.permit("approve_events", @room)
+			@open_event_with_room = FactoryGirl.create(:event_today, name: 'open_event')
+			@open_event_with_room.rooms << @room
+			@approved_event_with_room = FactoryGirl.create(:approved_event, name: 'approved_event')
+			@approved_event_with_room.rooms << @room
+		end
+		before(:each) do
+		    sign_in user
+		    @group.users << user
+		end
+
+	  	it "assigns all open events as @open_events" do
+	  		get :index, {}, valid_session
+			expect(assigns(:open_events)).to include(@open_event_with_room)
+			expect(assigns(:open_events)).not_to include(@open_event, @approved_event, @declined_event, @approved_event_yesterday, @approved_event_tomorrow)
+		end
+		it "assigns all approved events at specified date as @approved_events" do
+			get :index, {}, valid_session
+			expect(assigns(:approved_events)).to include(@approved_event_with_room)
+			expect(assigns(:approved_events)).not_to include(@open_event, @approved_event, @declined_event, @approved_event_yesterday, @approved_event_tomorrow)
+		end
+
+		after(:all) do 
+			@group.destroy
+			@open_event_with_room.destroy
+			@approved_event_with_room.destroy
+		end
+	end
+
 	after(:all) do
 		@open_event.destroy
 		@approved_event.destroy

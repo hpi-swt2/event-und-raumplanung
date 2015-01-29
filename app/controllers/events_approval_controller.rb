@@ -5,8 +5,8 @@ class EventsApprovalController < ApplicationController
   
   def index
     read_and_exec_params
-    @open_events = Event.open.order(:starts_at, :user_id, :id)
-		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id)
+    @open_events = Event.open.order(:starts_at, :user_id, :id).select{|event| can? :approve, event}
+		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id).select{|event| can? :approve, event}
   end
 
   private
