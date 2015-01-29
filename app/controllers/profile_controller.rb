@@ -30,7 +30,7 @@ class ProfileController < ApplicationController
     if not is_valid_domain(params["email"])
       flash[:error] = t('devise.sessions.wrong_domain')
       redirect_to "/profile"
-    elsif 
+    elsif not is_correct_account(params["email"], @me.username)
       flash[:error] = t('devise.sessions.wrong_email')
       redirect_to "/profile"
     else
@@ -52,7 +52,7 @@ class ProfileController < ApplicationController
     return (email && domains.include?(email.split('@').last))
   end
 
-  def is_correct_account
+  def is_correct_account(email, username)
     return (email && username == email.split('@').first)
   end
 
