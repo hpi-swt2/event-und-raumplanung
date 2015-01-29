@@ -6,13 +6,13 @@ include RequestHelpers
 RSpec.feature "Event" do
     background do
 	 #   @user = FactoryGirl.create :user, email: 'jack.daniels@hpi.uni-potsdam.de'
-	@admin = FactoryGirl.create(:adminUser)
+		#@admin = FactoryGirl.create(:adminUser)
     end
 
 
     before(:each) do
 	   # page.set_rack_session(:user_id => @admin.id) 
-	    page.set_rack_session(:user_id => 1) 
+	  #  page.set_rack_session(:user_id => 1) 
 	    #page.set_rack_session(:user_id => @user.id) 
 		#page.set_rack_session(:user_id => @user.id) 
 	 #   admin = FactoryGirl.create(:adminUser)
@@ -20,7 +20,7 @@ RSpec.feature "Event" do
 	    load Rails.root + "spec/support/seeds.rb" 
     end
 
-    let!(:authed_user) { create_logged_in_user }
+    let!(:authed_user) { create_logged_in_admin }
 
     scenario "create a new Event without mandatory field", :create_new_event => true do
   		page.visit "/events"
@@ -80,31 +80,32 @@ RSpec.feature "Event" do
 		#page.driver.browser.switch_to.alert.accept
 		#dialog.text.should = "Sind sie sicher?"
 		
-		page.should have_content("Sind sie sicher?")			
-		#page.should have_content("Event wurde erfolgreich gelöscht.")
+		#page.should have_content("Sind sie sicher?")			
+		page.should have_content("Event wurde erfolgreich gelöscht.")
     end
 
     scenario "comment on an Event", :comment_on_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
- 		page.click_link "Klubtreffen"
-		have_text("Klubtreffen des PR-Klubs")
-		#save_and_open_page
+  		page.click_link "AdminEvent"
+		have_text("details for an event of admins")
 		page.fill_in "commentContent", with: "Going to modify this Event"
-		page.first(:link, "Kommentieren").click
+		#page.first(:link, "Kommentieren").click
 		have_text("Kommentar wurde erfolgreich erstellt.")
     end
 
     scenario "create a task for an Event", :create_task_for_event => true do
   		page.visit "/events"
 		have_text("Eventübersicht")
-  		page.click_link "Klubtreffen"
-		have_text("Klubtreffen des PR-Klubs")
+  		page.click_link "AdminEvent"
+		have_text("details for an event of admins")
 		page.first(:link, "Aufgabe erstellen").click
 		have_text("Aufgabe hinzufügen")
 		page.fill_in "task_name", with: "Acceptance Tests schreiben"
 		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben."
-		page.click_button "Absenden"
+		#save_and_open_page
+		#page.click_button "Absenden"
+		page.click_on("Kommentieren", :match => :first)
 		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
     end
 
