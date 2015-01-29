@@ -1,5 +1,7 @@
 class ProfileController < ApplicationController
-	before_action :authenticate_user!
+  before_action :authenticate_user!
+
+  helper_method :update_profile
 
   def index
   end
@@ -25,7 +27,10 @@ class ProfileController < ApplicationController
 
     @me.student = is_student(params["email"])
 
-    if not is_valid_email(params["email"], @me.username)
+    if not is_valid_domain(params["email"])
+      flash[:error] = t('devise.sessions.wrong_domain')
+      redirect_to "/profile"
+    elsif 
       flash[:error] = t('devise.sessions.wrong_email')
       redirect_to "/profile"
     else
@@ -40,24 +45,24 @@ class ProfileController < ApplicationController
       end
     end
   end
-  helper_method :update_profile
 
-  def is_valid_email(email, username)
+  def is_valid_domain(email)
     domains = Rails.application.config.login["domains"]
 
-    if email && domains.include?(email.split('@').last) && username == email.split('@').first
-      return true
-    else
-      return false
-    end
+    return (email && domains.include?(email.split('@').last))
+  end
+
+  def is_correct_account
+    return (email && username == email.split('@').first)
   end
 
   def is_student(email)
-    if email.split('@').last.split('.').first == 'student'
+    email_domain = email.split('@').last
+
+    if email_domain && email_domain.split('.').first == 'student'
       return true
     else
       return false
     end
   end
-
 end
