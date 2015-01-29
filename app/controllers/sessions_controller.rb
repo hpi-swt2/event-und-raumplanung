@@ -1,4 +1,5 @@
 class SessionsController < Devise::SessionsController
+  before_filter :require_no_authentication, only: :new
 
   def new
     # Needed as attribute for admin password input
@@ -24,27 +25,32 @@ class SessionsController < Devise::SessionsController
     end
 
     self.resource = warden.authenticate!(auth_options)
+
+    if provider_response.kind_of? OpenID::Consumer::SuccessResponse
+      complete_successful_login
+    end
+  end
+
+  def complete_successful_login
     set_flash_message(:notice, :signed_in) if is_flashing_format?
     sign_in(resource_name, resource)
     yield resource if block_given?
 
-    if provider_response.kind_of? OpenID::Consumer::SuccessResponse
-      # Custom email and username
-      if @user.username == "" &&  @user.identity_url == nil
-        @user.identity_url = identity_url_temp
-        @user.email = @user.username + Time.now.to_s
-        @user.save
-      end
-
-      if not is_valid_email(@user.email, @user.username)
-        redirect_to "/profile"
-      else
-        respond_with resource, location: after_sign_in_path_for(resource)
-      end
-
-      # Clear the session variable
-      session[:username] = nil
+    # Custom email and username
+    if @user.username == "" &&  @user.identity_url == nil
+      @user.identity_url = identity_url_temp
+      @user.email = @user.username + Time.now.to_s
+      @user.save
     end
+
+    if not is_valid_email(@user.email, @user.username)
+      redirect_to "/profile"
+    else
+      respond_with resource, location: after_sign_in_path_for(resource)
+    end
+
+    # Clear the session variable
+    session[:username] = nil
   end
 
   def show_admin_login
@@ -78,6 +84,13 @@ class SessionsController < Devise::SessionsController
       return true
     else
       return false
+    end
+  end
+
+  def require_no_authentication
+    if signed_in?
+      flash[:alert] = I18n.t("devise.failure.already_authenticated")
+      redirect_to root_path
     end
   end
 end
