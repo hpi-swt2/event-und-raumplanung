@@ -153,6 +153,15 @@ class Event < ActiveRecord::Base
     where('ends_at <= ?', date)
   }
 
+  scope :week, lambda { |week|
+    now = Date.today        
+    weekBegin = Date.commercial(now.cwyear, week, 1)
+    weekEnd = Date.commercial(now.cwyear, week+1, 1)
+    puts weekBegin
+    puts weekEnd
+    where('ends_at >= ? AND starts_at <= ?', weekBegin, weekEnd)
+  }
+
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
   }
