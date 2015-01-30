@@ -57,11 +57,12 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
+    @task.creator = current_user    
+    @task.done = false
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
-    @task.done = false
 
     authorize! :create, @task
     respond_to do |format|
