@@ -1,119 +1,40 @@
 <%- model_class = Event -%>
+<% title @event.name %>
 
-<div class="event-page-header">
-  <div class="row event-section-divider">
-    <div class="col-xs-12 col-md-8">
-      <h1>
-        <%= @event.name %>
-        <% if @favorite.empty? %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
-          <% end %>
-        <% else %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
-          <% end %>
-        <% end %>
-      </h1>
-    </div>
-    <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h2><%= @event.starts_at.strftime("%d.%m.%Y") %></h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 col-md-8">
-      <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr - <%= @event.ends_at.strftime("%H:%M") %> Uhr</h3>
-    </div>
-    <div class="col-xs-6 col-md-4" style="text-align: right">
-      <h3><%= concat_rooms(@event) %></h3>
-    </div>
-  </div>
-</div>
+<%= render :partial => 'event_details', locals: { event: @event, user: @user } %>
 
-<div class="row event-section-divider">
-  <div class="col-xs-10 col-md-7 event-description">
-    <%= raw nl2br h @event.description %>
+<% if @event.tasks.include?(Task.where(identity_type: 'User', identity_id: current_user.id)) or current_user.id == @event.user_id %>
+  <div class="event-view-section">
+    <h3><%= t '.tasks' %></h3>
+    <% @event_id = @event.id %>
+    <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
   </div>
-  <div class="col-xs-8 col-md-5">
-    <table class="table table-striped">
-      <tbody>
-        <tr>
-          <td><%= t('events.show.begin') %></td>
-          <td><%= @event.starts_at.strftime("%d.%m.%Y - %H:%M") %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.end') %></td> 
-          <td><%= @event.ends_at.strftime("%d.%m.%Y - %H:%M") %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.schedule') %></td>
-          <td><%= @event.pretty_schedule %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.rooms') %></td>
-          <td><%= concat_rooms(@event) %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.creator') %></td>
-          <td><%= @user %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.participant_count') %></td>
-          <td><%= @event.participant_count %></td>
-        </tr>
-        <tr>
-          <td><%= t('events.show.status') %></td>
-          <td><%= t 'event.status.'+@event.status %></td>
-        </tr>
-        <tr>
-          <td>
-            <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
-          </td>
-          <td>
-            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
-              <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
-            <%end%>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-<div class="event-view-section">
-  <h3><%= t '.tasks' %></h3>
-  <% @event_id = @event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
-</div>
+<% end %>
 
 <% unless @feed_entries.nil? %>
-<div class="event-view-section">
-  <h3><%= t 'activities.activity_log' %></h3>
+  <div class="event-view-section">
+    <h3><%= t 'activities.activity_log' %></h3>
 
-  <div class="feed-container">
-    <div class="feed">
-      <% @feed_entries.each_with_index do |feed_entry, index| %>
-        <%= render :partial => 'feed_entry', :locals => { :feed_entry => feed_entry, :index => index } %>
-      <% end %>
-    </div>
-  </div> 
-
-  <div class="new-comment">
-    <h4><%= t 'comments.new_comment' %></h4>
-
-    <%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
-      <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
-      <div class="clearfix"></div>
-      <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
-    <% end %>  
+    <div class="feed-container">
+      <div class="feed">
+        <% @feed_entries.each_with_index do |feed_entry, index| %>
+          <%= render :partial => 'feed_entry', :locals => { feed_entry: feed_entry, index: index } %>
+        <% end %>
+      </div>
+    </div> 
   </div>
-</div>
+
+  <div class="event-view-section">
+    <div class="new-comment">
+      <h4><%= t 'comments.new_comment' %></h4>
+      <%= render :partial => 'comments' %>
+    </div>
+  </div>
 <% end %>
 
 <div class="row">
   <div class="col-xs-4 col-md-3">
-    <%= link_to t('.back', :default => t("helpers.links.back")), @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
+    <%= link_to t('.back', :default => t("helpers.links.back")), :back, :class => 'btn btn-default'  %>
   </div>
   <div class="col-xs-14 col-md-9 text-right">
     <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
