@@ -16,7 +16,7 @@
       </thead>
 
       <tbody>
-        <% @myGroups.each do |group| %>
+        <% @my_groups.each do |group| %>
           <tr>
             <td><%= link_to group.name, group_path(group) %></td>
             <% if can? :destroy, group %>
@@ -30,7 +30,7 @@
             <% end %>
           </tr>
         <% end %>
-        <% @otherGroups.each do |group| %>
+        <% @other_groups.each do |group| %>
           <tr>
             <!-- very uncool! we need more information whether the current user is admin or not -->
             <% if can? :destroy, group %>

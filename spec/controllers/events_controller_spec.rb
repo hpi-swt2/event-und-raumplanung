@@ -310,25 +310,24 @@ RSpec.describe EventsController, :type => :controller do
     context "if the user `owns` the event's room" do
       it "shows the activity log" do
 
-        # make user leader of group g
-        g = create(:group)
-        g.users << user
-        mem = g.memberships.last
-        mem.isLeader = true
-        mem.save
+        # make user leader of group 
+        group = create(:group)
+        group.users << user
+        member = group.memberships.last
+        member.isLeader = true
+        member.save
 
-        # create room r and assign it to group g
-        r = create(:room)
-        r.group = g
-        r.save
+        # create room and assign it to group 
+        room = create(:room)
+        group.rooms << room
 
-        # create new event with r as room
-        e2 = create(:event, user_id: user2.id)
-        e2.rooms << r
-        e2.save
+        # create new event with room
+        event = create(:event, user_id: user2.id)
+        event.rooms << room
+        event.save
 
         # verify that group leader is now able to see the log
-        get :show, {:id => e2.id}
+        get :show, {:id => event.id}
         expect(assigns(:feed_entries)).not_to be_nil
       end
     end

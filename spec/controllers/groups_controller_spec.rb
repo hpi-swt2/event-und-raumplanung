@@ -97,13 +97,6 @@ RSpec.describe GroupsController, :type => :controller do
         get :index, {}, valid_session
         expect(assigns(:groups)).to eq([group])
       end
-
-      it 'should show exactly all groups' do
-        #group = Group.create! valid_attributes
-        #get :index, {}, valid_session
-        #expect (assigns(:otherGroups)).to eq([group])
-        #expect(@myGroups.count + @otherGroups.count).to eq(@groups.count)
-      end
     end
 
     describe "GET show" do

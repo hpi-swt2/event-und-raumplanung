@@ -89,8 +89,8 @@ class Event < ActiveRecord::Base
   def involved_users
     involved = Array.new
     involved << User.find(self.user_id)
-    involved << get_involved_entities
-    involved << get_involved_group_leaders
+    involved += get_involved_entities
+    involved += get_involved_group_leaders
     return involved
   end
 
@@ -110,7 +110,9 @@ class Event < ActiveRecord::Base
     involved = Array.new
     self.rooms.each do |room|
       if room.group
-        involved += room.group.leaders
+        room.group.leaders.each do |leader|
+          involved << leader
+        end
       end
     end
     return involved
