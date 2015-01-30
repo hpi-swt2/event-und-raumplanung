@@ -291,6 +291,7 @@ class EventsController < GenericEventsController
           event_task = original_task.dup
           event_task = create_tasks_with_attachments original_task, event_task
           event_task.event_template_id = nil
+          event_task.creator = current_user
           @event.tasks << event_task 
         end
       end

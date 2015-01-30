@@ -7,10 +7,7 @@
 
 <h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
 
-<% if @leaders.count > 0 %>
-  <%= render :partial => 'leaders' %>
-<% end %>
-<% if @members.count > 0 %>
+<% if @leaders.count > 0 || @members.count > 0%>
   <%= render :partial => 'users' %>
 <% end %>
 
