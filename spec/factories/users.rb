@@ -41,5 +41,7 @@ FactoryGirl.define do
     hpiUser.email "hpi_user@student.hpi.de"
   end
 
-
+  factory :userWithoutEmail, :class => User do |userWithoutEmail|
+    userWithoutEmail.username "userwithoutemail"
+  end
 end
