@@ -55,16 +55,18 @@ class EventsController < GenericEventsController
     if params[:event]
       room_ids = params[:event][:room_ids]
       @chosen_rooms = Room.find(room_ids)
-      @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
+      @available_equipment = Equipment.all.select(:category).distinct
 
       @room_equipment = Hash.new
       for room in @chosen_rooms
         @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
       end
+      
       if params[:id]
         set_event
         set_requested_equipment
       end
+
     end
 
 
@@ -202,7 +204,7 @@ class EventsController < GenericEventsController
     #authorize! :edit, @event
 
     @chosen_rooms = Room.find(@event.room_ids)
-    @available_equipment = Equipment.all.where("room_id IS ? ", nil).group(:category).count
+    @available_equipment = Equipment.all.select(:category).distinct
     @room_equipment = Hash.new
     for room in @chosen_rooms
       @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
@@ -238,6 +240,8 @@ class EventsController < GenericEventsController
       @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)
+      EquipmentRequest.where(:event_id => @event.id).destroy_all
+      create_equipment_requests
     end
     super
   end
@@ -383,7 +387,7 @@ class EventsController < GenericEventsController
     end
 
     def create_equipment_requests
-      available_equipment = Equipment.where("room_id IS ? ", nil).select(:category).distinct
+      available_equipment = Equipment.all.select(:category).distinct
       for room in @event.room_ids
         for equipment in available_equipment
           category = equipment.category
