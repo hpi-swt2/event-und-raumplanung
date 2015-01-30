@@ -4,7 +4,7 @@ describe Task do
   let(:assigned_user) { create :user }
   let(:creator_user) { create :user }
   let(:event) { create :event, user_id: creator_user.id }
-  let(:task) { create :task, event_id: event.id, identity: assigned_user, creator: creator_user }
+  let(:task) { create :mailing_task, event_id: event.id, identity: assigned_user, creator: creator_user }
 
   before(:each) do
     ActionMailer::Base.deliveries.clear

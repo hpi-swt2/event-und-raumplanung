@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :task do
+    skip_sending_mails true
     name 'A Task'
     done false
     description 'This is a task.'
@@ -19,6 +20,10 @@ FactoryGirl.define do
     factory :unassigned_task do
       status "not_assigned"
       identity nil
+    end
+
+    factory :mailing_task do
+      skip_sending_mails false
     end
   end
 
