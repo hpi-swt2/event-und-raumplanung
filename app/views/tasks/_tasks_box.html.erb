@@ -1,7 +1,6 @@
 <%- model_class = Task -%>
 <% return_url = request.env['PATH_INFO'] %>
-<div class="table-responsive">
-    <table class="table table-striped" <%= 'id=tasks-sortable' if params[:controller] == 'events' %>>
+
 
 <% if @tasks.empty? %>
     <div class="no-tasks-text">

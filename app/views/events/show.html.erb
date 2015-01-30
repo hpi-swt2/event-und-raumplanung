@@ -74,9 +74,11 @@
 </div>
 
 <% if @event.tasks.include?(Task.where(user_id: current_user.id)) or current_user.id = @event.user_id %>
-  <h3><%= t '.tasks' %></h3>
-  <% @event_id = @event.id %>
-  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
+  <div class="event-view-section">
+    <h3><%= t '.tasks' %></h3>
+    <% @event_id = @event.id %>
+    <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event })%> 
+  </div>
 <% end %>
 
 <% unless @feed_entries.nil? %>

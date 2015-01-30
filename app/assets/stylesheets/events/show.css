@@ -69,7 +69,8 @@
 }
 
 .event-view-section {
-	margin-bottom: 1em;
+	clear: both;
+	margin-bottom: 3em;
 }
 
 .event-favorite-icon-checked, .event-favorite-icon-checked:hover, .event-favorite-icon-checked:focus, .event-favorite-icon-checked:visited, .event-favorite-icon-checked:active {
