@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.integer  "event_id"
     t.text     "schedule"
+    t.integer  "event_id"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
@@ -185,8 +185,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.datetime "updated_at"
     t.boolean  "done",              default: false
     t.string   "status"
-    t.integer  "task_order"
     t.datetime "deadline"
+    t.integer  "task_order"
     t.integer  "event_template_id"
     t.integer  "identity_id"
     t.string   "identity_type"

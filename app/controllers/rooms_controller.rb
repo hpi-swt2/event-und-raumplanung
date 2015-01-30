@@ -141,6 +141,14 @@ class RoomsController < ApplicationController
   render action: 'details'
   end
 
+  def printoverview
+    rooms_ids = Room.all.pluck(:id)
+    @rooms = Room.find(rooms_ids)
+    render locals: {rooms:@room}
+  end
+
+
+
   def print
     set_room
     @calevents = Event.approved.room_ids([@room.id])
