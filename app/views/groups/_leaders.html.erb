@@ -14,7 +14,7 @@
     <% @leaders.each do |leader| %>
       <% if @group.users.include?(leader) %>  
         <tr>
-          <td><%= leader.email %> &nbsp &nbsp<span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span></td>
+          <td><%= link_to leader.email, user_path(leader) %> &nbsp &nbsp<span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span></td>
 
           <% if params[:action] == "edit" %>
             <td>
