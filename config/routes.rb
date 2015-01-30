@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
       patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
+      get 'autocomplete', :action => 'autocomplete', :as => 'autocomplete'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
       get 'degrade_user/:user_id', :action => 'degrade_user', :as => 'degrade_user'
@@ -62,6 +63,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   get "identities/autocomplete" => "identities#autocomplete"
+
 
   resources :attachments
 
