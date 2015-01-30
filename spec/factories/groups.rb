@@ -7,4 +7,10 @@ FactoryGirl.define do
 		g.id 55
   	end
   end
+  factory :valid_group, :class => Group do |f|
+  	f.name 'Test'    
+  end
+  factory :invalid_group, :class => Group do
+    
+  end
 end
