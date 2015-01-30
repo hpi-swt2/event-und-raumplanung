@@ -1,22 +1,19 @@
 class IcalController < ApplicationController
   before_action :authenticate_user!
 
-  Mime::Type.register_alias "text/calendar", :ical
+  #Mime::Type.register_alias "text/calendar", :ical
 
-  # GET /ical/event/1
-  def show_event
-    @event = Event.find(params[:id])
+  # GET /ical
+  def get
+    @owned_events     = Event.where(user_id: current_user.id)
+    @favorites        = Event.joins(:favorites).where('events.user_id != ? AND favorites.user_id = ? AND favorites.is_favorite = true', current_user.id, current_user.id)
+    @events_with_task = Event.joins(:tasks).where("tasks.identity_type = 'User' AND tasks.identity_id = ?" , current_user.id)
 
-    @cal = Icalendar::Calendar.new
-    add_event_to_cal @cal, @event
-    @cal.publish
+    @event_ids  = @owned_events.collect{ |event| event.id }.uniq
+    @event_ids += @favorites.collect{ |event| event.id }.uniq
+    @event_ids += @events_with_task.collect{ |event| event.id }.uniq
 
-    render_ical @cal
-  end
-
-  # GET /ical/
-  def show_my_events
-    @events = Event.user(current_user_id)
+    @events = Event.find(@event_ids)
 
     @cal = Icalendar::Calendar.new
     @events.each do |event|
@@ -30,20 +27,28 @@ class IcalController < ApplicationController
   private
     def add_event_to_cal cal, event
       cal.event do |e|
-        e.dtstart     = Icalendar::Values::Time.new(event.starts_at)
-        e.dtend       = Icalendar::Values::Time.new(event.ends_at)
+        e.dtstart     = Icalendar::Values::DateTime.new(event.starts_at)
+        e.dtend       = Icalendar::Values::DateTime.new(event.ends_at)
         e.organizer   = "mailto:" + User.find(event.user_id).email
         e.summary     = event.name
         e.description = event.description
+        e.location    = event.rooms.map(&:name).to_sentence
         e.ip_class    = "PRIVATE"
-        e.rrule        = event.occurence_rule.to_ical
+        if event.occurence_rule
+          rule = event.occurence_rule.to_ical
+          if rule.include? "UNTIL"
+            e.rrule        = rule
+          else
+            e.rrule        = event.occurence_rule.until(Date.today + 365).to_ical
+          end
+        end
       end
     end
 
     def render_ical cal
       respond_to do |format|
         format.ical { render text: @cal.to_ical }
-        format.ics { render text: @cal.to_ical }
+        format.ics  { render text: @cal.to_ical }
         format.html { render plain: @cal.to_ical }
       end
     end

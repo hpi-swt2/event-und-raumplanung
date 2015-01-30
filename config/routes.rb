@@ -110,8 +110,7 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
-  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
-  get 'ical/' => 'ical#show_my_events'
+  get 'ical' => 'ical#get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
