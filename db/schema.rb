@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150119124943) do
+ActiveRecord::Schema.define(version: 20150123132333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,20 +36,6 @@ ActiveRecord::Schema.define(version: 20150119124943) do
   end
 
   add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
-
-  create_table "bookings", force: true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.datetime "start"
-    t.datetime "end"
-    t.integer  "event_id"
-    t.integer  "room_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.string   "author"
@@ -192,7 +178,7 @@ ActiveRecord::Schema.define(version: 20150119124943) do
 
   create_table "tasks", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -221,8 +207,8 @@ ActiveRecord::Schema.define(version: 20150119124943) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                                     null: false
-    t.string   "username",               default: ""
+    t.string   "email"
+    t.string   "username",               default: "",       null: false
     t.string   "encrypted_password",     default: "",       null: false
     t.string   "status"
     t.string   "reset_password_token"
@@ -246,7 +232,7 @@ ActiveRecord::Schema.define(version: 20150119124943) do
     t.boolean  "firstlogin",             default: true
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
 end

@@ -17,7 +17,8 @@ RSpec.describe DashboardController, type: :controller do
     starts_at_time:'17:00',
     ends_at_time:'23:59',
     is_private: true,
-    user_id: user.id
+    user_id: user.id,
+    rooms: [FactoryGirl.build(:room)]
   }}
 
   let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
@@ -52,6 +53,7 @@ RSpec.describe DashboardController, type: :controller do
       let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, identity: user, status: 'accepted' }
       let!(:another_group) { create :group }
       let!(:group_task) { create :assigned_task, event_id: event.id, identity: group}
+      let!(:task_done) { create :assigned_task, event_id: event.id, identity: user, done: true}
 
       before do
         Timecop.freeze(Date.today + 3)
@@ -61,12 +63,13 @@ RSpec.describe DashboardController, type: :controller do
         Timecop.return
       end
 
-      it 'assigns only accepted tasks for the currently logged in user to @my_accepted_tasks' do
+      it 'assigns only accepted tasks for the currently logged in user that have not been done yet to @my_accepted_tasks' do
         get :index, {}, valid_session
         expect(assigns(:my_accepted_tasks).include? task).to eq(true)
         expect(assigns(:my_accepted_tasks).include? other_task).to eq(false)
         expect(assigns(:my_accepted_tasks).include? pending_task).to eq(false)
         expect(assigns(:my_accepted_tasks).include? past_task).to eq(false)
+        expect(assigns(:my_accepted_tasks).include? task_done).to eq(false)
       end
 
       it 'assigns only pending tasks for the currently logged to @my_pending_tasks' do

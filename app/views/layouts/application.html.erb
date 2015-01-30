@@ -72,8 +72,8 @@
                 <li><%= link_to t('.templates'), event_templates_path %></li>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.rooms'), rooms_path %></li>
-                <li><%= link_to t('.equipment'), equipment_index_path %></li>
-                <li><%= link_to t('.properties'), room_properties_path %></li>
+                <li class="dropdown-room-indent"><%= link_to t('.equipment'), equipment_index_path %></li>
+                <li class="dropdown-room-indent"><%= link_to t('.properties'), room_properties_path %></li>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
                 <% if can? :manage, Permission %>
@@ -83,7 +83,7 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <% if user_signed_in? %>
+            <% if user_signed_in? && @current_user != nil %>
               <% if @current_user.student? %>
                 <li><a><%= @current_user.username + " (" + t(".student") + ")" %></a></li>
               <% else %>
@@ -109,7 +109,7 @@
       </div><!--/row-->
 
       <footer>
-        <p>&copy; Hasso Plattner Institut 2014</p>
+        <p>&copy; Hasso Plattner Institut 2015</p>
       </footer>
 
     </div> <!-- /container -->

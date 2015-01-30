@@ -18,6 +18,8 @@ de:
       category: Kategorie
       available: Vorhanden
       no_equipment: Keine Ausstattung vorhanden
+      message_for_event_creator: Message for event creator
+      close: Schließen
     upcoming_events:
       no_upcoming_events: Keine anstehenden Events
       create_event: Event erstellen

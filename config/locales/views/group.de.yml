@@ -25,7 +25,7 @@ de:
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen
       back: Zurück
-      rename: Gruppe Umbenennen
+      rename: Gruppe umbenennen
       user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
       assign_user: Nutzer zuweisen
       actions: Aktionen
@@ -33,6 +33,6 @@ de:
     manage_rooms:
       currentRooms: Aktuelle Gruppenräume
       currentRoomsOfGroup: 'Räume von %{group}'
-      addRoom: Räume Hinzufügen
+      addRoom: Räume hinzufügen
       add: Hinzufügen
       delete: Entfernen

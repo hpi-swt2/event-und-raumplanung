@@ -17,16 +17,20 @@ class TasksController < ApplicationController
   # GET /tasks/1.json
   def show
     authorize! :read, @task
+    @event = Event.find(@task.event_id)
   end
 
   # GET /tasks/new
   def new
     @task = Task.new
+    @assignable_entities = Group.all
+    @assignable_entities.concat(User.all)
     unless params[:event_id].blank?
       @task.event_id = params[:event_id]
       @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
+      @task.deadline = @task.event.starts_at
     else
       unless params[:event_template_id].blank?
         @task.event_template_id = params[:event_template_id]
@@ -53,22 +57,18 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-    
-    create_activity(@task)
-
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
+    @task.done = false
 
     authorize! :create, @task
-
     respond_to do |format|
       if @task.save && upload_files
         @task.send_notification_to_assigned_user(current_user) if @task.identity
-        
+        create_activity(@task)
         format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
-        format.json { render :show, status: :created, location: @task }
       else
         @upload_errors = get_upload_errors
         delete_new_uploads
@@ -87,10 +87,12 @@ class TasksController < ApplicationController
 
     params[:task][:identity_id] = identity_params.blank? ? nil : identity_params[:id]
     params[:task][:identity_type] = identity_params.blank? ? nil : identity_params[:type]
-    
+
+    cur_done_status = @task.done
+
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
-        create_activity(@task)
+        create_activity(@task) if cur_done_status != @task.done
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else

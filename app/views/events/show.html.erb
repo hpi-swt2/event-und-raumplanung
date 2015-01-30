@@ -7,14 +7,10 @@
       <h1>
         <%= @event.name %>
         <% if current_user.id != @event.user_id %>
-          <% if @favorite.empty? %>
-            <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
-              <span class="glyphicon glyphicon-star"></span>
-            <% end %>
-          <% else %>
-            <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
-              <span class="glyphicon glyphicon-star"></span>
-            <% end %>
+          <%= link_to show_toggle_favorite_from_event_path(@event), :remote => true, id: "btn_mark_as_favorite", 
+                class: "event-favorite-icon " + (@favorite.empty? ? "event-favorite-icon-unchecked" : "event-favorite-icon-checked"), 
+                data: { title_unmark: t('.unmark_as_favorite'), title_mark: t('.mark_as_favorite') } do %>
+            <span class="glyphicon glyphicon-star" ></span>
           <% end %>
         <% end %>
       </h1>
@@ -65,9 +61,17 @@
           <td><%= t('events.show.status') %></td>
           <td><%= t "event.status.#{@event.status}" %></td>
         </tr>
+        <tr>
+          <td></td>
+          <td>
+            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+              <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
+            <%end%>
+          </td>
+        </tr>
       <% end %>
     </tbody>
-  </table> 
+  </table>
 </div>
 <div class="event-description">
   <%= raw nl2br h @event.description %>
@@ -116,6 +120,7 @@
       <%= link_to t('.edit', :default => t("helpers.links.edit")),
                     edit_event_path(@event), :class => 'btn btn-default' %>
     <% end %>
+
     <% if can? :destroy, @event %>
       <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                     event_path(@event),

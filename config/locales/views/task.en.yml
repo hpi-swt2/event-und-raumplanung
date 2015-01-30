@@ -17,5 +17,9 @@ en:
     show:
       new: New Task
       no_tasks: There are no tasks for this event yet.
+      done: Done
+      not_done: Not done
+      files: Attachments
+      links: Links
     form:
       areYouSure: Are you sure?

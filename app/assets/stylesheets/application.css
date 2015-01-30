@@ -64,19 +64,23 @@ input.task-done-checkbox {
     color: white !important;
 }
 
-li.dropdown.open a {
+.dropdown.open a {
 	background-color: #808080 !important;
 	color: white !important;
 }
 
-li.dropdown.open a.dropdown-toggle:hover {
+.dropdown.open a.dropdown-toggle:hover {
     background-color: #808080 !important;
     color: white !important;
 }
 
-li.dropdown.open a:hover {
+.dropdown.open a:hover {
     background-color: #5a6065 !important;
     color: white !important;
+}
+
+.dropdown-room-indent {
+    text-indent: 1em;
 }
 
 .ui-autocomplete-loading {
