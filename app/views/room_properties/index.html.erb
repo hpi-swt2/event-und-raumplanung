@@ -2,14 +2,24 @@
 <% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
 <% title page_header %>
 <div class="page-header">
-  <h1><%= page_header %></h1>
+  <div class="row">
+    <div class="col-md-11">
+      <h1><%= page_header %></h1>
+    </div>
+    <div class="col-md-1">
+      <h1 class="text-right">
+        <%= link_to new_room_property_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+          <span class="glyphicon glyphicon-plus"></span>
+        <% end %>
+      </h1>
+    </div>
+  </div>
 </div>
 <div class="table-responsive">
     <table class="table table-striped">
       <thead>
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
-          <th><%= model_class.human_attribute_name(:created_at) %></th>
           <th><%=t '.actions', :default => t("helpers.actions") %></th>
         </tr>
       </thead>
@@ -17,7 +27,6 @@
         <% @roomProperties.each do |roomProperty| %>
           <tr>
             <td><%= link_to roomProperty.name, room_property_path(roomProperty) %></td>
-            <td><%=l roomProperty.created_at %></td>
             <td>
               <%= link_to edit_room_property_path(roomProperty), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
                 <span class="glyphicon glyphicon-pencil"></span>    
@@ -34,7 +43,3 @@
       </tbody>
     </table>
 </div>
-
-<%= link_to new_room_property_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
-  <span class="glyphicon glyphicon-plus"></span>
-<% end %>

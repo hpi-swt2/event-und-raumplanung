@@ -16,5 +16,6 @@ en:
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+      select_user: 'Select a user'
     manage_rooms:
       currentRoomsOfGroup: 'Rooms of %{group}'

@@ -10,7 +10,7 @@
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
           <th><%= model_class.human_attribute_name(:size) %></th>
-          <th><%=t '.actions', :default => t("helpers.actions") %></th>
+          <th class="text-right"><%=t '.actions', :default => t("helpers.actions") %></th>
         </tr>
         </thead>
         <tbody>
@@ -18,7 +18,7 @@
           <tr>
             <td><%= link_to room.name, room_path(room) %></td>
             <td><%= room.size %></td>
-            <td>
+            <td class="text-right">
               <%= link_to room_events_path(room), :title => t("helpers.links.all_events"), :class => 'btn btn-default btn-xs' do %>
                 <span class="glyphicon glyphicon-th-list"></span>
               <% end %>  
