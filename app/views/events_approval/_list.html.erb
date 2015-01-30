@@ -19,7 +19,7 @@
         <% if event.user_id %>
           <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
         <% else %>
-          t('.unkown')
+          t('.unknown')
         <% end %>
       </td>
       <td><%= link_to event.name, event_path(event) %></td>

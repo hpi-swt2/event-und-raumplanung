@@ -54,6 +54,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: true,
+    rooms: [build(:room)],
     user_id: user2.id
     }
   }
@@ -67,6 +68,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: false,
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -80,6 +82,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: false,
+    rooms: [build(:room)],
     user_id: user2.id
     }
   }

@@ -23,11 +23,14 @@
       </div>
     </div>
   <% end %>
-  
-  <% if @firstlogin %>
-        <p><%= t('user.hints') %></p>
-        <%= link_to t('.skip', :default => t("helpers.links.skip")), root_path, class: "btn btn-primary" %>
-  <% end %>
+
+  <div class="control-group">
+    <%= f.label :email, model_class.human_attribute_name(:email), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :email, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:email]) %>
+  </div>
 
   <div class="control-group">
     <%= f.label :email_notification, model_class.human_attribute_name(:email_notification), :class => 'control-label' %>
