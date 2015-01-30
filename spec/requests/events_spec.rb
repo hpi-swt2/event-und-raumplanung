@@ -38,7 +38,7 @@ RSpec.describe "Events", :type => :request do
     methods = [:approve, :decline]
     event = FactoryGirl.create(:event)
     another_event = FactoryGirl.create(:event)
-    another_event.rooms << a_room
+    another_event.rooms = [a_room]
     another_permitted_user.permit("approve_events", a_room)
     methods.each { |method| 
       expect(admin_ability).to be_able_to(method, event)

@@ -23,6 +23,7 @@
 //= require bootstrap-select
 //= require_tree .
 //= require fullcalendar
+//= require lang-all
 //= require moment
 //= require filterrific/filterrific-jquery
 //= require moment

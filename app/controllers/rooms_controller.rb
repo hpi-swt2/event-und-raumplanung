@@ -141,6 +141,12 @@ class RoomsController < ApplicationController
   render action: 'details'
   end
 
+  def print
+    set_room
+    @calevents = Event.approved.room_ids([@room.id])
+    render action: 'print', layout:'print', locals:{calevents:@calevents, room:@room, lang1:'de'}
+  end
+
   def fetch_event
     if Event.exists?(params[:id])
       event = Event.find(params[:id])

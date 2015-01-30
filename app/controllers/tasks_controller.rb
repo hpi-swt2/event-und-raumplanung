@@ -53,19 +53,18 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-
     if identity_params 
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
 
     authorize! :create, @task
-
     respond_to do |format|
         if @task.save && upload_files
           @task.send_notification_to_assigned_user(current_user) if @task.identity
         create_activity(@task)
-        format.html { redirect_to @task, notice: t('notices.successful_create', :model => Task.model_name.human) }
+        redirection_target = @task.event ? @task.event : @task.event_template
+        format.html { redirect_to redirection_target, notice: t('notices.successful_create', :model => Task.model_name.human) }
       else
         @upload_errors = get_upload_errors
         delete_new_uploads

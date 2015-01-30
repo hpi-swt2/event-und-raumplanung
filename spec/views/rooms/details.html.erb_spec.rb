@@ -37,4 +37,22 @@ RSpec.describe "rooms/details.html.erb" do
 		expect(rendered).to include(room.equipment.first.description)
 		expect(rendered).to include(room.equipment.last.description)
 	end
+    
+    #context "uses locales to show both German and English" do
+   
+        #it "shows English" do    
+        #   assign(:room,FactoryGirl.build(:room1))
+        #    I18n.default_locale = :en
+        #    render
+        #    expect(rendered).to include('Equipment')
+        #end
+        
+        #it "shows German" do    
+        #    assign(:room,FactoryGirl.build(:room1))
+        #    I18n.default_locale = :de
+        #    render
+        #    expect(rendered).to include('Ausstattung')
+        #end
+    #end
+
 end
