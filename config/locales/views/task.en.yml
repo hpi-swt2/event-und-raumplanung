@@ -16,7 +16,7 @@ en:
       this_task_was_already_declined: This task was already declined.
     show:
       new: New Task
-      no_tasks: There are no tasks for this event yet or you aren't allowed to see them.
+      no_tasks: There are no tasks for this event yet.
       done: Done
       not_done: Not done
       files: Attachments

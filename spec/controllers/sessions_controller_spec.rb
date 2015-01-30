@@ -57,7 +57,7 @@ RSpec.describe SessionsController, :type => :controller do
 
         it "logs in without a valid email address" do
           post :create
-          expect(response).to redirect_to("/profile")
+          expect(response).to redirect_to(edit_user_path(controller.current_user.id))
 
           expect(controller.current_user).to be_a(User)
 

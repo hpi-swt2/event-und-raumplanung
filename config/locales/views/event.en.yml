@@ -12,5 +12,7 @@ en:
       begin: 'Begin'
       end: 'End'
       tasks: 'Tasks'
+      last_update: 'Last Update'
+      status: 'Status'
       mark_as_favorite: 'Mark as favorite'
       unmark_as_favorite: 'Unmark as favorite'

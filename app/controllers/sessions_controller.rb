@@ -31,7 +31,7 @@ class SessionsController < Devise::SessionsController
     yield resource if block_given?
 
     if not is_valid_email(@user.email, @user.username)
-      redirect_to "/profile"
+      redirect_to edit_user_path @user
     else
       respond_with resource, location: after_sign_in_path_for(resource)
     end
