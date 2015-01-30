@@ -251,7 +251,9 @@ de:
       declined: abgelehnt
       pending: In Bearbeitung
       rejected_suggestion: Abgelehnter Vorschlag
-  events: 
+  events:
+    form:
+      series_end: 'Serienende'
     show: 
       suggested_for: 'Vorgeschlagen für'
     links:

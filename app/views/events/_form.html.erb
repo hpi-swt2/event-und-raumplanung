@@ -83,6 +83,21 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label t('events.form.series_end'), :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
+        <script type="text/javascript">
+          $('#ScheduleEndDatePicker').datetimepicker({
+            format: 'YYYY-MM-DD',
+            pickTime: false
+          });
+        </script>
+        <%= error_span(@event[:schedule_ends_at_date]) %>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
     <div class="row">
       <div class="controls col-sm-6">
       <%= f.label model_class.human_attribute_name(:private), :class => 'control-label' %>
