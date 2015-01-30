@@ -30,7 +30,7 @@ class TasksController < ApplicationController
       @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
-      @task.deadline = @task.event.starts_at
+      @task.deadline = @task.event.starts_at.strftime("%d/%m/%Y")
     else
       unless params[:event_template_id].blank?
         @task.event_template_id = params[:event_template_id]
