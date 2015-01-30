@@ -73,7 +73,7 @@
   <%= raw nl2br h @event.description %>
 </div>
 
-<% if @event.tasks.include?(Task.where(user_id: current_user.id)) or current_user.id = @event.user_id %>
+<% if @event.tasks.include?(Task.where(identity_type: 'User', identity_id: current_user.id)) or current_user.id == @event.user_id %>
   <div class="event-view-section">
     <h3><%= t '.tasks' %></h3>
     <% @event_id = @event.id %>
