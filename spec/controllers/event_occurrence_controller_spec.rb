@@ -37,7 +37,7 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       assigned_user = create(:user)
       sign_in assigned_user
 
-      event = FactoryGirl.create(:weekly_recurring_event)
+      event = FactoryGirl.create(:weekly_recurring_event, user_id: user.id)
       firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 

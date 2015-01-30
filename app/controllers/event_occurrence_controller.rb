@@ -2,6 +2,7 @@ class EventOccurrenceController < ApplicationController
   before_action :authenticate_user!
   before_action :validate_params, only: [ :show, :destroy ]
   before_action :event_occurrence_from_params, only: [ :show, :destroy ]
+  before_action :set_feed, only: [:show]
 
   def show
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user.id, true, @event_occurrence.event.id);
@@ -28,6 +29,7 @@ class EventOccurrenceController < ApplicationController
 
     def event_occurrence_from_params
       @event_occurrence = EventOccurrence.new( { event_id: event_occurrence_params[:eventid].to_i, starts_occurring_at: Time.parse(event_occurrence_params[:starting]), ends_occurring_at: Time.parse(event_occurrence_params[:ending]) } )
+      @event = @event_occurrence.event
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -53,5 +55,14 @@ class EventOccurrenceController < ApplicationController
         return false
       end
       return true
+    end
+
+    def set_feed
+      if @event.involved_users.include? current_user or can? :manage, Event
+        @activities = @event.activities.all.order("created_at ASC")
+        @comments = Comments.where(event_id: @event.id)
+        @feed_entries = @activities + @comments
+        @feed_entries = @feed_entries.sort_by(&:created_at)
+      end
     end
 end
