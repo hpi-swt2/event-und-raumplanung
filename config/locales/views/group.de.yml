@@ -30,6 +30,7 @@ de:
       assign_user: Nutzer zuweisen
       actions: Aktionen
       role: Rolle
+      select_user: 'Benutzer auswählen'
     manage_rooms:
       currentRooms: Aktuelle Gruppenräume
       currentRoomsOfGroup: 'Räume von %{group}'
