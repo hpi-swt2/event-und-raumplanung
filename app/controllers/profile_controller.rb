@@ -38,9 +38,6 @@ class ProfileController < ApplicationController
         if @me.save
           format.html { redirect_to "/", notice: t('notices.successful_update', :model => User.model_name.human) }
           format.json { render :show }
-        else
-          format.html { render :new }
-          format.json { render json: @me.errors, status: :unprocessable_entity }
         end
       end
     end
