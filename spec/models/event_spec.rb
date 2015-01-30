@@ -319,4 +319,9 @@ describe "event order" do
       expect(@events).to include @event
     end
 
+    it "without rooms should be invalid" do
+        invalid_event = build(:invalid_event_without_rooms)
+        expect(invalid_event).not_to be_valid
+    end
+
   end

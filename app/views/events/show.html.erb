@@ -55,15 +55,24 @@
         </tr>
         <tr>
           <td><%= t('events.show.creator') %></td>
-          <td><%= @user %></td>
+          <td><%= link_to User.find(@event.user_id).display_name, user_path(User.find(@event.user_id)) %></td>
         </tr>
         <tr>
           <td><%= t('events.show.participant_count') %></td>
           <td><%= @event.participant_count %></td>
         </tr>
         <tr>
+          <td><%= t('events.show.status') %></td>
+          <td><%= t 'event.status.'+@event.status %></td>
+        </tr>
+        <tr>
           <td>
             <%= render(partial: 'events/favorite', locals: { event: @event,  model_class:  model_class }) %>
+          </td>
+          <td>
+            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+              <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
+            <%end%>
           </td>
         </tr>
       </tbody>

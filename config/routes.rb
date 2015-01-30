@@ -52,6 +52,13 @@ Rails.application.routes.draw do
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 
+  devise_scope :user do
+    get 'admin', controller: 'sessions', action: 'show_admin_login'
+    post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
+  end
+
+  # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
+
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   get "identities/autocomplete" => "identities#autocomplete"
@@ -102,7 +109,7 @@ Rails.application.routes.draw do
   end
 
   resources :maps
-  resources :profile
+  resources :users, only: [:edit, :show, :update]
 
   resources :event_templates, :path => "templates"
   resources :event_templates do

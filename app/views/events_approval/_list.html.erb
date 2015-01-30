@@ -3,7 +3,6 @@
   <tr>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
-    <th><%= Event.human_attribute_name(:description) %></th>
     <th><%= Event.human_attribute_name(:rooms) %></th>
     <th><%= t '.time' %></th>
     <th><%= Event.human_attribute_name(:participant_count) %></th>
@@ -16,10 +15,15 @@
 <tbody>
   <% events.each do |event| %>
     <tr>
-      <td><%= User.find(event.user_id).username if event.user_id && !User.where(id: event.user_id).empty? %></td>
+      <td>
+        <% if event.user_id %>
+          <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+        <% else %>
+          t('.unknown')
+        <% end %>
+      </td>
       <td><%= link_to event.name, event_path(event) %></td>
-      <td><%= trimDescription event.description %></td>
-      <td><%= event.rooms.map(&:name).to_sentence %></td>
+        <td><%= event.rooms.map(&:name).to_sentence %></td>
       <td>
         <%= events_type == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
       </td>
