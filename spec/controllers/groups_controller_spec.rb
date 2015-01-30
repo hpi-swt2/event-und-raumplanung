@@ -139,6 +139,40 @@ RSpec.describe GroupsController, :type => :controller do
       end
     end
 
+    describe "GET autocomplete" do
+
+      context "when starting to type a user name" do
+
+        before(:each) do
+          #e4 = create(:event, user_id: user2.id)
+          @u1 = create(:user, username: 'uwe.mueller')
+          @u2 = create(:user, username: 'uwe.schmidt')
+          @u3 = create(:user, username: 'bernd.berndinger')
+          @u4 = create(:user, username: 'aurelius.auweia')
+          @group = group
+          @group.users << @u2
+          @group.reload
+          search = 'uwe'
+
+          get :autocomplete, :id => @group.to_param, search: search, format: :json
+        end
+
+        it "shows matching users", :isAdmin => true do
+          # string is matched _anywhere_ in the name
+          expect(response.body).to include(@u1.username)
+          expect(response.body).to include(@u4.username)
+        end
+
+        it "does not show matching users that are group members", :isAdmin => true do
+          expect(response.body).not_to include(@u2.username)
+        end
+
+        it "does not show non-matching users", :isAdmin => true do
+          expect(response.body).not_to include (@u3.username)
+        end 
+      end
+    end
+
     describe "PATCH assign_user" do
         before(:each) do 
         @user = user
