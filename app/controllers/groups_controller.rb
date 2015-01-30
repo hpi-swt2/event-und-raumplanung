@@ -149,7 +149,6 @@ class GroupsController < ApplicationController
 
   def autocomplete
     if params[:search]
-      logger.debug "autocomplete in GROUPS CONTROLLER: #{params[:search]}"
       unassigned = @group.get_unassigned_by_search(params[:search])
       json_unassigned = unassigned.collect {|u| {label: u.username, value: u.email, id: "User:" + u.id.to_s}}
       respond_with json_unassigned

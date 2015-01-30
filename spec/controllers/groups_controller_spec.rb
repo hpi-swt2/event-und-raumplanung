@@ -139,8 +139,44 @@ RSpec.describe GroupsController, :type => :controller do
       end
     end
 
-    describe "GET assign_user" do
-      # For Assigning user see capibara
+    describe "PATCH assign_user" do
+        before(:each) do 
+        @user = user
+        @user2 = user2
+        # @user2.groups.delete
+
+        @group = group
+        @group2 = group2
+
+        @group.users << @user
+
+        @user.reload
+        @group.reload
+      end
+      context "that is not yet assigned" do
+        context "as normal user" do
+          it "does not assign a user", :isAdmin => false do
+            patch :assign_user, id: @group.id, email: @user2.email
+            expect(@user2.reload.groups).not_to include(@group.reload)
+          end
+        end
+        context "as admin user", :isAdmin => true do
+          it "assigns a user to group" do
+            patch :assign_user, id: @group.id, email: @user2.email
+            expect(@user2.reload.groups).to include(@group.reload)
+          end
+        end
+        context "as group leader", :isGroupLeader => true do
+          it "assigns a user to group" do
+            patch :assign_user, id: @leaderGroup.id, email: @user2.email
+            expect(@user2.reload.groups).to include(@leaderGroup.reload)
+          end
+        end
+        it "redirects to edit_path, after succesfull assign", :isAdmin => true do
+          patch :assign_user, id: @group.id, email: @user2.email
+          expect(response).to redirect_to(edit_group_path(@group))
+        end
+      end
     end
 
     describe "GET unassign_user" do
