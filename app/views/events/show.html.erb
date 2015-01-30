@@ -70,7 +70,9 @@
           </td>
           <td>
             <% if (@event.is_approved) && (@event.exist_colliding_events) %>
-              <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
+              <%= link_to decline_event_path(@event), :title => t("helpers.links.decline"), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' do %>
+                <span class="glyphicon glyphicon-remove"></span>
+              <% end %>
             <%end%>
           </td>
         </tr>
@@ -104,7 +106,9 @@
     <%= form_tag( { :action => "create_comment", :controller => "events", user_id: @current_user.id, event_id: @event.id}, { :method => :post }) do %>
       <%= text_area_tag "commentContent", "",  rows: 5, cols: 80, maxlength: 255 %>
       <div class="clearfix"></div>
-      <%= submit_tag "Kommentieren", class: "btn btn-primary" %>
+      <button type="submit" class="btn btn-primary" title="<%= t('comments.new_comment') %>">
+      <span class="glyphicon glyphicon-send"></span>
+    </button>
     <% end %>  
   </div>
 </div>
@@ -112,22 +116,28 @@
 
 <div class="row">
   <div class="col-xs-4 col-md-3">
-    <%= link_to t('.back', :default => t("helpers.links.back")), :back, :class => 'btn btn-default'  %>
+    <%= link_to :back, :title =>t("helpers.links.back"), :class => 'btn btn-default' do  %>
+      <span class="glyphicon glyphicon-arrow-left"></span>    
+    <% end %> 
   </div>
   <div class="col-xs-14 col-md-9 text-right">
-    <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
-                        new_event_template_from_event_path(@event), :class => 'btn btn-default' %>
+    <%= link_to new_event_template_from_event_path(@event), :title => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize), :class => 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-list-alt"></span>    
+    <% end %>
     <% if can? :edit, @event %>
-      <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                    edit_event_path(@event), :class => 'btn btn-default' %>
+      <%= link_to edit_event_path(@event), :title => t("helpers.links.edit"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-pencil"></span>    
+      <% end %>
     <% end %>
 
     <% if can? :destroy, @event %>
-      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                    event_path(@event),
+      <%= link_to event_path(@event),
+                    :title => t("helpers.links.destroy"),
                     :method => 'delete',
                     :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                    :class => 'btn btn-danger' %>
+                    :class => 'btn btn-danger' do %>
+        <span class="glyphicon glyphicon-trash"></span>    
+      <% end %>            
     <% end %>
   </div>
 </div>
