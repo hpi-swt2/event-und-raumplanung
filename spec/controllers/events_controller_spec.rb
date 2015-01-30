@@ -40,6 +40,7 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: true,
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -80,7 +81,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id
     }
@@ -94,7 +95,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id,
     event_template_id: 1
@@ -108,6 +109,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date:'2014-08-23',
     starts_at_time:'17:00',
     ends_at_time:'23:59',
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -119,7 +121,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: Date.today,
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: Time.now.strftime("%H:%M:%S"),
-    rooms:[],
+    rooms: [build(:room)],
     user_id: user.id
   }
   }
@@ -131,6 +133,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -142,7 +145,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: [],
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -155,6 +158,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   } 
@@ -166,6 +170,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   }
@@ -209,6 +214,7 @@ RSpec.describe EventsController, :type => :controller do
       ends_at_time: "10:30",
       is_private: false,
       user_id: user.id,
+      rooms: [build(:room)],
       occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
     }
   }
@@ -617,7 +623,6 @@ RSpec.describe EventsController, :type => :controller do
   describe "POST approve" do
     it "creates activity when an event is approved" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :approve, {:id => event.to_param, :date => Date.today}
@@ -631,7 +636,6 @@ RSpec.describe EventsController, :type => :controller do
   describe "POST decline" do
     it "creates activity when an event is declined" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :decline, {:id => event.to_param, :date => Date.today}
@@ -831,19 +835,25 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
-  describe "GET approve" do 
+  describe "POST approve" do 
     it "approves the given event" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :approve, {:id => event.to_param}
+      #@request.env['HTTP_REFERER'] = 'http://test.com/'
+      post :approve, {:id => event.to_param}
       expect(assigns(:event).status).to eq('approved')
     end
 
     it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :approve, {:id => event.to_param}, valid_session
+      post :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(:back)
+    end
+
+    it "redirects to the events approval page if http referer is not set" do
+      event = Event.create! valid_attributes
+      post :approve, {:id => event.to_param}, valid_session
+      expect(response).to redirect_to(events_approval_path)
     end
   end
 
@@ -896,20 +906,27 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
-  describe "GET decline" do 
+  describe "POST decline" do 
     it "declines the given event" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      #@request.env['HTTP_REFERER'] = 'http://test.com/'
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(assigns(:event).status).to eq('declined')
     end
 
     it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(response).to redirect_to(:back)
     end
+
+    it "redirects to events approval page if http rererer is not set" do
+      event = Event.create! valid_attributes
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(response).to redirect_to(events_approval_path)
+    end
+
   end
 
   describe "DELETE destroy" do

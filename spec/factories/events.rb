@@ -8,6 +8,7 @@ FactoryGirl.define do
     f.ends_at Time.now + 7200
     f.is_private false
     f.user_id 122
+    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_event, :class => Event do
@@ -18,6 +19,7 @@ FactoryGirl.define do
     ends_at DateTime.now.advance(:days => +1, :hours => +1)
     is_private true
     user_id 122
+    rooms { build_list :room, 1 }
   end
 
   factory :my_upcoming_event, :class => Event do
@@ -28,6 +30,7 @@ FactoryGirl.define do
     ends_at Date.new(9999, 10, 10)
     is_private true
     sequence(:user_id) { |id| id }
+    rooms { build_list :room, 1 }
   end
 
   factory :standardEvent, parent: :event, :class => Event do 
@@ -62,13 +65,13 @@ FactoryGirl.define do
   factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
-   room_ids ['1']
+   rooms { create_list :room, 1 }
   end
 
   factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now).strftime("%Y-%m-%d") 
    ends_at_time (Time.now).strftime("%H:%M:%S")
-   room_ids ['1']
+   rooms { create_list :room, 1 }
   end
 
   factory :event_suggestion, :class => Event do 
@@ -127,6 +130,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end
 
   factory :weekly_recurring_event, :class => Event do |f|
@@ -145,6 +149,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.weekly)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
@@ -194,10 +199,16 @@ FactoryGirl.define do
     status "BIn Bearbeitung"
   end
 
+  factory :invalid_event_without_rooms, parent: :event do
+    room_ids []
+    rooms []
+  end
+
   factory :conflictingEvent, parent: :event do 
       starts_at_date Time.now.strftime("%Y-%m-%d")
       ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
       starts_at_time Time.now.strftime("%H:%M:%S")
       ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
   end 
+
 end
