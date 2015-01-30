@@ -2,10 +2,10 @@
   $(document).ready(function(){
     $("#equipment_room_id").multiselect({
       enableFiltering: true,
-      maxHeight: 250 });
-    $(".multiselect ").parent().css("width","100%");
-    $(".multiselect ").css("width","100%");
-  });
+      maxHeight: 250 })
+    $(".multiselect ").parent().css("width","100%")
+    $(".multiselect ").addClass("multiselectDropdown")
+  })
 </script>
 
 <%= form_for @equipment, :html => { :class => "form-horizontal equipment" } do |f| %>

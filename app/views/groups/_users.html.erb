@@ -3,41 +3,29 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th><%= User.human_attribute_name(:username) %></th>
+          <th><%= User.human_attribute_name(:email) %></th>
       <% if params[:action] == "edit" %>
         <% if can? :degrade_user, @group or can? :assign_user, @group %>
-          <th class="two-column text-right"><%= t("groups.edit.actions")%></th>
+          <th class="two-column"><%= t("groups.edit.actions")%></th>
         <% end %>
       <% end %>
         </tr>
       </thead>
 
       <tbody>
-        <% (@leaders + @members).each do |user| %>
-          <% is_leader = @leaders.include?(user) %>
-          <tr>
-            <td>
-              <%= user.username %>
-              <% if is_leader %>
-                &nbsp &nbsp
-                <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
-              <% end %>
-            </td>
-            <% if params[:action] == "edit" %>
-              <td class="text-right">
-                <% unless is_leader %>
-                  <%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-                  <% if can? :promote_user, @group %>
-                    <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-                  <% end %>
-                <% else %>
-                  <% if can? :degrade_user, @group %>
-                    <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
-                  <% end %>
-                <% end %>
-              </td>
+    <% @members.each do |user| %>
+          <% if @group.users.include?(user) %>
+            <tr>
+              <td><%= link_to user.email, user_path(user) %></td>
+              <% if params[:action] == "edit" %>
+            <td><%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
+            <% if can? :promote_user, @group %>
+              <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
             <% end %>
-          </tr>
+            </td>
+          <% end %>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

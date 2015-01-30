@@ -9,7 +9,7 @@ function initializeCheckboxesByEntity() {
   handleEnabled($('#rooms2'), approveEventsChecked);
   $('[name="approve_events"]').change(function() {
     handleEnabled($('#rooms2'), approveEventsChecked);
-  })
+  });
 }
 
 function updatePermissionsForEntity() {
@@ -55,7 +55,7 @@ function handleSelectAll() {
     }
   }
   else {
-    allSelected = true;
+    var allSelected = true;
     $(this).children('option[value!="all"]').each(function() {
       if (!$(this).prop('selected')) {
         allSelected = false;
@@ -73,7 +73,7 @@ function handleSelectAll() {
 }
 
 function isElementOf(array, value) {
-  return array && array.indexOf(value) != -1
+  return array && array.indexOf(value) !== -1;
 }
 
 function handleEnabled(target, condition) {
@@ -87,5 +87,5 @@ function approveEventsChecked() {
 }
 
 function approveEventsSelected() {
-  return $('#permissions').val() == 'approve_events';
+  return $('#permissions').val() === 'approve_events';
 }

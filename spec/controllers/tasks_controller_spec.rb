@@ -324,6 +324,16 @@ RSpec.describe TasksController, type: :controller do
         }.to change(Task, :count).by(1)
       end
 
+        it "creates task with valid deadline" do
+          expect { post :create, task: { description: "description", name: "Test", deadline: Date.current, event_id: event.id} }.to change { Task.count }.by(1)
+          expect(response).to redirect_to task_path(assigns(:task))
+        end
+
+        it "creates task with invalid deadline" do
+          expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
+          expect(response).to render_template("new")
+        end
+
       describe "with attachments" do 
         it "creates new task" do 
           expect{
@@ -521,6 +531,16 @@ RSpec.describe TasksController, type: :controller do
             patch :update, { id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.tomorrow }} 
             task.reload()
           }.to change(task, :deadline)
+        end
+
+        it "updates a task with another valid deadline" do
+          patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.current, identity: identity_dummy(task) }
+          expect(response).to redirect_to task_path(assigns(:task))
+        end
+
+        it "updates a task with invalid deadline" do
+          patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.yesterday, identity: identity_dummy(task) }
+          expect(response).to render_template("edit")
         end
 
         it "updates the task status to 'not assigned' if no one is assigned" do
