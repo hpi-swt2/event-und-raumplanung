@@ -64,6 +64,7 @@ class TasksController < ApplicationController
     @task.done = false
 
     authorize! :create, @task
+    
     respond_to do |format|
       if @task.save && upload_files
         @task.send_notification_to_assigned_user(current_user) if @task.identity
@@ -85,14 +86,19 @@ class TasksController < ApplicationController
     authorize! :update, @task
     delete_files if params[:delete_uploads]
 
-    params[:task][:identity_id] = identity_params.blank? ? nil : identity_params[:id]
-    params[:task][:identity_type] = identity_params.blank? ? nil : identity_params[:type]
+    if identity_params.blank?
+      params[:task][:identity_id] = nil 
+      params[:task][:identity_type] = nil
+    else 
+      params[:task][:identity_id] = identity_params[:id]
+      params[:task][:identity_type] = identity_params[:type]
+    end 
 
-    cur_done_status = @task.done
+    current_done_status = @task.done
 
     respond_to do |format|
       if upload_files && @task.update_and_send_notification((set_status task_params), current_user)
-        create_activity(@task) if cur_done_status != @task.done
+        create_activity(@task) if current_done_status != @task.done
         format.html { redirect_to @task, notice: t('notices.successful_update', :model => Task.model_name.human) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -138,7 +144,7 @@ class TasksController < ApplicationController
         return 
       end
 
-      if @task.identity.is_group and @task.identity.users.include?(current_user)
+      if is_member_of_assigned_group?
         @task.identity = current_user
       end
       
@@ -167,27 +173,33 @@ class TasksController < ApplicationController
   end 
 
   def decline
-    if @task.identity
-      if (@task.identity.is_group and @task.identity.users.include?(current_user)) or (!@task.identity.is_group and @task.identity.id == current_user.id)
-        if @task.status == "accepted"
-          flash[:error] = t('.you_already_accepted_this_task')
-          redirect_to root_path
-          return
-        else
-          @task.status = "declined"
-          @task.save
-        end
-      else
-        flash[:warning] = t(".you_are_not_authorized_to_decline_this_task")
+    if @task.identity and (is_member_of_assigned_group? or is_assigned_user?)
+      if @task.status == "accepted"
+        flash[:warning] = t('.you_already_accepted_this_task')
         redirect_to root_path
         return
+      else
+        @task.status = "declined"
+        @task.save
       end
+    else
+      flash[:warning] = t(".you_are_not_authorized_to_decline_this_task")
+      redirect_to root_path
+      return
     end
     respond_to do |format| 
       format.html { redirect_to @task }
       format.json { render json: @task }
     end
   end
+
+  def is_member_of_assigned_group?
+    return (@task.identity.is_group and @task.identity.users.include?(current_user))
+  end
+
+  def is_assigned_user?
+    return (!@task.identity.is_group and @task.identity.id == current_user.id)
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.
