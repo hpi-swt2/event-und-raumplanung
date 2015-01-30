@@ -153,7 +153,6 @@ class RoomsController < ApplicationController
   end
 
   def render_print_rooms(room_ids)   
-    I18n.locale = 'de';
     now = DateTime.now
     week = params[:week].to_i || Date.today.strftime("%W").to_i
 
