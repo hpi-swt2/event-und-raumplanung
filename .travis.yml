@@ -7,7 +7,8 @@ rvm:
 before_script:
 - cp config/database.psql.yml config/database.yml
 - psql -c 'create database hpi_swt2_test;' -U postgres
-script:
+script: 
+- xvfb-run rspec
 - RAILS_ENV=test bundle exec rake db:migrate
 - bundle exec rspec spec/
 notifications:

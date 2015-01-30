@@ -9,7 +9,8 @@ RSpec.feature "User signin" do
 		page.should have_text("Log in")
 		page.fill_in "user_email", :with => "Max.Mustermann@student.hpi.de"
 		page.click_button "Log in"
-		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/"
+		#expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/"
+		expect(page.current_url).to eq "http://www.example.com/users/sign_in"
 	end
 
   	#

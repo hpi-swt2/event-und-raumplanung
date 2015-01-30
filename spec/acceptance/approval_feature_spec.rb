@@ -59,7 +59,7 @@ RSpec.feature "Event approval" do
 		page.should have_content("bestätigt")
 	end
 
-<<-DOC	
+<<-DOC	# this feature is not supported anymore..
 	#
 	#
 	scenario "View details for Room" do

@@ -54,13 +54,13 @@ Task.create({:name => 'A Task',
 
 #
 ## Permission seed
-permission1 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 1, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission2 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 2, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission3 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 3, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission4 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 4, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission5 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 5, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission6 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 6, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
-permission7 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 7, created_at: "2015-01-28 20:22:57", updated_at: "2015-01-28 20:22:57")
+permission1 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 1)
+permission2 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 2)
+permission3 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 3)
+permission4 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 4)
+permission5 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 5)
+permission6 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 6)
+permission7 = Permission.create(room_id: nil, permitted_entity_id: 3, permitted_entity_type: "User", category: 7)
 
 #
 ##  Equipment seed
