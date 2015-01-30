@@ -1,2 +1,3 @@
+<% title t '.title' %>
 <% @auser = User.find(current_user.id) %>
 <%= render(partial: 'profile/profile_container', locals: { auser: @auser }) %>

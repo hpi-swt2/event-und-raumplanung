@@ -211,6 +211,18 @@ RSpec.describe GroupsController, :type => :controller do
           expect(response).to redirect_to(edit_group_path(@group))
         end
       end
+      context "that is already assigned" do
+        it "send an flash error to let the user notice", :isAdmin => true do
+          patch :assign_user, id: @group.id, email: @user.email
+          expect(@user.reload.groups).to include(@group.reload)
+          expect(flash[:error]).to eq(I18n.t('errors.messages.unsuccessful_user_assign', :email => @user.email))
+        end
+      end
+      it "redirects to edit_path and shows an error if no user-email is passed" , :isAdmin => true do
+        patch :assign_user, id: @group.id, email: ''
+        expect(response).to redirect_to(edit_group_path(@group))
+        expect(flash[:error]).to eq(I18n.t('groups.edit.user_not_found'))
+      end
     end
 
     describe "GET unassign_user" do
@@ -267,6 +279,16 @@ RSpec.describe GroupsController, :type => :controller do
           end
         end
       end
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :unassign_user, {:id => group.to_param, :user_id => user.id.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+      it "redirects to edit_path and shows an error if a non-existing user is passed" , :isAdmin => true do
+        get :unassign_user, {:id => @group.to_param, :user_id => 13357}, valid_session
+        expect(response).to redirect_to(edit_group_path(@group))
+        expect(flash[:error]).to eq(I18n.t('groups.edit.user_not_found'))
+      end
     end
 
     describe "GET promote_user" do
@@ -291,9 +313,27 @@ RSpec.describe GroupsController, :type => :controller do
           get :promote_user, {:id => group2.to_param, :user_id => user2.to_param}, valid_session
           expect(user2.is_leader_of_group(group2.id)).to eq(true)
         end
+        it "does not promote a user, that is not a member of the group and sends a flash error", :isAdmin => true do
+          get :promote_user, {:id => group2.to_param, :user_id => user.to_param}, valid_session
+          expect(user.is_leader_of_group(group2.id)).to eq(false)
+          expect(flash[:error]).to eq(I18n.t('errors.messages.unsuccessful_promotion', :email => user.email))
+        end
       end
     end
 
+    describe "GET manage_rooms" do
+      it "redirects to the root path as normal user", :isAdmin => false do
+        group = Group.create! valid_attributes
+        get :manage_rooms, {:id => group.to_param}, valid_session
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "assigns the requested group as @group as admin", :isAdmin => true  do
+        group = Group.create! valid_attributes
+        get :manage_rooms, {:id => group.to_param}, valid_session
+        expect(assigns(:group)).to eq(group)
+      end
+    end
 
     describe "GET degrade user" do
       context "as normal user" do
@@ -328,22 +368,12 @@ RSpec.describe GroupsController, :type => :controller do
           mem.reload
           expect(mem.isLeader).to eq(false)
         end
+        it "does show an error, if trying to degrade a non-member", :isAdmin => true do
+          get :degrade_user, {:id => group.id, :user_id => user.id}
+          expect(flash[:error]).to eq(I18n.t('errors.messages.unsuccessful_degradation', :email => user.email))
+        end
       end
-
-      it "redirects to the root path as normal user", :isAdmin => false do
-        group = Group.create! valid_attributes
-        get :unassign_user, {:id => group.to_param, :user_id => user.id.to_param}, valid_session
-        expect(response).to redirect_to(root_path)
-      end
-
-      it "unassigns user to group as admin", :isAdmin => true do
-        group = Group.create! valid_attributes
-        group.users << user
-        get :unassign_user, {:id => group.to_param, :user_id => user.id.to_param}, valid_session
-        expect(group.users.count).to eq(0)
-        expect(user.groups.count).to eq(0)
-
-      end
+      
     end
 
     describe "POST create" do
@@ -503,6 +533,11 @@ RSpec.describe GroupsController, :type => :controller do
           param << room2.id
           patch :assign_rooms, id: group1.id, group: {room_ids: param}
           expect(response).to redirect_to(manage_rooms_group_path(group1))
+        end
+        it "shows an error message if no rooms are selected", :isAdmin => true do
+          param = []
+          patch :assign_rooms, id: group1.id, group: {room_ids: param}
+          expect(flash[:error]).to eq(I18n.t('errors.messages.unsuccessful_room_assign'))
         end
       end
 
