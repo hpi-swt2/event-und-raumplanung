@@ -27,7 +27,9 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 					{
 						title: '<%= each.event.name %>',
 						start: '<%= each.starts_occurring_at %>',
+                        end:   '<%= each.ends_occurring_at %>',
                         event_id: '<%= each.event_id %>'
+
 
                     	<% if each.event.is_approved %>
                         	, color: 'green'
@@ -59,7 +61,8 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 			],
 			theme: false,
             eventClick: function(calEvent, jsEvent, view){
-                var route = '<%=  events_url %>' + '/' + calEvent.event_id
+                var route = '<%=  events_url %>' + '/' + calEvent.event_id + '?starting=' + calEvent.start.toDate() + '&ending=' + calEvent.start.toDate()
+                console.log(calEvent)
                 //$.get(route)
                 window.open(route, "_self")
             }
