@@ -2,7 +2,20 @@
 <% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
 <% title page_header %>
 <div class="page-header">
-  <h1><%= page_header %></h1>
+  <div class="row">
+    <div class="col-md-11">
+      <h1><%= page_header %></h1>
+    </div>
+    <div class="col-md-1 text-right">
+      <% if can? :new, Room %>
+        <h1 class="text-right">
+          <%= link_to t('.new', :default => t("helpers.links.new")),
+                         new_room_path,
+                         :class => 'btn btn-primary' %>
+        </h1>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <div class="well">
@@ -37,21 +50,14 @@
       </div>
     </div> 
     <div class="col-md-2">
-      <%= link_to (t '.reset_filter'), reset_filterrific_rooms_path, :class => 'btn btn-primary' %>
+      <br/>
+      <%= link_to (t '.reset_filter'), reset_filterrific_rooms_path, :class => 'btn btn-default' %>
     </div>
     <div class="col-md-1">
-    <%= render_filterrific_spinner %>
+      <%= render_filterrific_spinner %>
     </div>
   <% end %>
   </div>
 </div>
 
 <%= render(partial: 'rooms/list', locals: { rooms: @rooms,  model_class:  model_class }) %>
-
-<div class="clear"></div>
-
-<% if can? :new, Room %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_room_path,
-            :class => 'btn btn-primary' %>
-<% end %>

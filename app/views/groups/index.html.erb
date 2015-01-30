@@ -10,7 +10,7 @@
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
           <% if can? :destroy, Group %>
-            <th><%=t '.actions', :default => t("helpers.actions") %></th>
+            <th class="text-right"><%=t '.actions', :default => t("helpers.actions") %></th>
           <% end %>
         </tr>
       </thead>
@@ -20,7 +20,7 @@
           <tr>
             <td><%= link_to group.name, group_path(group) %></td>
             <% if can? :destroy, group %>
-              <td>
+              <td class="text-right">
                 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                           group_path(group),
                           :method => :delete,
