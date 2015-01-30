@@ -15,9 +15,8 @@ class UsersController < ApplicationController
 
   def update
   	authorize! :edit, @user
-    user_params[:student] = is_student(user_params[:email])
-    logger.info user_params
-    logger.info "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+    @user.student = is_student(user_params[:email])
+    @user.save
     if not is_valid_domain(user_params[:email])
       flash[:error] = t('devise.sessions.wrong_domain')
       redirect_to edit_user_path(@user)
