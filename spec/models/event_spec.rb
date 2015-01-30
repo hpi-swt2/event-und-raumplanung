@@ -97,6 +97,14 @@ describe Event do
       expect(weekly_recurring_event.schedule.occurs_on?(termination_date)).to be
       expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1))).to be
       expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1, days: 1))).not_to be
+
+      weekly_recurring_event.schedule_from_rule(dirty_rule, nil)
+      expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1, days: 1))).to be
+      expect(weekly_recurring_event.occurence_rule.until_time).to be nil
+
+      weekly_recurring_event.schedule_from_rule(dirty_rule, "")
+      expect(weekly_recurring_event.schedule.occurs_at?(weekly_recurring_event.starts_at.advance(weeks: 1, days: 1))).to be
+      expect(weekly_recurring_event.occurence_rule.until_time).to be_nil
     end
   end
 

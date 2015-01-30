@@ -89,7 +89,7 @@
         <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
         <script type="text/javascript">
           $('#ScheduleEndDatePicker').datetimepicker({
-            format: 'YYYY-MM-DD',
+            language: '<%= I18n.locale %>',
             pickTime: false
           });
         </script>
