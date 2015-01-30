@@ -1,3 +1,5 @@
+<% title "Log in" %>
+
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :class => "form-horizontal" }) do |f| %>
 	<%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>	  
   <div><%= f.submit "Log in", :class => 'btn btn-primary btn-lg' %></div>

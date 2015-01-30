@@ -8,8 +8,7 @@ en:
     my_tasks: My Tasks
     pending_tasks: Pending Tasks
     accept_tasks: Accept Tasks
-    no_taks: You currently have no tasks to do.
-    no_pending_tasks: You have no pending tasks.
+    no_taks: You currently have no tasks accepted.
     calendar: Calendar
     user: User
     requests: requests

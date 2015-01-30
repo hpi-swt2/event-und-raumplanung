@@ -30,6 +30,7 @@ de:
       people: Personen
       table_information: Tische auf Anfrage
       table_request: Tische anfragen
+      title: 'Details von %{model}'
     list:
       all_events: Alle Events
       room_selection: Raumauswahl
@@ -44,3 +45,5 @@ de:
       equipment: Ausstattung
       properties: Eigenschaften
       create_event: Event erstellen
+    events:
+      title: 'Anstehende %{event} in %{room}'

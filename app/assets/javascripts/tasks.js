@@ -24,6 +24,11 @@ function handleTaskCheckboxClick()
 			data: {task: {done: target.checked }},
 			dataType: 'json'
 		});
+
+        if ( $(target).hasClass("task-done-checkbox-from-dashboard") ){
+            window.location.reload(); 
+        } 
+            
 	});
 }
 

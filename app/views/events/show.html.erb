@@ -1,17 +1,16 @@
 <%- model_class = Event -%>
+<% title @event.name %>
 
 <div class="event-page-header">
   <div class="row event-section-divider">
     <div class="col-xs-12 col-md-8">
       <h1>
         <%= @event.name %>
-        <% if @favorite.empty? %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
-          <% end %>
-        <% else %>
-          <%= link_to show_toggle_favorite_from_event_path(@event), class: "event-favorite-icon-checked event-favorite-icon" do %>
-            <span class="glyphicon glyphicon-star"></span>
+        <% if current_user.id != @event.user_id %>
+          <%= link_to show_toggle_favorite_from_event_path(@event), :remote => true, id: "btn_mark_as_favorite", 
+                class: "event-favorite-icon " + (@favorite.empty? ? "event-favorite-icon-unchecked" : "event-favorite-icon-checked"), 
+                data: { title_unmark: t('.unmark_as_favorite'), title_mark: t('.mark_as_favorite') } do %>
+            <span class="glyphicon glyphicon-star" ></span>
           <% end %>
         <% end %>
       </h1>
@@ -113,7 +112,7 @@
 
 <div class="row">
   <div class="col-xs-4 col-md-3">
-    <%= link_to t('.back', :default => t("helpers.links.back")), @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
+    <%= link_to t('.back', :default => t("helpers.links.back")), :back, :class => 'btn btn-default'  %>
   </div>
   <div class="col-xs-14 col-md-9 text-right">
     <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
