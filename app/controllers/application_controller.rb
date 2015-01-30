@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     if current_user
-      I18n.locale = current_user.language
+      I18n.locale = current_user.language == 'German'? :de : :en
     else
       I18n.locale = I18n.default_locale
     end
