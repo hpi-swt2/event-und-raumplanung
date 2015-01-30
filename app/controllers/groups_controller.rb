@@ -172,8 +172,9 @@ class GroupsController < ApplicationController
 
     def load_user_from_id
       if params.include?(:user_id)
-        @user = User.find(params[:user_id])
-        if @user == nil
+        if User.exists?(params[:user_id])
+          @user = User.find(params[:user_id])
+        else
           flash[:error] = t("groups.edit.user_not_found")
           redirect_to edit_group_path(@group)
         end
