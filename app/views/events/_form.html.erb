@@ -102,6 +102,13 @@
 
  <div class="notice"></div> <!-- display conflicting events -->
 
+<div>
+    <div>
+      <a class="btn btn-default" data-toggle="collapse" href="#advancedSearch">
+      <span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span> 
+      <%= t('.advanced_search')%></a>
+</div>
+</div>
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
