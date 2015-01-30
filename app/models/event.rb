@@ -142,10 +142,9 @@ class Event < ActiveRecord::Base
     where('ends_at <= ?', date)
   }
 
-  scope :week, lambda { |week|
-    now = Date.today        
-    weekBegin = Date.commercial(now.cwyear, week, 1)
-    weekEnd = Date.commercial(now.cwyear, week+1, 1)
+  scope :week, lambda { |week, year|
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
     puts weekBegin
     puts weekEnd
     where('ends_at >= ? AND starts_at <= ?', weekBegin, weekEnd)

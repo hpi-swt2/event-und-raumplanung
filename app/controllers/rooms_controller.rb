@@ -142,8 +142,19 @@ class RoomsController < ApplicationController
   end
 
   def printoverview
+    
+    # room selection
     rooms_ids = Room.all.pluck(:id)
     @rooms = Room.find(rooms_ids)
+
+    # week selection
+    @weeks = []
+    now = DateTime.now
+    startweek = Date.today.strftime("%W").to_i
+     Range.new(startweek, [52, startweek+4].min) ## show options for the next 4 weeks  
+    #@weekBegin = Date.commercial(now.cwyear, week, 1)
+
+
     render locals: {rooms:@room}
   end
 
@@ -163,12 +174,12 @@ class RoomsController < ApplicationController
   def render_print_rooms(room_ids)   
     now = DateTime.now
     week = params[:week].to_i || Date.today.strftime("%W").to_i
-
-    @weekBegin = Date.commercial(now.cwyear, week, 1)
+    year = params[:year].to_i || now.cwyear
+    @weekBegin = Date.commercial(year, week, 1)
     @prints = []
     room_ids.each do | room_id |
         room = Room.find(room_id)
-        @calevents = Event.approved.room_ids([room_id]).week(week) || []
+        @calevents = Event.approved.room_ids([room_id]).week(week, year) || []
         @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
     end
     render action: 'print', layout:'print', locals:{ prints: @prints}
