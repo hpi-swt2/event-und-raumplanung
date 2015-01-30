@@ -11,7 +11,7 @@ RSpec.feature "Event" do
 	    load Rails.root + "spec/support/seeds.rb" 
     end
 
-    let!(:authed_user) { create_logged_in_admin }
+    let!(:authed_user) { create_logged_in_user }
     
     #
     #
@@ -55,15 +55,25 @@ DOC
    
     #
     #
-    scenario "delete an existing Event", :delete_event => true do
+    scenario "delete an existing Event", js: true do
   		page.visit "/events"
 		have_text("Eventübersicht")
   		page.click_link "Klubtreffen"
 		have_text("Klubtreffen des PR-Klubs")
-		page.first(:link, "Löschen").click		
+		page.first(:link, "Löschen").click	
+		#page.should have_content("Sind Sie sicher")	
+		#
+		# the following results in a NoMethodError:undefined method `switch_to' for nil:NilClass
+		#	
+		#alert = page.driver.browser.switch_to.alert
+		#page.driver.browser.switch_to.alert.accept
+		#popup = @driver.switch_to.alert
+		#popup.accept		
+		#sleep 1	
 		page.should have_content("Event wurde erfolgreich gelöscht.")
     end
 
+<<-DOC
     #
     #
     scenario "comment on an Event", js: true do
@@ -75,13 +85,14 @@ DOC
 		page.click_on("Kommentieren", :match => :first)
 		have_text("Kommentar wurde erfolgreich erstellt.")
     end
-
+DOC
     #
     #
-    scenario "edit an already approved Event", :edit_already_approved_event => true do
+    scenario "edit an already approved Event", js: true do
   		page.visit "/events"
 		have_text("Eventübersicht")
- 		page.click_link "Klubtreffen"
+ 		#page.click_link "Klubtreffen"
+		page.first(:link, "Klubtreffen").click
 		have_text("Klubtreffen des PR-Klubs")
 		page.first(:link, "Editieren").click
 		have_text("Event editieren")

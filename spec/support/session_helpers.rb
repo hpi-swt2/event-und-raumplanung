@@ -4,16 +4,16 @@ include Warden::Test::Helpers
 module RequestHelpers
   def create_logged_in_admin
     user = FactoryGirl.create(:adminUser)
-    login(user)
+    log_in(user)
     user
   end
 
   def create_logged_in_user
     user = FactoryGirl.create :user
-    login(user)
+    log_in(user)
     user
   end
-  def login(user)
+  def log_in(user)
     login_as user, scope: :user
   end
 

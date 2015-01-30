@@ -21,7 +21,7 @@ RSpec.feature "Event approval" do
 		page.driver.options[:respect_data_method] = false
 		page.click_on("Genehmigen", :match => :first) # we are using own acceptance test seeds, otherwise selecting first would be a bad choice.
 		page.visit "/events/1"
-		page.should have_content("bestätigt")
+		page.should have_content("test_admin genehmigte das Event")
 	end
 
 	#
@@ -39,7 +39,8 @@ RSpec.feature "Event approval" do
 		#page.visit "/events/1"
 		#page.should have_content("abgelehnt")
 	end
-	
+
+<<-DOC #currently in development as user story for Sprint 4, please uncomment for test	
 	#
 	#
 	scenario "suggest an alternative for an unprocessed Event", js: true do
@@ -56,9 +57,9 @@ RSpec.feature "Event approval" do
 		page.fill_in "event_starts_at_date", with: Date.tomorrow + 5
 		#save_and_open_page
 		page.visit "/events/1"
-		page.should have_content("bestätigt")
+		page.should have_content("test_admin genehmigte das Event")
 	end
-
+DOC
 <<-DOC	# this feature is not supported anymore..
 	#
 	#

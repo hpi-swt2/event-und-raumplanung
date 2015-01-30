@@ -15,15 +15,15 @@ RSpec.feature "Task" do
    
     #
     #
-    scenario "create minimal Task without rights", js: true do
-  		page.visit "/tasks"
-		page.should have_text("Aufgaben")
-		page.click_link("Aufgabe erstellen", :match => :first)
-		page.should have_text("Aufgabe hinzufügen")
+    scenario "create minimal Task", js: true do
+  		page.visit "/tasks/new?event_id=2"
+		#page.should have_text("Aufgaben")
+		#page.click_link("Aufgabe erstellen", :match => :first)
+		#page.should have_text("Aufgabe hinzufügen")
 		page.fill_in "task_name", with: "Acceptance Tests schreiben"
 		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben."
 		page.click_button "Absenden"
-		page.should have_content("You are not authorized to access this page")
+		page.should have_content("Aufgabe: Acceptance Tests schreiben")
     end
 
     #
