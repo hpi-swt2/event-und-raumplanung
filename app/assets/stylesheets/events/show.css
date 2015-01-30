@@ -55,7 +55,7 @@
 }
 
 .event-page-header {
-	margin: 3em 0;
+	margin: 1em 0;
 }
 
 .event-section-divider {
@@ -65,9 +65,11 @@
 .event-description {
 	font-size: 1.2em;
 	text-align: justify;
+	margin-bottom: 1em;
 }
 
 .event-view-section {
+	clear: both;
 	margin-bottom: 3em;
 }
 
@@ -89,4 +91,10 @@
 
 .glyphicon-star {
 	top: 5px;
+}
+
+.event-overview-table {
+	float: right;
+	width: 40%;
+	margin-left: 3em;
 }

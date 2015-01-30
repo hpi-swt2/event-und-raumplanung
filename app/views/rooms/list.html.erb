@@ -1,3 +1,4 @@
+<% title t'.room_selection' %> 
 <h1><%= t'.room_selection' %></h1>
 <%= form_tag("/rooms/list", method: "get", :name => "list", :ID => 1, :remote => true) do %>
 <%= label_tag(:size, I18n.t('rooms.list.requested_size')) %>
