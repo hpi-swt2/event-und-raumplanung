@@ -11,9 +11,8 @@ before_script:
 - cp config/database.psql.yml config/database.yml
 - psql -c 'create database hpi_swt2_test;' -U postgres
 script: 
-- xvfb-run rspec
 - RAILS_ENV=test bundle exec rake db:migrate
-- bundle exec rspec spec/
+- xvfb-run bundle exec rspec spec/
 notifications:
   email: false
 
