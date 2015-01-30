@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/change_locale/:locale' => 'locale#change_locale', as: "change_locale"
+
   resources :uploads, :only => [:new, :create, :destroy]
 
   resources :permissions, :only => [:index] do
@@ -47,6 +49,7 @@ Rails.application.routes.draw do
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
   get 'rooms/:id/print' => 'rooms#print'
+  get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'

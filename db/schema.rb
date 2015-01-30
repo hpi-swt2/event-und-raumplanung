@@ -13,9 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150123132333) do
 
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "activities", force: true do |t|
     t.string   "username"
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.integer  "event_id"
     t.text     "schedule"
+    t.integer  "event_id"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
@@ -185,8 +185,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
     t.boolean  "done",              default: false
     t.string   "status"
-    t.integer  "task_order"
     t.datetime "deadline"
+    t.integer  "task_order"
     t.integer  "event_template_id"
     t.integer  "identity_id"
     t.string   "identity_type"
@@ -215,7 +215,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,        null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -228,7 +228,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.string   "office_location",        default: ""
     t.string   "office_phone",           default: ""
     t.string   "mobile_phone",           default: ""
-    t.string   "language",               default: "German"
+    t.string   "language",               default: "de"
     t.boolean  "email_notification",     default: true
     t.boolean  "firstlogin",             default: true
   end

@@ -84,6 +84,8 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if user_signed_in? && @current_user != nil %>
+              <li><%= link_to t('menu.languages.de'), change_locale_path(:de) %></li>
+              <li><%= link_to t('menu.languages.en'), change_locale_path(:en) %></li>
               <% if @current_user.student? %>
                 <% appendix = " (" + t(".student") + ")" %>
               <% else %>
