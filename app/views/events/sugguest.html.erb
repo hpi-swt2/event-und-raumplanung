@@ -1,6 +1,8 @@
 <%- model_class = Event -%>
+<% page_header = t '.title', :default => [:'helpers.titles.sugguest', 'Sugguest %{model}'], :model => model_class.model_name.human.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.sugguest', 'Sugguest %{model}'], :model => model_class.model_name.human.titleize %></h1>
+  <h1><%= page_header %></h1>
 </div>
 
 <%= form_for @event, :url => {action: "create_suggestion"}, :method => "patch", :remote => true, :html => { :class => "form-horizontal event", :id => "sugguest-form" } do |f| %>

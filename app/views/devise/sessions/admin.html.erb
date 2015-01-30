@@ -1,0 +1,9 @@
+<h2>Admin Login</h2>
+
+<%= form_tag({ :action => "authenticate_admin", :controller => "sessions"}, :class => "form-horizontal form-group") do %>
+	<%= label_tag :resource, User.human_attribute_name(:email), :class => "control-label" %>
+	<%= text_field_tag :email, nil, :class => "form-control" %>
+	<%= label_tag :resource, User.human_attribute_name(:encrypted_password), :class => "control-label" %>
+	<%= password_field_tag :encrypted_password, nil, :class => "form-control" %>
+    <%= submit_tag "Log in", :class => "btn btn-primary btn-lg" %>
+<% end %>
