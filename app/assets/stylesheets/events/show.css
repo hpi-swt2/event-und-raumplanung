@@ -73,6 +73,10 @@
 	margin-bottom: 3em;
 }
 
+.event-view-footer {
+	clear: both;
+}
+
 .event-favorite-icon-checked, .event-favorite-icon-checked:hover, .event-favorite-icon-checked:focus, .event-favorite-icon-checked:visited, .event-favorite-icon-checked:active {
 	color: #F8A902;
 }

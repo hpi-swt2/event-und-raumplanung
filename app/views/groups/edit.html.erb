@@ -1,6 +1,14 @@
 <%- model_class = Group -%>
 <% page_header = t '.title', :default => [:'helpers.titles.edit'], :model => model_class.model_name.human.titleize %>
 <% title page_header %>
+<script>
+  $(document).ready(function(){
+      $("#User_user_id").multiselect({
+        enableFiltering: true,
+        maxHeight: 250 });
+    });
+</script>
+
 <div class="page-header">
   <h1><%= page_header %>:&nbsp <%=@group.name%></h1>
 </div>
@@ -17,8 +25,10 @@
 
 <%= form_for @group, :html => { :id => "add-user", :class => "event" }, :url => assign_user_group_path(@group) do |f| %>
 	<div class="form-group">
-    	<%= f.label User.human_attribute_name(:email) %>
-    	<%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+    	<%= f.label User.human_attribute_name(:name) %>
+    	<p>
+    		<%= select(User, :user_id, User.order(:username).collect{ |u| [u.username, u.id ]}, {include_blank: t('.select_user')}, {class: 'form-control'}) %>    	
+    	</p>
     </div>
     <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 <% end %>
@@ -28,5 +38,5 @@
 <% if can? :update, @group %>
   <%= render :partial => 'form' %>
 <% else%>
-    <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
+  <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
 <% end %>

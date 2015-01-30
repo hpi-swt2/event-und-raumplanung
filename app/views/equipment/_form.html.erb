@@ -1,14 +1,11 @@
 <script>
-    $(document).ready(function(){
-        $.getScript( "https://www.dcl.hpi.uni-potsdam.de/submit/static/multiselect/js/bootstrap-multiselect.js", function() {
-            $("#equipment_room_id").multiselect({
-                enableFiltering: true,
-                maxHeight: 250 });
-            $(".multiselect ").parent().css("width","100%");
-            $(".multiselect ").css("width","100%");
-        })
-
-    })
+  $(document).ready(function(){
+    $("#equipment_room_id").multiselect({
+      enableFiltering: true,
+      maxHeight: 250 });
+    $(".multiselect ").parent().css("width","100%");
+    $(".multiselect ").css("width","100%");
+  });
 </script>
 
 <%= form_for @equipment, :html => { :class => "form-horizontal equipment" } do |f| %>

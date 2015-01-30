@@ -5,8 +5,8 @@
         <%= @event.name %>
         <% if current_user.id != @event.user_id %>
           <%= link_to show_toggle_favorite_from_event_path(@event), :remote => true, id: "btn_mark_as_favorite", 
-                class: "event-favorite-icon " + (@favorite.empty? ? "event-favorite-icon-unchecked" : "event-favorite-icon-checked"), 
-                data: { title_unmark: t('.unmark_as_favorite'), title_mark: t('.mark_as_favorite') } do %>
+                class: "event-favorite-icon " + (@favorite.empty? ? "event-favorite-icon-unchecked" : "event-favorite-icon-checked"),
+                data: { title_unmark: t('events.show.unmark_as_favorite'), title_mark: t('events.show.mark_as_favorite') } do %>
             <span class="glyphicon glyphicon-star" ></span>
           <% end %>
         <% end %>

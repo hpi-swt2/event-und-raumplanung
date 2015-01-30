@@ -4,8 +4,7 @@ class GroupsController < ApplicationController
   before_action :set_room, only: [:unassign_room]
   before_action :set_user, only: [:promote_user, :degrade_user, :current_ability]
   before_action :get_user_roles, only: [:show, :edit]
-  before_action :load_user_from_email, only: [:assign_user]
-  before_action :load_user_from_id, only: [:unassign_user]
+  before_action :load_user_from_id, only: [:assign_user, :unassign_user]
 
   def index
     @groups = Group.all
@@ -146,19 +145,10 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
     end
 
-    def load_user_from_email
-      if params.include?(:User)
-        @user = User.find_by_email(params[:User][:email])
-        if @user == nil
-          flash[:error] = t("groups.edit.user_not_found")
-          redirect_to edit_group_path(@group)
-        end
-      end
-    end
-
     def load_user_from_id
-      if params.include?(:user_id)
-        @user = User.find(params[:user_id])
+      userParams = params.include?(:User) ? params[:User] : params
+      if userParams.include?(:user_id)
+        @user = User.find(userParams[:user_id])
         if @user == nil
           flash[:error] = t("groups.edit.user_not_found")
           redirect_to edit_group_path(@group)

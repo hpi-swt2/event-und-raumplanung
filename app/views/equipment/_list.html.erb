@@ -12,7 +12,7 @@
       <th><%= t '.description' %></th>
       <th><%= t '.room' %></th>
       <th><%= t '.category' %></th>
-      <th><%= t '.action', :default => t("helpers.actions") %></th>
+      <th class="text-right"><%= t '.action', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -29,7 +29,7 @@
         
         <td><%= equipment.category %></td>
 
-        <td>
+        <td class="text-right">
           <% if can? :edit, equipment%>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                         edit_equipment_path(equipment), :class => 'btn btn-default btn-xs' %>

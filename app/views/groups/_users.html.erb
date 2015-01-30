@@ -3,7 +3,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th><%= User.human_attribute_name(:email) %></th>
+          <th><%= User.human_attribute_name(:username) %></th>
       <% if params[:action] == "edit" %>
         <% if can? :degrade_user, @group or can? :assign_user, @group %>
           <th class="two-column text-right"><%= t("groups.edit.actions")%></th>
@@ -17,7 +17,7 @@
           <% is_leader = @leaders.include?(user) %>
           <tr>
             <td>
-              <%= user.email %>
+              <%= user.username %>
               <% if is_leader %>
                 &nbsp &nbsp
                 <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>

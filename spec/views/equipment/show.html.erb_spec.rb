@@ -25,13 +25,12 @@ RSpec.describe "equipment/show", :type => :view do
 
   it "renders attributes" do
     render
-    expect(rendered).to match("Beamer HD")
     expect(rendered).to match("Beamer")
   end
 
   it "renders the title" do
     render
-    assert_select "h1", :text => "Equipment".to_s, :count => 1
+    assert_select "h1", :text => "Beamer HD".to_s, :count => 1
   end
 
   it "renders the data list" do
