@@ -7,6 +7,7 @@ rvm:
 before_script:
 - cp config/database.psql.yml config/database.yml
 - psql -c 'create database hpi_swt2_test;' -U postgres
+- sh -c 'sudo apt-get update && sudo apt-get install libqt4-dev'
 script: 
 - xvfb-run rspec
 - RAILS_ENV=test bundle exec rake db:migrate
@@ -27,4 +28,3 @@ deploy:
     - "rake db:migrate"
     - "rake db:seed"
     - restart
-
