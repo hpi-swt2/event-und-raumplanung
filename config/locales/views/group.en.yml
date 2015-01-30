@@ -2,6 +2,7 @@
 
 en:
   groups:
+    group: Group
     index:
       title: Group-overview
       all_groups: All groups
@@ -15,3 +16,5 @@ en:
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+    manage_rooms:
+      currentRoomsOfGroup: 'Rooms of %{group}'

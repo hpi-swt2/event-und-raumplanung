@@ -1,11 +1,16 @@
 de:
-  application:
-    student: Student
-    staff: Mitarbeiter
-    navigation:
-      events: Events
-      templates: Eventvorlagen
+  layouts:
+    application:
+      student: Student
+      staff: Mitarbeiter
+      events: Veranstaltungen
       rooms: Räume
       groups: Gruppen
       tasks: Aufgaben
-      open_requests: Offene Anfragen
+      requests: Offene Anfragen
+      room_mate: Room Mate
+      configuration: Verwaltung
+      equipment: Ausstattung
+      properties: Eigenschaften
+      permissions: Berechtigungen
+      templates: Vorlagen

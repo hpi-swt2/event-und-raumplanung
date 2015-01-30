@@ -35,6 +35,8 @@ de:
       begin: 'Beginn'
       end: 'Ende'
       tasks: 'Aufgaben'
+      last_update: 'Letzte Aktualisierung'
+      status: 'Status'
       mark_as_favorite: 'Als Favoriten markieren'
       unmark_as_favorite: 'Favoritenmarkierung entfernen'
     chosen_rooms:

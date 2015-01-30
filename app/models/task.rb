@@ -4,29 +4,37 @@ class Task < ActiveRecord::Base
   include DateTimeAttribute
 
   belongs_to :event
+  belongs_to :identity, polymorphic: true # can be either user or group
+  belongs_to :event_template
   has_many :attachments, inverse_of: :task
   accepts_nested_attributes_for :attachments
-  belongs_to :user
-  validates_presence_of :name
+  has_many :uploads, :dependent => :destroy
+  accepts_nested_attributes_for :uploads
+  validates_presence_of :name, :deadline
   ranks :task_order, :with_same => :event_id
   date_time_attribute :deadline
   validate :deadline_cannot_be_in_the_past
 
 
   def deadline_cannot_be_in_the_past
-    errors.add(:deadline, "can't be in the past") if deadline && deadline <= Date.today
+    today = Date.today
+    errors.add(:deadline, "can't be in the past") if deadline && deadline < Time.new(today.year, today.month, today.day, 0, 0, 0)
+  end
+
+  def identity_changed?
+    identity_id_changed? or identity_type_changed?
   end
 
   def update_and_send_notification(task_params, assigner)
-    previousUser = user
+    previousIdentity = identity
     assign_attributes(task_params)
     if valid?
-      if user_id_changed?
-        unless previousUser.nil?
-          send_notification_to_previously_assigned_user(previousUser, assigner)
+      if identity_changed?
+        unless previousIdentity.nil?
+          send_notification_to_previously_assigned_user(previousIdentity, assigner)
         end
-        if user_id?
-      	  send_notification_to_assigned_user(assigner)
+        unless identity.nil?
+          send_notification_to_assigned_user(assigner)
         end
       end
       save
@@ -37,10 +45,22 @@ class Task < ActiveRecord::Base
   end
 
   def send_notification_to_assigned_user(assigner)
-    UserMailer.user_assigned_to_task_email(assigner, self).deliver
+    if identity.is_group
+      identity.users.each do |recipient|
+        UserMailer.user_assigned_to_task_email(assigner, self, recipient, identity).deliver
+      end
+    else
+      UserMailer.user_assigned_to_task_email(assigner, self, identity, nil).deliver
+    end
   end
 
-  def send_notification_to_previously_assigned_user(previousUser, assigner)
-    UserMailer.user_assignment_removed_email(assigner, previousUser, self).deliver  
+  def send_notification_to_previously_assigned_user(previousIdentity, assigner)
+    if previousIdentity.is_group
+      previousIdentity.users.each do |recipient|
+        UserMailer.user_assignment_removed_email(assigner, recipient, self, previousIdentity).deliver
+      end
+    else
+      UserMailer.user_assignment_removed_email(assigner, previousIdentity, self, nil).deliver
+    end
   end
 end

@@ -5,7 +5,21 @@ class EquipmentController < ApplicationController
   # GET /equipment
   # GET /equipment.json
   def index
+
     @equipment = Equipment.all
+
+
+    @filterrific = Filterrific.new(
+      Equipment, params[:filterrific])
+      @equipment = Equipment.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
+      
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
+    
   end
 
   # GET /equipment/1
@@ -31,7 +45,7 @@ class EquipmentController < ApplicationController
     authorize! :create, @equipment
     respond_to do |format|
       if @equipment.save
-        format.html { redirect_to @equipment, notice: t('notices.successful_create', :model => Equipment.model_name.human) }
+        format.html { redirect_to equipment_index_url, notice: t('notices.successful_create', :model => Equipment.model_name.human) }
         format.json { render :show, status: :created, location: @equipment }
       else
         format.html { render :new }
@@ -46,7 +60,7 @@ class EquipmentController < ApplicationController
     authorize! :update, @equipment
     respond_to do |format|
       if @equipment.update(equipment_params)
-        format.html { redirect_to @equipment, notice: t('notices.successful_update', :model => Equipment.model_name.human) }
+        format.html { redirect_to equipment_index_url, notice: t('notices.successful_update', :model => Equipment.model_name.human) }
         format.json { render :show, status: :ok, location: @equipment }
       else
         format.html { render :edit }
@@ -64,6 +78,15 @@ class EquipmentController < ApplicationController
       format.html { redirect_to equipment_index_url, notice: t('notices.successful_destroy', :model => Equipment.model_name.human) }
       format.json { head :no_content }
     end
+  end
+
+  def getCategories
+    categories= Equipment.select(:category).distinct.order('category ASC')
+    categoryArray = Array.new
+    categories.each do | cat |
+      categoryArray << [cat.category,cat.category]
+    end
+    return categoryArray
   end
 
   private

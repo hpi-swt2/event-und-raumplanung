@@ -1,3 +1,4 @@
+<% title t'.room_selection' %> 
 <h1><%= t'.room_selection' %></h1>
 <%= form_tag("/rooms/list", method: "get", :name => "list", :ID => 1, :remote => true) do %>
 <%= label_tag(:size, I18n.t('rooms.list.requested_size')) %>
@@ -33,34 +34,36 @@
 <%= t'.no_rooms_found' %>
 <%elsif @noSelection %>
 <%= t'.no_selection' %>
-<% else %> 
-<table border=1px>
-    <tr>
-        <th><%= t'.room_id' %></th>
-        <th><%= t'.room_name' %></th>
-        <th><%= t'.room_size' %></th>
-        <th><%= t'.equipment' %></th>
-        <th><%= t'.properties' %></th>
-    </tr>
-    <% @rooms.each do |room| %>
-    <tr>
-      <td align="middle"><%= room.id %></td>
-      <td><%= link_to room.name, room, method: :details %></td>
-      <td align="middle"><%=room.size %></td>
-      <td>
-      <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
-      <% category_list.each do |item| %>
-      <%= item %>
-      <% end %>
-      </td>
-      <td>
-      <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
-      <% property_list.each do |item| %>
-      <%= item %>
-      <% end %>
-      </td>
-    </tr>
-    <% end %>
-</table>
+<% else %>
+<div class="table-responsive">
+    <table border=1px>
+        <tr>
+            <th><%= t'.room_id' %></th>
+            <th><%= t'.room_name' %></th>
+            <th><%= t'.room_size' %></th>
+            <th><%= t'.equipment' %></th>
+            <th><%= t'.properties' %></th>
+        </tr>
+        <% @rooms.each do |room| %>
+        <tr>
+          <td align="middle"><%= room.id %></td>
+          <td><%= link_to room.name, room, method: :details %></td>
+          <td align="middle"><%=room.size %></td>
+          <td>
+          <% category_list = Equipment.where(:room_id => room.id).pluck(:category) %>
+          <% category_list.each do |item| %>
+          <%= item %>
+          <% end %>
+          </td>
+          <td>
+          <% property_list = RoomProperty.where(:room_id => room.id).pluck(:name) %>
+          <% property_list.each do |item| %>
+          <%= item %>
+          <% end %>
+          </td>
+        </tr>
+        <% end %>
+    </table>
+</div>
 <% end %>
 <br><br><br>

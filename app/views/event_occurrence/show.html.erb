@@ -1,0 +1,99 @@
+<%- model_class = EventOccurrence -%>
+<% title @event_occurrence.event.name %>
+<div class="event-page-header">
+  <div class="row event-section-divider">
+    <div class="col-xs-12 col-md-8">
+      <h1>
+        <%= @event_occurrence.event.name %>
+        <% if @favorite.empty? %>
+          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence.event), class: "event-favorite-icon-unchecked event-favorite-icon" do %>
+            <span class="glyphicon glyphicon-star"></span>
+          <% end %>
+        <% else %>
+          <%= link_to show_toggle_favorite_from_event_path(@event_occurrence.event), class: "event-favorite-icon-checked event-favorite-icon" do %>
+            <span class="glyphicon glyphicon-star"></span>
+          <% end %>
+        <% end %>
+      </h1>
+    </div>
+    <div class="col-xs-6 col-md-4" style="text-align: right">
+      <h2><%= @event_occurrence.starts_occurring_at.strftime("%d.%m.%Y") %></h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <h3><%= @event_occurrence.starts_occurring_at.strftime("%H:%M") %> Uhr - <%= @event_occurrence.event.ends_at.strftime("%H:%M") %> Uhr</h3>
+    </div>
+    <div class="col-xs-6 col-md-4" style="text-align: right">
+      <h3><%= concat_rooms(@event_occurrence.event) %></h3>
+    </div>
+  </div>
+</div>
+
+<div class="row event-section-divider">
+  <div class="col-xs-10 col-md-7 event-description">
+    <%= raw nl2br h @event_occurrence.event.description %>
+  </div>
+  <div class="col-xs-8 col-md-5">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td><%= t('event_occurrences.show.starts_occurring_at') %></td>
+          <td><%= @event_occurrence.starts_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
+        </tr>
+        <tr>
+          <td><%= t('event_occurrences.show.ends_occurring_at') %></td> 
+          <td><%= @event_occurrence.ends_occurring_at.strftime("%d.%m.%Y - %H:%M") %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.schedule') %></td>
+          <td><%= @event_occurrence.event.pretty_schedule %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.rooms') %></td>
+          <td><%= concat_rooms(@event_occurrence.event) %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.creator') %></td>
+          <td><%= @user %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.participant_count') %></td>
+          <td><%= @event_occurrence.event.participant_count %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="event-view-section">
+  <h3><%= t '.tasks' %></h3>
+  <% @event_id = @event_occurrence.event.id %>
+  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event: @event_occurrence.event })%>
+</div>
+
+<div class="event-view-section">
+  <h3><%= t '.comments' %></h3>
+  tbd: Comment section
+</div>
+
+<div class="row">
+  <div class="col-xs-4 col-md-3">
+    <%= link_to t('.back', :default => t("helpers.links.back")), @return_url.nil? ? events_path : @return_url, :class => 'btn btn-default'  %>
+  </div>
+  <div class="col-xs-14 col-md-9 text-right">
+    <%= link_to t('.create', :default => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize)),
+                        new_event_template_from_event_path(@event_occurrence.event), :class => 'btn btn-default' %>
+    <% if can? :edit, @event_occurrence.event %>
+      <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                    edit_event_path(@event_occurrence.event), :class => 'btn btn-default' %>
+    <% end %>
+    <% if can? :destroy, @event_occurrence.event %>
+      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                    event_path(@event_occurrence.event),
+                    :method => 'delete',
+                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                    :class => 'btn btn-danger' %>
+    <% end %>
+  </div>
+</div>

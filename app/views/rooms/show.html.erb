@@ -1,6 +1,7 @@
 <%-
   model_class = Room
   maximum_events = 5
+  title @room.name
 -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
@@ -31,6 +32,31 @@
               :class => 'btn btn-danger' %>
 <% end %>
 
+<div class "page-header">
+    <h2><%=t '.equipment' %> </h2>
+    <% if @assigned_equipment != {} %>
+      <div class="table-responsive">
+          <table class="table table-column">
+            <thead>
+            <tr>
+              <th><%= t '.category'%></th>
+              <th><%= t '.available'%></th>
+            </tr>
+            </thead>
+            <tbody>
+              <% @assigned_equipment.each do |category, count| %>
+                <tr>
+                  <td><%= category%></td>
+                  <td><%= count %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+      </div>
+    <% else %>
+      <em><%=t '.no_equipment' %></em><br/>
+    <% end %>
+</div>
 <div id="events">
   <div class="page-header upcoming-events">
     <h2><%=t '.upcoming_events' %></h2>
@@ -39,29 +65,6 @@
   </div>
 
   <%= render :partial => 'upcoming_events' %>
-</div>
-<div class "page-header">
-    <h2><%=t '.equipment' %> </h2>
-    <% if @assigned_equipment != {} %>
-      <table class="table table-column">
-        <thead>
-        <tr>
-          <th><%= t '.category'%></th>
-          <th><%= t '.available'%></th>
-        </tr>
-        </thead>
-        <tbody>
-          <% @assigned_equipment.each do |category, count| %>
-            <tr>
-              <td><%= category%></td>
-              <td><%= count %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <em><%=t '.no_equipment' %></em><br/>
-    <% end %>
 </div>
 <br></br>
 

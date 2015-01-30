@@ -1,0 +1,44 @@
+<%- model_class = Permission -%>
+<% page_header = t '.title', :default => model_class.model_name.human.titleize %>
+<% title page_header %>
+
+<script>
+  $(function() {
+    $('.selectpicker').selectpicker();
+    $('#entity').change(updatePermissionsForEntity);
+    $('#permissions').change(updateEntitiesForPermission);
+    $(document).on('ajax:success', '#permissionsByPermission, #permissionsByEntity', permissionSubmitSuccess);
+    $('#rooms')
+      .change(updateEntitiesForPermission)
+      .change(handleSelectAll)
+      .trigger('change');
+    handleEnabled($('#rooms'), approveEventsSelected);
+    $('#permissions').change(function() {
+      handleEnabled($('#rooms'), approveEventsSelected);
+    });
+    updateEntitiesForPermission();
+    updatePermissionsForEntity();
+  })
+</script>
+
+<div id="flash_messages"></div>
+<div class="page-header">
+  <h1><%= page_header %></h1>
+</div>
+  
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href="#content_entitites" id="tab_entities" data-toggle="tab"> <%= t('.filter_by_entity') %> </a>
+  </li>
+  <li>
+    <a href="#content_permissions" id="tab_permissions" data-toggle="tab"> <%= t('.filter_by_permission') %> </a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="content_entitites">
+    <%= render :partial => 'form_by_entity' %>
+  </div>
+  <div class="tab-pane" id="content_permissions">
+    <%= render :partial => 'form_by_permission' %>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= User.human_attribute_name(:email) %></th>
+      <% if params[:action] == "edit" %>
+        <% if can? :degrade_user, @group or can? :assign_user, @group %>
+          <th class="two-column"><%= t("groups.edit.actions")%></th>
+        <% end %>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @leaders.each do |leader| %>
+      <% if @group.users.include?(leader) %>  
+        <tr>
+          <td><%= leader.email %> &nbsp &nbsp<span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span></td>
+
+          <% if params[:action] == "edit" %>
+            <td>
+            <% if can? :degrade_user, @group %>
+              <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, leader), :class => 'btn btn-default btn-xs' %>
+            <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

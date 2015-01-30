@@ -1,0 +1,58 @@
+<%- model_class = Event -%>
+<% return_url = request.env['PATH_INFO'] %>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= t('dashboard.urgent_event_suggestions') %></h3>
+    </div>
+    <div class="panel-body">
+        <% if @requests && !@requests.empty? %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th><%=t '.event' %></th>
+                <th></th>
+                <th></th>
+                <th><%=t 'dashboard.date_and_time' %></th>
+                <th><%=t 'dashboard.rooms' %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @requests.each do |event| %>
+                  <td>
+                    <%= t('dashboard.user') + ' '+ event.user_id.to_s + ' ' + t('dashboard.requests') %>
+                    <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
+                    <br>
+                    <%= link_to event.name, event_path(event) %> -
+                    <%= event.description %>
+                    (<%= event.participant_count %>)
+                  </td>
+                  <td>
+                    <% if !event.check_vacancy(event.rooms.collect{|r| r.id}).empty? %>
+                      <span class="glyphicon glyphicon-flash" aria-hidden="true" style="font-size:30px"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= image_tag("flag.png", :alt => "Important", :width => 25, :height => 24) unless not event.is_important %>
+                  </td>
+                  <td>
+                    <span style="white-space:nowrap"><%= event.starts_at.strftime("%d.%m.%Y %H:%M") %>&nbsp;</span><%= t('dashboard.to') %>
+                    <span style="white-space:nowrap"><%= event.ends_at.strftime("%d.%m.%Y %H:%M") %></span>
+                  </td>
+                  <td>
+                    <%= event.rooms.map(&:name).to_sentence %>
+                  </td>
+                  <td>
+                    <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline_event', :default => t("helpers.links.decline"))%></button>
+                    <%= link_to t('.approve_event', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+            <%= t('dashboard.no_event_requests') %>
+        <% end %>
+        <%= link_to t('dashboard.show_all'), events_path, :class => 'btn btn-default' %>
+    </div>
+</div>

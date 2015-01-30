@@ -3,15 +3,18 @@
 en:
   rooms:
     index:
-      title: Raumübersicht
-      all_events: Alle Events
+      title: room overview
+      all_events: all events
     show:
-      no_upcoming_events: Keine anstehenden Events
-      upcoming_events: Anstehende Events
-      all_events: Alle Events
-      no_properties: Keine speziellen Eigenschaften
-    events:
-      no_upcoming_events: Keine anstehenden Events
+      no_upcoming_events: no upcoming events
+      upcoming_events: upcoming events
+      all_events: all events
+      no_properties: no_properties
+      message_for_event_creator: message fpr event creator
+      close: close
+    upcoming_events:
+      no_upcoming_events: no upcoming events
+      create_event: Create Event
     details:
       capacity: Capacity
       equipment: Equipment
@@ -19,7 +22,9 @@ en:
       people: people
       table_information: Tables upon request
       table_request: Request tables
+      title: 'Details of %{model}'
     list:
+      all_events: Alle Events
       room_selection: Room Selection
       requested_size: needed size of room
       necessary_equipment: Necessary equipment
@@ -31,3 +36,5 @@ en:
       room_size: Maximum number of persons
       equipment: Equipment
       properties: Properties
+      create_event: Create events
+

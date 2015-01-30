@@ -1,18 +1,34 @@
 <%- model_class = Group -%>
+<% page_header = t '.title', :default => [:'helpers.titles.edit'], :model => model_class.model_name.human.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+  <h1><%= page_header %>:&nbsp <%=@group.name%></h1>
 </div>
+<br>
+<h2><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h2>
 
-<%= render :partial => 'form' %>
 
-<h3><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h3>
-
-<% if @users.count > 0 %>
+<% if @leaders.count > 0 %>
+  <%= render :partial => 'leaders' %>
+<% end %>
+<% if @members.count > 0 %>
 	<%= render :partial => 'users' %>
 <% end %>
+
+
+<h2><%=t '.assign_user', :default => t("groups.edit.assign_user") %></h2>
 
 <%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
   <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
   <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
+
+<% end %>
+
+
+<h2><%=t '.rename', :default => t("groups.edit.rename") %></h2>
+<% if can? :update, @group %>
+  <%= render :partial => 'form' %>
+<% else%>
+    <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
 <% end %>

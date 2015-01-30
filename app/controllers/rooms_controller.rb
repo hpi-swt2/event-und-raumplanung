@@ -8,7 +8,22 @@ class RoomsController < ApplicationController
   # GET /rooms
   # GET /rooms.json
   def index
-    @rooms = Room.all
+    @filterrific = Filterrific.new(Room,params[:filterrific] || session[:filterrific_rooms])
+    @filterrific.select_options =  {sorted_by: Room.options_for_sorted_by, items_per_page: Room.options_for_per_page}
+    @rooms = Room.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Room.per_page)
+    session[:filterrific_rooms] = @filterrific.to_hash
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def reset_filterrific
+    # Clear session persistence
+    session[:filterrific_rooms] = nil
+    # Redirect back to the index action for default filter settings.
+    redirect_to action: :index
   end
 
   # GET /rooms/1
@@ -126,6 +141,30 @@ class RoomsController < ApplicationController
   render action: 'details'
   end
 
+  def fetch_event
+    if Event.exists?(params[:id])
+      event = Event.find(params[:id])
+      rooms = event.rooms.map(&:name).to_sentence
+      if event.starts_at
+        startTime = event.starts_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        startTime = ''
+      end
+      if event.ends_at
+        endTime = event.ends_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        endTime = ''
+      end
+      user = User.find(event.user_id).identity_url
+      declinePath = decline_event_suggestion_event_path(event)
+      approvePath = approve_event_suggestion_event_path(event)
+      render json: {success: true, body: {event: event, rooms: rooms, startTime: startTime, endTime: endTime, 
+                      user: user, approvePath: approvePath, declinePath: declinePath}}
+    else
+      render json: {success: false}
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
@@ -146,7 +185,7 @@ class RoomsController < ApplicationController
         @assigned_equipment = {}
       end
     end
-    
+
     def assign_equipment
       @available_equipment.each do |category, count|
         key = category+'_equipment_count'
