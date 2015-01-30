@@ -153,6 +153,7 @@ class RoomsController < ApplicationController
   end
 
   def render_print_rooms(room_ids)   
+    I18n.locale = 'de';
     now = DateTime.now
     week = params[:week].to_i || Date.today.strftime("%W").to_i
 
@@ -161,7 +162,7 @@ class RoomsController < ApplicationController
     room_ids.each do | room_id |
         room = Room.find(room_id)
         @calevents = Event.approved.room_ids([room_id]).week(week) || []
-        @prints << {room:room, events:@calevents, lang: 'de', weekBegin: @weekBegin } if room
+        @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
     end
     render action: 'print', layout:'print', locals:{ prints: @prints}
   end

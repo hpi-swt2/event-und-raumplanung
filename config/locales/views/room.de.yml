@@ -44,3 +44,5 @@ de:
       equipment: Ausstattung
       properties: Eigenschaften
       create_event: Event erstellen
+    print:
+      room_blocked: Raum blockiert

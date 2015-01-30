@@ -18,7 +18,7 @@
            <% print[:events].each do |each| %>
               {
                 id : '<%= each.id %>',
-                title: '<%= each.name %>',
+                title: '<%= each.is_private ? t(".room_blocked",default:"room blocked") : each.name %>',
                 start: '<%= each.starts_at %>',
                 end: '<%= each.ends_at %>'           
               },
