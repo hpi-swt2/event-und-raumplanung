@@ -1,5 +1,8 @@
-class Task < ActiveRecord::Base
+class Task < ActiveRecord::Base  
+  attr_accessor :skip_sending_mails
+
   before_save :send_mails
+  skip_callback :save, :before, :send_mails, if: :skip_sending_mails
 
   include RankedModel
   include DateTimeAttribute

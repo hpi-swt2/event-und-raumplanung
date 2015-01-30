@@ -58,15 +58,17 @@ another_event = Event.create({name: 'Vorlesung',
 					rooms: [room2],
 					user_id: user1.id})
 
-Task.create({name: 'An accepted Task', 
+task = Task.new({name: 'An accepted Task', 
 			description: 'This is an accepted task.',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
 			creator_id: user1.id,
 			status: 'accepted'})
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'Another accepted Task', 
+task = Task.new({name: 'Another accepted Task', 
 			description: 'This is a accepted task which is already done.',
 			event_id: another_event.id,
 			identity_type: 'User',
@@ -74,16 +76,20 @@ Task.create({name: 'Another accepted Task',
 			creator_id: user1.id,
 			status: 'accepted',
 			done: true })
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'A pending Task', 
+task = Task.new({name: 'A pending Task', 
 			description: 'This is a pending task.',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
 			creator_id: user1.id,
 			status: 'pending'})
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'A second pending Task', 
+task = Task.new({name: 'A second pending Task', 
 			description: 'This is another pending task.',
 			event_id: another_event.id,
 			identity_type: 'User',
@@ -91,7 +97,9 @@ Task.create({name: 'A second pending Task',
 			creator_id: user1.id,
 			status: 'pending'})
 
-Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned", creator_id: user1.id})
+task = Task.new({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned", creator_id: user1.id})
+task.skip_sending_mails = true
+task.save
 
 #
 # Create Equipment
