@@ -14,6 +14,7 @@ RSpec.describe "events/show", :type => :view do
                                           created_at: DateTime.new(2000,02,25,4,5,6), updated_at: DateTime.new(2001,03,20,5,6,7),
                                           starts_at: DateTime.new(2050, 05, 03, 15, 00),
                                           ends_at:  DateTime.new(2050,05, 04, 16,45),
+                                          rooms: [build(:room)],
                                           user_id: 42, is_private: true))
 
     @event.activities << Activity.create(:username => "user", 
@@ -46,9 +47,14 @@ RSpec.describe "events/show", :type => :view do
     #expect(rendered).to include("<input checked=\"checked\" disabled=\"disabled\" id=\"private\" name=\"private\" type=\"checkbox\" value=\"private\" />")
   end
 
-  it "displays the favorite button" do
+  it "does display the favorite button for every user that is not event owner" do
     render
-    #expect(rendered).to include("Add Favorite")
-  end 
+    expect(rendered).to include('glyphicon-star')
+  end
 
+  it "doesn't display the favorite button for event owner" do
+    @event.user_id = user.id
+    render
+    expect(rendered).to_not include('glyphicon-star')
+  end
 end

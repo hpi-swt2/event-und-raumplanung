@@ -143,6 +143,8 @@ class EventTemplatesController < ApplicationController
       params['name'] = task_attributes['name']
       params['description'] = task_attributes['description']
       params['task_order'] = task_attributes['task_order']
+      # this probably makes no sense
+      params['deadline'] = task_attributes['deadline']
       return params
     end
 

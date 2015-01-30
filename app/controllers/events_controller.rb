@@ -46,7 +46,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/show_toggle_favorite
   def show_toggle_favorite
     toggle_favorite
-    redirect_to event_url
+    render nothing: true
   end
 
   # GET /events
@@ -73,7 +73,11 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def decline
@@ -81,15 +85,39 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def approve_event_suggestion
+  #  if !params.has_key?(:message) or params[:message] == nil or params[:message].strip.empty?
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_accepted_email_without_message(User.find(@event.user_id), @event).deliver;
+  #    end
+  #  else
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_accepted_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+  #    end
+  #  end
     @event.update(status: 'pending', event_id: nil)
     redirect_to events_path, notice: t('notices.successful_approve', :model => t('event.status.suggested'))
+
   end
 
   def decline_event_suggestion
+  #  if !params.has_key?(:message) or params[:message] == nil or params[:message].strip.empty?
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_declined_email_without_message(User.find(@event.user_id), @event).deliver;
+  #    end
+  #  else
+  #    if User.exists?(@event.user_id)
+  #      UserMailer.event_declined_email_with_message(User.find(@event.user_id), @event, params[:message]).deliver;
+  #    end
+  #  end
+
     if @event.update(:status => 'rejected_suggestion')
       respond_to do |format|
         format.html { redirect_to events_path, notice: t('notices.successful_decline', :model => t('event.status.suggested')) }
@@ -99,9 +127,9 @@ class EventsController < GenericEventsController
   end
 
   def check_vacancy
-    @event = Event.new(event_params)
+    @event = Event.new(event_suggestion_params.except(:original_event_id))
     @event.user_id = current_user_id
-    conflicting_events = @event.check_vacancy event_params[:room_ids]
+    conflicting_events = @event.check_vacancy event_suggestion_params[:original_event_id], event_suggestion_params[:room_ids]
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
@@ -167,12 +195,16 @@ class EventsController < GenericEventsController
     @event.schedule_from_rule(event_params[:occurence_rule])
     filtered_params = params_without_occurence_rule(event_params)
     @event.attributes = filtered_params
-    
-    @event.activities << Activity.create(:username => current_user.username, 
-                                          :action => params[:action], :controller => params[:controller],
-                                          :changed_fields => @event.changed)
+
+    changed_attributes = @event.changed
 
     @update_result = @event.update(filtered_params)
+
+    if @update_result
+      @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => changed_attributes)
+    end
     super
   end
 
@@ -223,7 +255,7 @@ class EventsController < GenericEventsController
     end
 
     def event_suggestion_params
-      params.require(:event).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :original_event_id, :room_ids => [])
+      params.require(:event).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :original_event_id, :message,:room_ids => [])
     end
 
     def create_event params, new_url, model
@@ -234,12 +266,12 @@ class EventsController < GenericEventsController
       @event.user_id = current_user_id
       create_tasks @event_template_id
 
-      @event.activities << Activity.create(:username => current_user.username, 
+      respond_to do |format|
+        if @event.save
+          @event.activities << Activity.create(:username => current_user.username, 
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
 
-      respond_to do |format|
-        if @event.save
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
@@ -320,8 +352,9 @@ class EventsController < GenericEventsController
     end
 
     def build_conflicting_events_response conflicting_events 
+      logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = conflicting_event.name if (conflicting_event.user_id == current_user_id || !conflicting_event.is_private)
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]
@@ -333,19 +366,9 @@ class EventsController < GenericEventsController
     def get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
       start_time = I18n.l conflicting_event.starts_at, format: :time_only
       end_time = I18n.l conflicting_event.ends_at, format: :time_only
-      if conflicting_event.rooms.size > 1
-        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
-          return I18n.t('event.alert.conflict_same_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        else 
-          return I18n.t('event.alert.conflict_different_days_multiple_rooms', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        end
-      else
-        if same_day conflicting_event.starts_at, conflicting_event.ends_at 
-          return I18n.t('event.alert.conflict_same_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        else
-          return I18n.t('event.alert.conflict_different_days_one_room', name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-        end 
-      end 
+      rooms_translation = conflicting_event.rooms.size > 1 ? 'multiple_rooms' : 'one_room'
+      days_translation = (same_day conflicting_event.starts_at, conflicting_event.ends_at )? 'same_days' : 'different_days'
+      return I18n.t('event.alert.conflict_'+ days_translation + '_' + rooms_translation, name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
     end 
 
     def same_day starts_at, ends_at

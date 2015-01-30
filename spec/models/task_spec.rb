@@ -27,4 +27,10 @@ describe Task do
   	task.save
     expect(ActionMailer::Base.deliveries.count).to eq 1
   end
+
+  it "requires a deadline" do
+  	@task = FactoryGirl.build(:task)
+  	@task.deadline = nil
+  	expect(@task.valid?).to be false
+  end
 end

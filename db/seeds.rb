@@ -32,13 +32,13 @@ room12 = Room.create(name: 'HS 2', size: 100)
 room13 = Room.create(name: 'HS 3', size: 99)
 
 ## Create Users
-user2 = User.find_by username: 'maxe1992'
+user2 = User.find_by username: 'max.mustermann'
 if user2.nil?
-	user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'maxe1992', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
+	user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'max.mustermann', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
 end
-user3 = User.find_by username: 'eri1942'
+user3 = User.find_by username: 'erika.musterfrau'
 if user3.nil?
-	user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', username: 'eri1942', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
+	user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', username: 'erika.musterfrau', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
 end
 user1 = User.all.first
 

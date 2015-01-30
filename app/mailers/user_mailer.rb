@@ -32,4 +32,42 @@ class UserMailer < ActionMailer::Base
     @creator = @task.creator
     mail(to: @creator.email, subject: 'Task Accepted: ' + @task.name)
   end
+
+  def event_accepted_email_with_message(user, event, message)
+    @user = user
+    @message = message
+    @event = event
+
+    subject = 'Your event has been approved'
+
+    mail(to: @user.email, subject: subject)
+  end
+
+  def event_declined_email_with_message(user, event, message)
+    @user = user
+    @event = event
+    @message = message
+
+    subject = 'Your event has been declined'
+
+    mail(to: @user.email, subject: subject)
+  end
+
+  def event_accepted_email_without_message(user, event)
+    @user = user
+    @event = event
+
+    subject = 'Your event has been approved'
+
+    mail(to: @user.email, subject: subject)
+  end
+
+  def event_declined_email_without_message(user, event)
+    @user = user
+    @event = event
+
+    subject = 'Your event has been declined'
+
+    mail(to: @user.email, subject: subject)
+  end
 end
