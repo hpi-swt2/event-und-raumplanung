@@ -28,5 +28,5 @@
 <% if can? :update, @group %>
   <%= render :partial => 'form' %>
 <% else%>
-    <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
+  <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
 <% end %>
