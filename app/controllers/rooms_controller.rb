@@ -71,19 +71,27 @@ class RoomsController < ApplicationController
   end
 
   def getValidRooms
+    needed_rooms = []
     if params['room']['equipment']
-      needed_rooms = Room.where(:equipment => params['room']['equipment'])
-      logger.info needed_rooms.inspect
-      logger.info "XXXX"
-      needed_rooms = Equipment.where("category IN (?)", params['room']['equipment']).pluck(:room_id)
+      needed_rooms = Equipment.where("category IN (?)", params['room']['equipment'])
+      needed_rooms.collect! { |equipment| equipment.room }
+      h = Hash.new(0)
+      needed_rooms.each { |room| h.store(room, h[room]+1) }
+      needed_rooms.to_a.keep_if { |room| h[room] == params['room']['equipment'].size}
     end
+
     unless params['room']['size'].empty?
-      needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms.join(","), :room_size => params['room']['size']})
+      if needed_rooms.empty? 
+        needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms.join(","), :room_size => params['room']['size']})
+      else   
+        needed_rooms.to_a.keep_if {|room| room.size >= params['room']['size'].to_i}
+      end
     else 
-
+      unless params['room']['equipment']
+        needed_rooms = Room.all
+      end
     end
-    msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
-
+    msg = needed_rooms.map { |room|  {"id" => room.id, "name" => room.name}}
     respond_to do |format|
         format.json { render :json => msg} 
     end 

@@ -7,7 +7,7 @@ var typingTimer,
     doneTypingInterval = 1000;
 
 function getValidRooms() {
-    var equipment_ids = [], data, data_1, dict, i;
+    var equipment_ids = [], data, data_1, dict;
     $(".equipment:checked").each(function () { equipment_ids.push($(this).attr('id')); });
     data = {};
     data.room = {};
@@ -30,17 +30,26 @@ function getValidRooms() {
         beforeSend: function (xhr) {
             xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
         },
-        success: function (data) {
-            i = 0;
-            var msg = "";
-            data.forEach(function (key) {
-                if (msg === "") {
-                    msg = '<li data-original-index="' + i + '"><a tabindex="' + i + '" class="" data-normalized-text="<span class=&quot;text&quot;>A-1.1</span>"><span class="text">' + data[key].name + '</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
+        success: function (rooms) {
+            var room_ids = [],
+                options;
+            // $('#selectpicker').multiSelect('deselect_all');
+            rooms.forEach(function (room) {
+                room_ids.push(room.id);
+            });
+            console.log(room_ids);
+            options = $('#selectpicker').children();
+            options.each(function (index, option) {
+                var value = parseInt($(option).attr('value'), 10);
+                if ($.inArray(value, room_ids) !== -1) {
+                    console.log(value);
+                    $(option).attr('disabled', false);
                 } else {
-                    msg += '<li data-original-index="' + i + '"><a tabindex="' + i + '" class="" data-normalized-text="<span class=&quot;text&quot;>A-1.1</span>"><span class="text">' + data[key].name + '</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
+                    $(option).attr('disabled', true);
                 }
             });
-            $(".selectpicker.dropdown-menu").html(msg);
+            $('#selectpicker').multiSelect('refresh');
+
         }
     });
 }

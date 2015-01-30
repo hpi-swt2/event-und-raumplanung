@@ -251,6 +251,10 @@ de:
       declined: abgelehnt
       pending: In Bearbeitung
       rejected_suggestion: Abgelehnter Vorschlag
+  room: 
+    desired_size: 'gewünschte Raumgröße'
+  equipment: 
+    necessary: 'Benötigte Ausstattung'
   events: 
     show: 
       suggested_for: 'Vorgeschlagen für'
