@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
@@ -29,10 +30,12 @@ Rails.application.routes.draw do
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+
   post 'events_create_comment' => 'events#create_comment', as: "create_comment"
   post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
+
 
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"
@@ -48,6 +51,13 @@ Rails.application.routes.draw do
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
+
+  devise_scope :user do
+    get 'admin', controller: 'sessions', action: 'show_admin_login'
+    post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
+  end
+
+  # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
@@ -73,12 +83,14 @@ Rails.application.routes.draw do
 
   resources :equipment
 
+  get 'fetch_event' => 'rooms#fetch_event', as: :fetch_event
+
   patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
 
   resources :events do
-    collection do 
+    collection do
       get :create_event_suggestion
-      patch :create_event_suggestion 
+      patch :create_event_suggestion
       post :creat_event_suggestion
       get :reset_filterrific
     end
@@ -87,7 +99,7 @@ Rails.application.routes.draw do
       post :approve
       post :decline
       get :decline
-      get :approve_event_suggestion 
+      get :approve_event_suggestion
       get :decline_event_suggestion
       get :new_event_template
       get :new_event_suggestion
@@ -104,7 +116,8 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
-
+  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
+  get 'ical/' => 'ical#show_my_events'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

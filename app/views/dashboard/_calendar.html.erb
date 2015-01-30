@@ -26,7 +26,8 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 					<%### if each.event.user_id === current_user.id %>
 					{
 						title: '<%= each.event.name %>',
-						start: '<%= each.starts_occurring_at %>'
+						start: '<%= each.starts_occurring_at %>',
+                        event_id: '<%= each.event_id %>'
 
                     	<% if each.event.is_approved %>
                         	, color: 'green'
@@ -44,7 +45,8 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 						<% if @event.user_id != current_user.id && each.is_favorite %>
 						{
 							title: '<%= @event.name %>',
-							start: '<%= @event.starts_at %>'
+							start: '<%= @event.starts_at %>',
+                            event_id: '<%= each.event_id %>'
 							
 							<% if @event.is_approved %>
 		                       	, color: 'blue'
@@ -55,7 +57,12 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 						<% end %>
                 <% end %>
 			],
-			theme: false
+			theme: false,
+            eventClick: function(calEvent, jsEvent, view){
+                var route = '<%=  events_url %>' + '/' + calEvent.event_id
+                //$.get(route)
+                window.open(route, "_self")
+            }
 		});
 	});
 </script>

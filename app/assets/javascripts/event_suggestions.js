@@ -40,6 +40,7 @@ function checkVacancy() {
     $("#selectpicker option:selected").each(function () { rooms.push($(this).val()); });
     data = {
         event: {
+            original_event_id: $('#event_original_event_id').val(),
             starts_at_date: $('#event_starts_at_date').val(),
             starts_at_time: $('#event_starts_at_time').val(),
             ends_at_date:  $('#event_ends_at_date').val(),

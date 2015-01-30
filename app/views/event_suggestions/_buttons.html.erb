@@ -6,7 +6,7 @@
 	<% if can? :approve_event_suggestion, event %>   
     	<%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_suggestion_event_path(event), :class => 'btn btn-success btn-xs' %>
 	<% end %>
-<% elsif event.status == "rejeceted_suggestion" %> 
+<% elsif event.status == "rejected_suggestion" %> 
 	<% if can? :edit, event.event %>
 		<%= link_to t('.edit_original_event', :default => t("events.links.edit_original_event")), edit_event_path(event.event), :class => 'btn btn-warning btn-xs' %>
 	<% end %>
