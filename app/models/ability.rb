@@ -36,12 +36,15 @@ class Ability
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
+    can :show, Event, :is_private => false
+    can :show, Event, :is_private => true, :involved_users => { :id => user.id }
     can [:create_comment, :delete_comment], Event
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 
     can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event => { :user_id => user.id }
     can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event_template => { :user_id => user.id }
     can [:read, :set_done], Task, :identity_id => user.id, :identity_type => 'User'
+    can [:edit], User, :id => user.id
     if user.username == load_admin
         can :manage, Group
         can :manage, Room

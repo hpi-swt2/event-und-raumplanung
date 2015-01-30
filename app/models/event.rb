@@ -26,7 +26,6 @@ class Event < ActiveRecord::Base
   )
   self.per_page = 12
 
-  has_many :bookings
   has_many :tasks
   has_many :activities
 
@@ -101,21 +100,11 @@ class Event < ActiveRecord::Base
     involved = Array.new
     involved << User.find(self.user_id)
     self.tasks.each do | task |
-      if task.identity_type == 'User'
-        u = User.find(task.identity_id)
-        involved << u
-      end
-
-      if task.identity_type == 'Group'
-        g = Group.find(task.identity_id)
-        involved << g.users
-      end
+        involved << User.find(task.identity_id) if task.identity_type == 'User'
+        involved += Group.find(task.identity_id).users if task.identity_type == 'Group'
     end
-
     self.rooms.each do |room|
-      if room.group
-        involved += room.group.leaders
-      end
+      involved += room.group.leaders if room.group
     end
     involved
   end
@@ -164,6 +153,15 @@ class Event < ActiveRecord::Base
     where('ends_at <= ?', date)
   }
 
+  scope :week, lambda { |week|
+    now = Date.today        
+    weekBegin = Date.commercial(now.cwyear, week, 1)
+    weekEnd = Date.commercial(now.cwyear, week+1, 1)
+    puts weekBegin
+    puts weekEnd
+    where('ends_at >= ? AND starts_at <= ?', weekBegin, weekEnd)
+  }
+
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
   }
@@ -173,11 +171,7 @@ class Event < ActiveRecord::Base
   }
   
   scope :user, lambda { |id|
-    if id.present?
-      where(user_id: id)
-    else
-      all
-    end
+    where(user_id: id) if id.present?
   }
 
   def self.options_for_sorted_by
@@ -248,11 +242,6 @@ class Event < ActiveRecord::Base
 
   def set_status_to_pending_and_destroy_suggestion
     self.event_suggestion.destroy
-    # WEGEN FEHLERHAFTER VERSION IM DEV KAM IMMER ZUM RAUM UND EIN LEERER RAUM ZURÜCK 
-    # SOLLTE DAS GEFIXT WERDEN KANN ES SEIN, DASS DAS HIER FEHLER WIRFT UND GEFIXT WERDEN MUSS
-    # if params['room_ids'].count == 2  muss auf 1 geändert werden
-    # DON'T BLAME ME 
-    # @OLEGSFINEST
     self.update_columns(:status => 'pending')
   end
 
