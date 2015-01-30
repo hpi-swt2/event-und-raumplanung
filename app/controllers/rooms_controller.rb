@@ -142,24 +142,8 @@ class RoomsController < ApplicationController
   end
 
   def printoverview
-    
-    # room selection
-    rooms_ids = Room.all.pluck(:id)
-    @rooms = Room.find(rooms_ids)
-
-    # week selection
-    @weeks = []
-    now = DateTime.now
-    startweek = Date.today.strftime("%W").to_i
-    startyear = now.cwyear
-    date = Date.commercial(startyear, startweek, 1)
-    while @weeks.length < 4
-      @weeks << date
-      date = date.next_week
-    end
-    
-
-    render locals: {rooms:@room, weeks:@weeks}
+    @rooms = Room.all
+    render locals: {rooms:@rooms}
   end
 
 
@@ -176,10 +160,10 @@ class RoomsController < ApplicationController
   end
 
   def render_print_rooms(room_ids)   
-    now = DateTime.now
-    week = params[:week].to_i || Date.today.strftime("%W").to_i
-    year = params[:year].to_i || now.cwyear
-    @weekBegin = Date.commercial(year, week, 1)
+    date = params[:date] ? Date.parse(params[:date]) :  Date.today.monday
+    week = date.cweek
+    year = date.cwyear
+    @weekBegin = date
     @prints = []
     room_ids.each do | room_id |
         room = Room.find(room_id)

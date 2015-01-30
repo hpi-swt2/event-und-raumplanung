@@ -4,44 +4,41 @@
 
 
 
+<script type="text/javascript">
+	function print(){
+		var url="/rooms/print?";
+		url += "date="+$('#printdate').val()+"&";
+		url += "rooms="+$('#printselect').val().join(',');
+		fenster = window.open(url, "Print");
+		fenster.focus();
+	}
+</script>
+    
 
-<html>
-  <head>
-   
-  </head>
-    <body>
 
-  <h1>Raums drucken</h1>
+<h1>Raums drucken</h1>
 
 <div>
-
-	Räume
-<select multiple="multiple" id="printselect" name="printselect[]">
-	<% @rooms.each do |room| %>
-	<option value="<%= room.name %>"><%= room.name %></option>
-	<% end -%>
-</select>
-
-
-Zeitraum
-<select>
-	<% @weeks.each do |week| %>
-	<option value="<%= week %>"><%= week %></option>
-	<% end -%>
-</select>
-
-
+	<h2>Räume</h2>
+	<select multiple="multiple" id="printselect" name="printselect[]">
+		<% @rooms.each do |room| %>
+		<option value="<%= room.id %>"><%= room.name %></option>
+		<% end -%>
+	</select>
+	<script> $('#printselect').multiSelect(); </script>
+</div>
+<h2>Zeitraum</h2>
+<div>
+	<select id="printdate">
+		<% monday = Date.today.monday
+		4.times do %>
+		<option value="<%= monday %>"><%= l monday %> - <%= l monday.end_of_week %></option>
+		<% monday = monday.next_week
+		end %>
+	</select>
 </div>
 
-
-<a href="/rooms/print?week=5&rooms=1,2,3"><i class="glyphicon glyphicon-print"></i></a>
-
-
-  	<script>
-   $('#printselect').selectpicker();
-     </script>
-
-
-    <script src="vendor/assets/javascripts/jquery.multi-select.js" type="text/javascript"></script>
-  </body>
-</html>
+<button type="button" class="btn btn-default btn-lg" aria-label="Left Align">
+  <a href="javascript:print()">
+  	<span class="glyphicon glyphicon-print" aria-hidden="true"></a></span>
+</button>
