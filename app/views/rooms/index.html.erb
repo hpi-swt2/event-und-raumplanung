@@ -51,7 +51,7 @@
 <div class="clear"></div>
 
 <% if can? :new, Room %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_room_path,
-            :class => 'btn btn-primary' %>
+  <%= link_to new_room_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+  <% end %>
 <% end %>

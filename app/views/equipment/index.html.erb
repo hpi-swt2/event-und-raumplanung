@@ -42,7 +42,7 @@
 <%= render(partial: 'equipment/list', locals: { equipment: @equipment,  model_class:  model_class }) %>
 
 <% if can? :new, Equipment %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_equipment_path,
-            :class => 'btn btn-primary' %>
+  <%= link_to new_equipment_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+  <% end %>          
 <% end %>

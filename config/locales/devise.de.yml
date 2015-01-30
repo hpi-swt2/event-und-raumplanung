@@ -55,6 +55,8 @@ de:
       wrong_username: "Dein Name in der Mail-Adresse stimmt nicht mit dem Namen der OpenID überein."
       wrong_domain: "Bitte benutze eine gültige HPI E-Mail Adresse."
       wrong_email: "E-mail-Adresse stimmt nicht mit dem OpenID Account überein."
+      new:
+        login: "Anmelden"    
     unlocks:
       send_instructions: "Du erhältst in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren können."
       send_paranoid_instructions: "Falls Deine E-Mail-Adresse in unserer Datenbank existiert erhältst Du in wenigen Minuten eine E-Mail mit der Anleitung, wie Du Deinen Account entsperren kannst."

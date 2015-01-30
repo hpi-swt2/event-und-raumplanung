@@ -13,4 +13,4 @@ en:
       end: 'End'
       tasks: 'Tasks'
       mark_as_favorite: 'Mark as favorite'
-      unmark_as_favorite: 'Unmark as favorite'
+      unmark_as_favorite: 'Remove from favorites'

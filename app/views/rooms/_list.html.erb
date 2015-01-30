@@ -19,24 +19,28 @@
             <td><%= link_to room.name, room_path(room) %></td>
             <td><%= room.size %></td>
             <td>
-              <%= link_to t('.all_events', :default => t("helpers.links.all_events")),
-                          room_events_path(room), :class => 'btn btn-default btn-xs' %>
-
+              <%= link_to room_events_path(room), :title => t("helpers.links.all_events"), :class => 'btn btn-default btn-xs' do %>
+                <span class="glyphicon glyphicon-th-list"></span>
+              <% end %>  
               <% if can? :edit, Room %>
-                <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                          edit_room_path(room), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.details', :default => t("helpers.links.details")),
-                    room, method: :details, :class => 'btn btn-default btn-xs' %>
-              <% end -%>
+                <%= link_to edit_room_path(room), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
+                  <span class="glyphicon glyphicon-pencil"></span>    
+                <% end %>
+                <%= link_to room, :title => t("helpers.links.details"),  method: :details, :class => 'btn btn-default btn-xs' do %>
+                  <span class="glyphicon glyphicon-zoom-in"></span>
+                <% end %>  
+              <% end %>
+              <%= link_to new_event_path(room_ids: [room.id]), :title => t("helpers.links.create_event"), :class => 'btn btn-default btn-xs' do %>
+                <span class="glyphicon glyphicon-plus"></span>
+              <% end %>
               <% if can? :destroy, Room %>
-              <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          room_path(room),
+                <%= link_to  room_path(room),
                           :method => :delete,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-xs btn-danger' %>
-              <% end -%>
-              <%= link_to t('.create_event', :default => t("helpers.links.create_event")),
-                          new_event_path(room_ids: [room.id]), :class => 'btn btn-default btn-xs' %>
+                          :title => t("helpers.links.destroy"), :class => 'btn btn-xs btn-danger' do %>
+                  <span class="glyphicon glyphicon-trash"></span>   
+                <% end %>
+              <% end %>
             </td>
           </tr>
         <% end %>
