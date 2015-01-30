@@ -8,17 +8,16 @@ class GroupsController < ApplicationController
   before_action :load_user_from_id, only: [:unassign_user]
 
   def index
-    @groups = Group.all
+    #@groups = Group.all
     @myGroups = Group.get_all_groups_of_current_user (current_user.id)
-    @otherGroups = @groups-@myGroups
+    #@otherGroups = @groups-@myGroups
 
     @filterrific = Filterrific.new(
       Group, params[:filterrific])
       @groups = Group.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
 
     @myGroups = @myGroups & @groups 
-    @otherGroups = @otherGroups & @groups 
-    
+    @otherGroups = @groups - @myGroups
     
     respond_to do |format|
       format.html
@@ -39,7 +38,7 @@ class GroupsController < ApplicationController
 
   def unassign_user
     authorize! :unassign_user, @group
-    if @user.is_leader_of_group(@group.id) == false
+    if not @user.is_leader_of_group(@group.id)
       flash[:notice] = t('notices.successful_user_unassign', :email => @user.email)
       @group.users.delete(@user)
     else
@@ -50,7 +49,6 @@ class GroupsController < ApplicationController
 
   def new
     authorize! :new, Group
-
     @group = Group.new    
   end
 
@@ -63,7 +61,6 @@ class GroupsController < ApplicationController
     authorize! :create, Group
 
     @group = Group.new(group_params)
-
     respond_to do |format|
       if @group.save
         format.html { redirect_to @group, notice: t('notices.successful_create', :model => Group.model_name.human) }

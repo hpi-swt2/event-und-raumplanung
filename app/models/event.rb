@@ -92,6 +92,13 @@ class Event < ActiveRecord::Base
   def involved_users
     involved = Array.new
     involved << User.find(self.user_id)
+    involved << get_involved_entities
+    involved << get_involved_group_leaders
+    return involved
+  end
+
+  def get_involved_entities
+    involved = Array.new
     self.tasks.each do | task |
       if task.identity_type == 'User'
         involved << User.find(task.identity_id)
@@ -99,7 +106,6 @@ class Event < ActiveRecord::Base
         Group.find(task.identity_id).users.each {|user| involved << user}
       end
     end
-    involved += get_involved_group_leaders
     return involved
   end
 
