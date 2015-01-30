@@ -43,7 +43,7 @@
     <div class="control-group">
       <%= f.label :description, :class => 'control-label' %>
       <div class="controls">
-        <%= f.text_field :description, :class => 'form-control' %>
+        <%= f.text_area :description, :class => 'form-control' %>
       </div>
       <%= error_span(@task[:description]) %>
     </div>
@@ -149,7 +149,6 @@
     </div>
   </div>
   <%= submit_tag t('submit'), :class => 'btn btn-primary form_submit task_form_submit', :onclick => "$('.task_form').submit();" %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            @return_url.nil? ? tasks_path : @return_url, :class => 'btn btn-default' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")), event_path(@task.event_id), :class => 'btn btn-default' %>
 </div>
 

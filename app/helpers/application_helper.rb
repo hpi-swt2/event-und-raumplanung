@@ -1,6 +1,10 @@
 module ApplicationHelper
 	  ALERT_TYPES = [:success, :info, :warning, :danger] unless const_defined?(:ALERT_TYPES)
 
+  def title(page_title)
+    content_for(:title) { page_title }
+  end
+
 def bootstrap_flash(options = {})
     flash_messages = []
     flash.each do |type, message|

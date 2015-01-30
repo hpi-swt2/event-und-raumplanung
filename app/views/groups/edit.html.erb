@@ -1,6 +1,8 @@
 <%- model_class = Group -%>
+<% page_header = t '.title', :default => [:'helpers.titles.edit'], :model => model_class.model_name.human.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %>:&nbsp <%=@group.name%></h1>
+  <h1><%= page_header %>:&nbsp <%=@group.name%></h1>
 </div>
 <br>
 <h2><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h2>
@@ -18,7 +20,7 @@
 
 <%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
-  <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+  <input type="text", name="email", id="task_identity_display", class="form-control", data-autocomplete-url="<%= autocomplete_group_path %>" value="">
   <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 
 <% end %>

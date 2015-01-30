@@ -17,16 +17,20 @@ class TasksController < ApplicationController
   # GET /tasks/1.json
   def show
     authorize! :read, @task
+    @event = Event.find(@task.event_id)
   end
 
   # GET /tasks/new
   def new
     @task = Task.new
+    @assignable_entities = Group.all
+    @assignable_entities.concat(User.all)
     unless params[:event_id].blank?
       @task.event_id = params[:event_id]
       @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
+      @task.deadline = @task.event.starts_at
     else
       unless params[:event_template_id].blank?
         @task.event_template_id = params[:event_template_id]
@@ -57,11 +61,12 @@ class TasksController < ApplicationController
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
+    @task.done = false
 
     authorize! :create, @task
     respond_to do |format|
-        if @task.save && upload_files
-          @task.send_notification_to_assigned_user(current_user) if @task.identity
+      if @task.save && upload_files
+        @task.send_notification_to_assigned_user(current_user) if @task.identity
         create_activity(@task)
         redirection_target = @task.event ? @task.event : @task.event_template
         format.html { redirect_to redirection_target, notice: t('notices.successful_create', :model => Task.model_name.human) }
@@ -122,7 +127,7 @@ class TasksController < ApplicationController
     authorize! :destroy, @task
     @task.destroy
     respond_to do |format|
-      format.html { redirect_to tasks_url, notice: t('notices.successful_destroy', :model => Task.model_name.human) }
+      format.html { redirect_to event_path(@task.event_id), notice: t('notices.successful_destroy', :model => Task.model_name.human) }
       format.json { head :no_content }
     end
   end

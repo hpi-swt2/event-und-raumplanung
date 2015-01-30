@@ -12,3 +12,7 @@ en:
       configuration: Configuration
       equipment: Equipment
       print: Print
+      properties: Properties
+      permissions: Permissions
+      templates:   Templates
+
