@@ -94,7 +94,6 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it 'should prompt an error message to another User from the assigned group who wants to accept an already accepted task' do 
-      pending("redirects to tasks/task.id and not to root_path & flash warning is nil")
       get :accept, id: assigned_task_group.id
       sign_in another_user
       get :accept, id: assigned_task_group.id

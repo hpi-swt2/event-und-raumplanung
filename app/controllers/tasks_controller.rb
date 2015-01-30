@@ -133,36 +133,38 @@ class TasksController < ApplicationController
 
   def accept
     if @task.identity
+      if !can_task_be_accepted?
+        redirect_to root_path
+        return 
+      end
+
       if @task.identity.is_group and @task.identity.users.include?(current_user)
         @task.identity = current_user
       end
-
-      if !@task.identity.is_group and @task.identity.id != current_user.id
-        if @task.status == "accepted"
-          flash[:warning] = t(".this_task_was_already_accepted_by") + " " + @task.identity.name
-        else  
-          flash[:warning] = t(".you_are_not_authorized_to_accept_this_task")
-        end
-        redirect_to root_path
-        return
-      end
-
-      if @task.status == "declined"
-        flash[:warning] = t(".this_task_was_already_declined")
-        redirect_to root_path
-        return
-      end
-
+      
       @task.status = "accepted"
       @task.save
-    end
-    
+    end 
     respond_to do |format| 
       format.html { redirect_to @task }
       format.json { render json: @task }
     end
-
   end
+
+  def can_task_be_accepted?
+    if @task.status == 'declined'
+      flash[:warning] = t(".this_task_was_already_declined")
+      return false
+    elsif @task.status == 'accepted'
+      flash[:warning] = t(".this_task_was_already_accepted_by") + " " + @task.identity.name
+      return false
+    elsif !@task.identity.is_group and @task.identity.id != current_user.id
+      flash[:warning] = t(".you_are_not_authorized_to_accept_this_task")
+      return false
+    else 
+      return true
+    end
+  end 
 
   def decline
     if @task.identity
