@@ -1,4 +1,5 @@
-<h4><%= label_tag(:size, t('room.desired_size')) %></h4>
+
+<h4><%= label_tag(:size, I18n.t('rooms.list.requested_size')) %> </h4>
 <%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :class => 'room_input form-control', :placeholder => "e.g. 20") %>
 <br>
 <h4><label><%= t'equipment.necessary' %></label></h4>

@@ -1,4 +1,6 @@
 <%- model_class = Event -%>
+<% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
+<% title page_header %>
 
 <script type="text/javascript">
   $(function() {
@@ -9,7 +11,7 @@
 </script>
 
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%= page_header %></h1>
 </div>
 <div class="well">
   <%= form_for @filterrific do |f| %>
@@ -21,7 +23,7 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.text_field(
             :search_query,
-            :placeholder => "Search for " + Event.model_name.human.pluralize,
+            :placeholder => Event.human_attribute_name(:search_for) + " " + Event.model_name.human.pluralize,
             class: 'filterrific-periodically-observed form-control'
           ) %>
        </div>

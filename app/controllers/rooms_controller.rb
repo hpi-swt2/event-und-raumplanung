@@ -160,8 +160,27 @@ class RoomsController < ApplicationController
 
   def print
     set_room
-    @calevents = Event.approved.room_ids([@room.id])
-    render action: 'print', layout:'print', locals:{calevents:@calevents, room:@room, lang1:'de'}
+    print_rooms([@room.id])
+  end
+
+  def print_rooms
+    throw "need room ids" unless params[:rooms]
+    room_ids = params[:rooms].split(',')
+    render_print_rooms(room_ids)
+  end
+
+  def render_print_rooms(room_ids)   
+    now = DateTime.now
+    week = params[:week].to_i || Date.today.strftime("%W").to_i
+
+    @weekBegin = Date.commercial(now.cwyear, week, 1)
+    @prints = []
+    room_ids.each do | room_id |
+        room = Room.find(room_id)
+        @calevents = Event.approved.room_ids([room_id]).week(week) || []
+        @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
+    end
+    render action: 'print', layout:'print', locals:{ prints: @prints}
   end
 
   def fetch_event

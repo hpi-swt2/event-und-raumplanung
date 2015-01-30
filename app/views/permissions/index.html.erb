@@ -1,4 +1,6 @@
 <%- model_class = Permission -%>
+<% page_header = t '.title', :default => model_class.model_name.human.titleize %>
+<% title page_header %>
 
 <script>
   $(function() {
@@ -21,7 +23,7 @@
 
 <div id="flash_messages"></div>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= page_header %></h1>
 </div>
   
 <ul class="nav nav-tabs">
