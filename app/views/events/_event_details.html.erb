@@ -59,23 +59,24 @@
         <td><%= t('events.show.last_update') %></td>
         <td><%= @event.updated_at.strftime("%d.%m.%Y %H:%M") %></td>
       </tr>
-      <tr>
-        <td>TODO</td>
-        <td></td>
-      </tr>
+      <% if @event_occurrence %>
+        <tr>
+          <td><%= t('events.show.belongs_to_series') %></td>
+          <td><%= link_to(@event_occurrence.event.name, @event_occurrence.event) %></td>
+        </tr>
+      <% end %>
       <% if current_user.id == @event.user_id %>
         <tr>
           <td><%= t('events.show.status') %></td>
           <td><%= t "event.status.#{@event.status}" %></td>
         </tr>
-        <tr>
-          <td></td>
-          <td>
-            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+        <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+          <tr>
+            <td>
               <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
-            <%end%>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        <%end%>
       <% end %>
     </tbody>
   </table>
