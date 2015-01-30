@@ -13,12 +13,25 @@
 
   <h1>Raums drucken</h1>
 
+<div>
 
+	Räume
 <select multiple="multiple" id="printselect" name="printselect[]">
 	<% @rooms.each do |room| %>
 	<option value="<%= room.name %>"><%= room.name %></option>
 	<% end -%>
 </select>
+
+
+Zeitraum
+<select>
+	<% @weeks.each do |week| %>
+	<option value="<%= week %>"><%= week %></option>
+	<% end -%>
+</select>
+
+
+</div>
 
 
 <a href="/rooms/print?week=5&rooms=1,2,3"><i class="glyphicon glyphicon-print"></i></a>

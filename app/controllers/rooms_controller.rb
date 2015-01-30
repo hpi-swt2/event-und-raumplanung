@@ -151,11 +151,15 @@ class RoomsController < ApplicationController
     @weeks = []
     now = DateTime.now
     startweek = Date.today.strftime("%W").to_i
-     Range.new(startweek, [52, startweek+4].min) ## show options for the next 4 weeks  
-    #@weekBegin = Date.commercial(now.cwyear, week, 1)
+    startyear = now.cwyear
+    date = Date.commercial(startyear, startweek, 1)
+    while @weeks.length < 4
+      @weeks << date
+      date = date.next_week
+    end
+    
 
-
-    render locals: {rooms:@room}
+    render locals: {rooms:@room, weeks:@weeks}
   end
 
 
