@@ -83,11 +83,13 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <% if user_signed_in? && @current_user.email != nil %>
-              <% if @current_user.student? %>
+            <% if user_signed_in? %>
+              <% if @current_user.student? && @current_user.email != nil %>
                 <% appendix = " (" + t(".student") + ")" %>
-              <% else %>
+              <% elsif @current_user.email != nil %>
                 <% appendix = " (" + t(".staff") + ")" %>
+              <% else %>
+                <% appendix = "" %>
               <% end %>
               <li><%= link_to @current_user.display_name + appendix, user_path(current_user) %></li>
             <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
