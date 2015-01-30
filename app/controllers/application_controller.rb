@@ -6,7 +6,9 @@ class ApplicationController < ActionController::Base
   protected
   def authenticate_user!
     if user_signed_in?
-      super
+      if @current_user.email != nil
+        super
+      end
     else
       store_location_for(:user, request.env['PATH_INFO'])
       redirect_to new_user_session_path

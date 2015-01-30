@@ -16,7 +16,7 @@
     <% @members.each do |user| %>
           <% if @group.users.include?(user) %>
             <tr>
-              <td><%= user.email %></td>
+              <td><%= link_to user.email, user_path(user) %></td>
               <% if params[:action] == "edit" %>
             <td><%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
             <% if can? :promote_user, @group %>

@@ -129,7 +129,7 @@ de:
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
       date_in_the_past: kann nicht in der Vergangenheit liegen
       start_date_not_before_end_date: muss vor dem Endzeitpunkt liegen
-      unsuccessful_user_assign: 'Benutzer %{email} erfolgreich der Gruppe hinzugefügt'
+      unsuccessful_user_assign: 'Benutzer %{email} ist bereits Mitglied der Gruppe'
       unsuccessful_user_unassign: 'Benutzer %{email} kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist.'
       unsuccessful_promotion: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_degradation: 'Benutzer %{email} ist kein Mitglied der Gruppe'

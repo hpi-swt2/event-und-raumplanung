@@ -32,6 +32,7 @@ de:
       role: Rolle
     manage_rooms:
       currentRooms: Aktuelle Gruppenräume
+      currentRoomsOfGroup: 'Räume von %{group}'
       addRoom: Räume hinzufügen
       add: Hinzufügen
       delete: Entfernen

@@ -10,14 +10,14 @@ class Task < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   has_many :uploads, :dependent => :destroy
   accepts_nested_attributes_for :uploads
-  validates_presence_of :name
+  validates_presence_of :name, :deadline
   ranks :task_order, :with_same => :event_id
   date_time_attribute :deadline
   validate :deadline_cannot_be_in_the_past
 
 
   def deadline_cannot_be_in_the_past
-    errors.add(:deadline, "can't be in the past") if deadline && deadline <= Date.today
+    errors.add(:deadline, "can't be in the past") if deadline && deadline.to_date < Date.current
   end
 
   def identity_changed?
@@ -46,20 +46,20 @@ class Task < ActiveRecord::Base
   def send_notification_to_assigned_user(assigner)
     if identity.is_group
       identity.users.each do |recipient|
-        UserMailer.user_assigned_to_task_email(assigner, self, recipient, true).deliver  
+        UserMailer.user_assigned_to_task_email(assigner, self, recipient, identity).deliver  
       end
     else
-      UserMailer.user_assigned_to_task_email(assigner, self, identity, false).deliver
+      UserMailer.user_assigned_to_task_email(assigner, self, identity, nil).deliver
     end
   end
 
   def send_notification_to_previously_assigned_user(previousIdentity, assigner)
     if previousIdentity.is_group
       previousIdentity.users.each do |recipient|
-        UserMailer.user_assignment_removed_email(assigner, recipient, self, true).deliver  
+        UserMailer.user_assignment_removed_email(assigner, recipient, self, previousIdentity).deliver  
       end
     else
-      UserMailer.user_assignment_removed_email(assigner, previousIdentity, self, false).deliver
+      UserMailer.user_assignment_removed_email(assigner, previousIdentity, self, nil).deliver
     end
   end
 end
