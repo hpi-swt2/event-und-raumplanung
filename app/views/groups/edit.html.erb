@@ -20,7 +20,7 @@
 
 <%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
   <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
-  <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+  <input type="text", name="email", id="task_identity_display", class="form-control", data-autocomplete-url="<%= autocomplete_group_path %>" value="">
   <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 
 <% end %>
