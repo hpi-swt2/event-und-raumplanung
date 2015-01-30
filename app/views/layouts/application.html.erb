@@ -83,7 +83,7 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <% if user_signed_in? %>
+            <% if user_signed_in? && @current_user != nil %>
               <% if @current_user.student? %>
                 <li><a><%= @current_user.username + " (" + t(".student") + ")" %></a></li>
               <% else %>

@@ -73,7 +73,11 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def decline
@@ -81,7 +85,11 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def approve_event_suggestion
