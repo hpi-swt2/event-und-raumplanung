@@ -17,6 +17,14 @@ en:
       new: "New"
       edit: "Edit"
       submit: "Submit"
+      add_favorite: "Mark as favorite"
+      remove_favorite: "Remove from favorites"
+      edit_original_event: "Edit original"
+      destroy_original_event: "Delete original"
+      create_event: Create event
+      details: Details
+      all_events: All Events
+      save_changes: Save changes
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

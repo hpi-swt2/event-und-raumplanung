@@ -9,9 +9,9 @@
     <div class="col-md-1">
       <% if can? :new, Equipment %>
         <h1 class="text-right">
-          <%= link_to t('.new', :default => t("helpers.links.new")),
-                        new_equipment_path,
-                        :class => 'btn btn-primary' %>
+          <%= link_to new_equipment_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+            <span class="glyphicon glyphicon-plus"></span>
+          <% end %>  
         </h1>
       <% end %>
     </div>

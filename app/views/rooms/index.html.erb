@@ -60,4 +60,12 @@
   </div>
 </div>
 
+<div class="clear"></div>
+
+<% if can? :new, Room %>
+  <%= link_to new_room_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+  <% end %>
+<% end %>
+
 <%= render(partial: 'rooms/list', locals: { rooms: @rooms,  model_class:  model_class }) %>

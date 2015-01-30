@@ -14,6 +14,14 @@ de:
       new: "Neu"
       edit: "Editieren"
       submit: "Absenden"
+      add_favorite: "Als Favoriten markieren"
+      remove_favorite: "Favoritenmarkierung entfernen"
+      edit_original_event: "Original editieren"
+      destroy_original_event: "Original löschen"
+      create_event: Veranstaltung erstellen
+      details: Details
+      all_events: Alle Veranstaltungen
+      save_changes: Änderungen übernehmen
     titles:
       edit: "%{model} editieren"
       save: "%{model} speichern"
