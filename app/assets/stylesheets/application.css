@@ -55,16 +55,35 @@ input.task-done-checkbox {
     color: whitesmoke !important;
 }
 
+.navbar-nav li a:hover {
+    background-color: #808080 !important;
+}
+
 .navbar-nav .dropdown-menu {
-    background-color: #8a9095 !important;
+    background-color: #808080 !important;
+    color: white !important;
+}
+
+.dropdown.open a {
+	background-color: #808080 !important;
 	color: white !important;
 }
 
-li.dropdown.open a {
-	background-color: #8a9095 !important;
-	color: white !important;
+.dropdown.open a.dropdown-toggle:hover {
+    background-color: #808080 !important;
+    color: white !important;
+}
+
+.dropdown.open a:hover {
+    background-color: #5a6065 !important;
+    color: white !important;
+}
+
+.dropdown-room-indent {
+    text-indent: 1em;
 }
 
 .ui-autocomplete-loading {
     background: white url("/assets/ui-anim_basic_16x16.gif") right center no-repeat;
   }
+

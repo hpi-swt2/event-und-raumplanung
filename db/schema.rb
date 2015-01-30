@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
 
   create_table "tasks", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
