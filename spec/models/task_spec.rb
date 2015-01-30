@@ -19,12 +19,12 @@ describe Task do
   it "sends an email when the status changed to accepted" do
   	task.status = 'accepted'
   	test = task.save
-    expect(ActionMailer::Base.deliveries.count).to eq(1)
+    expect(ActionMailer::Base.deliveries.count).to eq 1
   end
 
   it "sends an email when the status changed to declined" do
   	task.status = 'declined'
   	task.save
-    expect(ActionMailer::Base.deliveries.count).to eq(1)
+    expect(ActionMailer::Base.deliveries.count).to eq 1
   end
 end

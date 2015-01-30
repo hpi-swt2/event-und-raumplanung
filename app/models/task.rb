@@ -82,7 +82,7 @@ class Task < ActiveRecord::Base
       if !previous_identity.nil? and previous_identity.is_group
         assigned_group = previous_identity
       end
-      UserMailer.assignment_response_notification_email(status == 'accepted', identity, self, assigned_group)
+      UserMailer.assignment_response_notification_email(status == 'accepted', identity, self, assigned_group).deliver
     end
   end
 end
