@@ -1,0 +1,24 @@
+en:
+  events:
+    show:
+      schedule_not_recurring: 'Once'
+      schedule: 'Schedule'
+      starts_at: 'Starts'
+      name: 'Name'
+      creator: 'Creator'
+      rooms: 'Rooms'
+      participant_count: 'Participation Count'
+      comments: 'Comments'
+      begin: 'Begin'
+      end: 'End'
+      tasks: 'Tasks'
+      mark_as_favorite: 'Mark as favorite'
+      unmark_as_favorite: 'Unmark as favorite'
+    chosen_rooms:
+      details: 'Details And Additional Equipment'
+      requestable_equipment: 'Requestable Equipment'
+      category: 'Ausstattung'
+      requested: 'additional requested'
+      present: 'vorhanden'
+
+

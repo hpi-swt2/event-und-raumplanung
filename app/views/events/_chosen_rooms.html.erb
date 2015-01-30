@@ -1,6 +1,6 @@
 <% if @chosen_rooms %>
   <div class="row">
-      <%= label_tag "Requestable Equipment: ", nil, :class => 'control-label' %>
+      <%= label_tag t('events.chosen_rooms.requestable_equipment'), nil, :class => 'control-label' %>
   </div>
 
   <%for room in @chosen_rooms%>
@@ -11,21 +11,21 @@
     <div class="form-group">
       <a class="btn btn-default" data-toggle="collapse" href= <%= '#'+table_id %> >
         <span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span> 
-        Details
+        <%= t('events.chosen_rooms.details') %>
       </a>
     </div>
     <div id = <%= table_id %> class="collapse">
       <div class="row">
-        <%= label_tag "Capacity: ", nil, :class => 'control-label' %>
+        <%= label_tag t('rooms.details.capacity')+': ', nil, :class => 'control-label' %>
         <%= label_tag room.size, nil, :class => 'control-label' %>
       </div>
       <div class="control-group">
           <table class="table table-column">
               <thead>
                 <tr>
-                  <th>Category</th>
-                  <th>Request</th>
-                  <th>Present</th>
+                  <th><%= t('events.chosen_rooms.category') %></th>
+                  <th><%= t('events.chosen_rooms.requested') %></th>
+                  <th><%= t('events.chosen_rooms.present') %></th>
                 </tr>
               </thead>
               <tbody>
@@ -48,7 +48,7 @@
               </tbody>
         </table>
       </div>
-    </div>
-    <br>  
+        <br> 
+    </div> 
   <% end %>
 <% end %>
