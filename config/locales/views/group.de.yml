@@ -12,6 +12,7 @@ de:
       unassigned: entfernt
       unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
+      no_users: Zur Zeit hat die Gruppe noch keine Benutzer!
       member: Mitglied
       leader: Gruppenleiter
       enter_email: Email-Adresse eingeben

@@ -21,7 +21,8 @@
     <%= error_span(@roomProperty[:name]) %>
   </div>
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit t('.cancel', :default => t("helpers.links.cancel")),
+               :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             room_properties_path, :class => 'btn btn-default' %>
 

@@ -26,5 +26,6 @@ en:
       room: Room
       category: Category
       cancel: Cancel
+      submit: Submit
     edit:
       title: Edit Equipment

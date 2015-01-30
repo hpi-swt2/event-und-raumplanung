@@ -64,7 +64,8 @@
         <%= error_span(@equipment[:category]) %>
     </div>
     <br />
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('.submit', :default => t("helpers.links.submit")),
+                 :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 equipment_index_path, :class => 'btn btn-default' %>
 

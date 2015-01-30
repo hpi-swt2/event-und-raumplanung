@@ -13,6 +13,7 @@ de:
       destroy: "Löschen"
       new: "Neu"
       edit: "Editieren"
+      submit: "Absenden"
     titles:
       edit: "%{model} editieren"
       save: "%{model} speichern"

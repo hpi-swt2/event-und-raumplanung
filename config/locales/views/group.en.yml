@@ -11,6 +11,7 @@ en:
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+      no_users: Currently, there are no users!
     edit:
       assign_rooms: assign rooms
       assigned: assigned

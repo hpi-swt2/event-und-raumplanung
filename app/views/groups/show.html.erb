@@ -1,24 +1,25 @@
 <%- model_class = Group -%>
 <% title @group.name %>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:&nbsp<%=@group.name%></h1>
+    <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:&nbsp<%=@group.name%></h1>
 </div>
 
 
-<h3><%=t '.user_overview', :default => t("groups.show.user_overview") %></h3>
-
 <% if @leaders.count > 0 || @members.count > 0%>
-  <%= render :partial => 'users' %>
+    <h3><%=t '.user_overview', :default => t('groups.show.user_overview') %></h3>
+    <%= render :partial => 'users' %>
+<% else %>
+    <p></p><%=t '.no_users', :default => t('groups.show.no_users') %></p>
 <% end %>
 
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              groups_path, :class => 'btn btn-default'  %>
+<%= link_to t('.back', :default => t('helpers.links.back')),
+            groups_path, :class => 'btn btn-default'  %>
 <% if can? :edit, @group %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_group_path(@group), :class => 'btn btn-default' %>
+    <%= link_to t('.edit', :default => t('helpers.links.edit')),
+                edit_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
 <% if can? :manage_rooms, @group %>
-  <%= link_to t('.assign_room', :default => t("groups.show.assign_rooms")),
-              manage_rooms_group_path(@group), :class => 'btn btn-default' %>
+    <%= link_to t('.assign_room', :default => t('groups.show.assign_rooms')),
+                manage_rooms_group_path(@group), :class => 'btn btn-default' %>
 <% end %>
