@@ -45,7 +45,9 @@ Rails.application.routes.draw do
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
+  get 'rooms/printoverview', as: 'print'
   get 'rooms/:id/print' => 'rooms#print'
+  get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'

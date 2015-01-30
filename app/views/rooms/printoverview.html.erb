@@ -1,0 +1,44 @@
+<%-
+  model_class = Room
+-%>
+
+
+
+<script type="text/javascript">
+	function print(){
+		var url="/rooms/print?";
+		url += "date="+$('#printdate').val()+"&";
+		url += "rooms="+$('#printselect').val().join(',');
+		fenster = window.open(url, "Print");
+		fenster.focus();
+	}
+</script>
+    
+
+
+<h1>Raums drucken</h1>
+
+<div>
+	<h2>Räume</h2>
+	<select multiple="multiple" id="printselect" name="printselect[]">
+		<% @rooms.each do |room| %>
+		<option value="<%= room.id %>"><%= room.name %></option>
+		<% end -%>
+	</select>
+	<script> $('#printselect').multiSelect(); </script>
+</div>
+<h2>Zeitraum</h2>
+<div>
+	<select id="printdate">
+		<% monday = Date.today.monday
+		4.times do %>
+		<option value="<%= monday %>"><%= l monday %> - <%= l monday.end_of_week %></option>
+		<% monday = monday.next_week
+		end %>
+	</select>
+</div>
+
+<button type="button" class="btn btn-default btn-lg" aria-label="Left Align">
+  <a href="javascript:print()">
+  	<span class="glyphicon glyphicon-print" aria-hidden="true"></a></span>
+</button>

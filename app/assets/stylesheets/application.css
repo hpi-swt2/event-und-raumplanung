@@ -16,6 +16,7 @@
  *= require fullcalendar.print
  *= require bootstrap-datetimepicker
  *= require recurring_select
+ *= require multi-select
  *= require jquery-ui/autocomplete
  */
 

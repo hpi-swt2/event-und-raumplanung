@@ -18,6 +18,7 @@
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
 //= require jquery.ui.touch-punch
+//= require jquery.multi-select
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
