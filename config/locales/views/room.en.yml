@@ -36,3 +36,5 @@ en:
       equipment: Equipment
       properties: Properties
       create_event: Create events
+    print:
+      room_blocked: Room blocked
