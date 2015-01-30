@@ -21,6 +21,7 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
+//= require jquery.multi-select
 //= require_tree .
 //= require fullcalendar
 //= require lang-all

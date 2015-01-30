@@ -45,10 +45,6 @@ function getValidRooms() {
     });
 }
 
-$('.room_input').change(function () {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(getValidRooms, doneTypingInterval);
-});
 
 ready = function () {
     $('#advancedSearch').on('shown.bs.collapse', function () {
@@ -57,7 +53,12 @@ ready = function () {
     $('#advancedSearch').on('hidden.bs.collapse', function () {
         $(".drop-down-chevron").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
-    $('.selectpicker').selectpicker();
+    $('#selectpicker').multiSelect();
+    $('.room_input').change(function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(getValidRooms, doneTypingInterval);
+    });
+
     $('#event-form #selectpicker').change(function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(checkVacancy, doneTypingInterval);
