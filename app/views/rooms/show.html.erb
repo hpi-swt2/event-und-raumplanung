@@ -4,16 +4,16 @@
     title @room.name
 -%>
 <div class="page-header">
-    <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= @room.name%></h1>
 </div>
+
 <dl class="dl-horizontal">
-    <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-    <dd><%= @room.name %></dd>
-    <dt><strong><%= model_class.human_attribute_name(:size) %>:</strong></dt>
-    <dd><%= @room.size %></dd>
-    <dt><strong><%= model_class.human_attribute_name(:properties) %>:</strong></dt>
-    <dd><%= @room.list_properties.presence || t('.no_properties') %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:size) %>:</strong></dt>
+  <dd><%= @room.size %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:properties) %>:</strong></dt>
+  <dd><%= @room.list_properties.presence || t('.no_properties') %></dd>
 </dl>
+
 <div>
     <h2><%=t '.equipment' %> </h2>
     <% if @assigned_equipment != {} %>
@@ -28,7 +28,7 @@
                 <tbody>
                 <% @assigned_equipment.each do |category, count| %>
                     <tr>
-                        <td><%= category%></td>
+                        <td><%= category %></td>
                         <td><%= count %></td>
                     </tr>
                 <% end %>
@@ -56,6 +56,7 @@
   <div class="page-header upcoming-events">
     <h2><%=t '.upcoming_events' %></h2>
   </div>
+
   <%= render :partial => 'upcoming_events' %>
 </div>
 

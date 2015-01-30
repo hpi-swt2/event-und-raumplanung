@@ -8,21 +8,19 @@
 <h2><%=t '.user_overview', :default => t("groups.edit.user_overview") %></h2>
 
 
-<% if @leaders.count > 0 %>
-  <%= render :partial => 'leaders' %>
-<% end %>
-<% if @members.count > 0 %>
+<% if @members.count > 0 || @leaders.count > 0%>
 	<%= render :partial => 'users' %>
 <% end %>
 
 
 <h2><%=t '.assign_user', :default => t("groups.edit.assign_user") %></h2>
 
-<%= form_for @group, :html => { :id => "add-user", :class => "form-horizontal event" }, :url => assign_user_group_path(@group) do |f| %>
-  <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
-  <%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
-  <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
-
+<%= form_for @group, :html => { :id => "add-user", :class => "event" }, :url => assign_user_group_path(@group) do |f| %>
+	<div class="form-group">
+    	<%= f.label User.human_attribute_name(:email) %>
+    	<%= text_field User, :email, :class => 'form-control', :id => 'input_email' %>
+    </div>
+    <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 <% end %>
 
 
