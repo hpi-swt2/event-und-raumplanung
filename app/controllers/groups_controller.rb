@@ -10,7 +10,19 @@ class GroupsController < ApplicationController
   respond_to :json
 
   def index
-    @groups = Group.all
+    @my_groups = Group.get_all_groups_of_current_user (current_user.id) 
+    
+    @filterrific = Filterrific.new(
+      Group, params[:filterrific])
+      @groups = Group.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
+
+    @my_groups = @my_groups & @groups 
+    @other_groups = @groups - @my_groups
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def show
@@ -30,7 +42,7 @@ class GroupsController < ApplicationController
 
   def unassign_user
     authorize! :unassign_user, @group
-    if @user.is_leader_of_group(@group.id) == false
+    if not @user.is_leader_of_group(@group.id)
       flash[:notice] = t('notices.successful_user_unassign', :email => @user.email)
       @group.users.delete(@user)
     else
@@ -41,7 +53,6 @@ class GroupsController < ApplicationController
 
   def new
     authorize! :new, Group
-
     @group = Group.new    
   end
 
@@ -54,7 +65,6 @@ class GroupsController < ApplicationController
     authorize! :create, Group
 
     @group = Group.new(group_params)
-
     respond_to do |format|
       if @group.save
         format.html { redirect_to @group, notice: t('notices.successful_create', :model => Group.model_name.human) }

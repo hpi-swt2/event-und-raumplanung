@@ -4,35 +4,18 @@
 <div class="page-header">
   <h1><%= page_header %></h1>
 </div>
-<div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><%= model_class.human_attribute_name(:name) %></th>
-          <% if can? :destroy, Group %>
-            <th><%=t '.actions', :default => t("helpers.actions") %></th>
-          <% end %>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @groups.each do |group| %>
-          <tr>
-            <td><%= link_to group.name, group_path(group) %></td>
-            <% if can? :destroy, group %>
-              <td>
-                <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          group_path(group),
-                          :method => :delete,
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-xs btn-danger' %>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-</div>
+<%= form_for @filterrific do |f| %>
+<div class="chardin_box">
+          <%= t '.search_name' %>
+          <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+          <%= f.text_field(
+            :search_name,
+            :placeholder => (t '.search_for_name'),
+            class: 'filterrific-periodically-observed form-control'
+          ) %>
+    </div>
+<% end %>
+<%= render(partial: 'groups/list', locals: { groups: @groups,  model_class:  model_class }) %>
 
 <br>
 <% if can? :create, Group %>
