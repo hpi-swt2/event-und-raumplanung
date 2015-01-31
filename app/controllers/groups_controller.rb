@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
     
   def assign_user
     authorize! :assign_user, @group
-    flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
+    flash[:notice] = t('notices.successful_user_assign', :email => @user.username)
     @group.users << @user
     redirect_to edit_group_path(@group)
   end
@@ -24,10 +24,10 @@ class GroupsController < ApplicationController
   def unassign_user
     authorize! :unassign_user, @group
     if @user.is_leader_of_group(@group.id) == false
-      flash[:notice] = t('notices.successful_user_unassign', :email => @user.email)
+      flash[:notice] = t('notices.successful_user_unassign', :email => @user.username)
       @group.users.delete(@user)
     else
-      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.email)
+      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.username)
     end
     redirect_to edit_group_path(@group)
   end
