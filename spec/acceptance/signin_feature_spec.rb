@@ -10,6 +10,17 @@ RSpec.feature "User signin" do
 		page.click_button "Log in"
 		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/openidlogin"
 	end
+
+  	#
+    	#
+	scenario "Signing in with single button and new admin login", :user_signin_correct => true do
+		page.visit "/admin"
+		page.should have_text("Admin Login")
+		page.fill_in "email", :with => "test_admin@example.com"
+		page.fill_in "encrypted_password", :with => "test_admin"
+		page.click_button "Log in"
+		page.should have_content("Dashboard")
+	end
 DOC
 
 <<-DOC	# OLD TESTS: not necessary anymore due to change in login process
