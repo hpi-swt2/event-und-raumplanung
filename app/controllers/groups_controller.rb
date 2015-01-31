@@ -1,11 +1,13 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability, :assign_rooms]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability, :assign_rooms, :autocomplete]
   before_action :set_room, only: [:unassign_room]
   before_action :set_user, only: [:promote_user, :degrade_user, :current_ability]
   before_action :get_user_roles, only: [:show, :edit]
   before_action :load_user_from_email, only: [:assign_user]
   before_action :load_user_from_id, only: [:unassign_user]
+
+  respond_to :json
 
   def index
     @groups = Group.all
@@ -17,8 +19,12 @@ class GroupsController < ApplicationController
     
   def assign_user
     authorize! :assign_user, @group
-    flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
-    @group.users << @user
+    if @user.is_member_of_group(@group)
+      flash[:error] = t('errors.messages.unsuccessful_user_assign', :email => @user.email)
+    else
+      flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
+      @group.users << @user
+    end
     redirect_to edit_group_path(@group)
   end
 
@@ -141,14 +147,22 @@ class GroupsController < ApplicationController
     redirect_to edit_group_path(@group)
   end
 
+  def autocomplete
+    if params[:search]
+      unassigned = @group.get_unassigned_by_search(params[:search])
+      json_unassigned = unassigned.collect {|u| {label: u.username, value: u.email, id: "User:" + u.id.to_s}}
+      respond_with json_unassigned
+    end
+  end
+
   private
     def set_group
       @group = Group.find(params[:id])
     end
 
     def load_user_from_email
-      if params.include?(:User)
-        @user = User.find_by_email(params[:User][:email])
+      if params.include?(:email)
+        @user = User.find_by_email(params[:email])
         if @user == nil
           flash[:error] = t("groups.edit.user_not_found")
           redirect_to edit_group_path(@group)
@@ -158,8 +172,9 @@ class GroupsController < ApplicationController
 
     def load_user_from_id
       if params.include?(:user_id)
-        @user = User.find(params[:user_id])
-        if @user == nil
+        if User.exists?(params[:user_id])
+          @user = User.find(params[:user_id])
+        else
           flash[:error] = t("groups.edit.user_not_found")
           redirect_to edit_group_path(@group)
         end

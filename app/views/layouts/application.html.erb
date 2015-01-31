@@ -40,7 +40,7 @@
     <%= javascript_include_tag "application" %>
   </head>
   <body>
-
+  
     <nav class="navbar navbar-default" role="navigation">
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -83,12 +83,15 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <% if user_signed_in? && @current_user != nil %>
-              <% if @current_user.student? %>
-                <li><a><%= @current_user.username + " (" + t(".student") + ")" %></a></li>
+            <% if user_signed_in? %>
+              <% if @current_user.student? && @current_user.email != nil %>
+                <% appendix = " (" + t(".student") + ")" %>
+              <% elsif @current_user.email != nil %>
+                <% appendix = " (" + t(".staff") + ")" %>
               <% else %>
-                <li><a><%= @current_user.username + " (" + t(".staff") + ")" %></a></li>
+                <% appendix = "" %>
               <% end %>
+              <li><%= link_to @current_user.display_name + appendix, user_path(current_user) %></li>
             <li><%= link_to t("devise.sessions.sign_out"), destroy_user_session_path, :method => :delete %></li>
             <% end %>
           </ul>

@@ -8,10 +8,9 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       if @current_user.email != nil
         super
-      else
-        if not params[:controller] == "profile"
-          redirect_to "/profile"
-        end
+      elsif params[:controller] != "users"
+        logger.info params
+        redirect_to edit_user_path(@current_user)
       end
     else
       store_location_for(:user, request.env['PATH_INFO'])

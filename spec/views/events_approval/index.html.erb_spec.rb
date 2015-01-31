@@ -37,7 +37,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user1.username.gsub('.',' ').titleize
+			expect(rendered).to include @user1.display_name
 		end
 		it 'room name' do
 			render
@@ -52,7 +52,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user2.username.gsub('.',' ').titleize
+			expect(rendered).to include @user2.display_name
 		end
 		it 'room name' do
 			render
