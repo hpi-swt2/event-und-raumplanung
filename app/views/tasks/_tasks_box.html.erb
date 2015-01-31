@@ -54,7 +54,7 @@
   <% end %>
   <% if can? :edit, @event or @event.nil? %>    
     <% if params[:controller] == 'events' %>
-      <%= link_to new_task_path(event), :title => t("helpers.submit.create"), :class => 'btn btn-primary' do %>
+      <%= link_to new_task_path(event_id: @event_id), :title => t("helpers.submit.create"), :class => 'btn btn-primary' do %>
         <span class="glyphicon glyphicon-plus"></span>    
       <% end %> 
     <% else %> 
