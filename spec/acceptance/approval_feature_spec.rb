@@ -40,10 +40,10 @@ RSpec.feature "Event approval" do
 		#page.should have_content("abgelehnt")
 	end
 
-<<-DOC #currently in development as user story for Sprint 4, please uncomment for test	
+    #currently in development as user story for Sprint 4, please uncomment for test	
 	#
 	#
-	scenario "suggest an alternative for an unprocessed Event", js: true do
+	scenario "suggest an alternative for an unprocessed Event", :acceptance_test => true, js: true, exclude: true do
   		page.visit "/events_approval"
 		have_text("Klubtreffen des PR-Klubs")
 		have_text("Klubtreffen")
@@ -59,20 +59,20 @@ RSpec.feature "Event approval" do
 		page.visit "/events/1"
 		page.should have_content("test_admin genehmigte das Event")
 	end
-DOC
-<<-DOC	# this feature is not supported anymore..
+
+	# this feature is not supported anymore..
 	#
 	#
-	scenario "View details for Room" do
+	scenario "View details for Room", :acceptance_test => true, exclude: true do
   		page.visit "/events_approval"
 		page.click_link("A-1.1", :match => :first).click
 		page.should have_content("A-1.1")
 		page.should have_content("28")
 	end
-DOC
+
 	#
 	#
-	scenario "View details for Event", :view_details_for_event => true do
+	scenario "View details for Event", :acceptance_test => true, :view_details_for_event => true do
   		page.visit "/events_approval"
 		page.first(:link, "Klubtreffen").click
 		page.should have_content("Klubtreffen des PR-Klubs")

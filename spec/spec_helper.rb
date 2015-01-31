@@ -32,14 +32,46 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 RSpec.configure do |config|
+   
+  # If you want to explude tests e.g. acceptance test just flag them with "exclude: true"
+  config.filter_run_excluding :exclude => true 
 
+  # The name of this setting is a bit misleading. What it really means in Rails
+  # is "run every test method within a transaction." In the context of rspec-rails,
+  # it means "run every example within a transaction."
+  #
+  # The idea is to start each example with a clean database, create whatever data
+  # is necessary for that example, and then remove that data by simply rolling back
+  # the transaction at the end of the example.
   config.use_transactional_fixtures = false
 
-  config.before(:suite) do
-   DatabaseCleaner.strategy = :transaction
-   DatabaseCleaner.clean_with(:truncation)
-   Rails.application.load_seed # loading seeds
+
+config.around(:each, :acceptance_test => true) do |ex|
+    DatabaseCleaner.start   
+    DatabaseCleaner.strategy = :truncation
+    load Rails.root + "spec/support/seeds.rb" 
+    ex.run
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+end
+
+  config.before(:each, :acceptance_test => true ) do
+      #config.use_transactional_fixtures = false
+     #DatabaseCleaner.strategy = :transaction
+     #DatabaseCleaner.clean_with(:truncation)
+     #Rails.application.load_seed # loading seeds
+     # Capybara.javascript_driver = :webkit
   end
+
+  config.before(:each, :acceptance_test => false ) do
+      #config.use_transactional_fixtures = true
+  end
+
+ # config.before(:suite) do
+ #   DatabaseCleaner.strategy = :transaction
+ #    DatabaseCleaner.clean_with(:truncation)
+ #    Rails.application.load_seed # loading seeds
+ # end
 
 
   config.include Devise::TestHelpers, type: :controller
@@ -78,5 +110,4 @@ RSpec.configure do |config|
   end
 
   Capybara.javascript_driver = :webkit
- 
 end

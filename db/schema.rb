@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150123132333) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "activities", force: true do |t|
     t.string   "username"
     t.string   "action"
@@ -35,7 +32,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
   end
 
-  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
+  add_index "attachments", ["task_id"], name: "index_attachments_on_task_id"
 
   create_table "comments", force: true do |t|
     t.string   "author"
@@ -56,7 +53,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.string   "category"
   end
 
-  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id", using: :btree
+  add_index "equipment", ["room_id"], name: "index_equipment_on_room_id"
 
   create_table "event_occurrences", force: true do |t|
     t.integer  "event_id"
@@ -66,18 +63,18 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
   end
 
-  add_index "event_occurrences", ["event_id"], name: "index_event_occurrences_on_event_id", using: :btree
+  add_index "event_occurrences", ["event_id"], name: "index_event_occurrences_on_event_id"
 
   create_table "event_templates", force: true do |t|
     t.string   "name"
-    t.text     "description"
+    t.text     "description",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "participant_count"
   end
 
-  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id", using: :btree
+  add_index "event_templates", ["user_id"], name: "index_event_templates_on_user_id"
 
   create_table "event_templates_rooms", force: true do |t|
     t.integer "event_template_id"
@@ -86,14 +83,14 @@ ActiveRecord::Schema.define(version: 20150123132333) do
 
   create_table "events", force: true do |t|
     t.string   "name"
-    t.text     "description"
+    t.text     "description",       limit: 255
     t.integer  "participant_count"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "room_id"
-    t.boolean  "is_private",        default: true
-    t.string   "status",            default: "pending"
+    t.boolean  "is_private",                    default: true
+    t.string   "status",                        default: "pending"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.date     "start_date"
@@ -101,13 +98,13 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.text     "schedule"
+    t.text     "schedule",          limit: 255
     t.integer  "event_id"
   end
 
-  add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
-  add_index "events", ["room_id"], name: "index_events_on_room_id", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
+  add_index "events", ["event_id"], name: "index_events_on_event_id"
+  add_index "events", ["room_id"], name: "index_events_on_room_id"
+  add_index "events", ["user_id"], name: "index_events_on_user_id"
 
   create_table "events_rooms", force: true do |t|
     t.integer "event_id"
@@ -122,8 +119,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
   end
 
-  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id", using: :btree
-  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+  add_index "favorites", ["event_id"], name: "index_favorites_on_event_id"
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id"
 
   create_table "groups", force: true do |t|
     t.string   "name"
@@ -139,8 +136,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
   end
 
-  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
-  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id"
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id"
 
   create_table "permissions", force: true do |t|
     t.integer  "room_id"
@@ -151,8 +148,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.datetime "updated_at"
   end
 
-  add_index "permissions", ["permitted_entity_id", "permitted_entity_type"], name: "index_permissions_on_permitted_entity", using: :btree
-  add_index "permissions", ["room_id"], name: "index_permissions_on_room_id", using: :btree
+  add_index "permissions", ["permitted_entity_id", "permitted_entity_type"], name: "index_permissions_on_permitted_entity"
+  add_index "permissions", ["room_id"], name: "index_permissions_on_room_id"
 
   create_table "room_properties", force: true do |t|
     t.string   "name"
@@ -174,15 +171,15 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.integer  "group_id"
   end
 
-  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id", using: :btree
+  add_index "rooms", ["group_id"], name: "index_rooms_on_group_id"
 
   create_table "tasks", force: true do |t|
     t.string   "name"
-    t.text     "description"
+    t.text     "description",       limit: 255
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "done",              default: false
+    t.boolean  "done",                          default: false
     t.string   "status"
     t.datetime "deadline"
     t.integer  "task_order"
@@ -191,9 +188,9 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.string   "identity_type"
   end
 
-  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
-  add_index "tasks", ["event_template_id"], name: "index_tasks_on_event_template_id", using: :btree
-  add_index "tasks", ["identity_id", "identity_type"], name: "index_tasks_on_identity_id_and_identity_type", using: :btree
+  add_index "tasks", ["event_id"], name: "index_tasks_on_event_id"
+  add_index "tasks", ["event_template_id"], name: "index_tasks_on_event_template_id"
+  add_index "tasks", ["identity_id", "identity_type"], name: "index_tasks_on_identity_id_and_identity_type"
 
   create_table "uploads", force: true do |t|
     t.integer  "task_id"
@@ -232,7 +229,7 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.boolean  "firstlogin",             default: true
   end
 
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["username"], name: "index_users_on_username", unique: true
 
 end

@@ -15,7 +15,7 @@ RSpec.feature "Task" do
    
     #
     #
-    scenario "create minimal Task", js: true do
+    scenario "create minimal Task", acceptance_test: true, js: true do
   		page.visit "/tasks/new?event_id=2"
 		#page.should have_text("Aufgaben")
 		#page.click_link("Aufgabe erstellen", :match => :first)
@@ -28,7 +28,7 @@ RSpec.feature "Task" do
 
     #
     #
-    scenario "create a task for an Event witout mandatory fields", js: true do
+    scenario "create a task for an Event witout mandatory fields", acceptance_test: true, js: true do
   		page.visit "/tasks/new?event_id=2"
 		#have_text("Eventübersicht")
    		#page.first(:link, "Editieren").click
@@ -43,7 +43,7 @@ RSpec.feature "Task" do
 
     #
     #
-    scenario "create Task with deadline and assignment", js: true do
+    scenario "create Task with deadline and assignment", acceptance_test: true, js: true do
   		#page.visit "/events"
 		#have_text("Eventübersicht")
  		#page.first(:link, "Editieren").click
@@ -60,10 +60,11 @@ RSpec.feature "Task" do
 		page.should have_content("Aufgabe wurde erfolgreich erstellt.")
 		have_text("test_admin")
     end
-<<-DOC # currently not supported due to Anhang hinzufügen which is an linked input field
+   
+    # currently not supported due to Anhang hinzufügen which is an linked input field
     #
     #
-    scenario "create Task with attachment", js: true do
+    scenario "create Task with attachment", js: true, acceptance_test: true, exclude: true do
   		page.visit "/tasks/new?event_id=2"
 		#page.should have_text("Aufgabe hinzufügen")
 		#page.click_button "Hinzufügen"
@@ -78,5 +79,4 @@ RSpec.feature "Task" do
 		page.click_button "Absenden"
 		page.should have_content("Aufgabe wurde erfolgreich aktualisiert.")
     end
-DOC
 end
