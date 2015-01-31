@@ -20,7 +20,7 @@ class Group < ActiveRecord::Base
 
 	def is_group
 		true
-    end
+  end
   has_many :permissions, :as => :permitted_entity, :dependent => :destroy
 
   def leaders
@@ -54,5 +54,11 @@ class Group < ActiveRecord::Base
     self.permissions.find_all{ |permission| permission.category == category}.each do |permission|
       permission.destroy
     end
+  end
+
+  def get_unassigned_by_search(search)
+    users = User.where("LOWER(username) LIKE ? ","%#{search.downcase}%")
+    users = users.reject { |user| user.groups.include?(self)}
+    return users
   end
 end
