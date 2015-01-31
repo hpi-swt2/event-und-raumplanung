@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
       if @current_user.email != nil
         super
       elsif params[:controller] != "users"
-        logger.info params
         redirect_to edit_user_path(@current_user)
       end
     else

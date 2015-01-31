@@ -6,6 +6,8 @@ de:
     index:
       title: Gruppenübersicht
       all_groups: Alle Gruppen
+      search_name: Suche
+      search_for_name: Suche nach Namen
     show:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen

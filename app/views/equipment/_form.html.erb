@@ -5,6 +5,18 @@
       maxHeight: 250 })
     $(".multiselect ").parent().css("width","100%")
     $(".multiselect ").addClass("multiselectDropdown")
+
+    var availableTags=[
+      <% @categories= getCategories %>
+      <% @categories.each do | cat | %>
+        "<%= cat[0]%>",
+      <% end %>
+    ]
+    $( "#equipment_category" ).autocomplete({
+      source: availableTags
+    })
+
+    $('[data-toggle="tooltip"]').tooltip()
   })
 </script>
 
@@ -56,8 +68,11 @@
 
   <div class="control-group">
     <%= f.label t '.category', :class => 'control-label' %>
+    <span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" 
+          title='<%= t '.category_tooltip' %>'>
+    </span>
     <div class="controls">
-      <%= f.text_field :category, :class => 'form-control' %>
+      <%= f.text_field :category, :autocomplete => :off, :class => 'form-control' %>
     </div>
     <%= error_span(@equipment[:category]) %>
   </div>
