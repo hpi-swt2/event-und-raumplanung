@@ -32,9 +32,9 @@ class GroupsController < ApplicationController
   def assign_user
     authorize! :assign_user, @group
     if @user.is_member_of_group(@group)
-      flash[:error] = t('errors.messages.unsuccessful_user_assign', :email => @user.username)
+      flash[:error] = t('errors.messages.unsuccessful_user_assign', :email => @user.email)
     else
-      flash[:notice] = t('notices.successful_user_assign', :email => @user.username)
+      flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
       @group.users << @user
     end
     redirect_to edit_group_path(@group)
