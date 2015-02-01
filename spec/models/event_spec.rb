@@ -147,20 +147,21 @@ describe Event do
     context "and is terminating" do
       let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
 
-      # Logic moved to event_occurrence_controller
-      #it "cannot decline an invalid occurrence" do
-      #  expect {
-      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2003, 1, 1, 0, 0, 0))
-      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2015, 8, 16, 0, 0, 0).advance(days: 1))
-      #  }.to raise_error
-      #end
-
-      it "declines a valid occurrence" do
+      it "deletes a valid occurrence" do
         next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
         expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).to be
 
         daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
         expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).not_to be
+      end
+
+      it "resets all exception times if a schedule's rule changes" do
+        next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
+        daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
+        expect(daily_recurring_terminating_event.schedule.exception_times).not_to be_empty
+        
+        daily_recurring_terminating_event.schedule_from_rule('{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}')
+        expect(daily_recurring_terminating_event.schedule.exception_times).to be_empty
       end
     end
   end
