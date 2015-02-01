@@ -27,5 +27,6 @@ de:
       category: Kategorie
       cancel: Abbrechen
       submit: Absenden
+      category_tooltip: Geben Sie eine Kategorie für das Equipment ein. Die Kategorie dient zum Filtern.
     edit:
       title: Equipment aktualisieren
