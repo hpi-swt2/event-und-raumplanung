@@ -1,21 +1,21 @@
 <% if @chosen_rooms %>
-  <div class="row">
+  <div class="control-group">
       <%= label_tag 'requestable_label', t('events.chosen_rooms.requestable_equipment'), :class => 'control-label' %>
   </div>
 
   <%for room in @chosen_rooms%>
-    <div class="row">
+    <div class="control-group">
       <%= label_tag 'room_name_label', room.name, :class => 'control-label' %>
     </div>
     <% table_id = "room_details"+room.id.to_s %>
-    <div class="form-group">
+    <div class="control-group">
       <a class="btn btn-default" data-toggle="collapse" href= <%= '#'+table_id %> >
         <span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span> 
         <%= t('events.chosen_rooms.details') %>
       </a>
     </div>
     <div id = <%= table_id %> class="collapse">
-      <div class="row">
+      <div class="control-group">
         <%= label_tag 'capacity_label', t('rooms.details.capacity')+': ', :class => 'control-label' %>
         <%= label_tag 'capacity', room.size, :class => 'control-label' %>
       </div>
