@@ -1,54 +1,56 @@
 <% if @chosen_rooms %>
-  <div class="row">
+  <div class="control-group">
       <%= label_tag 'requestable_label', t('events.chosen_rooms.requestable_equipment'), :class => 'control-label' %>
   </div>
-
   <%for room in @chosen_rooms%>
-    <div class="row">
-      <%= label_tag 'room_name_label', room.name, :class => 'control-label' %>
-    </div>
-    <% table_id = "room_details"+room.id.to_s %>
-    <div class="form-group">
-      <a class="btn btn-default" data-toggle="collapse" href= <%= '#'+table_id %> >
-        <span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span> 
-        <%= t('events.chosen_rooms.details') %>
-      </a>
-    </div>
-    <div id = <%= table_id %> class="collapse">
-      <div class="row">
-        <%= label_tag 'capacity_label', t('rooms.details.capacity')+': ', :class => 'control-label' %>
-        <%= label_tag 'capacity', room.size, :class => 'control-label' %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="control-group">
+          <%= label_tag 'room_name_label', room.name, :class => 'control-label' %>
+        </div>
       </div>
-      <div class="control-group">
-          <table class="table table-column">
-              <thead>
-                <tr>
-                  <th><%= t('events.chosen_rooms.category') %></th>
-                  <th><%= t('events.chosen_rooms.requested') %></th>
-                  <th><%= t('events.chosen_rooms.present') %></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @available_equipment.each do |equipment| %>
-                  <tr>
-                    <td><%= equipment.category%></td>
-                    <% requested_count = 0 %>
-                    <% if @requested_equipment && @requested_equipment.has_key?(room.id) && @requested_equipment[room.id].has_key?(equipment.category) %>
-                      <% requested_count = @requested_equipment[room.id][equipment.category] %>
-                    <% end %>                   
-                    <td> <%= number_field_tag equipment.category+'_equipment_count_'+room.id.to_s, 
-                          requested_count, min: 0 %></td>
-                    <% if @room_equipment[room.id].has_key?(equipment.category) %>
-                      <td><%= @room_equipment[room.id].count %></td>
-                    <% else %>    
-                      <td>0</td>
-                    <% end %> 
-                  </tr>
-                <% end %>   
-              </tbody>
-        </table>
+      <div class="panel-body">
+        <% table_id = "room_details"+room.id.to_s %>
+        <div class="control-group">
+          <a class="btn btn-default" data-toggle="collapse" href= <%= '#'+table_id %> > 
+            <span class="drop-down-chevron glyphicon glyphicon-chevron-right"></span>
+            <%= t('events.chosen_rooms.details') %>
+          </a>
+        </div>
+        <div id = <%= table_id %> class="collapse">
+          <div class="control-group">
+            <%= label_tag 'capacity_label', t('rooms.details.capacity')+': ', :class => 'control-label' %>
+            <%= label_tag 'capacity', room.size, :class => 'control-label' %>
+          </div>
+              <table class="table" style="margin-bottom: 0px;">
+                  <thead>
+                    <tr>
+                      <th><%= t('events.chosen_rooms.category') %></th>
+                      <th><%= t('events.chosen_rooms.requested') %></th>
+                      <th><%= t('events.chosen_rooms.present') %></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @available_equipment.each do |equipment| %>
+                      <tr>
+                        <td><%= equipment.category%></td>
+                        <% requested_count = 0 %>
+                        <% if @requested_equipment && @requested_equipment.has_key?(room.id) && @requested_equipment[room.id].has_key?(equipment.category) %>
+                          <% requested_count = @requested_equipment[room.id][equipment.category] %>
+                        <% end %>                   
+                        <td> <%= number_field_tag equipment.category+'_equipment_count_'+room.id.to_s, 
+                              requested_count, min: 0 %></td>
+                        <% if @room_equipment[room.id].has_key?(equipment.category) %>
+                          <td><%= @room_equipment[room.id].count %></td>
+                        <% else %>    
+                          <td>0</td>
+                        <% end %> 
+                      </tr>
+                    <% end %>   
+                  </tbody>
+              </table>     
+        </div> 
       </div>
-        <br> 
-    </div> 
+    </div>
   <% end %>
 <% end %>
