@@ -124,6 +124,7 @@ describe Event do
 
     it "occurence rule returns nil" do
       expect(event_with_schedule.occurence_rule).to be_nil
+      expect(event_with_schedule.single_occurrence_event?).to be
     end
 
     it "string formatting is valid" do
@@ -136,10 +137,31 @@ describe Event do
 
     it "and occurence rule is set" do
       expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+      expect(daily_recurring_event.single_occurrence_event?).not_to be
     end
 
     it "and string formatting is valid" do
       expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
+    end
+
+    context "and is terminating" do
+      let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
+
+      # Logic moved to event_occurrence_controller
+      #it "cannot decline an invalid occurrence" do
+      #  expect {
+      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2003, 1, 1, 0, 0, 0))
+      #    daily_recurring_terminating_event.decline_occurrence(Time.local(2015, 8, 16, 0, 0, 0).advance(days: 1))
+      #  }.to raise_error
+      #end
+
+      it "declines a valid occurrence" do
+        next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
+        expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).to be
+
+        daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
+        expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).not_to be
+      end
     end
   end
 

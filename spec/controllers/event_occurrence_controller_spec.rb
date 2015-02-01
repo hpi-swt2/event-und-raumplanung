@@ -32,5 +32,36 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       expect(response).to be_success
       expect(assigns(:event_occurrence)).to be_a(EventOccurrence)
     end
+
+    it "only shows tasks assigned to current user when he is not the event owner" do
+      assigned_user = create(:user)
+      sign_in assigned_user
+
+      event = FactoryGirl.create(:weekly_recurring_event, user_id: user.id)
+      firstTask = create(:task, event_id: event.id, identity: assigned_user)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:eventid => event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+  end
+
+  describe "delete occurrence" do
+    context "and is allowed to delete this event" do
+      it "and successfully deletes an occurrence" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
+        delete :destroy, {:eventid => weekly_recurring_event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context "and is not allowed to delete this event" do
+      it "and gets an error when trying deletes an occurrence" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        expect {
+          delete :destroy, {:eventid => weekly_recurring_event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
+        }.to raise_error(ActionController::RoutingError)
+      end
+    end
   end
 end

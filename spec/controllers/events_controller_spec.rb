@@ -901,7 +901,7 @@ RSpec.describe EventsController, :type => :controller do
       it "changes the specified schedule" do
         weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
         put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
-        expect(response).to be_success
+        expect(response).to redirect_to(event_path(weekly_recurring_event.to_param))
         schedule = assigns(:event).schedule
         expect(schedule).to be_a(IceCube::Schedule)
         expect(schedule.recurrence_rules).not_to be_empty
@@ -921,7 +921,7 @@ RSpec.describe EventsController, :type => :controller do
       it "re-renders the 'edit' template" do
         event = Event.create! valid_attributes
         put :update, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to redirect_to(event_path(event.to_param))
       end
     end
   end
