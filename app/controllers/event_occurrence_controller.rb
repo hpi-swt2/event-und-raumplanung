@@ -5,14 +5,14 @@ class EventOccurrenceController < ApplicationController
   before_action :set_feed, only: [:show]
 
   def show
-    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user.id, true, @event_occurrence.event.id);
-    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    authorize! :show, @event
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user.id, true, @event.id);
+    @user = User.find(@event.user_id) unless @event.user_id.nil?
     if current_user.id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
-      @tasks = @event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user.id).rank(:task_order)
+      @tasks = @event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user_id).rank(:task_order)
     end
-    # @return_url = ... (currently root_path by default)
   end
 
   def destroy

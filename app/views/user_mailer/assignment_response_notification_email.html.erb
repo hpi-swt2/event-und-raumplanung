@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>English version below</p>
+    <h1>Hallo <%= @creator.username %></h1>
+    <p>
+      <%= @user.name %> hat den Task <%= link_to @task.name, task_url(@task) %> des Events <%= link_to @task.event.name, event_url(@task.event)  %> 
+      <% if @group_assignment %>
+        im Namen der Gruppe <%= @group_name %>
+      <% end %> 
+      
+      <% if @accepted %>
+        akzeptiert
+      <% else %>
+        abgelehnt
+      <% end %>
+      .
+    </p>
+    <p>Einen schönen Tag!</p>
+    
+    <hr/>
+
+    <h1>Hello <%= @creator.username %></h1>
+    <p>
+      <%= @user.name %> has 
+      <% if @accepted %>
+        accepted
+      <% else %>
+        declined
+      <% end %>
+      the task <%= link_to @task.name, task_url(@task) %> of the event <%= link_to @task.event.name, event_url(@task.event)  %> 
+      <% if @group_assignment %>
+        on behalf of <%= @group_name %>
+      <% end %>
+      .
+    </p>
+    <p>Thanks and have a great day!</p>
+  </body>
+</html>

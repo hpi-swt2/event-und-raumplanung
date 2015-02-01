@@ -6,15 +6,19 @@ en:
     index:
       title: Group-overview
       all_groups: All groups
+      search_name: Search
+      search_for_name: Search for name
     show:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+      no_users: Currently, there are no users!
     edit:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
       user_overview: User-overview
+      select_user: 'Select a user'
     manage_rooms:
       currentRoomsOfGroup: 'Rooms of %{group}'

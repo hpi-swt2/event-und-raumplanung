@@ -5,7 +5,7 @@ RSpec.describe TasksController, type: :controller do
     let(:event) { create :event }
     let(:user) { create :user }
     let(:another_user) { create :user }
-    let(:task) { FactoryGirl.create :task }
+    let(:task) { FactoryGirl.create :task, creator_id: user.id }
     let(:group) { create :group, users: [user, another_user]}
     let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { create :unassigned_task, event_id: event.id }
@@ -94,7 +94,6 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it 'should prompt an error message to another User from the assigned group who wants to accept an already accepted task' do 
-      pending("redirects to tasks/task.id and not to root_path & flash warning is nil")
       get :accept, id: assigned_task_group.id
       sign_in another_user
       get :accept, id: assigned_task_group.id
@@ -325,6 +324,16 @@ RSpec.describe TasksController, type: :controller do
         }.to change(Task, :count).by(1)
       end
 
+        it "creates task with valid deadline" do
+          expect { post :create, task: { description: "description", name: "Test", deadline: Date.current, event_id: event.id} }.to change { Task.count }.by(1)
+          expect(response).to redirect_to task_path(assigns(:task))
+        end
+
+        it "creates task with invalid deadline" do
+          expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
+          expect(response).to render_template("new")
+        end
+
       describe "with attachments" do 
         it "creates new task" do 
           expect{
@@ -522,6 +531,16 @@ RSpec.describe TasksController, type: :controller do
             patch :update, { id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.tomorrow }} 
             task.reload()
           }.to change(task, :deadline)
+        end
+
+        it "updates a task with another valid deadline" do
+          patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.current, identity: identity_dummy(task) }
+          expect(response).to redirect_to task_path(assigns(:task))
+        end
+
+        it "updates a task with invalid deadline" do
+          patch :update, id: task, task: { description: task.description, event_id: task.event_id, name: task.name, deadline: Date.yesterday, identity: identity_dummy(task) }
+          expect(response).to render_template("edit")
         end
 
         it "updates the task status to 'not assigned' if no one is assigned" do

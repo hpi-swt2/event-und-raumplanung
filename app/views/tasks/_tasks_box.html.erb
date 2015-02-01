@@ -8,16 +8,16 @@
         <%= t('tasks.show.no_tasks') %>
     </div>
   <% else %>
-    <% sortable = params[:controller] == 'events' %>
+    <% sortable = params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
     <table class="table table-striped" <%= 'id=tasks-sortable' if sortable %>>
       <thead>
         <tr>
-        <% if params[:controller] == 'events' %>
+        <% if params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
           <th class="col-sm-1"><%= model_class.human_attribute_name(:done) %></th>
         <% end %>
           <th class="col-sm-1"></th>
           <th class="col-sm-5"><%= model_class.human_attribute_name(:name) %></th>
-        <% if params[:controller] == 'events' %>
+        <% if params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
           <th class="col-sm-5"><%= model_class.human_attribute_name(:assigned_to) %></th>
           <th class="col-sm-2"><%= model_class.human_attribute_name(:deadline) %></th>
         <% end %>
@@ -29,14 +29,14 @@
       <tbody>
       <% @tasks.each do |task| %>
           <tr data-item-id=<%= "#{task.id}" %> class="item">
-        <%if params[:controller] == 'events' %>
+        <%if params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
           <td class="col-sm-1"><input class="task-done-checkbox" type="checkbox" <%= task.done ? 'checked' : '' %> data-taskpath="<%= set_task_done_path(task.id) %>"></td>
         <% end %>
             <td class="col-sm-1">
               <span class="glyphicon glyphicon-paperclip <%= task.attachments.count() > 0 ? "" : "hidden" %>" aria-hidden="true"></span>
             </td>
             <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
-        <%if params[:controller] == 'events' %>
+        <%if params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
           <td class="<%= task.status %> col-sm-5"><%= (task.identity.blank?) ? t('tasks.status.not_assigned') : (task.identity.name) %></td>
         <% end %>
             <% if task.deadline %>
@@ -53,10 +53,14 @@
     </table>
   <% end %>
   <% if can? :edit, @event or @event.nil? %>    
-    <% if params[:controller] == 'events' %>
-      <%= link_to t('helpers.links.task'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
+    <% if params[:controller] == 'events' or params[:controller] == 'event_occurrence' %>
+      <%= link_to new_task_path(event_id: @event_id), :title => t("helpers.links.task"), :class => 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-plus"></span>    
+      <% end %> 
     <% else %> 
-      <%= link_to t('helpers.links.task'), new_task_path(event_template_id: @event_template_id), :class => 'btn btn-primary' %>
+      <%= link_to new_task_path(event_template_id: @event_template_id), :title => t("helpers.links.event_template"), :class => 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>    
+      <% end %> 
     <% end %>
   <% end %>
 </div>

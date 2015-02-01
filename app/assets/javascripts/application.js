@@ -30,6 +30,7 @@
 //= require moment/de
 //= require recurring_select
 //= require jquery-ui/autocomplete
+//= require bootstrap-multiselect
 
 jQuery.fn.bootstrap_flash = function(message, options) {
   options = options || {};
