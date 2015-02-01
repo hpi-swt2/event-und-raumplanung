@@ -73,7 +73,7 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    redirect_to :back, flash: {notice: "Successfully approved the event"}
   end
 
   def decline
@@ -81,7 +81,7 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    redirect_to :back, flash: {notice: "Successfully declined the event"}
   end
 
   def approve_event_suggestion
