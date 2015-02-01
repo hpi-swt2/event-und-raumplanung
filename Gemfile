@@ -90,7 +90,7 @@ gem 'icalendar'
 
 gem 'fullcalendar-rails', '~> 2.0.2.0'
 gem 'momentjs-rails'
-gem 'filterrific'
+gem 'filterrific', '~> 1.4'
 
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
