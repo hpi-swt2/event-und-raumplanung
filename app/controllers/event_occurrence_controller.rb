@@ -11,7 +11,7 @@ class EventOccurrenceController < ApplicationController
     if current_user.id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
-      @tasks = @event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user_id).rank(:task_order)
+      @tasks = @event.tasks.where('identity_type = \'User\' AND identity_id = ?', current_user.id).rank(:task_order)
     end
   end
 
