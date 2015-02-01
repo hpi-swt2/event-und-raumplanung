@@ -39,6 +39,7 @@ class EventTemplatesController < ApplicationController
   # GET /templates/1
   # GET /templates/1.json
   def show
+    @creator = User.find(@event_template.user_id).name unless @event_template.user_id.nil?
     @tasks = @event_template.tasks.rank(:task_order)
   end
 
@@ -143,6 +144,8 @@ class EventTemplatesController < ApplicationController
       params['name'] = task_attributes['name']
       params['description'] = task_attributes['description']
       params['task_order'] = task_attributes['task_order']
+      # this probably makes no sense
+      params['deadline'] = task_attributes['deadline']
       return params
     end
 

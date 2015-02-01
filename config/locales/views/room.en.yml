@@ -22,10 +22,11 @@ en:
       people: people
       table_information: Tables upon request
       table_request: Request tables
+      title: 'Details of %{model}'
     list:
       all_events: Alle Events
       room_selection: Room Selection
-      requested_size: needed size of room
+      requested_size: Needed Room Size
       necessary_equipment: Necessary equipment
       necessary_properties: Necessary properties
       no_rooms_found: No rooms met the criteria
