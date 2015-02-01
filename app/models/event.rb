@@ -73,6 +73,11 @@ class Event < ActiveRecord::Base
   def schedule_from_rule(dirty_rule)
     validate_schedule
     schedule = self.schedule
+    if schedule.exception_times
+      schedule.exception_times.each do |exception_time|
+        schedule.remove_exception_time(exception_time)
+      end
+    end
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
     self.schedule = schedule
@@ -83,11 +88,10 @@ class Event < ActiveRecord::Base
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
   end
 
-  def decline_occurrence(time)
+  def delete_occurrence(time)
     schedule = self.schedule
     schedule.add_exception_time(time)
-    self.schedule = schedule
-    self.save!
+    self.update!(schedule: schedule)
   end
 
   def single_occurrence_event?

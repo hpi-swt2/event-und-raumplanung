@@ -159,7 +159,7 @@ describe Event do
         next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
         expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).to be
 
-        daily_recurring_terminating_event.decline_occurrence(next_occurrence)
+        daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
         expect(daily_recurring_terminating_event.schedule.occurs_at?(next_occurrence)).not_to be
       end
     end
