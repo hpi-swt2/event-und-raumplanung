@@ -32,7 +32,7 @@ class Event < ActiveRecord::Base
   belongs_to :event
 
   has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
-  
+
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
@@ -85,17 +85,36 @@ class Event < ActiveRecord::Base
     (self.ends_at - self.starts_at).seconds
   end
 
-  def involved_users()
+  def involved_users
     involved = Array.new
     involved << User.find(self.user_id)
+    involved += get_involved_entities
+    involved += get_involved_group_leaders
+    return involved
+  end
+
+  def get_involved_entities
+    involved = Array.new
     self.tasks.each do | task |
-        involved << User.find(task.identity_id) if task.identity_type == 'User'
-        involved += Group.find(task.identity_id).users if task.identity_type == 'Group'
+      if task.identity_type == 'User'
+        involved << User.find(task.identity_id)
+      elsif task.identity_type == 'Group'
+        Group.find(task.identity_id).users.each {|user| involved << user}
+      end
     end
+    return involved
+  end
+
+  def get_involved_group_leaders
+    involved = Array.new
     self.rooms.each do |room|
-      involved += room.group.leaders if room.group
+      if room.group
+        room.group.leaders.each do |leader|
+          involved << leader
+        end
+      end
     end
-    involved
+    return involved
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
@@ -128,7 +147,7 @@ class Event < ActiveRecord::Base
     room_ids = room_ids.select { |room_id| room_id!=''}
     joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
-  scope :approved, lambda { 
+  scope :approved, lambda {
     where("status = 'approved'")
   }
 
@@ -142,10 +161,9 @@ class Event < ActiveRecord::Base
     where('ends_at <= ?', date)
   }
 
-  scope :week, lambda { |week|
-    now = Date.today        
-    weekBegin = Date.commercial(now.cwyear, week, 1)
-    weekEnd = Date.commercial(now.cwyear, week+1, 1)
+  scope :week, lambda { |week, year|
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
     puts weekBegin
     puts weekEnd
     where('ends_at >= ? AND starts_at <= ?', weekBegin, weekEnd)
@@ -158,7 +176,7 @@ class Event < ActiveRecord::Base
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
   }
-  
+
   scope :user, lambda { |id|
     where(user_id: id) if id.present?
   }
@@ -188,7 +206,7 @@ class Event < ActiveRecord::Base
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
   scope :not_declined, -> { where.not status: 'declined' }
-  
+
   def approve
     self.update_attribute(:status, 'approved')
   end
@@ -198,10 +216,10 @@ class Event < ActiveRecord::Base
   def is_approved
     return self.status == 'approved'
   end
-  
+
   def exist_colliding_events
-    event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
-    return (event_count > 0)
+    #event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
+    #return (event_count > 0)
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant

@@ -23,6 +23,16 @@ class UserMailer < ActionMailer::Base
   	mail(to: @user.email, subject: subject + @task.name + ' was removed')
   end
 
+  def assignment_response_notification_email(accepted, user, task, assigned_group)
+    @accepted = accepted
+    @group_assignment = !assigned_group.nil?
+    @group_name = assigned_group.nil? ? "" : assigned_group.name
+    @user = user
+    @task = task
+    @creator = @task.creator
+    mail(to: @creator.email, subject: 'Task Accepted: ' + @task.name)
+  end
+
   def event_accepted_email_with_message(user, event, message)
     @user = user
     @message = message

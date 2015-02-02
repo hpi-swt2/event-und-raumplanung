@@ -39,6 +39,7 @@ class EventTemplatesController < ApplicationController
   # GET /templates/1
   # GET /templates/1.json
   def show
+    @creator = User.find(@event_template.user_id).name unless @event_template.user_id.nil?
     @tasks = @event_template.tasks.rank(:task_order)
   end
 

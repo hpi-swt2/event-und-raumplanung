@@ -55,12 +55,24 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
     <div class="row">
-      <div class="controls col-sm-6">
-        <%= f.date_field :starts_at_date, :class => 'form-control' %>
+      <div class="controls col-sm-6" id="startDate">
+        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => @event.starts_at_date.strftime("%d/%m/%Y")}%>
+        <script type="text/javascript">
+          $('#startDate').datetimepicker({
+            format: 'DD/MM/YYYY',
+            pickTime: false
+          });
+        </script>
          <%= error_span(@event[:starts_at_date]) %>
       </div>
-      <div class="controls col-sm-6">
-        <%= f.time_field :starts_at_time, :class => 'form-control', value: @event.starts_at_time.strftime('%H:%M') %>
+      <div class="controls col-sm-6" id="startTime">
+        <%= f.time_field :starts_at_time, {:class => 'form-control', :value => @event.starts_at_time.strftime('%H:%M')}%>
+        <script type="text/javascript">
+          $('#startTime').datetimepicker({
+            format: 'HH:mm',
+            pickDate: false         
+          });
+        </script>
         <%= error_span(@event[:starts_at_time]) %>
       </div>
     </div>
@@ -69,12 +81,24 @@
  <div class="control-group">
     <%= f.label model_class.human_attribute_name(:ends_at) , :class => 'control-label' %>
     <div class="row">
-      <div class="controls col-sm-6">
-        <%= f.date_field :ends_at_date, :class => 'form-control' %>
+      <div class="controls col-sm-6" id="endDate">
+        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => @event.ends_at_date.strftime("%d/%m/%Y") }%>
+        <script type="text/javascript">
+          $('#endDate').datetimepicker({
+            format: 'DD/MM/YYYY',
+            pickTime: false
+          });
+        </script>
         <%= error_span(@event[:ends_at_date]) %>
       </div>
-      <div class="controls col-sm-6">
-        <%= f.time_field :ends_at_time, :class => 'form-control', value: @event.ends_at_time.strftime('%H:%M') %>
+      <div class="controls col-sm-6" id="endTime">
+        <%= f.text_field :ends_at_time, {:class => 'form-control', :value => @event.ends_at_time.strftime('%H:%M')}%>
+        <script type="text/javascript">
+          $('#endTime').datetimepicker({
+            format: 'HH:mm',
+            pickDate: false         
+          });
+        </script>
         <%= error_span(@event[:ends_at_time]) %>
       </div>
     </div>

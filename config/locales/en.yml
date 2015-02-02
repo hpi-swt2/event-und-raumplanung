@@ -247,7 +247,19 @@ en:
       none: Nothing selected
     attachments:
       none: No Attachments
-
+  event:
+    private: 'private event'
+    alert:
+      conflict_same_days_multiple_rooms: 'Your alternative conflicts with the event %{name} taking place on %{start_date} from %{start_time} until %{end_time} in the rooms %{rooms}.'
+      conflict_same_days_one_room: 'Your alternative conflicts with the event %{name} taking place from %{start_date} from %{start_time} until %{end_time} in room %{rooms}.'
+      conflict_different_days_multiple_rooms: 'Your alternative conflicts with the event %{name} taking place from %{start_date} to %{end_date} from %{start_time} until %{end_time} in the rooms %{rooms}.'
+      conflict_different_days_one_room: 'Your alternative conflicts with the event %{name} taking place from %{start_date} to %{end_date} from %{start_time} until %{end_time} in room %{rooms}.'
+    status: 
+      suggested: Suggestion
+      approved: approved
+      declined: declined
+      pending: pending
+      rejected_suggestion: rejected suggestion
   will_paginate:
     next_label: Next →
     page_entries_info:

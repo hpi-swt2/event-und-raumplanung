@@ -18,6 +18,7 @@
  *= require recurring_select
  *= require multi-select
  *= require jquery-ui/autocomplete
+ *= require bootstrap-multiselect
  */
 
 footer {

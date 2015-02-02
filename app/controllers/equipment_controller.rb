@@ -88,6 +88,7 @@ class EquipmentController < ApplicationController
     end
     return categoryArray
   end
+  helper_method :getCategories
 
   private
     # Use callbacks to share common setup or constraints between actions.
