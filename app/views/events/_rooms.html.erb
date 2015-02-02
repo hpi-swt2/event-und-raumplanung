@@ -19,7 +19,7 @@
 		<% else %>
 		<%= check_box_tag(property, true, false, :onclick => "javascript: document.list.submit();") %>
 		<% end %>
-		<%= label_tag(property, property) %>
+		<%= label_tag(property, property.name) %>
 	<% end %>
 <%end%>
 <br>
