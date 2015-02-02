@@ -4,8 +4,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def set_locale
-    if current_user
+  def set_locale     
+    if params[:controller] != "sessions" && user_signed_in?
       I18n.locale = current_user.language.eql? 'German'? 'de' : 'en'
     else
       I18n.locale = I18n.default_locale
