@@ -74,10 +74,11 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
+    notice = {notice: "Successfully approved the event"}
     begin
-      redirect_to :back
+      redirect_to :back, flash: notice
     rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
+      redirect_to events_approval_path, flash: notice
     end
   end
 
@@ -86,10 +87,11 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
+    notice = {notice: "Successfully declined the event"}
     begin
-      redirect_to :back
+      redirect_to :back, flash: notice
     rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
+      redirect_to events_approval_path, flash: notice
     end
   end
 
@@ -315,7 +317,7 @@ class EventsController < GenericEventsController
       params['participant_count'] = @event.participant_count
       params['is_private'] = @event.is_private
       params['is_important'] = @event.is_important
-      params['status'] = 'suggested'
+      params['status'] = 'approved'
       return params
     end
 
