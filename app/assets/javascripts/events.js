@@ -125,6 +125,7 @@ ready = function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(getValidRooms, doneTypingInterval);
     });
+
     $('#event-form #selectpicker').change(function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(checkVacancy, doneTypingInterval);
