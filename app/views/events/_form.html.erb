@@ -29,16 +29,21 @@
     </div>
     <%= error_span(@event[:description]) %>
   </div>
-  <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
-  <div class="control-group">
-    <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+  <div class="row well">
+    <div class="event-section-divider"><h3>Room Selection</h3></div>
+    <br/>
+    <div class="col-xs-4 col-md-4 room_input">
+    <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
     </div>
-    <script>
-    $('#selectpicker').selectpicker();
-    </script>
-    <%= error_span(@event[:rooms]) %>
+    <div class="row col-xs-6 col-md-6 col-xs-offset-2 col-md-offset-2">
+      <div class="control-group">
+        <h4><%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %></h4>
+        <div class="controls">
+          <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), {}, {:id => 'selectpicker', :multiple =>'' }%>
+        </div>
+      <%= error_span(@event[:rooms]) %>
+      </div>
+    </div>
   </div>
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
@@ -104,6 +109,21 @@
     <div class="controls">
       <%= f.select_recurring :occurence_rule, nil, :allow_blank => true %>
       <%= error_span(@event[:schedule]) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label t('events.form.series_end'), :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
+        <script type="text/javascript">
+          $('#ScheduleEndDatePicker').datetimepicker({
+            format: 'YYYY-MM-DD',
+            pickTime: false
+          });
+        </script>
+        <%= error_span(@event[:schedule_ends_at_date]) %>
+      </div>
     </div>
   </div>
   <div class="control-group">
