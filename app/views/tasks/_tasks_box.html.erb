@@ -69,7 +69,9 @@
                       <h4 class="modal-title" id="myModalLabel">Create Task</h4>
                     </div>
                     <div class="modal-body">
-                      <%= render partial: 'tasks/form', :locals => { :event_id => @event_id} %>
+                      <div id="task-form-create">
+                        <%= render partial: 'tasks/form', :locals => { :event_id => @event_id} %>
+                      </div>
                     </div>
                     <div class="modal-footer">
 
