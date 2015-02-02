@@ -31,24 +31,37 @@ function getValidRooms() {
             xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
         },
         success: function (data) {
-            i = 0;
-            var msg = "";
-            data.forEach(function (key) {
-                if (msg === "") {
-                    msg = '<li data-original-index="' + i + '"><a tabindex="' + i + '" class="" data-normalized-text="<span class=&quot;text&quot;>A-1.1</span>"><span class="text">' + data[key].name + '</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
-                } else {
-                    msg += '<li data-original-index="' + i + '"><a tabindex="' + i + '" class="" data-normalized-text="<span class=&quot;text&quot;>A-1.1</span>"><span class="text">' + data[key].name + '</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
-                }
+            // hide and uncolor all rooms
+            var allRooms = $('.selectpicker option');
+            allRooms.each(function(key){
+                var value = allRooms[key].getAttribute('value');
+                var room = $('.selectpicker').find('[value=' + value + ']');
+                room.hide();
+                room.css('backgroundColor','');
             });
-            $(".selectpicker.dropdown-menu").html(msg);
+
+            // show and color selected rooms
+            var selectedRooms = $('.selectpicker option:selected');
+            selectedRooms.each(function(key){
+                var value = selectedRooms[key].getAttribute('value');
+                var room = $('.selectpicker').find('[value=' + value + ']');
+                room.show();
+                room.css('backgroundColor','red');
+            });
+
+            // show and uncolor valid rooms
+            $.each(data, function(value) {
+                var room = $('.selectpicker').find('[value=' + value + ']');
+                room.show();
+                room.css('backgroundColor','');
+            });
+
+            // show changes
+            $('.selectpicker').selectpicker('refresh');
         }
     });
 }
 
-$('.room_input').change(function () {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(getValidRooms, doneTypingInterval);
-});
 
 ready = function () {
     $('#advancedSearch').on('shown.bs.collapse', function () {
@@ -60,7 +73,11 @@ ready = function () {
     $('.selectpicker').selectpicker();
     $('#event-form #selectpicker').change(function () {
         clearTimeout(typingTimer);
-        typingTimer = setTimeout(checkVacancy, doneTypingInterval);
+        typingTimer = setTimeout(function(){checkVacancy(); getValidRooms();}, doneTypingInterval);
+    });
+    $('.room_input').change(function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(getValidRooms, doneTypingInterval);
     });
 };
 

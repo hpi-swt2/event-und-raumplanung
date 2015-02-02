@@ -71,8 +71,16 @@ class RoomsController < ApplicationController
   end
 
   def getValidRooms
-    needed_rooms = Equipment.where("category IN (?)", params['room']['equipment']).pluck(:room_id)
-    needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms, :room_size => params['room']['size']})
+    needed_rooms = Room.all
+    if !params['room']['equipment'].blank?
+      params['room']['equipment'].each do |equipment|
+        rooms_with_quipment = Equipment.where(category: equipment).pluck(:room_id)
+        needed_rooms = needed_rooms.where('id in (?)', rooms_with_quipment)
+      end
+    end
+    if params['room']['size'] && !params['room']['size'].empty?
+      needed_rooms = needed_rooms.where('size >= ?', params['room']['size'])
+    end
     msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
 
     respond_to do |format|
