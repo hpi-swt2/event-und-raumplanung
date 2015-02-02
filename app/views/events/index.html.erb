@@ -23,7 +23,7 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.text_field(
             :search_query,
-            :placeholder => "Search for " + Event.model_name.human.pluralize,
+            :placeholder => Event.human_attribute_name(:search_for) + " " + Event.model_name.human.pluralize,
             class: 'filterrific-periodically-observed form-control'
           ) %>
        </div>

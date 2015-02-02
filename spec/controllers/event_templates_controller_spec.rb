@@ -39,7 +39,8 @@ RSpec.describe EventTemplatesController, :type => :controller do
 
   describe "GET show" do
     it "assigns the requested event_template as @event_template" do
-      event_template = FactoryGirl.create(:event_template)
+      user = FactoryGirl.create(:user)
+      event_template = FactoryGirl.create(:event_template, :user_id => user.id)
       get :show, {:id => event_template.to_param}
       expect(assigns(:event_template)).to eq(event_template)
     end

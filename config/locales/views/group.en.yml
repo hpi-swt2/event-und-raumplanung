@@ -12,7 +12,9 @@ en:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
+      unassign_user: Unassign User
       user_overview: User-overview
+      enter_email: enter Email-Address
       no_users: Currently, there are no users!
     edit:
       assign_rooms: assign rooms
@@ -22,3 +24,4 @@ en:
       select_user: 'Select a user'
     manage_rooms:
       currentRoomsOfGroup: 'Rooms of %{group}'
+      user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!

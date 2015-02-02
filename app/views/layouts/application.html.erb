@@ -40,7 +40,7 @@
     <%= javascript_include_tag "application" %>
   </head>
   <body>
-  
+
     <nav class="navbar navbar-default" role="navigation">
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -78,6 +78,7 @@
                 <% end %>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
+                <li><%= link_to t('.print'), print_path %></li>
                 <% if can? :manage, Permission %>
                   <li><%= link_to t('.permissions'), permissions_path %></li>
                 <% end %>
@@ -86,6 +87,8 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if user_signed_in? %>
+              <li><%= link_to t('menu.languages.de'), change_locale_path(:de) %></li>
+              <li><%= link_to t('menu.languages.en'), change_locale_path(:en) %></li>
               <% if @current_user.student? && @current_user.email != nil %>
                 <% appendix = " (" + t(".student") + ")" %>
               <% elsif @current_user.email != nil %>

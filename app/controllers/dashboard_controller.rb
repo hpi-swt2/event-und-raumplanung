@@ -4,6 +4,7 @@ class DashboardController < ApplicationController
   def index
     @event_occurrences = Event.upcoming_events(5)
     @my_upcoming_events = next_five_own_events
+    @requests = Event.open.order(:starts_at, :user_id, :id).limit(5)
     get_my_tasks
   end
 
