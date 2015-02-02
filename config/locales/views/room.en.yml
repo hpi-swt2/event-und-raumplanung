@@ -22,6 +22,7 @@ en:
       people: people
       table_information: Tables upon request
       table_request: Request tables
+      title: 'Details of %{model}'
     list:
       all_events: Alle Events
       room_selection: Room Selection

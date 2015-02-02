@@ -26,5 +26,7 @@ en:
       room: Room
       category: Category
       cancel: Cancel
+      submit: Submit
+      category_tooltip: Please enter a category for this equipment. The category will be used for filtering.
     edit:
       title: Edit Equipment

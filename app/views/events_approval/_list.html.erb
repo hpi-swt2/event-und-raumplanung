@@ -38,8 +38,11 @@
         <% end %>
       <% end %>
       <td>
-        <% username = User.find(event.user_id).username if event.user_id && !User.where(id: event.user_id).empty? %>
-        <%= username ? username.gsub('.',' ').titleize : t('.unkown') %>
+        <% if event.user_id %>
+          <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+        <% else %>
+          t('.unknown')
+        <% end %>
       </td>
       <td><%= link_to event.name, event_path(event) %></td>
         <td><%= event.rooms.map(&:name).to_sentence %></td>
@@ -50,8 +53,10 @@
       <% if events_type == 'open' %>
         <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
           <td>
-            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline")) %></button>
-            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
+            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
+            <%= link_to approve_event_path(event), :method => :approve, :title => t("helpers.links.approve"), :class => 'btn btn-success btn-xs' do %>
+                <span class="glyphicon glyphicon-ok"></span>
+            <% end %>
           </td>
       <% end %>
     </tr>

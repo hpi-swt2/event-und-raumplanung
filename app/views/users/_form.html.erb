@@ -1,0 +1,79 @@
+<%- model_class = User -%>
+<%= form_for @user, :html => { :class => "form-horizontal user" } do |f| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => User.model_name.human, :count => @user.errors.count %></h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :email, model_class.human_attribute_name(:email), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :email, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:email]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :email_notification, model_class.human_attribute_name(:email_notification), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.check_box :email_notification, :class => 'bootstrap-switch' %>
+  </div>
+    <%= error_span(@user[:email_notification]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :fullname, model_class.human_attribute_name(:fullname), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :fullname, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:fullname]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :office_location, model_class.human_attribute_name(:office_location), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :office_location, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:office_location]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :office_phone, model_class.human_attribute_name(:office_phone), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :office_phone, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:office_phone]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :mobile_phone, model_class.human_attribute_name(:mobile_phone), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.text_field :mobile_phone, :class => 'form-control' %>
+  </div>
+    <%= error_span(@user[:mobile_phone]) %>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :language, model_class.human_attribute_name(:language), :class => 'control-label' %>
+  <div class="controls">
+    <%= f.select :language, %w[German English], {}, { :class => 'form-control' } %>
+  </div>
+    <%= error_span(@user[:language]) %>
+  </div>
+
+  <%= f.submit t('.submit', :default => t("helpers.links.save")), :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            user_path(@user), :class => 'btn btn-default' %>
+
+<% end %>

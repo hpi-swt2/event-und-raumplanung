@@ -1,16 +1,12 @@
-<h2>Log in</h2>
+<% title t('devise.sessions.new.title') %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :class => "form-horizontal" }) do |f| %>
+<h1><%= t('.login') %></h1>
 
-		<% if @admin == true %>
-      	  <%= f.label User.human_attribute_name(:encrypted_password), :class => 'control-label' %>
-      	  <%= f.password_field :encrypted_password, autofocus: true, :class => 'form-control' %>
-      	<% else %>
-	      <%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
-	      <%= f.email_field :email, autofocus: true, :class => 'form-control' %>
-	      <%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>	  
-    	<% end %>
-  <div><%= f.submit "Log in", :class => 'btn btn-primary' %></div>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :class => "form-group" }) do |f| %>
+	<%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>	  
+  	<button type="submit" class="btn btn-primary btn-lg" title="<%= t('.login') %>">
+  		<span class="glyphicon glyphicon-log-in"></span>
+  	</button>
 <% end %>
 
 <%= render "devise/shared/links" %>

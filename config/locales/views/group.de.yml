@@ -6,12 +6,15 @@ de:
     index:
       title: Gruppenübersicht
       all_groups: Alle Gruppen
+      search_name: Suche
+      search_for_name: Suche nach Namen
     show:
       assign_rooms: Räume zuweisen
       assigned: zugewiesen
       unassigned: entfernt
       unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
+      no_users: Zur Zeit hat die Gruppe noch keine Benutzer!
       member: Mitglied
       leader: Gruppenleiter
       enter_email: Email-Adresse eingeben
@@ -25,13 +28,15 @@ de:
       degrade: Gruppenleiterschaft entziehen 
       promote: zum Gruppenleiter ernennen
       back: Zurück
-      rename: Gruppe Umbenennen
+      rename: Gruppe umbenennen
       user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
       assign_user: Nutzer zuweisen
       actions: Aktionen
       role: Rolle
+      select_user: 'Benutzer auswählen'
     manage_rooms:
       currentRooms: Aktuelle Gruppenräume
-      addRoom: Räume Hinzufügen
+      currentRoomsOfGroup: 'Räume von %{group}'
+      addRoom: Räume hinzufügen
       add: Hinzufügen
       delete: Entfernen
