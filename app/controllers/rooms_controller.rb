@@ -70,26 +70,16 @@ class RoomsController < ApplicationController
      @rooms = Room.find(rooms_ids)
   end
 
-  def getValidRooms
+  def get_valid_rooms
     needed_rooms = []
     if params['room']['equipment']
-      needed_rooms = Equipment.where("category IN (?)", params['room']['equipment'])
-      needed_rooms.collect! { |equipment| equipment.room }
-      h = Hash.new(0)
-      needed_rooms.each { |room| h.store(room, h[room]+1) }
-      needed_rooms.to_a.keep_if { |room| h[room] == params['room']['equipment'].size}
+      needed_rooms = get_valid_rooms_for_equipment(params['room']['equipment'])
     end
-
-    unless params['room']['size'].empty?
-      if needed_rooms.empty? 
-        needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms.join(","), :room_size => params['room']['size']})
-      else   
-        needed_rooms.to_a.keep_if {|room| room.size >= params['room']['size'].to_i}
-      end
-    else 
-      unless params['room']['equipment']
-        needed_rooms = Room.all
-      end
+    if params['room']['size']
+      needed_rooms = get_valid_rooms_for_size(needed_rooms, params['room']['size'].to_i)
+    end
+    if !params['room']['equipment'] && !params['room']['size']
+      needed_rooms = Room.all
     end
     msg = needed_rooms.map { |room|  {"id" => room.id, "name" => room.name}}
     respond_to do |format|
@@ -263,5 +253,23 @@ class RoomsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def room_params
       params.require(:room).permit(:name, :size, :property_ids => [])
+    end
+
+    def get_valid_rooms_for_equipment needed_equipment
+      needed_equipment = Equipment.where("category IN (?)", params['room']['equipment'])
+      needed_rooms = needed_equipment.collect { |equipment| equipment.room }
+      h = Hash.new(0)
+      needed_rooms.each { |room| h.store(room, h[room]+1) }
+      needed_rooms.to_a.keep_if { |room| h[room] == params['room']['equipment'].size}
+      return needed_rooms
+    end
+    
+    def get_valid_rooms_for_size filtered_rooms, size
+      if filtered_rooms.empty? 
+        filtered_rooms = Room.where("size >= :room_size", {:room_size => size})
+      else
+        filtered_rooms.to_a.keep_if {|room| room.size >= size}
+      end
+      return filtered_rooms
     end
 end
