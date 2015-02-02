@@ -70,19 +70,18 @@ class RoomsController < ApplicationController
      @rooms = Room.find(rooms_ids)
   end
 
-  def getValidRooms
-    needed_rooms = Room.all
-    if !params['room']['equipment'].blank?
-      params['room']['equipment'].each do |equipment|
-        rooms_with_quipment = Equipment.where(category: equipment).pluck(:room_id)
-        needed_rooms = needed_rooms.where('id in (?)', rooms_with_quipment)
-      end
+  def get_valid_rooms
+    needed_rooms = []
+    if params['room']['equipment']
+      needed_rooms = get_valid_rooms_for_equipment(params['room']['equipment'])
     end
-    if params['room']['size'] && !params['room']['size'].empty?
-      needed_rooms = needed_rooms.where('size >= ?', params['room']['size'])
+    if params['room']['size']
+      needed_rooms = get_valid_rooms_for_size(needed_rooms, params['room']['size'].to_i)
     end
-    msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
-
+    if !params['room']['equipment'] && !params['room']['size']
+      needed_rooms = Room.all
+    end
+    msg = needed_rooms.map { |room|  {"id" => room.id, "name" => room.name}}
     respond_to do |format|
         format.json { render :json => msg} 
     end 
@@ -147,6 +146,38 @@ class RoomsController < ApplicationController
   
   def details
   render action: 'details'
+  end
+
+  def printoverview
+    @rooms = Room.all
+    render locals: {rooms:@rooms}
+  end
+
+
+
+  def print
+    set_room
+    print_rooms([@room.id])
+  end
+
+  def print_rooms
+    throw "need room ids" unless params[:rooms]
+    room_ids = params[:rooms].split(',')
+    render_print_rooms(room_ids)
+  end
+
+  def render_print_rooms(room_ids)   
+    date = params[:date] ? Date.parse(params[:date]) :  Date.today.monday
+    week = date.cweek
+    year = date.cwyear
+    @weekBegin = date
+    @prints = []
+    room_ids.each do | room_id |
+        room = Room.find(room_id)
+        @calevents = Event.approved.room_ids([room_id]).week(week, year) || []
+        @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
+    end
+    render action: 'print', layout:'print', locals:{ prints: @prints}
   end
 
   def fetch_event
@@ -229,5 +260,23 @@ class RoomsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def room_params
       params.require(:room).permit(:name, :size, :property_ids => [])
+    end
+
+    def get_valid_rooms_for_equipment needed_equipment
+      needed_equipment = Equipment.where("category IN (?)", params['room']['equipment'])
+      needed_rooms = needed_equipment.collect { |equipment| equipment.room }
+      h = Hash.new(0)
+      needed_rooms.each { |room| h.store(room, h[room]+1) }
+      needed_rooms.to_a.keep_if { |room| h[room] == params['room']['equipment'].size}
+      return needed_rooms
+    end
+    
+    def get_valid_rooms_for_size filtered_rooms, size
+      if filtered_rooms.empty? 
+        filtered_rooms = Room.where("size >= :room_size", {:room_size => size})
+      else
+        filtered_rooms.to_a.keep_if {|room| room.size >= size}
+      end
+      return filtered_rooms
     end
 end
