@@ -13,6 +13,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		assign(:open_events, Event.find([@open_event]))
 		assign(:approved_events, Event.find([@approved_event]))
 		assign(:date, Date.current)
+		assign(:conflict_events, Event.approved.where('starts_at >= ?', Date.current))
 	end
 
 	describe "renders list for" do
