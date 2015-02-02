@@ -31,6 +31,9 @@ gem 'therubyracer',  platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+
+gem 'bootstrap-multiselect-rails'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -90,7 +93,7 @@ gem 'icalendar'
 
 gem 'fullcalendar-rails', '~> 2.0.2.0'
 gem 'momentjs-rails'
-gem 'filterrific'
+gem 'filterrific', '~> 1.4'
 
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'

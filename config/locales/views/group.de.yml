@@ -14,6 +14,7 @@ de:
       unassigned: entfernt
       unassign_user: Zuweisung entfernen
       user_overview: Benutzerübersicht
+      no_users: Zur Zeit hat die Gruppe noch keine Benutzer!
       member: Mitglied
       leader: Gruppenleiter
       enter_email: Email-Adresse eingeben
@@ -32,6 +33,7 @@ de:
       assign_user: Nutzer zuweisen
       actions: Aktionen
       role: Rolle
+      select_user: 'Benutzer auswählen'
     manage_rooms:
       currentRooms: Aktuelle Gruppenräume
       currentRoomsOfGroup: 'Räume von %{group}'

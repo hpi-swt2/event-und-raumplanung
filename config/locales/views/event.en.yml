@@ -15,4 +15,7 @@ en:
       last_update: 'Last Update'
       status: 'Status'
       mark_as_favorite: 'Mark as favorite'
-      unmark_as_favorite: 'Unmark as favorite'
+      unmark_as_favorite: 'Remove from favorites'
+    rooms:
+      requested_size: Needed size of room
+      reuqested_equipment: Necessary equipment

@@ -17,6 +17,8 @@
             </p>
         <% end %>
         <%= link_to t('dashboard.more'), events_path(:only_own => true), :class => 'own-events' %>
-        <%= link_to t('.new', :default => t("helpers.links.new")), new_event_path, :class => 'btn btn-primary' %>
+        <%= link_to new_event_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+            <span class="glyphicon glyphicon-plus" ></span>
+        <% end %>
     </div>
 </div>

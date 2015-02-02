@@ -1,0 +1,6 @@
+# ruby encoding: utf-8
+
+en:
+  room_properties:
+    index:
+      title: Room properties

@@ -1,4 +1,4 @@
-/*
+ /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
  *
@@ -13,9 +13,12 @@
  *= require_tree .
  *= require_self
  *= require fullcalendar
+ *= require fullcalendar.print
  *= require bootstrap-datetimepicker
  *= require recurring_select
+ *= require multi-select
  *= require jquery-ui/autocomplete
+ *= require bootstrap-multiselect
  */
 
 footer {

@@ -2,7 +2,20 @@
 <% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
 <% title page_header %>
 <div class="page-header">
-  <h1><%= page_header %></h1>
+  <div class="row">
+    <div class="col-md-11">
+      <h1><%= page_header %></h1>
+    </div>
+    <div class="col-md-1">
+      <% if can? :new, Equipment %>
+        <h1 class="text-right">
+          <%= link_to new_equipment_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+            <span class="glyphicon glyphicon-plus"></span>
+          <% end %>  
+        </h1>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <%= form_for @filterrific do |f| %>
@@ -40,9 +53,3 @@
 <% end %>
 
 <%= render(partial: 'equipment/list', locals: { equipment: @equipment,  model_class:  model_class }) %>
-
-<% if can? :new, Equipment %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_equipment_path,
-            :class => 'btn btn-primary' %>
-<% end %>

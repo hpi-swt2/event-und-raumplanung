@@ -43,10 +43,10 @@ class GroupsController < ApplicationController
   def unassign_user
     authorize! :unassign_user, @group
     if not @user.is_leader_of_group(@group.id)
-      flash[:notice] = t('notices.successful_user_unassign', :email => @user.email)
+      flash[:notice] = t('notices.successful_user_unassign', :email => @user.username)
       @group.users.delete(@user)
     else
-      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.email)
+      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.username)
     end
     redirect_to edit_group_path(@group)
   end
@@ -160,7 +160,7 @@ class GroupsController < ApplicationController
   def autocomplete
     if params[:search]
       unassigned = @group.get_unassigned_by_search(params[:search])
-      json_unassigned = unassigned.collect {|u| {label: u.username, value: u.email, id: "User:" + u.id.to_s}}
+      json_unassigned = unassigned.collect {|u| {label: u.username, value: u.email}}
       respond_with json_unassigned
     end
   end
@@ -185,8 +185,8 @@ class GroupsController < ApplicationController
         if User.exists?(params[:user_id])
           @user = User.find(params[:user_id])
         else
-          flash[:error] = t("groups.edit.user_not_found")
-          redirect_to edit_group_path(@group)
+        flash[:error] = t("groups.edit.user_not_found")
+        redirect_to edit_group_path(@group)
         end
       end
     end

@@ -647,9 +647,17 @@ RSpec.describe EventsController, :type => :controller do
         it "then events tasks have the same values as the event_templates tasks" do
           post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
           event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
-          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id', 'creator_id']
           assigns(:event).tasks.each_with_index do |task, i|
             expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        it "then events tasks have the same creator as the event" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.creator_id).to eql(assigns(:event).user_id)
           end
         end
 
@@ -1079,6 +1087,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(result.length).to eq(2)
       end
 
+
       describe "and if the conflicting event" do 
         it "takes place on one day in one room, the correct error message gets returned" do 
           event = FactoryGirl.create :event_on_one_day_with_one_room
@@ -1120,6 +1129,17 @@ RSpec.describe EventsController, :type => :controller do
           result = JSON.parse(response.body)
           expect(result[event.id.to_s]).to include('msg')
           expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+
+        it "is private, the events name is not shown" do
+          event = FactoryGirl.create :event_on_one_day_with_multiple_rooms, :is_private => true 
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          conflicting_event = attributes_for(:event_on_one_day_with_multiple_rooms)
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: I18n.t('event.private'), start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
         end
       end
     end
