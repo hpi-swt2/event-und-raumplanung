@@ -56,7 +56,8 @@ class EventsController < GenericEventsController
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
     @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
     @filterrific.user = nil if @filterrific.user == 0;
-    @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    filterred_events = Event.filterrific_find(@filterrific)
+    @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
   end
@@ -149,8 +150,9 @@ class EventsController < GenericEventsController
   # GET /events/1
   # GET /events/1.json
   def show
+    authorize! :show, @event
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    @user = User.find(@event.user_id) unless @event.user_id.nil?
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else

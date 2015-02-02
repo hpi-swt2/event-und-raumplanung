@@ -45,6 +45,48 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:valid_attributes_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    rooms: [build(:room)],
+    user_id: user2.id
+    }
+  }
+
+  let(:valid_attributes_not_private) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user.id
+    }
+  }
+
+  let(:valid_attributes_not_private_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user2.id
+    }
+  }
+
   let(:valid_attributes_with_room) {
     {name:'Das Bo live',
     description:'Türlich Türlich',
@@ -241,6 +283,31 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event)).to eq(event)
     end
 
+    it "shows not private events to any user" do
+      event = Event.create! valid_attributes_not_private_user2
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to owner" do
+      event = Event.create! valid_attributes_user2
+      my_event = Event.create! valid_attributes
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).to redirect_to(root_path)
+      get :show, {:id => my_event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to involved user" do
+      event = Event.create! valid_attributes_user2
+      firstTask = create(:task)
+      firstTask.event = event
+      firstTask.identity = user
+      firstTask.save
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
     it "assigns the tasks of the requested event as @tasks ordered by rank" do
       event = Event.create! valid_attributes
       firstTask = create(:task)
@@ -260,7 +327,7 @@ RSpec.describe EventsController, :type => :controller do
       assigned_user = create(:user)
       sign_in assigned_user
 
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_not_private
       firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
@@ -279,6 +346,23 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
 
+    it "shows all tasks of the event to the event owner" do
+      skip ("Group members cannnot see tasks that are assigned to that group")
+      assigned_group = create(:group)
+      group_member = create(:user)
+      assigned_group.users << group_member
+      sign_in group_member
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_group)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      puts (assigns(:tasks).inspect)
+      puts (firstTask.inspect)
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
     context "if the user has created the event" do
       it "shows the activity log" do
         e = create(:event, user_id: user.id)
@@ -293,25 +377,24 @@ RSpec.describe EventsController, :type => :controller do
     context "if the user `owns` the event's room" do
       it "shows the activity log" do
 
-        # make user leader of group g
-        g = create(:group)
-        g.users << user
-        mem = g.memberships.last
-        mem.isLeader = true
-        mem.save
+        # make user leader of group 
+        group = create(:group)
+        group.users << user
+        member = group.memberships.last
+        member.isLeader = true
+        member.save
 
-        # create room r and assign it to group g
-        r = create(:room)
-        r.group = g
-        r.save
+        # create room and assign it to group 
+        room = create(:room)
+        group.rooms << room
 
-        # create new event with r as room
-        e2 = create(:event, user_id: user2.id)
-        e2.rooms << r
-        e2.save
+        # create new event with room
+        event = create(:event, user_id: user2.id)
+        event.rooms << room
+        event.save
 
         # verify that group leader is now able to see the log
-        get :show, {:id => e2.id}
+        get :show, {:id => event.id}
         expect(assigns(:feed_entries)).not_to be_nil
       end
     end

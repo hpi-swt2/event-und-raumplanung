@@ -22,6 +22,8 @@ de:
       details: Details
       all_events: Alle Veranstaltungen
       save_changes: Änderungen übernehmen
+      skip: "Überspringen"
+      save: "Speichern"
     titles:
       edit: "%{model} editieren"
       save: "%{model} speichern"

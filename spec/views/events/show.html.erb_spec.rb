@@ -15,7 +15,7 @@ RSpec.describe "events/show", :type => :view do
                                           starts_at: DateTime.new(2050, 05, 03, 15, 00),
                                           ends_at:  DateTime.new(2050,05, 04, 16,45),
                                           rooms: [build(:room)],
-                                          user_id: 42, is_private: true))
+                                          user_id: user.id+1, is_private: true))
 
     @event.activities << Activity.create(:username => "user", 
                                           :action => "action", :controller => "controller",
@@ -25,7 +25,7 @@ RSpec.describe "events/show", :type => :view do
     @feed_entries = @activities
     @current_user = user
 
-    @favorite = Favorite.where('user_id = 42 AND favorites.is_favorite = ? AND event_id = ?', true, @event.id);
+    @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', user.id, true, @event.id);
 
     @tasks = []
   end

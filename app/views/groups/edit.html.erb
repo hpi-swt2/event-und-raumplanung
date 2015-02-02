@@ -1,13 +1,6 @@
 <%- model_class = Group -%>
 <% page_header = t '.title', :default => [:'helpers.titles.edit'], :model => model_class.model_name.human.titleize %>
 <% title page_header %>
-<script>
-  $(document).ready(function(){
-      $("#User_user_id").multiselect({
-        enableFiltering: true,
-        maxHeight: 250 });
-    });
-</script>
 
 <div class="page-header">
   <h1><%= page_header %>:&nbsp <%=@group.name%></h1>
@@ -23,14 +16,14 @@
 
 <h2><%=t '.assign_user', :default => t("groups.edit.assign_user") %></h2>
 
-<%= form_for @group, :html => { :id => "add-user", :class => "event" }, :url => assign_user_group_path(@group) do |f| %>
-	<div class="form-group">
-    	<%= f.label User.human_attribute_name(:name) %>
-    	<p>
-    		<%= select(User, :user_id, User.order(:username).collect{ |u| [u.username, u.id ]}, {include_blank: t('.select_user')}, {class: 'form-control'}) %>    	
-    	</p>
-    </div>
-    <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
+<%= form_for @group, :html => { :id => "add-user" }, :url => assign_user_group_path(@group) do |f| %>
+  <div class="form-group">
+  	<%= f.label User.human_attribute_name(:email), :class => 'control-label' %>
+  	<p>
+  	  <input type="text", name="email", id="task_identity_display", class="form-control", data-autocomplete-url="<%= autocomplete_group_path %>" value="">
+  	</p>
+  </div>
+  <%= f.submit t("groups.edit.assign_user"), :class => 'btn btn-primary' %>
 <% end %>
 
 

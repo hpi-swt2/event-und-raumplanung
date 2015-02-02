@@ -3,7 +3,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th><%= User.human_attribute_name(:username) %></th>
+          <th><%= User.human_attribute_name(:name) %></th>
       <% if params[:action] == "edit" %>
         <% if can? :degrade_user, @group or can? :assign_user, @group %>
           <th class="two-column text-right"><%= t("groups.edit.actions")%></th>
@@ -17,11 +17,11 @@
           <% is_leader = @leaders.include?(user) %>
           <tr>
             <td>
-              <%= user.username %>
-              <% if is_leader %>
-                &nbsp &nbsp
-                <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
-              <% end %>
+             <%= link_to user.username, user_path(user) %>
+             <% if is_leader %>
+              &nbsp &nbsp
+              <span class="label label-primary"><%=t '.leader', :default => t("groups.show.leader") %></span>
+             <% end %>
             </td>
             <% if params[:action] == "edit" %>
               <td class="text-right">
@@ -35,7 +35,7 @@
                     <%= link_to t('.degrade', :default => t("groups.edit.degrade")), degrade_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
                   <% end %>
                 <% end %>
-              </td>
+             </td>
             <% end %>
           </tr>
         <% end %>

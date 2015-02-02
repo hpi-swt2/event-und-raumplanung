@@ -22,8 +22,7 @@ class Task < ActiveRecord::Base
 
 
   def deadline_cannot_be_in_the_past
-    today = Date.today
-    errors.add(:deadline, "can't be in the past") if deadline && deadline < Time.new(today.year, today.month, today.day, 0, 0, 0)
+    errors.add(:deadline, "can't be in the past") if deadline && deadline.to_date < Date.current
   end
 
   def identity_changed?
@@ -62,7 +61,7 @@ class Task < ActiveRecord::Base
   def send_notification_to_assigned_user(assigner)
     if identity.is_group
       identity.users.each do |recipient|
-        UserMailer.user_assigned_to_task_email(assigner, self, recipient, identity).deliver
+        UserMailer.user_assigned_to_task_email(assigner, self, recipient, identity).deliver  
       end
     else
       UserMailer.user_assigned_to_task_email(assigner, self, identity, nil).deliver
@@ -72,7 +71,7 @@ class Task < ActiveRecord::Base
   def send_notification_to_previously_assigned_user(previousIdentity, assigner)
     if previousIdentity.is_group
       previousIdentity.users.each do |recipient|
-        UserMailer.user_assignment_removed_email(assigner, recipient, self, previousIdentity).deliver
+        UserMailer.user_assignment_removed_email(assigner, recipient, self, previousIdentity).deliver  
       end
     else
       UserMailer.user_assignment_removed_email(assigner, previousIdentity, self, nil).deliver
