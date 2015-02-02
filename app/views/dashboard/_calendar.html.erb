@@ -7,8 +7,8 @@
 <!-- TODO: implement filtering (by month, week, day) to call Event.events_between(...) appropriatly. Ask Team Biber (Daniel Stolpe, Meike Baumgärtner) in case of questions concerning Event.events_between(...) and recurring events
 Event.events_between(..) returns a collection of EventOccurrences. To access the "real" Event call "event" on an EventOccurrence instance
 -->
-<% @calevents = Event.events_between(Time.local(2015, 1, 1, 0, 0, 0), Time.local(2016, 1, 1, 0, 0, 0)) %> <!-- this is an example - bad - only for demonstration -->
-<% @favorites = Favorite.all %> 
+<% @calevents = get_calendar_events %>
+<% @favorites = Favorite.all %>
 
 <div id="calendar"></div>
 
@@ -62,7 +62,8 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 			theme: false,
             eventClick: function(calEvent, jsEvent, view){
                 var f = 'YYYY-MM-DD hh:mm:ss'
-                var route = '<%=  events_url %>' + '/' + calEvent.event_id + '?starting=' + calEvent.start.format(f) + '&ending=' + calEvent.start.format(f)
+                var route = '<%= show_occurrence_path %>' + '?eventid=' + calEvent.event_id + '&starting=' + calEvent.start.format(f) + '&ending=' + calEvent.start.format(f)
+                //console.log(calEvent.schedule)
                 window.open(route, "_self")
             }
 		});
