@@ -1,3 +1,4 @@
+require 'pry'
 class EventOccurrenceController < ApplicationController
   before_action :authenticate_user!
   before_action :validate_params, only: :show
