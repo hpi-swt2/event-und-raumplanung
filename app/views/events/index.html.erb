@@ -137,7 +137,7 @@
 <%= render(partial: 'events/list', locals: { events: @events,  model_class:  model_class }) %>
 
 <div class="clear"></div>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_event_path,
-            :class => 'btn btn-primary' %>
+<%= link_to new_event_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+  <span class="glyphicon glyphicon-plus"></span>
+<% end %>
 

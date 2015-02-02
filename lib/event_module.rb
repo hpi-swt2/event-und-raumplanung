@@ -1,4 +1,6 @@
 # is used in Event and Event_Template
+require 'active_support'
+
 module EventModule
   def self.included(base)
     base.class_eval do
@@ -23,11 +25,8 @@ module EventModule
   end
 
   def setDefaultTime
-    time = Time.new.getlocal
-    time -= time.sec
-    time += time.min % 15
-    self.starts_at = time
-    self.ends_at = (time+(60*60))
+    self.starts_at = Time.current.strftime('%H:%M')
+    self.ends_at = self.starts_at + (60*60)
   end
 
   def check_vacancy id, rooms

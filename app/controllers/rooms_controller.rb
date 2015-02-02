@@ -141,6 +141,13 @@ class RoomsController < ApplicationController
   render action: 'details'
   end
 
+  def printoverview
+    @rooms = Room.all
+    render locals: {rooms:@rooms}
+  end
+
+
+
   def print
     set_room
     print_rooms([@room.id])
@@ -153,14 +160,14 @@ class RoomsController < ApplicationController
   end
 
   def render_print_rooms(room_ids)   
-    now = DateTime.now
-    week = params[:week].to_i || Date.today.strftime("%W").to_i
-
-    @weekBegin = Date.commercial(now.cwyear, week, 1)
+    date = params[:date] ? Date.parse(params[:date]) :  Date.today.monday
+    week = date.cweek
+    year = date.cwyear
+    @weekBegin = date
     @prints = []
     room_ids.each do | room_id |
         room = Room.find(room_id)
-        @calevents = Event.approved.room_ids([room_id]).week(week) || []
+        @calevents = Event.approved.room_ids([room_id]).week(week, year) || []
         @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
     end
     render action: 'print', layout:'print', locals:{ prints: @prints}

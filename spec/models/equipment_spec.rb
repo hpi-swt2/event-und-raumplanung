@@ -40,13 +40,6 @@ describe Equipment do
   end
 	
 	it 'should return equipments for a room name' do
-   	#the commented lines will not run because there is no Room in the database - nothing will be returned because of equipment.rb line 24
-    #@correct_equipment.room_id = 0
-    #@room.id = 0
-    #results = Equipment.rooms("Room")
-   	#expect(results).to include(@correct_equipment)
-   	#results = Equipment.rooms("testString")
-   	#expect(results).to include(@correct_equipment)
    	results = Equipment.rooms("AAAA")
    	expect(results).not_to include(@correct_equipment)
   end

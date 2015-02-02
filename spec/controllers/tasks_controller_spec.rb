@@ -5,7 +5,7 @@ RSpec.describe TasksController, type: :controller do
     let(:event) { create :event }
     let(:user) { create :user }
     let(:another_user) { create :user }
-    let(:task) { FactoryGirl.create :task }
+    let(:task) { FactoryGirl.create :task, creator_id: user.id }
     let(:group) { create :group, users: [user, another_user]}
     let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { create :unassigned_task, event_id: event.id }
@@ -94,7 +94,6 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it 'should prompt an error message to another User from the assigned group who wants to accept an already accepted task' do 
-      pending("redirects to tasks/task.id and not to root_path & flash warning is nil")
       get :accept, id: assigned_task_group.id
       sign_in another_user
       get :accept, id: assigned_task_group.id

@@ -22,18 +22,21 @@
             <td><%= event_template.rooms.map(&:name).to_sentence %></td>
             <td>
             <% if can? :edit, event_template%>
-              <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                          edit_event_template_path(event_template), :class => 'btn btn-default btn-xs' %>
+              <%= link_to edit_event_template_path(event_template), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
+                <span class="glyphicon glyphicon-pencil"></span>
+              <% end %>
             <% end %>
-             <% if can? :destroy, event_template %>
-              <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          event_template_path(event_template),
+               <%= link_to new_event_from_template_path(event_template), :title => t("helpers.submit.create", :model => Event.model_name.human.titleize), :class => 'btn btn-default btn-xs' do %>
+                <span class="glyphicon glyphicon-plus"></span>
+              <% end %>
+            <% if can? :destroy, event_template %>
+              <%= link_to event_template_path(event_template), :title => t("helpers.links.destroy"),
                           :method => :delete,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-xs btn-danger' %>
+                          :class => 'btn btn-xs btn-danger' do %>
+                <span class="glyphicon glyphicon-trash"></span>
+              <% end %>
             <% end %>
-               <%= link_to t('.create', :default => t("helpers.submit.create", :model => Event.model_name.human.titleize)),
-                          new_event_from_template_path(event_template), :class => 'btn btn-default btn-xs' %>
             </td>
           </tr>
         <% end %>
