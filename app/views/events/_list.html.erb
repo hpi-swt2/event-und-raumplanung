@@ -1,6 +1,10 @@
 <div id="filterrific_results">
   <%= will_paginate @events, renderer: BootstrapPagination::Rails %>
 
+  <div>
+    <%= page_entries_info events unless @events.empty? %>
+  </div>
+
   <div class="table-responsive">
       <table class="table table-striped">
       <thead>
@@ -39,7 +43,7 @@
   </div>
 
   <div>
-    <%= page_entries_info events %>
+    <%= page_entries_info events if @events.empty? %>
   </div>
   
 <%= will_paginate @events, renderer: BootstrapPagination::Rails %>
