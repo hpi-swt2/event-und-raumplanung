@@ -26,8 +26,7 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       }.to raise_error(ActionController::RoutingError)
     end
 
-    it "throws Not Found if event has no schedule" do
-      pending("throws Not Found")
+    it "succeeds if event has schedule and occurrence matches the schedule" do
       weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
       get :show, {:eventid => weekly_recurring_event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
       expect(response).to be_success
