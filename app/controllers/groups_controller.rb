@@ -26,6 +26,7 @@ class GroupsController < ApplicationController
   end
 
   def show
+    authorize! :show, @group
     @users = @group.users 
   end
     

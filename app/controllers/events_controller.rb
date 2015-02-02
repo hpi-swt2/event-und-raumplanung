@@ -70,6 +70,7 @@ class EventsController < GenericEventsController
   end
 
   def approve
+    authorize! :approve, @event
     @event.approve
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
@@ -82,6 +83,7 @@ class EventsController < GenericEventsController
   end
 
   def decline
+    authorize! :decline, @event
     @event.decline
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
