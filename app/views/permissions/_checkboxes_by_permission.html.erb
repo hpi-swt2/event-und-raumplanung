@@ -2,12 +2,12 @@
 <% @users.each do |user| %>
   <% form_name = 'User:' + user.id.to_s %>
   <%= check_box_tag form_name, "1", @rooms.all?{ |room| user.has_permission(@permission, room) } %> 
-  <%= label_tag form_name, user.username %> <br/>
+  <%= link_to user.display_name, user_path(user) %> <br/>
 <% end %>
 
 <h4><%= t Group.model_name.human(count: 2).titleize %></h4>
 <% @groups.each do |group| %>
   <% form_name = 'Group:' + group.id.to_s %>
   <%= check_box_tag form_name, "1", @rooms.all?{ |room| group.has_permission(@permission, room) } %> 
-  <%= label_tag form_name, group.name %> <br/>
+  <%= link_to group.name, group_path(group) %> <br/>
 <% end %>

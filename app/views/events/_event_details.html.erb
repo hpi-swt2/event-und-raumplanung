@@ -43,7 +43,11 @@
       </tr>
       <tr>
         <td><%= t('events.show.creator') %></td>
-        <td><%= @user %></td>
+        <td>
+          <% unless @user.nil? %>
+            <%= link_to @user.display_name, user_path(@user) %>
+          <% end %>
+        </td>
       </tr>
       <tr>
         <td><%= t('events.show.participant_count') %></td>

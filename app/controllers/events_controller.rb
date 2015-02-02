@@ -152,7 +152,7 @@ class EventsController < GenericEventsController
   def show
     authorize! :show, @event
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    @user = User.find(@event.user_id) unless @event.user_id.nil?
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
@@ -293,6 +293,7 @@ class EventsController < GenericEventsController
           event_task = original_task.dup
           event_task = create_tasks_with_attachments original_task, event_task
           event_task.event_template_id = nil
+          event_task.creator = current_user
           @event.tasks << event_task 
         end
       end

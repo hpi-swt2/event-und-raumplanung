@@ -18,6 +18,7 @@
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
 //= require jquery.ui.touch-punch
+//= require jquery.multi-select
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
@@ -31,6 +32,7 @@
 //= require moment/de
 //= require recurring_select
 //= require jquery-ui/autocomplete
+//= require bootstrap-multiselect
 
 jQuery.fn.bootstrap_flash = function(message, options) {
   options = options || {};

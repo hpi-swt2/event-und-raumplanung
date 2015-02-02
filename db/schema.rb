@@ -38,20 +38,6 @@ ActiveRecord::Schema.define(version: 20150123132333) do
 
   add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
 
-  create_table "bookings", force: true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.datetime "start"
-    t.datetime "end"
-    t.integer  "event_id"
-    t.integer  "room_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
-
   create_table "comments", force: true do |t|
     t.string   "author"
     t.string   "content"
@@ -204,8 +190,10 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.integer  "event_template_id"
     t.integer  "identity_id"
     t.string   "identity_type"
+    t.integer  "creator_id"
   end
 
+  add_index "tasks", ["creator_id"], name: "index_tasks_on_creator_id", using: :btree
   add_index "tasks", ["event_id"], name: "index_tasks_on_event_id", using: :btree
   add_index "tasks", ["event_template_id"], name: "index_tasks_on_event_template_id", using: :btree
   add_index "tasks", ["identity_id", "identity_type"], name: "index_tasks_on_identity_id_and_identity_type", using: :btree
