@@ -54,9 +54,13 @@
   <% end %>
   <% if can? :edit, @event or @event.nil? %>    
     <% if params[:controller] == 'events' %>
-      <%= link_to t('helpers.links.task'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
+      <%= link_to new_task_path(event_id: @event_id), :title => t("helpers.links.task"), :class => 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-plus"></span>    
+      <% end %> 
     <% else %> 
-      <%= link_to t('helpers.links.task'), new_task_path(event_template_id: @event_template_id), :class => 'btn btn-primary' %>
+      <%= link_to new_task_path(event_template_id: @event_template_id), :title => t("helpers.links.event_template"), :class => 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>    
+      <% end %> 
     <% end %>
   <% end %>
 </div>

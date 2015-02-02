@@ -647,9 +647,17 @@ RSpec.describe EventsController, :type => :controller do
         it "then events tasks have the same values as the event_templates tasks" do
           post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
           event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
-          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id', 'creator_id']
           assigns(:event).tasks.each_with_index do |task, i|
             expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        it "then events tasks have the same creator as the event" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.creator_id).to eql(assigns(:event).user_id)
           end
         end
 
