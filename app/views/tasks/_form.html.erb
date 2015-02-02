@@ -1,6 +1,8 @@
 <div class="col-lg-8">
-  <%= form_for @task, :html => { :class => 'form-horizontal task edit-task task_form', :multipart => true } do |f| %>
-    <% if @task.errors.any? %>
+  <% @task = Task.new()%>
+  <%= @task.event_id = params[:id] %>
+  <%= form_for @task, url: { :action => "create", :controller => "tasks", task: @task}, :html => { :class => 'form-horizontal task edit-task task_form'} do |f| %>
+     <% if @task.errors.any? %>
       <div id="error_expl" class="panel panel-danger">
         <div class="panel-heading">
           <h3 class="panel-title">

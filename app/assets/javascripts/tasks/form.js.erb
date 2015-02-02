@@ -67,3 +67,22 @@ function initializeAttachmentForm() {
 
 $(initializeAttachmentForm);
 $(document).on('page:load', initializeAttachmentForm);
+
+function clickHandler(e) {
+    e.preventDefault();
+    $.ajax({
+        success: function (data) {
+            $('#myModal').modal('toggle');
+        }
+    });
+}
+
+
+
+ready = function () {
+    $("#modaltesttogglebutton").unbind("click").click(clickHandler);
+};
+
+
+$(document).ready(ready);
+$(document).on('page:load', ready);

@@ -51,6 +51,7 @@ class Ability
         can :manage, Event
         can :manage, RoomProperty
         can :manage, Permission
+        can :manage, Task
     else
         can :read, Group
     end
