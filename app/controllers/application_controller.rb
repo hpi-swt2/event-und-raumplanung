@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def set_locale
-    if current_user
+    if params[:controller] != "sessions" && user_signed_in?
       I18n.locale = current_user.language
     else
       I18n.locale = I18n.default_locale
