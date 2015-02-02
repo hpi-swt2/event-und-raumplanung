@@ -120,10 +120,12 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    #starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    starts_at = Time.now
     f.starts_at starts_at
 
-    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    #ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    ends_at = starts_at + (60*60)
     f.ends_at ends_at
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
@@ -139,10 +141,10 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    starts_at = Time.local(2015, 2, 1, 11, 0, 0)
+    starts_at = Time.now
     f.starts_at starts_at
 
-    ends_at = Time.local(2015, 2, 1, 12, 30, 0)
+    ends_at = Time.now + 90.minutes
     f.ends_at ends_at
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
