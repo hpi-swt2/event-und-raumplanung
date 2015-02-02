@@ -116,8 +116,8 @@ ActiveRecord::Schema.define(version: 20150202145925) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.text     "schedule"
     t.integer  "event_id"
+    t.text     "schedule"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
