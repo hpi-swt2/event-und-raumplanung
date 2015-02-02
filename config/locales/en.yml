@@ -279,6 +279,9 @@ en:
   submit: Submit
   delete: Delete
   cancel: Cancel
+  events:
+    form:
+      series_end: 'Series end'
   menu:
     languages:
       de: DE

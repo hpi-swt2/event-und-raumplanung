@@ -68,17 +68,28 @@ class Event < ActiveRecord::Base
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
   end
 
-  def schedule_from_rule(dirty_rule)
+  def schedule_from_rule(dirty_rule, termination_date)
     validate_schedule
     schedule = self.schedule
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
-    schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+    unless dirty_rule.nil? || dirty_rule == "null"
+      rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
+      rule.until(Date.parse(termination_date)) unless termination_date.nil?
+      schedule.add_recurrence_rule rule
+    end
     self.schedule = schedule
   end
 
   def occurence_rule
     schedule = self.schedule
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
+  end
+
+  def schedule_ends_at_date
+    schedule = self.schedule
+    if schedule && !schedule.recurrence_rules.empty? && schedule.terminating?
+      return schedule.recurrence_rules.first.until_time.to_date
+    end
   end
 
   def duration
