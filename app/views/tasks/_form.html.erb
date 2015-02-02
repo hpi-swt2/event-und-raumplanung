@@ -72,7 +72,7 @@
         <%= f.label :identity, :class => 'control-label' %>
         <div class="controls">
             <%= f.hidden_field :identity, value: "#{@task[:identity_type]}:#{@task[:identity_id]}" %>
-            <input type="text" placeholder="Enter user or group name" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
+            <input type="text" placeholder="<%= t('tasks.form.enter_name') %>" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
         </div>
         <%= error_span(@task[:identity]) %>
       </div>
