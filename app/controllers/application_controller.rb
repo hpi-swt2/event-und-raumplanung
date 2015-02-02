@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale     
     if params[:controller] != "sessions" && user_signed_in?
-      I18n.locale = current_user.language.eql? 'German'? 'de' : 'en'
+      I18n.locale = current_user.language
     else
       I18n.locale = I18n.default_locale
     end
