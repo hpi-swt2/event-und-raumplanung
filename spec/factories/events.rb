@@ -33,48 +33,48 @@ FactoryGirl.define do
     rooms { build_list :room, 1 }
   end
 
-  factory :standardEvent, parent: :event, :class => Event do 
-    
+  factory :standardEvent, parent: :event, :class => Event do
+
    sequence(:name) { |n| "Party#{n}" }
    description "All night long glühwein for free"
    participant_count 80
    rooms { build_list :room, 3 }
- end 
+ end
 
   factory :scheduledEvent, parent: :event do
    starts_at_date (Time.now).strftime("%Y-%m-%d")
    ends_at_date (Time.now + 7200).strftime("%Y-%m-%d")    # + 2h
    starts_at_time (Time.now).strftime("%H:%M:%S")
    ends_at_time (Time.now + 7200).strftime("%H:%M:%S")
-   room_ids ['1'] 
+   room_ids ['1']
    is_private false
   end
 
-  factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do 
+  factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    room_ids ['1', '2']
   end
 
-  factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do 
-   ends_at_date (Time.now).strftime("%Y-%m-%d") 
-   ends_at_time (Time.now).strftime("%H:%M:%S")  
+  factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do
+   ends_at_date (Time.now).strftime("%Y-%m-%d")
+   ends_at_time (Time.now).strftime("%H:%M:%S")
    room_ids ['1', '2']
   end
 
-  factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
+  factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    rooms { create_list :room, 1 }
   end
 
-  factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
-   ends_at_date (Time.now).strftime("%Y-%m-%d") 
+  factory :event_on_one_day_with_one_room, parent: :scheduledEvent do
+   ends_at_date (Time.now).strftime("%Y-%m-%d")
    ends_at_time (Time.now).strftime("%H:%M:%S")
    rooms { create_list :room, 1 }
   end
 
-  factory :event_suggestion, :class => Event do 
+  factory :event_suggestion, :class => Event do
     starts_at Time.now + 1
     ends_at Time.now + 2
     user_id 122
@@ -154,6 +154,25 @@ FactoryGirl.define do
     f.rooms { build_list :room, 1 }
   end
 
+  factory :weekly_recurring_event_ending, :class => Event do |f|
+    f.name "Weekly recurring ending"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.now
+    f.starts_at starts_at
+
+    ends_at = Time.now + 90.minutes
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.weekly.until(Date.today + 10))
+    end
+    f.schedule schedule
+    f.rooms { build_list :room, 1 }
+  end
+
   factory :daily_recurring_terminating_event, :class => Event do |f|
     f.name "Daily recurring until x"
     f.description "Eventdescription terminating"
@@ -201,7 +220,7 @@ FactoryGirl.define do
     end
     f.schedule schedule
     f.rooms { build_list :room, 1 }
-  end 
+  end
 
   factory :sortEvent1, parent: :event do
     name "A1"
@@ -229,11 +248,11 @@ FactoryGirl.define do
     rooms []
   end
 
-  factory :conflictingEvent, parent: :event do 
+  factory :conflictingEvent, parent: :event do
       starts_at_date Time.now.strftime("%Y-%m-%d")
       ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
       starts_at_time Time.now.strftime("%H:%M:%S")
       ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
-  end 
+  end
 
 end
