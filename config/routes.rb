@@ -123,7 +123,7 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
-  get 'ical' => 'ical#get'
+  get 'ical/:icaltoken' => 'ical#get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,10 +1,11 @@
 class IcalController < ApplicationController
-  before_action :authenticate_user!
 
-  #Mime::Type.register_alias "text/calendar", :ical
-
-  # GET /ical
+  # GET /ical/:icaltoken
   def get
+    current_user      = User.where(icaltoken: params[:icaltoken]).first
+    if current_user.nil?
+      return redirect_to root_path
+    end
     @owned_events     = Event.where(user_id: current_user.id)
     @favorites        = Event.joins(:favorites).where('events.user_id != ? AND favorites.user_id = ? AND favorites.is_favorite = true', current_user.id, current_user.id)
     @events_with_task = Event.joins(:tasks).where("tasks.identity_type = 'User' AND tasks.identity_id = ?" , current_user.id)
@@ -47,7 +48,6 @@ class IcalController < ApplicationController
 
     def render_ical cal
       respond_to do |format|
-        format.ical { render text: @cal.to_ical }
         format.ics  { render text: @cal.to_ical }
         format.html { render plain: @cal.to_ical }
       end
