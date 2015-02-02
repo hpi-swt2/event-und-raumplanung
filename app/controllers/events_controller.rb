@@ -17,6 +17,8 @@ class EventsController < GenericEventsController
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
   before_action :get_model, only: [:new, :create, :update, :destroy]
   
+  before_action :log_activity, only: [:approve, :decline]
+
   def flash_to_headers
     if request.xhr?
       #avoiding XSS injections via flash
@@ -52,14 +54,18 @@ class EventsController < GenericEventsController
   # GET /events
   # GET /events.json
   def index
-    @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
-    @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-    @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
-    @filterrific.user = nil if @filterrific.user == 0;
+    initialize_filterrific params
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
+  end
+
+  def initialize_filterrific params
+      @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
+      @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
+      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
+      @filterrific.user = nil if @filterrific.user == 0;
   end
 
   def reset_filterrific
@@ -71,26 +77,12 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
-    @event.activities << Activity.create(:username => current_user.username,
-                                          :action => params[:action],
-                                          :controller => params[:controller])
-    begin
-      redirect_to :back
-    rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
-    end
+    redirect_to_previous_site
   end
 
   def decline
     @event.decline
-    @event.activities << Activity.create(:username => current_user.username, 
-                                          :action => params[:action],
-                                          :controller => params[:controller])
-    begin
-      redirect_to :back
-    rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
-    end
+    redirect_to_previous_site
   end
 
   def approve_event_suggestion
@@ -180,7 +172,6 @@ class EventsController < GenericEventsController
   # POST /events
   # POST /events.json
   def create
-
     create_event event_params, :new, Event.model_name.human
   end
 
@@ -195,13 +186,10 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1.json
   def update
     @event.schedule_from_rule(event_params[:occurence_rule])
-    filtered_params = params_without_occurence_rule(event_params)
+    filtered_params = params_without_occurence_rule_and_event_template_id(event_params)
     @event.attributes = filtered_params
-
     changed_attributes = @event.changed
-
     @update_result = @event.update(filtered_params)
-
     if @update_result
       @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action], :controller => params[:controller],
@@ -252,8 +240,8 @@ class EventsController < GenericEventsController
       params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :room_ids => [])
     end
 
-    def params_without_occurence_rule(params)
-      params.reject {|k,v| k == "occurence_rule"}
+    def params_without_occurence_rule_and_event_template_id(params)
+      params.reject {|k,v| k == "occurence_rule" or k == "event_template_id"}
     end
 
     def event_suggestion_params
@@ -261,13 +249,15 @@ class EventsController < GenericEventsController
     end
 
     def create_event params, new_url, model
-      @event_template_id = params['event_template_id']
-      params.delete('event_template_id')
-      @event = Event.new(params_without_occurence_rule params)
+      @event = Event.new(params_without_occurence_rule_and_event_template_id params)
       @event.schedule_from_rule(params[:occurence_rule])
       @event.user_id = current_user_id
-      create_tasks @event_template_id
-
+      if params['event_template_id']
+        params = copy_items_from_event_template params
+      end
+      if params['event_id']
+        @original_event_id = params['event_id']
+      end
       respond_to do |format|
         if @event.save
           @event.activities << Activity.create(:username => current_user.username, 
@@ -277,9 +267,6 @@ class EventsController < GenericEventsController
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
-          if params['event_id']
-            @original_event_id = params['event_id']
-          end
           format.html { render new_url}
           format.json { render json: @event.errors, status: :unprocessable_entity }
         end
@@ -287,17 +274,15 @@ class EventsController < GenericEventsController
     end
 
     def create_tasks event_template_id
-      if event_template_id
-        event_template = EventTemplate.find(event_template_id)
-        event_template.tasks.collect do |original_task| 
-          event_task = original_task.dup
-          event_task = create_tasks_with_attachments original_task, event_task
-          event_task.event_template_id = nil
-          event_task.creator = current_user
-          @event.tasks << event_task 
-        end
+      event_template = EventTemplate.find(event_template_id)
+      event_template.tasks.collect do |original_task| 
+        event_task = original_task.dup
+        event_task = create_tasks_with_attachments original_task, event_task
+        event_task.event_template_id = nil
+        event_task.creator = current_user
+        @event.tasks << event_task 
       end
-      return 
+      return
     end
 
     def create_tasks_with_attachments original_task, new_task
@@ -376,6 +361,27 @@ class EventsController < GenericEventsController
 
     def same_day starts_at, ends_at
       Time.at(starts_at).to_date === Time.at(ends_at).to_date
-    end 
+    end
+
+    def log_activity
+      @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    end
+
+    def redirect_to_previous_site   
+      begin
+        redirect_to :back
+      rescue ActionController::RedirectBackError
+        redirect_to events_approval_path
+      end
+    end
+
+    def copy_items_from_event_template params
+      @event_template_id = params[:event_template_id]
+      create_tasks @event_template_id
+      params.delete('event_template_id')
+      return params
+    end
 
 end
