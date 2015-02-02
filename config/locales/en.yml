@@ -225,6 +225,7 @@ en:
       default: ! '%a, %d %b %Y %H:%M:%S %z'
       long: ! '%d %B, %Y %H:%M'
       short: ! '%d %b %H:%M'
+      time_only : ! '%I:%M %p'
     pm: pm
     starts_at: starts at
     ends_at: ends at
@@ -259,7 +260,7 @@ en:
       approved: approved
       declined: declined
       pending: pending
-      rejected_suggestion: rejected suggestion
+      rejected_suggestion: rejected suggestion    
   will_paginate:
     next_label: Next →
     page_entries_info:
