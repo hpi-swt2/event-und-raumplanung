@@ -346,6 +346,23 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
 
+    it "shows all tasks of the event to the event owner" do
+      skip ("Group members cannnot see tasks that are assigned to that group")
+      assigned_group = create(:group)
+      group_member = create(:user)
+      assigned_group.users << group_member
+      sign_in group_member
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_group)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      puts (assigns(:tasks).inspect)
+      puts (firstTask.inspect)
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
     context "if the user has created the event" do
       it "shows the activity log" do
         e = create(:event, user_id: user.id)
@@ -360,25 +377,24 @@ RSpec.describe EventsController, :type => :controller do
     context "if the user `owns` the event's room" do
       it "shows the activity log" do
 
-        # make user leader of group g
-        g = create(:group)
-        g.users << user
-        mem = g.memberships.last
-        mem.isLeader = true
-        mem.save
+        # make user leader of group 
+        group = create(:group)
+        group.users << user
+        member = group.memberships.last
+        member.isLeader = true
+        member.save
 
-        # create room r and assign it to group g
-        r = create(:room)
-        r.group = g
-        r.save
+        # create room and assign it to group 
+        room = create(:room)
+        group.rooms << room
 
-        # create new event with r as room
-        e2 = create(:event, user_id: user2.id)
-        e2.rooms << r
-        e2.save
+        # create new event with room
+        event = create(:event, user_id: user2.id)
+        event.rooms << room
+        event.save
 
         # verify that group leader is now able to see the log
-        get :show, {:id => e2.id}
+        get :show, {:id => event.id}
         expect(assigns(:feed_entries)).not_to be_nil
       end
     end
@@ -631,9 +647,17 @@ RSpec.describe EventsController, :type => :controller do
         it "then events tasks have the same values as the event_templates tasks" do
           post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
           event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
-          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id', 'creator_id']
           assigns(:event).tasks.each_with_index do |task, i|
             expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        it "then events tasks have the same creator as the event" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.creator_id).to eql(assigns(:event).user_id)
           end
         end
 

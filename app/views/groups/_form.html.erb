@@ -1,4 +1,4 @@
-<%= form_for @group, :html => { :class => "form-horizontal event" } do |f| %>
+<%= form_for @group, :html => { :class => "event" } do |f| %>
 
     <% if @group.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -15,11 +15,9 @@
     </div>
   <% end %>
 
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
-    </div>
+    <%= f.text_field :name, :class => 'form-control' %>
     <%= error_span(@group[:name]) %>
   </div>
 

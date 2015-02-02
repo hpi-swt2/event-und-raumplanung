@@ -81,8 +81,18 @@
 	color: #F8A902;
 }
 
+.event-favorite-icon-checked-button {
+	color: #F8A902;
+	top: 1px !important;
+}
+
 .event-favorite-icon-unchecked, .event-favorite-icon-unchecked:hover, .event-favorite-icon-unchecked:focus, .event-favorite-icon-unchecked:visited, .event-favorite-icon-unchecked:active {
 	color: #DDD;
+}
+
+.event-favorite-icon-unchecked-button {
+	color: #DDD;
+	top: 1px !important;
 }
 
 .event-favorite-icon {
