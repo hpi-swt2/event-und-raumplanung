@@ -88,3 +88,7 @@ input.task-done-checkbox {
     background: white url("/assets/ui-anim_basic_16x16.gif") right center no-repeat;
   }
 
+.dropdown-divider-line {
+    border-bottom: 1px solid #A0A0A0;
+}
+

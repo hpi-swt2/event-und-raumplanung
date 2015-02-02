@@ -102,7 +102,7 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:schedule), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select_recurring :occurence_rule, nil, :allow_blank => true %>
+      <%= f.select_recurring :occurence_rule, nil, :allow_blank => true, :class => 'schedule-selectpicker' %>
       <%= error_span(@event[:schedule]) %>
     </div>
   </div>

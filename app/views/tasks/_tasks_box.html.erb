@@ -37,7 +37,7 @@
             </td>
             <td class="col-sm-5"><%= link_to task.name, task_path(task) %></td>
         <%if params[:controller] == 'events' %>
-          <td class="<%= task.status %> col-sm-5"><%= (task.identity.blank?) ? t('tasks.status.not_assigned') : (task.identity.name) %></td>
+          <td class="<%= task.status %> col-sm-5"><%= (task.identity.blank?) ? t('tasks.status.not_assigned') : (link_to task.identity.name, polymorphic_path(task.identity), class: 'hidden-link') %></td>
         <% end %>
             <% if task.deadline %>
               <td><%= task.deadline.strftime("%d.%m.%Y") %></td>
