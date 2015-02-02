@@ -88,6 +88,8 @@ RSpec.describe RoomPropertiesController, type: :controller do
 
       it "redirects to show path after success" do
         post :create, {:room_property => attributes}, valid_session
+        expect(assigns(:roomProperty)).to be_a(RoomProperty)
+        expect(assigns(:roomProperty)).to be_persisted
         expect(response).to redirect_to(room_properties_url)
       end
     end
@@ -391,6 +393,8 @@ RSpec.describe RoomPropertiesController, type: :controller do
 
         it "redirects to show path after success" do
           post :create, {:room_property => attributes}, valid_session
+          expect(assigns(:roomProperty)).to be_a(RoomProperty)
+          expect(assigns(:roomProperty)).to be_persisted
           expect(response).to redirect_to(room_properties_url)
         end
       end

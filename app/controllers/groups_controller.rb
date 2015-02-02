@@ -68,7 +68,7 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     respond_to do |format|
       if @group.save
-        format.html { redirect_to @group, notice: t('notices.successful_create', :model => Group.model_name.human) }
+        format.html { redirect_to edit_group_path(@group), notice: t('notices.successful_create', :model => Group.model_name.human) }
         format.json { render :show, status: :created, location: @group }
       else
         format.html { render :new }
