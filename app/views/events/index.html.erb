@@ -11,7 +11,16 @@
 </script>
 
 <div class="page-header">
-  <h1><%= page_header %></h1>
+  <table width="100%">
+    <td>
+      <h1><%= page_header %></h1>
+    </td>
+    <td align="right">
+      <%= link_to new_event_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-plus"></span>
+      <% end %>
+    </td>
+  </table>
 </div>
 <div class="well">
   <%= form_for @filterrific do |f| %>
@@ -137,7 +146,3 @@
 <%= render(partial: 'events/list', locals: { events: @events,  model_class:  model_class }) %>
 
 <div class="clear"></div>
-<%= link_to new_event_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
-  <span class="glyphicon glyphicon-plus"></span>
-<% end %>
-
