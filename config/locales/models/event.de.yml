@@ -20,6 +20,7 @@ de:
         created_at: 'erstellt am'
         updated_at: 'aktualisiert am'
         schedule: 'Wiederholungsmuster'
+        search_for: 'Suche nach'
   sort_options:
     sort_name : 'Name (a-z)'
     sort_created_at_desc : 'Erstellungsdatum (neueste zuerst)'

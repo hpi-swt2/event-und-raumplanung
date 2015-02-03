@@ -12,3 +12,11 @@ en:
       begin: 'Begin'
       end: 'End'
       tasks: 'Tasks'
+      last_update: 'Last Update'
+      status: 'Status'
+      mark_as_favorite: 'Mark as favorite'
+      unmark_as_favorite: 'Remove from favorites'
+      belongs_to_series: 'Belongs to series'
+    rooms:
+      requested_size: Needed size of room
+      reuqested_equipment: Necessary equipment

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/change_locale/:locale' => 'locale#change_locale', as: "change_locale"
+
   resources :uploads, :only => [:new, :create, :destroy]
 
   resources :permissions, :only => [:index] do
@@ -19,6 +21,7 @@ Rails.application.routes.draw do
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
       patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
+      get 'autocomplete', :action => 'autocomplete', :as => 'autocomplete'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
       get 'degrade_user/:user_id', :action => 'degrade_user', :as => 'degrade_user'
@@ -45,16 +48,28 @@ Rails.application.routes.draw do
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
+  get 'rooms/printoverview', as: 'print'
+  get 'rooms/:id/print' => 'rooms#print'
+  get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
-  post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
+  post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
+  delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
+
+  devise_scope :user do
+    get 'admin', controller: 'sessions', action: 'show_admin_login'
+    post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
+  end
+
+  # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   get "identities/autocomplete" => "identities#autocomplete"
+
 
   resources :attachments
 
@@ -102,15 +117,14 @@ Rails.application.routes.draw do
   end
 
   resources :maps
-  resources :profile
+  resources :users, only: [:edit, :show, :update]
 
   resources :event_templates, :path => "templates"
   resources :event_templates do
     get :reset_filterrific, on: :collection
   end
 
-  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
-  get 'ical/' => 'ical#show_my_events'
+  get 'ical/:icaltoken' => 'ical#get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

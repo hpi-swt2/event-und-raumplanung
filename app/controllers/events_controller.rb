@@ -46,7 +46,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/show_toggle_favorite
   def show_toggle_favorite
     toggle_favorite
-    redirect_to event_url
+    render nothing: true
   end
 
   # GET /events
@@ -56,7 +56,8 @@ class EventsController < GenericEventsController
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
     @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
     @filterrific.user = nil if @filterrific.user == 0;
-    @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    filterred_events = Event.filterrific_find(@filterrific)
+    @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
   end
@@ -69,19 +70,29 @@ class EventsController < GenericEventsController
   end
 
   def approve
+    authorize! :approve, @event
     @event.approve
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def decline
+    authorize! :decline, @event
     @event.decline
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path
+    end
   end
 
   def approve_event_suggestion
@@ -141,8 +152,9 @@ class EventsController < GenericEventsController
   # GET /events/1
   # GET /events/1.json
   def show
+    authorize! :show, @event
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    @user = User.find(@event.user_id) unless @event.user_id.nil?
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
@@ -159,6 +171,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/new_event_suggestion
   def new_event_suggestion
     @original_event_id = @event.id
+    @original_owner = @event.user_id
     render "event_suggestions/new"
   end
 
@@ -178,6 +191,7 @@ class EventsController < GenericEventsController
   def create_event_suggestion
     params = add_original_event_params event_suggestion_params
     params = add_reference_to_original_event params 
+    @old_event_owner = Event.find(params["event_id"]).user_id
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
@@ -211,7 +225,7 @@ class EventsController < GenericEventsController
     @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_comment_create') }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
@@ -255,7 +269,12 @@ class EventsController < GenericEventsController
       params.delete('event_template_id')
       @event = Event.new(params_without_schedule_related_params params)
       @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
-      @event.user_id = current_user_id
+      # test
+      if @old_event_owner
+        @event.user_id = @old_event_owner
+      else
+        @event.user_id = current_user_id
+      end
       create_tasks @event_template_id
 
       respond_to do |format|
@@ -283,6 +302,7 @@ class EventsController < GenericEventsController
           event_task = original_task.dup
           event_task = create_tasks_with_attachments original_task, event_task
           event_task.event_template_id = nil
+          event_task.creator = current_user
           @event.tasks << event_task 
         end
       end
@@ -346,7 +366,7 @@ class EventsController < GenericEventsController
     def build_conflicting_events_response conflicting_events 
       logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]

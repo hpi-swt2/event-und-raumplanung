@@ -1,36 +1,53 @@
 <%- model_class = RoomProperty -%>
+<% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <div class="row">
+    <div class="col-md-11">
+      <h1><%= page_header %></h1>
+    </div>
+    <div class="col-md-1">
+      <h1 class="text-right">
+        <%= link_to new_room_property_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+          <span class="glyphicon glyphicon-plus"></span>
+        <% end %>
+      </h1>
+    </div>
+  </div>
 </div>
 <div class="table-responsive">
     <table class="table table-striped">
       <thead>
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
-          <th><%= model_class.human_attribute_name(:created_at) %></th>
-          <th><%=t '.actions', :default => t("helpers.actions") %></th>
+          <% if (can? :destroy, RoomProperty) or (can? :edit, RoomProperty)%>
+            <th><%=t '.actions', :default => t("helpers.actions") %></th>
+          <% end %>
         </tr>
       </thead>
       <tbody>
         <% @roomProperties.each do |roomProperty| %>
           <tr>
             <td><%= link_to roomProperty.name, room_property_path(roomProperty) %></td>
-            <td><%=l roomProperty.created_at %></td>
-            <td>
-              <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                          edit_room_property_path(roomProperty), :class => 'btn btn-default btn-xs' %>
-              <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                          room_property_path(roomProperty),
-                          :method => :delete,
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-xs btn-danger' %>
-            </td>
+            <% if (can? :destroy, RoomProperty) or (can? :edit, RoomProperty)%>
+              <td>
+                <% if can? :edit, roomProperty %>
+                  <%= link_to edit_room_property_path(roomProperty), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
+                    <span class="glyphicon glyphicon-pencil"></span>    
+                  <% end %>
+                <% end %>
+                <% if can? :destroy, roomProperty %>
+                  <%= link_to room_property_path(roomProperty),
+                            :method => :delete,
+                            :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                            :title => t("helpers.links.destroy"), :class => 'btn btn-xs btn-danger' do %>
+                    <span class="glyphicon glyphicon-trash"></span>   
+                  <% end %>
+                <% end %>
+              </td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
 </div>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_room_property_path,
-            :class => 'btn btn-primary' %>

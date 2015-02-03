@@ -1,0 +1,23 @@
+English version below
+
+Hallo <%= @creator.username %>
+===========================
+
+<%= @user.name %> hat den Task <%= @task.name %> des Events <%= @task.event.name %> <% if @group_assignment %>im Namen der Gruppe <%= @group_name %> <% end %><% if @accepted %>akzeptiert<% else %>abgelehnt<% end %>.
+
+Rufen Sie diese Seite auf, um den Task anzusehen: <%= task_url(@task)%>.
+Rufen Sie diese Seite auf, um das Event anzusehen: <%= event_url(@task.event) %>
+
+Einen schönen Tag!
+
+============================================
+
+Hello <%= @creator.username %>
+===========================
+
+<%= @user.name %> has <% if @accepted %>accepted <% else %>declined <% end %>the task <%= @task.name %> of the event <%= @task.event.name %><% if @group_assignment %> on behalf of <%= @group_name %><% end %>.
+
+Visit this URL to see the task: <%= task_url(@task)%>.
+Visit this URL to see the event <%= event_url(@task.event)%>.
+
+Thanks and have a great day!

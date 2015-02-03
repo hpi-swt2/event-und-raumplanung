@@ -10,21 +10,25 @@ RSpec.describe "layouts/application", :type => :view do
     @current_user = user
   end
 
-  it "doesn't show the room requests link to normal users" do    
+  it "doesn't show the room requests, room properties and permissions link to normal users" do    
     sign_in_test_user hpi_user
     render
 
     assert_select ".navbar-default" do 
       assert_select "a[href=?]", events_approval_path, false
+      assert_select "a[href=?]", permissions_path, false
+      assert_select "a[href=?]", room_properties_path, false
     end
   end
 
-  it "shows the room requests link to admin users" do    
+  it "shows the room requests, room properties and permissions link to admin users" do    
     sign_in_test_user admin_user
     render
 
     assert_select ".navbar-default" do 
       assert_select "a[href=?]", events_approval_path
+      assert_select "a[href=?]", permissions_path
+      assert_select "a[href=?]", room_properties_path
     end
   end
 
@@ -38,6 +42,7 @@ RSpec.describe "layouts/application", :type => :view do
       assert_select "a[href=?]", rooms_path
       assert_select "a[href=?]", equipment_index_path
       assert_select "a[href=?]", groups_path
+      assert_select "a[href=?]", event_templates_path
     end
   end
 end

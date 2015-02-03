@@ -144,6 +144,7 @@ describe Event do
 
     it "occurence rule returns nil" do
       expect(event_with_schedule.occurence_rule).to be_nil
+      expect(event_with_schedule.single_occurrence_event?).to be
     end
 
     it "has no termination date" do
@@ -160,10 +161,24 @@ describe Event do
 
     it "and occurence rule is set" do
       expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+      expect(daily_recurring_event.single_occurrence_event?).not_to be
     end
 
     it "and string formatting is valid" do
       expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
+    end
+
+    context "and is terminating" do
+      let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
+
+      it "resets all exception times if a schedule's rule changes" do
+        next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
+        daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
+        expect(daily_recurring_terminating_event.schedule.exception_times).not_to be_empty
+        
+        daily_recurring_terminating_event.schedule_from_rule('{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}')
+        expect(daily_recurring_terminating_event.schedule.exception_times).to be_empty
+      end
     end
   end
 
@@ -171,7 +186,7 @@ describe Event do
     let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
 
     it "and occurence rule is set" do
-      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 15))
+      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 16))
     end
 
     it "and there is no event occurrence after the termination date (inclusive)" do
@@ -277,25 +292,35 @@ describe Event do
     	expect(@declined_event.is_approved).to be false
     	expect(@approved_event.is_approved).to be true
  	end
+end
 
-   it "should find overlapping events" do
-    @event1 = FactoryGirl.create(:standardEvent)
-    @event2 = FactoryGirl.create(:conflictingEvent, :rooms => @event1.rooms)
+describe "checkVacancy" do
+  before(:all) do 
+    FactoryGirl.create(:room1)
+    FactoryGirl.create(:room2)
+    @scheduledEvent = FactoryGirl.create(:scheduledEvent)
+  end 
 
+  it "should find overlapping events" do
     ## Case 1: same timeslot
-    colliding_events = @event2.check_vacancy(@event1.id, @event1.rooms.map(&:id))
+    @event2 = FactoryGirl.create(:conflictingEvent, :rooms => @scheduledEvent.rooms)
+    colliding_events = @event2.check_vacancy(@scheduledEvent.id, @scheduledEvent.rooms.map(&:id))
     expect(colliding_events.size).to eq 1
     expect(colliding_events[0].name).to eq "Eventname"
 
     ## Case 2: same timeslots, but different rooms, results to no conflicts (
     @event2.rooms = []
-    colliding_events = @event2.check_vacancy(@event1.id, [@event1[:room_id].to_s])
+    colliding_events = @event2.check_vacancy(@scheduledEvent.id, [@scheduledEvent[:room_id].to_s])
     expect(colliding_events.size).to eq 0
 
-    @event1.destroy
     @event2.destroy
-   end
-end
+  end
+
+  it "does not return the original event as a conflict" do 
+    colliding_events = @scheduledEvent.check_vacancy(@scheduledEvent.id, @scheduledEvent.rooms.map(&:id))
+    expect(colliding_events).not_to include(@scheduledEvent.id)
+  end 
+end 
 
 describe "event order" do
     before(:all) do

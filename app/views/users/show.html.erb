@@ -1,0 +1,20 @@
+<%- model_class = User -%>
+<div class="page-header">
+  <h1><%= @user.display_name %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:fullname) %>:</strong></dt>
+  <dd><%= @user.fullname %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:office_location) %>:</strong></dt>
+  <dd><%= @user.office_location %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:office_phone) %>:</strong></dt>
+  <dd><%= @user.office_phone %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:mobile_phone) %>:</strong></dt>
+  <dd><%= @user.mobile_phone %></dd>
+</dl>
+
+<% if can? :edit, @user %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_user_path(@user), :class => 'btn btn-default' %>
+<% end %>
