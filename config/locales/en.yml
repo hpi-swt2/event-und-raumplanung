@@ -244,8 +244,6 @@ en:
       pending: pending
       accepted: accepted
       declined: declined
-    user:
-      none: Nothing selected
     attachments:
       none: No Attachments
   event:

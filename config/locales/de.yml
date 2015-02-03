@@ -236,7 +236,6 @@ de:
     successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
     successful_comment_create: 'Kommentar wurde erfolgreich erstellt'
     set_language: 'Sprache erfolgreich umgestellt.'
-  tasks:
   alert:
     successful_suggest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
@@ -269,11 +268,8 @@ de:
       pending: ausstehend
       accepted: bestätigt
       declined: abgelehnt
-    user:
-      none: Keine Auswahl
     attachments:
       none: Keine Anhänge
-
   will_paginate:
     next_label: Weiter →
     page_entries_info:
