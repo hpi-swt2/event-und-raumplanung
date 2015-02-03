@@ -136,6 +136,7 @@ describe Event do
 
     it "occurence rule returns nil" do
       expect(event_with_schedule.occurence_rule).to be_nil
+      expect(event_with_schedule.single_occurrence_event?).to be
     end
 
     it "has no termination date" do
@@ -152,10 +153,24 @@ describe Event do
 
     it "and occurence rule is set" do
       expect(daily_recurring_event.occurence_rule).to eq(IceCube::Rule.daily)
+      expect(daily_recurring_event.single_occurrence_event?).not_to be
     end
 
     it "and string formatting is valid" do
       expect(daily_recurring_event.pretty_schedule).to eq(daily_recurring_event.schedule.to_s)
+    end
+
+    context "and is terminating" do
+      let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
+
+      it "resets all exception times if a schedule's rule changes" do
+        next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
+        daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
+        expect(daily_recurring_terminating_event.schedule.exception_times).not_to be_empty
+        
+        daily_recurring_terminating_event.schedule_from_rule('{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}')
+        expect(daily_recurring_terminating_event.schedule.exception_times).to be_empty
+      end
     end
   end
 
@@ -163,7 +178,7 @@ describe Event do
     let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
 
     it "and occurence rule is set" do
-      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 15))
+      expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 16))
     end
 
     it "and there is no event occurrence after the termination date (inclusive)" do

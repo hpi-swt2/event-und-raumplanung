@@ -2,3 +2,39 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+#delete-event-overlay {
+	z-index: 10;
+	background-color: rgba(30, 30, 30, 0.8);
+	display: none;
+	left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+#delete-event {
+	z-index: 11;
+	width: 800px;
+	height: 150px;
+	background-color: #FFF;
+	position: absolute;
+	margin-left: -415px;
+	top: 300px;
+	left: 50%;
+	border: 1px solid #DDD;
+	border-radius: 4px;
+	padding: 10px 15px;
+	display: none;
+}
+
+#delete-event .delete-button-container {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#delete-event a {
+	width: 260px;
+	margin-right: 10px;
+}
