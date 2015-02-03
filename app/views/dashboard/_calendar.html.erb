@@ -23,7 +23,7 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 			events: [
                 <% @calevents.each do |each| %>
 					
-					<%### if each.event.user_id === current_user.id %>
+					<% if each.event.user_id === current_user.id %>
 					{
 						title: '<%= each.event.name %>',
 						start: '<%= each.starts_occurring_at %>',
@@ -38,7 +38,7 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
                     	<% end %> 
 					
 					},
-					<%### end %>
+					<% end %>
                 <% end %>
 
                 <% @favorites.each do |each| %>
