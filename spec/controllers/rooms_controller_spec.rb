@@ -118,4 +118,20 @@ RSpec.describe RoomsController, :type => :controller do
         expect(available_chairs).to eq(2)
       end
     end
+
+    describe 'printing rooms' do
+      before(:each) do
+        @room = create(:room)
+      end
+      
+      it ' have a working overview' do  
+        get :printoverview
+        expect(response).to be_success
+      end
+
+      it ' have a working print view' do  
+        get :print_rooms, {date:Date.today, rooms:Room.all.collect(&:id).join(',')} 
+        expect(response).to be_success
+      end
+    end
 end

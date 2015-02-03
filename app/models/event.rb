@@ -145,6 +145,12 @@ class Event < ActiveRecord::Base
     return involved
   end
 
+  def in_week(week, year)
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
+    return (self.ends_at >= weekBegin && self.starts_at <= weekEnd)
+  end
+
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
   # scopes. In this example we omit the implementation of the scopes for brevity.
   # Please see 'Scope patterns' for scope implementation details.
