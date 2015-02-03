@@ -20,6 +20,272 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  date:
+    abbr_day_names:
+    - Sun
+    - Mon
+    - Tue
+    - Wed
+    - Thu
+    - Fri
+    - Sat
+    abbr_month_names:
+    -
+    - Jan
+    - Feb
+    - Mar
+    - Apr
+    - May
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Oct
+    - Nov
+    - Dec
+    day_names:
+    - Sunday
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    - Saturday
+    formats:
+      default: ! '%d-%m-%Y'
+      long: ! '%d %B, %Y'
+      short: ! '%d %b'
+    month_names:
+    -
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
+    order:
+    - :day
+    - :month
+    - :year
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: about 1 hour
+        other: about %{count} hours
+      about_x_months:
+        one: about 1 month
+        other: about %{count} months
+      about_x_years:
+        one: about 1 year
+        other: about %{count} years
+      almost_x_years:
+        one: almost 1 year
+        other: almost %{count} years
+      half_a_minute: half a minute
+      less_than_x_minutes:
+        one: less than a minute
+        other: less than %{count} minutes
+      less_than_x_seconds:
+        one: less than 1 second
+        other: less than %{count} seconds
+      over_x_years:
+        one: over 1 year
+        other: over %{count} years
+      x_days:
+        one: 1 day
+        other: ! '%{count} days'
+      x_minutes:
+        one: 1 minute
+        other: ! '%{count} minutes'
+      x_months:
+        one: 1 month
+        other: ! '%{count} months'
+      x_seconds:
+        one: 1 second
+        other: ! '%{count} seconds'
+    prompts:
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Seconds
+      year: Year
+  errors:
+    format: ! '%{attribute} %{message}'
+    messages:
+      accepted: must be accepted
+      blank: can't be blank
+      confirmation: ! "doesn't match %{attribute}"
+      empty: can't be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      odd: must be odd
+      record_invalid: ! 'Validation failed: %{errors}'
+      taken: has already been taken
+      too_long:
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
+    template:
+      body: ! 'There were problems with the following fields:'
+      header:
+        one: 1 error prohibited this %{model} from being saved
+        other: ! '%{count} errors prohibited this %{model} from being saved'
+  helpers:
+    select:
+      prompt: Please select
+    submit:
+      create: Create %{model}
+      submit: Save %{model}
+      update: Update %{model}
+    links:
+      suggest: ! 'Suggest alternative'
+      decline: ! 'Decline'
+      approve: ! 'Approve'
+      remove_favorite: ! 'Remove from favorites'
+      add_favorite: ! 'Add to favorites'
+      task:    ! 'Create task'
+    titles:
+      suggest: 'Suggest alternative'
+  number:
+    currency:
+      format:
+        delimiter: ! ','
+        format: ! '%u%n'
+        precision: 2
+        separator: .
+        significant: false
+        strip_insignificant_zeros: false
+        unit: £
+    format:
+      delimiter: ! ','
+      precision: 3
+      separator: .
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: ! '%n %u'
+        units:
+          billion: Billion
+          million: Million
+          quadrillion: Quadrillion
+          thousand: Thousand
+          trillion: Trillion
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: ! '%n %u'
+        units:
+          byte:
+            one: Byte
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: ''
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: ! ', and '
+      two_words_connector: ! ' and '
+      words_connector: ! ', '
+  time:
+    am: am
+    formats:
+      default: ! '%a, %d %b %Y %H:%M:%S %z'
+      long: ! '%d %B, %Y %H:%M'
+      short: ! '%d %b %H:%M'
+      time_only : ! '%I:%M %p'
+    pm: pm
+    starts_at: starts at
+    ends_at: ends at
+  notices:
+    successful_create: ! '%{model} successfully created.'
+    successful_update: ! '%{model} successfully updated.'
+    successful_destroy: ! '%{model} successfully destroyed.'
+    successful_suggest: ! '%{model} successfully suggested.'
+    set_language: 'Language successfully changed.'
+  alert:
+    successful_sugguest_conflict: ! '%{model} is in conflict with %{model}. %{model} was successfully suggested.'
+    conflict_detected: ! '%{model} is in conflict with other %{model}.'
+  tasks:
+    status:
+      not_assigned: not assigned
+      pending: pending
+      accepted: accepted
+      declined: declined
+    user:
+      none: Nothing selected
+    attachments:
+      none: No Attachments
+  event:
+    private: 'private event'
+    alert:
+      conflict_same_days_multiple_rooms: 'Your alternative conflicts with the event %{name} taking place on %{start_date} from %{start_time} until %{end_time} in the rooms %{rooms}.'
+      conflict_same_days_one_room: 'Your alternative conflicts with the event %{name} taking place from %{start_date} from %{start_time} until %{end_time} in room %{rooms}.'
+      conflict_different_days_multiple_rooms: 'Your alternative conflicts with the event %{name} taking place from %{start_date} to %{end_date} from %{start_time} until %{end_time} in the rooms %{rooms}.'
+      conflict_different_days_one_room: 'Your alternative conflicts with the event %{name} taking place from %{start_date} to %{end_date} from %{start_time} until %{end_time} in room %{rooms}.'
+    status: 
+      suggested: Suggestion
+      approved: approved
+      declined: declined
+      pending: pending
+      rejected_suggestion: rejected suggestion    
+  will_paginate:
+    next_label: Next →
+    page_entries_info:
+      multi_page: Show %{model} %{from} - %{to} of %{count}
+      multi_page_html: Show %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b>
+      single_page:
+        one: Show 1 %{model}
+        other: Show all %{count} %{model}
+        zero: No %{model} found
+      single_page_html:
+        one: Show <b>1</b> %{model}
+        other: Show <b>all&nbsp;%{count}</b> %{model}
+        zero: No %{model} found
+    page_gap: "&hellip;"
+    previous_label: "← Previous"
   submit: Submit
   delete: Delete
   cancel: Cancel
+  event:
+    altert:
+      single_occurrence_successful_delete: 'You successfully deleted the event occurrence.'
+  events:
+    form:
+      series_end: 'Series end'
+  menu:
+    languages:
+      de: DE
+      en: EN

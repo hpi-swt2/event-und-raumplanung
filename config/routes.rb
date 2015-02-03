@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/change_locale/:locale' => 'locale#change_locale', as: "change_locale"
+
   resources :uploads, :only => [:new, :create, :destroy]
 
   resources :permissions, :only => [:index] do
@@ -46,10 +48,14 @@ Rails.application.routes.draw do
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
   get 'rooms/:id/details' => 'rooms#details'
+  get 'rooms/printoverview', as: 'print'
+  get 'rooms/:id/print' => 'rooms#print'
+  get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
-  post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
+  post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
+  delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 
@@ -118,8 +124,7 @@ Rails.application.routes.draw do
     get :reset_filterrific, on: :collection
   end
 
-  get 'ical/event/:id/' => 'ical#show_event', :as => :ical_event
-  get 'ical/' => 'ical#show_my_events'
+  get 'ical/:icaltoken' => 'ical#get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

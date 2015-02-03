@@ -28,7 +28,7 @@
                     (<%= event.participant_count %>)
                   </td>
                   <td>
-                    <% if !event.check_vacancy(event.rooms.collect{|r| r.id}).empty? %>
+                    <% if !event.check_vacancy(event.id, event.rooms.collect{|r| r.id}).empty? %>
                       <span class="glyphicon glyphicon-flash" aria-hidden="true" style="font-size:30px"></span>
                     <% end %>
                   </td>
@@ -55,6 +55,6 @@
         <% else %>
             <%= t('dashboard.no_event_requests') %>
         <% end %>
-        <%= link_to t('dashboard.show_all'), events_path, :class => 'btn btn-default' %>
+        <%= link_to t('dashboard.show_all'), events_approval_path, :class => 'btn btn-default' %>
     </div>
 </div>

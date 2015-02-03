@@ -210,7 +210,16 @@ RSpec.describe TasksController, type: :controller do
         event_id: event.id,
         deadline: ''
       }
+    }    
+    let(:valid_attributes_with_out_event_id) {
+      {
+        name: "Test",
+        done: false,
+        description: "description",
+      }
     }
+    
+
 
     let(:valid_session) { {} }
 
@@ -281,7 +290,17 @@ RSpec.describe TasksController, type: :controller do
     it "creates task" do
       expect { post :create, task: valid_attributes }
         .to change { Task.count }.by(1)
-      expect(response).to redirect_to task_path(assigns(:task))
+    end
+
+    it "assigns a newly created task as @task" do
+      post :create, { task: valid_attributes }
+      expect(assigns(:task)).to be_a(Task)
+      expect(assigns(:task)).to be_persisted
+    end
+    
+    it "redirects to the event of the created task" do
+      post :create, { task: valid_attributes }
+      expect(response).to redirect_to Event.find(valid_attributes[:event_id])
     end
 
     it "creates an activity when a task is created with an event id" do
@@ -295,7 +314,6 @@ RSpec.describe TasksController, type: :controller do
 
     it "creates task that are marked as undone" do
       post :create, task: { name: "Test", done: true, event_id: event.id, deadline: "2099-01-01" }
-      expect(response).to redirect_to task_path(assigns(:task))
       expect(assigns(:task).done).to be false
     end
 
@@ -306,33 +324,52 @@ RSpec.describe TasksController, type: :controller do
         }.to change(Task, :count).by(1)
       end
 
+      describe "with attachments" do 
+        it "creates new task" do 
+          expect{
+           post :create, { task: valid_attributes_with_attachement }
+           }.to change(Task, :count).by(1)
+        end 
+        it "creates new task with attachment" do 
+          post :create, { task: valid_attributes_with_attachement }
+          expect(assigns(:task).attachments).to_not be_empty()
+        end 
+
+        it "creates new attachment" do 
+          expect{
+           post :create, { task: valid_attributes_with_attachement }
+          }.to change(Attachment, :count).by(1) 
+        end 
+        it "redirects to the newly created @tasks event" do 
+          post :create, { task: valid_attributes_with_attachement }
+          expect(response).to redirect_to(Event.find(valid_attributes[:event_id]))
+        end
+      end
+
       it "assigns a newly created task as @task" do
-        event = 
         post :create, { task: valid_attributes }
         expect(assigns(:task)).to be_a(Task)
         expect(assigns(:task)).to be_persisted
       end 
-
-      it "redirects to the created task" do
-        post :create, { task: valid_attributes }
-        expect(response).to redirect_to(Task.last)
-      end
 
       it "creates task with valid deadline" do
         expect { 
           post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow, event_id: event.id } 
         }.to change(Task, :count).by(1)
       end
+      
+      # it "creates task with uploads" do
+      #   expect { post :create, task: {description: "description", name: "Test", event_id: event.id}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
+      # end
 
-        it "creates task with valid deadline" do
-          expect { post :create, task: { description: "description", name: "Test", deadline: Date.current, event_id: event.id} }.to change { Task.count }.by(1)
-          expect(response).to redirect_to task_path(assigns(:task))
-        end
+      it "creates task with valid deadline" do
+        expect { post :create, task: { description: "description", name: "Test", deadline: Date.current, event_id: event.id} }.to change { Task.count }.by(1)
+      end
 
-        it "creates task with invalid deadline" do
-          expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
-          expect(response).to render_template("new")
-        end
+      it "creates task with invalid deadline" do
+        expect { post :create, task: { description: "description", name: "Test", deadline: Date.yesterday, event_id: event.id} }.to change { Task.count }.by(0)
+        expect(response).to render_template("new")
+      end
 
       describe "with attachments" do 
         it "creates new task" do 
@@ -352,9 +389,9 @@ RSpec.describe TasksController, type: :controller do
           }.to change(Attachment, :count).by(1) 
         end 
 
-        it "redirects to the newly created @task" do 
+        it "redirects to the newly created @event" do 
           post :create, { task: valid_attributes_with_attachement }
-          expect(response).to redirect_to(Task.last)
+          expect(response).to redirect_to(Task.last.event)
         end
       end
 
@@ -370,7 +407,6 @@ RSpec.describe TasksController, type: :controller do
 
       it "creates task with uploads" do
         expect { post :create, task: {description: "description", name: "Test", event_id: event.id, deadline: '2099-01-01'}, uploads: [fixture_file_upload('files/test_pdf.pdf', 'application/pdf')] }.to change { Upload.count }.by(1)
-        expect(response).to redirect_to task_path(assigns(:task))
       end
 
       it "sets the event for a new task that should belong to the event" do
@@ -460,7 +496,7 @@ RSpec.describe TasksController, type: :controller do
         expect { post :create, task: { description: "description", name: "Test", event_id: event.id, deadline: '2099-01-01',
           attachments_attributes: [ { title: "Example", url: "http://example.com"} ]}}
           .to change { Attachment.count }.by(1)
-        expect(response).to redirect_to task_path(assigns(:task))
+        expect(response).to redirect_to event_path(Task.last.event)
       end
 
       it "sets the return url when coming from root" do
@@ -639,7 +675,7 @@ RSpec.describe TasksController, type: :controller do
 
     it "creates task with valid deadline" do
       expect { post :create, task: { description: "description", name: "Test", deadline: Date.tomorrow , event_id: event.id} }.to change { Task.count }.by(1)
-      expect(response).to redirect_to task_path(assigns(:task))
+      expect(response).to redirect_to event_path(event)
     end
 
     it "does not create task with invalid deadline" do

@@ -120,11 +120,9 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    #starts_at = Time.local(2015, 8, 1, 8, 0, 0)
     starts_at = Time.now
     f.starts_at starts_at
 
-    #ends_at = Time.local(2015, 8, 1, 9, 30, 0)
     ends_at = starts_at + (60*60)
     f.ends_at ends_at
 
@@ -152,6 +150,46 @@ FactoryGirl.define do
     end
     f.schedule schedule
     f.rooms { build_list :room, 1 }
+  end
+
+  factory :weekly_recurring_event_ending, :class => Event do |f|
+    f.name "Weekly recurring ending"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.now
+    f.starts_at starts_at
+
+    ends_at = Time.now + 90.minutes
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.weekly.until(Date.today + 10))
+    end
+    f.schedule schedule
+    f.rooms { build_list :room, 1 }
+  end
+
+  factory :daily_recurring_terminating_event, :class => Event do |f|
+    f.name "Daily recurring until x"
+    f.description "Eventdescription terminating"
+    f.participant_count 15
+    f.is_private false
+    f.rooms { build_list :room, 1 }
+
+    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      rule = IceCube::Rule.daily
+      rule.until(Time.local(2015, 8, 16, 0, 0, 0))
+      s.add_recurrence_rule(rule)
+    end
+    f.schedule schedule
   end
 
   factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|

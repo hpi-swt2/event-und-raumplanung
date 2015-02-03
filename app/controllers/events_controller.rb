@@ -70,6 +70,7 @@ class EventsController < GenericEventsController
   end
 
   def approve
+    authorize! :approve, @event
     @event.approve
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
@@ -82,6 +83,7 @@ class EventsController < GenericEventsController
   end
 
   def decline
+    authorize! :decline, @event
     @event.decline
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
@@ -169,6 +171,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/new_event_suggestion
   def new_event_suggestion
     @original_event_id = @event.id
+    @original_owner = @event.user_id
     render "event_suggestions/new"
   end
 
@@ -188,14 +191,15 @@ class EventsController < GenericEventsController
   def create_event_suggestion
     params = add_original_event_params event_suggestion_params
     params = add_reference_to_original_event params 
+    @old_event_owner = Event.find(params["event_id"]).user_id
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    @event.schedule_from_rule(event_params[:occurence_rule])
-    filtered_params = params_without_occurence_rule(event_params)
+    @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
+    filtered_params = params_without_schedule_related_params(event_params)
     @event.attributes = filtered_params
 
     changed_attributes = @event.changed
@@ -221,7 +225,7 @@ class EventsController < GenericEventsController
     @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_comment_create') }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
@@ -249,11 +253,11 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :schedule_ends_at_date, :room_ids => [])
     end
 
-    def params_without_occurence_rule(params)
-      params.reject {|k,v| k == "occurence_rule"}
+    def params_without_schedule_related_params(params)
+      params.reject {|k,v| k == "occurence_rule" || k == "schedule_ends_at_date"}
     end
 
     def event_suggestion_params
@@ -263,9 +267,14 @@ class EventsController < GenericEventsController
     def create_event params, new_url, model
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
-      @event = Event.new(params_without_occurence_rule params)
-      @event.schedule_from_rule(params[:occurence_rule])
-      @event.user_id = current_user_id
+      @event = Event.new(params_without_schedule_related_params params)
+      @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
+      # test
+      if @old_event_owner
+        @event.user_id = @old_event_owner
+      else
+        @event.user_id = current_user_id
+      end
       create_tasks @event_template_id
 
       respond_to do |format|
@@ -357,7 +366,7 @@ class EventsController < GenericEventsController
     def build_conflicting_events_response conflicting_events 
       logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]
