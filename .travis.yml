@@ -9,13 +9,12 @@ before_install:
 - sudo apt-get install libqt4-dev libqtwebkit-dev -y
 before_script:
 - cp config/database.psql.yml config/database.yml
-- psql -c 'create database hpi_swt2_acceptance;' -U postgres
 - psql -c 'create database hpi_swt2_test;' -U postgres
 script: 
 - RAILS_ENV=test bundle exec rake db:migrate
 - xvfb-run bundle exec rspec spec/ --exclude-pattern  "spec/acceptance/*.rb"
 - RAILS_ENV=acceptance bundle exec rake db:setup
-- RAILS_ENV=acceptance xvfb-run rspec --pattern "spec/acceptance/*.rb"
+- RAILS_ENV=acceptance xvfb-run bundle exec rspec --pattern "spec/acceptance/*.rb"
 notifications:
   email: false
 
