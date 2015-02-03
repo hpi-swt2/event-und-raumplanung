@@ -7,7 +7,7 @@ RSpec.feature "Event" do
     end
 
     before(:each) do
-	    load Rails.root + "spec/support/seeds.rb"
+	    load "spec/support/seeds.rb"
     end
 
     let!(:authed_user) { create_logged_in_admin }
