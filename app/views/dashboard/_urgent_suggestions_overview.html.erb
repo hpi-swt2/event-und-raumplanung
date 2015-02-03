@@ -20,7 +20,12 @@
             <tbody>
               <% @requests.each do |event| %>
                   <td>
-                    <%= t('dashboard.user') + ' '+ event.user_id.to_s + ' ' + t('dashboard.requests') %>
+                    <% if event.user_id %>
+                      <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+                    <% else %>
+                      t('.unknown')
+                    <% end %>
+                    <%= t('dashboard.requests') %> 
                     <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
                     <br>
                     <%= link_to event.name, event_path(event) %> -
