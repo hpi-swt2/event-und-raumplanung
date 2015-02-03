@@ -72,6 +72,8 @@ class Event < ActiveRecord::Base
   def schedule_from_rule(dirty_rule, termination_date=nil)
     validate_schedule
     schedule = self.schedule
+    schedule.start_time = self.starts_at
+    schedule.end_time = self.ends_at
     if schedule.exception_times
       schedule.exception_times.each do |exception_time|
         schedule.remove_exception_time(exception_time)
