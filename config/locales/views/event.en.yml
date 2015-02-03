@@ -15,13 +15,16 @@ en:
       last_update: 'Last Update'
       status: 'Status'
       mark_as_favorite: 'Mark as favorite'
-      unmark_as_favorite: 'Unmark as favorite'
+      unmark_as_favorite: 'Remove from favorites'
+      belongs_to_series: 'Belongs to series'
+
     chosen_rooms:
       details: 'Details And Additional Equipment'
       requestable_equipment: 'Requestable Equipment'
       category: 'Ausstattung'
       requested: 'additional requested'
       present: 'vorhanden'
+
     rooms:
       requested_size: Needed size of room
       reuqested_equipment: Necessary equipment
