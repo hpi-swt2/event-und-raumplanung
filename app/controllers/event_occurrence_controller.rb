@@ -1,7 +1,7 @@
 class EventOccurrenceController < ApplicationController
   before_action :authenticate_user!
-  before_action :validate_params, only: [ :show, :destroy ]
-  before_action :event_occurrence_from_params, only: [ :show, :destroy ]
+  before_action :validate_params, only: [ :show, :destroy, :decline ]
+  before_action :event_occurrence_from_params, only: [ :show, :destroy, :decline ]
   before_action :set_feed, only: [:show]
 
   def show
@@ -23,6 +23,28 @@ class EventOccurrenceController < ApplicationController
     end
     flash[:notice] = t("event.alert.single_occurrence_successful_delete")
     redirect_to root_path
+  end
+
+  def decline
+    if can? :decline, @event
+      if @event.single_occurrence_event?
+        @event.decline
+      else
+        single_occurrence = @event.duplicate
+        single_occurrence.starts_at = @event_occurrence.starts_occurring_at
+        single_occurrence.ends_at = @event_occurrence.ends_occurring_at
+        single_occurrence.reset_schedule
+        single_occurrence.save!
+
+        single_occurrence.decline
+
+        @event.delete_occurrence(@event_occurrence.starts_occurring_at)
+      end
+      flash[:notice] = t("event.alert.single_occurrence_successful_decline")
+      redirect_to root_path
+    else
+      raise ActionController::RoutingError.new('Not found')
+    end
   end
 
   private

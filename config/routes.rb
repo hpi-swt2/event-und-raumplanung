@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
   delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
+  get 'event_occurrence/decline' => 'event_occurrence#decline', as: "decline_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 

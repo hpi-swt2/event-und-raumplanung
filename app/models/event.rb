@@ -70,8 +70,27 @@ class Event < ActiveRecord::Base
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
   end
 
+  def reset_schedule
+    write_attribute(:schedule, nil)
+    validate_schedule
+  end
+
+  def duplicate
+    dup_event = self.dup
+    dup_event.rooms = self.rooms
+    dup_event.favorites = self.favorites
+    return dup_event
+  end
+
   def schedule_from_rule(dirty_rule)
     validate_schedule
+    empty_schedule_and_exception_times
+    schedule = self.schedule
+    schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+    self.schedule = schedule
+  end
+
+  def empty_schedule_and_exception_times
     schedule = self.schedule
     if schedule.exception_times
       schedule.exception_times.each do |exception_time|
@@ -79,7 +98,6 @@ class Event < ActiveRecord::Base
       end
     end
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
-    schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
     self.schedule = schedule
   end
 
