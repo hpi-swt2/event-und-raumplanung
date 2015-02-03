@@ -12,7 +12,8 @@ before_script:
 - psql -c 'create database hpi_swt2_test;' -U postgres
 script: 
 - RAILS_ENV=test bundle exec rake db:migrate
-- xvfb-run bundle exec rspec spec/
+- xvfb-run bundle exec rspec spec/ --exclude-pattern  "spec/acceptance/*.rb"
+- RAILS_ENV=acceptance rspec spec/acceptence/
 notifications:
   email: false
 

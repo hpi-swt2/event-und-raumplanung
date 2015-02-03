@@ -131,7 +131,7 @@ gem 'jquery-turbolinks'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-group :test, :development  do 
+group :test, :development, :acceptance  do 
 	gem 'capybara'
 	gem 'capybara-webkit' #, '~> 0.7.2' # for JS support
 	gem 'guard-rspec'

@@ -16,7 +16,6 @@ RSpec.feature "Task" do
     #
     #
     scenario "create minimal Task", acceptance_test: true, js: true do
-      pending("failing")
   		#page.visit "/events"
 		#have_text("Eventübersicht")
  		#page.first(:link, "Editieren").click
@@ -37,7 +36,6 @@ RSpec.feature "Task" do
     #
     #
     scenario "create a task for an Event witout mandatory fields", acceptance_test: true, js: true do
-      pending("failing")
   		#page.visit "/events"
 		#have_text("Eventübersicht")
  		#page.first(:link, "Editieren").click
@@ -59,7 +57,6 @@ RSpec.feature "Task" do
     #
     #
     scenario "create Task with deadline and assignment", acceptance_test: true, js: true do
-      pending("failing")
   		#page.visit "/events"
 		#have_text("Eventübersicht")
  		#page.first(:link, "Editieren").click

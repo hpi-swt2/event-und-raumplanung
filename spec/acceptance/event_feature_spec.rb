@@ -32,7 +32,6 @@ RSpec.feature "Event" do
     #
     #
     scenario "delete an existing Event", acceptance_test: true, js: true do
-      pending("failing")
   		page.visit "/events"
 		  have_text("Eventübersicht")
   		page.click_link "DeleteMePlease"
@@ -67,7 +66,6 @@ RSpec.feature "Event" do
     #
     #
     scenario "edit an already approved Event", acceptance_test: true, js: true do
-      pending("failing")
   		page.visit "/events"
 		  have_text("Eventübersicht")
    		page.click_link "AdminEvent"
