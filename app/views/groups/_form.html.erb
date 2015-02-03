@@ -21,13 +21,18 @@
     <%= error_span(@group[:name]) %>
   </div>
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+
   <% if @group.id != nil %>
-    <%= link_to t('.back', :default => t("helpers.links.back")),
-              group_path(@group), :class => 'btn btn-default' %>
+    <%= link_to group_path(@group), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-remove"></span>    
+    <% end %>
   <% else %>
-    <%= link_to t('.back', :default => t("helpers.links.back")),
-              groups_path, :class => 'btn btn-default' %>
+    <%= link_to groups_path, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-remove"></span>    
+    <% end %>
   <% end %>
 
 <% end %>

@@ -20,14 +20,14 @@
       <thead>
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
-          <th><%=t '.actions', :default => t("helpers.actions") %></th>
+          <th class="text-right"><%=t '.actions', :default => t("helpers.actions") %></th>
         </tr>
       </thead>
       <tbody>
         <% @roomProperties.each do |roomProperty| %>
           <tr>
             <td><%= link_to roomProperty.name, room_property_path(roomProperty) %></td>
-            <td>
+            <td class="text-right">
               <%= link_to edit_room_property_path(roomProperty), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
                 <span class="glyphicon glyphicon-pencil"></span>    
               <% end %>
