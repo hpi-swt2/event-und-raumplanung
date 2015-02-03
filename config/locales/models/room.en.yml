@@ -1,0 +1,25 @@
+# ruby encoding: utf-8
+
+en:
+  activerecord:
+    models:
+      room:
+        one: 'Room'
+        other: 'Rooms'
+    attributes:
+      room:
+        name: 'Name'
+        size: 'Size'
+        properties: 'Properties'
+        created_at: 'Created at'
+        equipment: 'Equipment'
+        category: 'Category'
+        available: 'Available'
+        max_count: 'Maximum Count'
+  sort_options:
+    sort_name_asc : 'Name (a-z)'
+    sort_name_desc : 'Name (z-a)'
+    sort_created_at_desc : 'Created at (descending)'
+    sort_created_at_asc : 'Created at (ascending)'
+    sort_size_asc : 'Size (ascending)'
+    sort_size_desc : 'Size (descending)'

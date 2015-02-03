@@ -45,6 +45,48 @@ RSpec.describe EventsController, :type => :controller do
     }
   }
 
+  let(:valid_attributes_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    rooms: [build(:room)],
+    user_id: user2.id
+    }
+  }
+
+  let(:valid_attributes_not_private) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user.id
+    }
+  }
+
+  let(:valid_attributes_not_private_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user2.id
+    }
+  }
+
   let(:valid_attributes_with_room) {
     {name:'Das Bo live',
     description:'Türlich Türlich',
@@ -241,6 +283,31 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event)).to eq(event)
     end
 
+    it "shows not private events to any user" do
+      event = Event.create! valid_attributes_not_private_user2
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to owner" do
+      event = Event.create! valid_attributes_user2
+      my_event = Event.create! valid_attributes
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).to redirect_to(root_path)
+      get :show, {:id => my_event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to involved user" do
+      event = Event.create! valid_attributes_user2
+      firstTask = create(:task)
+      firstTask.event = event
+      firstTask.identity = user
+      firstTask.save
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
     it "assigns the tasks of the requested event as @tasks ordered by rank" do
       event = Event.create! valid_attributes
       firstTask = create(:task)
@@ -260,7 +327,7 @@ RSpec.describe EventsController, :type => :controller do
       assigned_user = create(:user)
       sign_in assigned_user
 
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_not_private
       firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
@@ -279,6 +346,23 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
 
+    it "shows all tasks of the event to the event owner" do
+      skip ("Group members cannnot see tasks that are assigned to that group")
+      assigned_group = create(:group)
+      group_member = create(:user)
+      assigned_group.users << group_member
+      sign_in group_member
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_group)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      puts (assigns(:tasks).inspect)
+      puts (firstTask.inspect)
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
     context "if the user has created the event" do
       it "shows the activity log" do
         e = create(:event, user_id: user.id)
@@ -293,25 +377,24 @@ RSpec.describe EventsController, :type => :controller do
     context "if the user `owns` the event's room" do
       it "shows the activity log" do
 
-        # make user leader of group g
-        g = create(:group)
-        g.users << user
-        mem = g.memberships.last
-        mem.isLeader = true
-        mem.save
+        # make user leader of group 
+        group = create(:group)
+        group.users << user
+        member = group.memberships.last
+        member.isLeader = true
+        member.save
 
-        # create room r and assign it to group g
-        r = create(:room)
-        r.group = g
-        r.save
+        # create room and assign it to group 
+        room = create(:room)
+        group.rooms << room
 
-        # create new event with r as room
-        e2 = create(:event, user_id: user2.id)
-        e2.rooms << r
-        e2.save
+        # create new event with room
+        event = create(:event, user_id: user2.id)
+        event.rooms << room
+        event.save
 
         # verify that group leader is now able to see the log
-        get :show, {:id => e2.id}
+        get :show, {:id => event.id}
         expect(assigns(:feed_entries)).not_to be_nil
       end
     end
@@ -620,9 +703,17 @@ RSpec.describe EventsController, :type => :controller do
         it "then events tasks have the same values as the event_templates tasks" do
           post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
           event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
-          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id', 'creator_id']
           assigns(:event).tasks.each_with_index do |task, i|
             expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        it "then events tasks have the same creator as the event" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.creator_id).to eql(assigns(:event).user_id)
           end
         end
 
@@ -678,6 +769,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST approve" do
     it "creates activity when an event is approved" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -691,6 +783,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST decline" do
     it "creates activity when an event is declined" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -944,6 +1037,10 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST approve" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
+
     it "approves the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'
@@ -958,7 +1055,7 @@ RSpec.describe EventsController, :type => :controller do
       expect(response).to redirect_to(:back)
     end
 
-    it "redirects to the events approval page if http referer is not set" do
+    it "redirects to the events approval page if http referer is not set" do   
       event = Event.create! valid_attributes
       post :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_approval_path)
@@ -1015,6 +1112,9 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST decline" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
     it "declines the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'
@@ -1104,6 +1204,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(result.length).to eq(2)
       end
 
+
       describe "and if the conflicting event" do 
         it "takes place on one day in one room, the correct error message gets returned" do 
           event = FactoryGirl.create :event_on_one_day_with_one_room
@@ -1145,6 +1246,17 @@ RSpec.describe EventsController, :type => :controller do
           result = JSON.parse(response.body)
           expect(result[event.id.to_s]).to include('msg')
           expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
+
+        it "is private, the events name is not shown" do
+          event = FactoryGirl.create :event_on_one_day_with_multiple_rooms, :is_private => true 
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          conflicting_event = attributes_for(:event_on_one_day_with_multiple_rooms)
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: I18n.t('event.private'), start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
         end
       end
     end

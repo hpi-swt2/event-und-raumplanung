@@ -13,3 +13,9 @@ en:
         status: Status
         identity_url: Identity url
         encrypted_password: Password
+        office_location: 'Office Location'
+        office_phone: 'Office Phone'
+        mobile_phone: 'Mobile Phone'
+        language: 'Language'
+        email_notification: 'E-Mail Notifications'
+        fullname: 'Name'

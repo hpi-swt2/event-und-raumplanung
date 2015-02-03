@@ -6,10 +6,10 @@ class SessionsController < Devise::SessionsController
       # First time: When the submit button of the session form is clicked
       # Second time: When the response from OpenID must be handled
     # First: We need an OpenID independent admin user
-    # Second: We can not rely on an email given by OpenID 
+    # Second: We can not rely on an email given by OpenID
 
     # Devise specfic code (just take a look at the gems create method)
-    provider_response = env[Rack::OpenID::RESPONSE]
+    provider_response = request.env[Rack::OpenID::RESPONSE]
     identity_url_temp = ""
 
     if provider_response.kind_of? OpenID::Consumer::SuccessResponse
@@ -30,21 +30,20 @@ class SessionsController < Devise::SessionsController
     sign_in(resource_name, resource)
     yield resource if block_given?
 
-    # Custom email and username
-    if @user.username == "" &&  @user.identity_url == nil
-      @user.identity_url = identity_url_temp
-      @user.email = @user.username + Time.now.to_s
-      @user.save
-    end
-
     if not is_valid_email(@user.email, @user.username)
-      redirect_to "/profile"
+      redirect_to edit_user_path @user
     else
       respond_with resource, location: after_sign_in_path_for(resource)
     end
 
     # Clear the session variable
     session[:username] = nil
+
+    # init icaltoken
+    if @user.icaltoken.nil?
+      @user.icaltoken = SecureRandom.base64(24)
+      @user.save
+    end
   end
 
   def show_admin_login
@@ -53,7 +52,7 @@ class SessionsController < Devise::SessionsController
 
   def authenticate_admin
     admin_conf = Rails.application.config.login["admin"]
-    
+
     email = params["email"]
     password = params["encrypted_password"]
     if (email == admin_conf["email"] && password == admin_conf["password"])

@@ -12,6 +12,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		assign(:open_events, Event.find([@open_event]))
 		assign(:approved_events, Event.find([@approved_event]))
 		assign(:date, Date.current)
+		assign(:conflict_events, Event.approved.where('starts_at >= ?', Date.current))
 	end
 
 	describe "renders list for" do
@@ -37,7 +38,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user1.username.gsub('.',' ').titleize
+			expect(rendered).to include @user1.display_name
 		end
 		it 'room name' do
 			render
@@ -52,7 +53,7 @@ RSpec.describe "events_approval/index", :type => :view do
 		end
 		it 'user name' do
 			render
-			expect(rendered).to include @user2.username.gsub('.',' ').titleize
+			expect(rendered).to include @user2.display_name
 		end
 		it 'room name' do
 			render

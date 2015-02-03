@@ -45,4 +45,6 @@ de:
       category: 'Ausstattung'
       requested: 'Zusätzlich Beantragt'
       present: 'Vorhanden'
-
+    rooms:
+      requested_size: Gewünschte Raumgröße
+      reuqested_equipment: Notwendige Ausstattung

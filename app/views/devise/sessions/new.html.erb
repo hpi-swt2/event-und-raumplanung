@@ -1,8 +1,12 @@
-<% title "Log in" %>
+<% title t('devise.sessions.new.title') %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :class => "form-horizontal" }) do |f| %>
+<h1><%= t('.login') %></h1>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :class => "form-group" }) do |f| %>
 	<%= f.hidden_field :identity_url, :value => Rails.application.config.login["identity_url"] %>	  
-  <div><%= f.submit "Log in", :class => 'btn btn-primary btn-lg' %></div>
+  	<button type="submit" class="btn btn-primary btn-lg" title="<%= t('.login') %>">
+  		<span class="glyphicon glyphicon-log-in"></span>
+  	</button>
 <% end %>
 
 <%= render "devise/shared/links" %>

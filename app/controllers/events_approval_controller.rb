@@ -1,13 +1,13 @@
 class EventsApprovalController < ApplicationController
 
   before_action :authenticate_user!
-  load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index] #this line needs to be removed in the future as only admins should be able to view this page
-
+  before_action :authorize_user
+  
   def index
     read_and_exec_params
-    @open_events = Event.open.order(:starts_at, :user_id, :id)
-		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id)
+    @open_events = Event.open.order(:starts_at, :user_id, :id).select{|event| can? :approve, event}
+		@approved_events = Event.approved.where('starts_at BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day).order(:starts_at, :user_id, :id).select{|event| can? :approve, event}
+    @conflict_events = Event.approved.where('starts_at >= ?', Date.current)
   end
 
   private
@@ -21,5 +21,8 @@ class EventsApprovalController < ApplicationController
       rescue
       end  
       @date = Date.current unless !@date.nil? && @date.acts_like_date?
+    end
+    def authorize_user
+      authorize! :approve_any, Event
     end
 end

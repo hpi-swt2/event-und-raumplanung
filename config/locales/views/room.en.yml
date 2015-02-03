@@ -26,7 +26,7 @@ en:
     list:
       all_events: Alle Events
       room_selection: Room Selection
-      requested_size: needed size of room
+      requested_size: Needed Room Size
       necessary_equipment: Necessary equipment
       necessary_properties: Necessary properties
       no_rooms_found: No rooms met the criteria
@@ -37,4 +37,5 @@ en:
       equipment: Equipment
       properties: Properties
       create_event: Create events
-
+    print:
+      room_blocked: Room blocked
