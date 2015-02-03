@@ -234,6 +234,7 @@ en:
     successful_update: ! '%{model} successfully updated.'
     successful_destroy: ! '%{model} successfully destroyed.'
     successful_suggest: ! '%{model} successfully suggested.'
+    successful_approve: ! '%{model} successfully approved.'
     set_language: 'Language successfully changed.'
   alert:
     successful_sugguest_conflict: ! '%{model} is in conflict with %{model}. %{model} was successfully suggested.'
@@ -260,7 +261,8 @@ en:
       approved: approved
       declined: declined
       pending: pending
-      rejected_suggestion: rejected suggestion    
+      rejected_suggestion: rejected suggestion
+      request: Request      
   will_paginate:
     next_label: Next →
     page_entries_info:

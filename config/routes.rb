@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
-
+  get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
 
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"

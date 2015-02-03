@@ -252,6 +252,7 @@ de:
       declined: abgelehnt
       pending: In Bearbeitung
       rejected_suggestion: Abgelehnter Vorschlag
+      request: Anfrage
   room:
     desired_size: 'gewünschte Raumgröße'
   equipment:
