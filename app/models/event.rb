@@ -26,14 +26,13 @@ class Event < ActiveRecord::Base
   )
   self.per_page = 12
 
-  has_many :bookings
   has_many :tasks
   has_many :activities
 
   belongs_to :event
 
   has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
-  
+
   has_many :favorites
   has_and_belongs_to_many :rooms, dependent: :nullify
   accepts_nested_attributes_for :rooms
@@ -69,11 +68,15 @@ class Event < ActiveRecord::Base
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
   end
 
-  def schedule_from_rule(dirty_rule)
+  def schedule_from_rule(dirty_rule, termination_date)
     validate_schedule
     schedule = self.schedule
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
-    schedule.add_recurrence_rule RecurringSelect.dirty_hash_to_rule(dirty_rule) unless dirty_rule.nil? || dirty_rule == "null"
+    unless dirty_rule.nil? || dirty_rule == "null"
+      rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
+      rule.until(Date.parse(termination_date)) unless termination_date.nil?
+      schedule.add_recurrence_rule rule
+    end
     self.schedule = schedule
   end
 
@@ -82,31 +85,47 @@ class Event < ActiveRecord::Base
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
   end
 
+  def schedule_ends_at_date
+    schedule = self.schedule
+    if schedule && !schedule.recurrence_rules.empty? && schedule.terminating?
+      return schedule.recurrence_rules.first.until_time.to_date
+    end
+  end
+
   def duration
     (self.ends_at - self.starts_at).seconds
   end
 
-  def involved_users()
+  def involved_users
     involved = Array.new
     involved << User.find(self.user_id)
+    involved += get_involved_entities
+    involved += get_involved_group_leaders
+    return involved
+  end
+
+  def get_involved_entities
+    involved = Array.new
     self.tasks.each do | task |
       if task.identity_type == 'User'
-        u = User.find(task.identity_id)
-        involved << u
-      end
-
-      if task.identity_type == 'Group'
-        g = Group.find(task.identity_id)
-        involved << g.users
+        involved << User.find(task.identity_id)
+      elsif task.identity_type == 'Group'
+        Group.find(task.identity_id).users.each {|user| involved << user}
       end
     end
+    return involved
+  end
 
+  def get_involved_group_leaders
+    involved = Array.new
     self.rooms.each do |room|
       if room.group
-        involved += room.group.leaders
+        room.group.leaders.each do |leader|
+          involved << leader
+        end
       end
     end
-    involved
+    return involved
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord
@@ -139,6 +158,9 @@ class Event < ActiveRecord::Base
     room_ids = room_ids.select { |room_id| room_id!=''}
     joins(:events_rooms).where("events_rooms.room_id IN (?)",room_ids) if room_ids.size>0
   }
+  scope :approved, lambda {
+    where("status = 'approved'")
+  }
 
   scope :starts_after, lambda { |ref_date|
     date = DateTime.strptime(ref_date, I18n.t('datetimepicker.format'))
@@ -150,6 +172,14 @@ class Event < ActiveRecord::Base
     where('ends_at <= ?', date)
   }
 
+  scope :week, lambda { |week, year|
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
+    puts weekBegin
+    puts weekEnd
+    where('ends_at >= ? AND starts_at <= ?', weekBegin, weekEnd)
+  }
+
   scope :participants_gte, lambda { |count|
     where('participant_count >= ?', count)
   }
@@ -157,13 +187,9 @@ class Event < ActiveRecord::Base
   scope :participants_lte, lambda { |count|
     where('participant_count <= ?', count)
   }
-  
+
   scope :user, lambda { |id|
-    if id.present?
-      where(user_id: id)
-    else
-      all
-    end
+    where(user_id: id) if id.present?
   }
 
   def self.options_for_sorted_by
@@ -191,7 +217,7 @@ class Event < ActiveRecord::Base
   scope :approved, -> { where status: 'approved' }
   scope :declined, -> { where status: 'declined' }
   scope :not_declined, -> { where.not status: 'declined' }
-  
+
   def approve
     self.update_attribute(:status, 'approved')
   end
@@ -201,10 +227,10 @@ class Event < ActiveRecord::Base
   def is_approved
     return self.status == 'approved'
   end
-  
+
   def exist_colliding_events
-    event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
-    return (event_count > 0)
+    #event_count = Event.where.not(:id => self.id).where('(starts_at BETWEEN ? AND ?) OR (ends_at BETWEEN ? AND ?)',self.starts_at, self.ends_at, self.starts_at, self.ends_at).count
+    #return (event_count > 0)
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant
@@ -234,11 +260,6 @@ class Event < ActiveRecord::Base
 
   def set_status_to_pending_and_destroy_suggestion
     self.event_suggestion.destroy
-    # WEGEN FEHLERHAFTER VERSION IM DEV KAM IMMER ZUM RAUM UND EIN LEERER RAUM ZURÜCK 
-    # SOLLTE DAS GEFIXT WERDEN KANN ES SEIN, DASS DAS HIER FEHLER WIRFT UND GEFIXT WERDEN MUSS
-    # if params['room_ids'].count == 2  muss auf 1 geändert werden
-    # DON'T BLAME ME 
-    # @OLEGSFINEST
     self.update_columns(:status => 'pending')
   end
 

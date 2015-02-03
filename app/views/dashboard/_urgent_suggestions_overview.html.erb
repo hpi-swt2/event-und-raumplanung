@@ -28,7 +28,7 @@
                     (<%= event.participant_count %>)
                   </td>
                   <td>
-                    <% if !event.check_vacancy(event.rooms.collect{|r| r.id}).empty? %>
+                    <% if !event.check_vacancy(event.id, event.rooms.collect{|r| r.id}).empty? %>
                       <span class="glyphicon glyphicon-flash" aria-hidden="true" style="font-size:30px"></span>
                     <% end %>
                   </td>
@@ -43,7 +43,7 @@
                     <%= event.rooms.map(&:name).to_sentence %>
                   </td>
                   <td>
-                    <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline_event', :default => t("helpers.links.decline"))%></button>
+                    <%= link_to t('.decline_event', :default => t("helpers.links.decline")), decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
                     <%= link_to t('.approve_event', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
                   </td>
                 </tr>
@@ -53,6 +53,6 @@
         <% else %>
             <%= t('dashboard.no_event_requests') %>
         <% end %>
-        <%= link_to t('dashboard.show_all'), events_path, :class => 'btn btn-default' %>
+        <%= link_to t('dashboard.show_all'), events_approval_path, :class => 'btn btn-default' %>
     </div>
 </div>

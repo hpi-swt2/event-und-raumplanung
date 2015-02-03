@@ -1,3 +1,4 @@
+<% title t("groups.manage_rooms.currentRoomsOfGroup", :group => @group.name) %>
 <h1><%= @group.name %></h1>	
 <h1><small><%= t("groups.manage_rooms.currentRooms") %></small></h1> <br>
 
@@ -20,7 +21,7 @@
 	    </tbody>
 	</table>
 <br>
-<h2><%= t("groups.manage_rooms.addRoom") %></h2> <br>
+<h2><%= t("groups.manage_rooms.addRoom") %></h2><br/>
 <%= form_for @group, html: { :class => "form-horizontal event", :id => "assign-rooms-form" }, :url => assign_rooms_group_path(@group) do |f| %>
 
   <div class="control-group">

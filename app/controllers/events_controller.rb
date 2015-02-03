@@ -46,7 +46,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/show_toggle_favorite
   def show_toggle_favorite
     toggle_favorite
-    redirect_to event_url
+    render nothing: true
   end
 
   # GET /events
@@ -56,7 +56,8 @@ class EventsController < GenericEventsController
     @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
     @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
     @filterrific.user = nil if @filterrific.user == 0;
-    @events = Event.filterrific_find(@filterrific).page(params[:page]).per_page(@filterrific.items_per_page || Event.per_page)
+    filterred_events = Event.filterrific_find(@filterrific)
+    @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
   end
@@ -73,7 +74,12 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back, flash: {notice: "Successfully approved the event"}
+    notice = {notice: "Successfully approved the event"}
+    begin
+      redirect_to :back, flash: notice
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path, flash: notice
+    end
   end
 
   def decline
@@ -81,7 +87,12 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    redirect_to :back, flash: {notice: "Successfully declined the event"}
+    notice = {notice: "Successfully declined the event"}
+    begin
+      redirect_to :back, flash: notice
+    rescue ActionController::RedirectBackError
+      redirect_to events_approval_path, flash: notice
+    end
   end
 
   def approve_event_suggestion
@@ -141,8 +152,9 @@ class EventsController < GenericEventsController
   # GET /events/1
   # GET /events/1.json
   def show
+    authorize! :show, @event
     @favorite = Favorite.where('user_id = ? AND favorites.is_favorite = ? AND event_id = ?', current_user_id, true, @event.id);
-    @user = User.find(@event.user_id).name unless @event.user_id.nil?
+    @user = User.find(@event.user_id) unless @event.user_id.nil?
     if current_user_id == @event.user_id
       @tasks = @event.tasks.rank(:task_order)
     else
@@ -184,8 +196,8 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
-    @event.schedule_from_rule(event_params[:occurence_rule])
-    filtered_params = params_without_occurence_rule(event_params)
+    @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
+    filtered_params = params_without_schedule_related_params(event_params)
     @event.attributes = filtered_params
 
     changed_attributes = @event.changed
@@ -239,11 +251,11 @@ class EventsController < GenericEventsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :room_ids => [])
+      params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :schedule_ends_at_date, :room_ids => [])
     end
 
-    def params_without_occurence_rule(params)
-      params.reject {|k,v| k == "occurence_rule"}
+    def params_without_schedule_related_params(params)
+      params.reject {|k,v| k == "occurence_rule" || k == "schedule_ends_at_date"}
     end
 
     def event_suggestion_params
@@ -253,8 +265,8 @@ class EventsController < GenericEventsController
     def create_event params, new_url, model
       @event_template_id = params['event_template_id']
       params.delete('event_template_id')
-      @event = Event.new(params_without_occurence_rule params)
-      @event.schedule_from_rule(params[:occurence_rule])
+      @event = Event.new(params_without_schedule_related_params params)
+      @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
       @event.user_id = current_user_id
       create_tasks @event_template_id
 
@@ -283,6 +295,7 @@ class EventsController < GenericEventsController
           event_task = original_task.dup
           event_task = create_tasks_with_attachments original_task, event_task
           event_task.event_template_id = nil
+          event_task.creator = current_user
           @event.tasks << event_task 
         end
       end
@@ -346,7 +359,7 @@ class EventsController < GenericEventsController
     def build_conflicting_events_response conflicting_events 
       logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
-                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : "Privates Event"
+                  conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
                   warning = get_conflicting_events_warning_msg conflicting_event, room_msg, conflicting_event_name
                   [ conflicting_event.id, { :msg => warning } ]

@@ -12,7 +12,9 @@
       <th><%= t '.description' %></th>
       <th><%= t '.room' %></th>
       <th><%= t '.category' %></th>
-      <th><%= t '.action', :default => t("helpers.actions") %></th>
+      <% if can? :edit, Equipment.first %>
+        <th class="text-right"><%= t '.action', :default => t("helpers.actions") %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -29,18 +31,20 @@
         
         <td><%= equipment.category %></td>
 
-        <td>
+        <td class="text-right">
           <% if can? :edit, equipment%>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_equipment_path(equipment), :class => 'btn btn-default btn-xs' %>
+            <%= link_to edit_equipment_path(equipment), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
+              <span class="glyphicon glyphicon-pencil"></span>    
+            <% end %>
           <% end %>   
             
-           <% if can? :destroy, equipment %>  
-            <%= link_to t('.delete', :default => t("helpers.links.destroy")),
-                        equipment_path(equipment),
+          <% if can? :destroy, equipment %>  
+            <%= link_to  equipment_path(equipment),
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        :class => 'btn btn-xs btn-danger' %>
+                        :title => t("helpers.links.destroy"), :class => 'btn btn-xs btn-danger' do %>
+              <span class="glyphicon glyphicon-trash"></span>   
+            <% end %>
           <% end %>
         </td>
       </tr>
@@ -49,4 +53,4 @@
   </table>
 </div>
 <%= will_paginate equipment, renderer: BootstrapPagination::Rails %>
-</div>
+</div>  

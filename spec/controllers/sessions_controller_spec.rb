@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'pp'
 
 RSpec.describe SessionsController, :type => :controller do
 
@@ -6,74 +7,76 @@ RSpec.describe SessionsController, :type => :controller do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
-  describe "GET new" do
-    it "bla" do
-      get :new
-      expect(@admin).to be_nil
+  describe "GET admin" do
+    it "renders the admin login page" do
+      get :show_admin_login
+      expect(response.status).to eq(200)
     end
   end
 
-  context "user is admin" do
+  context "is admin" do
     describe "POST create" do
       let(:admin) { build(:adminUser) }
 
-      it "requires a vaild password after passing e-mail-address" do
+      it "redirects the admin user to the root" do
         # login as admin for the first time
-        post :create, :user => { :email => admin.email }
-        expect(response).to redirect_to new_user_session_path("admin" => "")
+        post :authenticate_admin, :email => admin.email, :encrypted_password => admin.encrypted_password
+        expect(response).to redirect_to root_path
 
-        post :create, :user => { :encrypted_password => admin.encrypted_password }
-        expect(response).to redirect_to(root_path)
-        expect(assigns(:user)).to be_a(User)
-        expect(assigns(:user)).to be_persisted
-
-        # session logout
+        sign_out admin
         delete :destroy
 
         # login again, but this time admin is already persisted
-        post :create, :user => { :email => admin.email}
-        expect(response).to redirect_to new_user_session_path("admin" => "")
-        
-        post :create, :user => { :encrypted_password => admin.encrypted_password}
-        expect(response).to redirect_to(root_path)
-        expect(assigns(:user)).to be_a(User)
-        expect(assigns(:user)).to be_persisted
+        post :authenticate_admin, :email => admin.email, :encrypted_password => admin.encrypted_password
+        expect(response).to redirect_to root_path
       end
 
       it "rejects an invalid admin password" do
-        # login as admin for the first time
-        post :create, :user => { :email => admin.email }
-        expect(response).to redirect_to new_user_session_path("admin" => "")
+        post :authenticate_admin, :email => admin.email, :encrypted_password => "wrongPassword:P"
+        expect(response).to redirect_to admin_path
 
-        post :create, :user => { :encrypted_password => "wrongPassword:P" }
-        expect(response).to redirect_to(root_path)
-        expect(assigns(:user)).to be_nil
         expect(flash[:error]).to eq(I18n.t('devise.failure.invalid'))
       end
     end
   end
 
-  context "user is student" do
+  context "is normal user" do
     describe "POST create" do
-      let(:user) { build(:user) }
-      let(:hpi_user) { build(:hpiUser) }
+      let(:user) { create(:user) }
 
-      it "rejects an invalid email domain" do
-        post :create, :user => { :email => user.email }, :authenticity_token => "abc"
-        expect(response).to redirect_to(root_path)
-        expect(assigns(:user)).to be_nil
-        expect(flash[:error]).to eq(I18n.t('devise.sessions.wrong_domain'))
-      end
+      context "with a success response" do
+        before(:each) do
+          # mock openID authentication
+          User.delete_all
+          endpoint = double('EndPoint')
+          endpoint.stubs(:claimed_id).returns('http://openid.example.org/hpi_user')
+          success  = OpenID::Consumer::SuccessResponse.new(endpoint, OpenID::Message.new, "")
+          OpenID::Consumer.any_instance.stubs(:complete_id_res).returns(success)
+          @request.env[Rack::OpenID::RESPONSE] = success
+        end
 
-      it "logs in with a valid email address" do
-        # mock openID authentication
-        allow(request.env['warden']).to receive(:authenticate!).and_return(hpi_user)
-        allow(controller).to receive(:current_user).and_return(hpi_user)
-        controller.store_location_for(:user, root_path)
-        
-        post :create, :user => { :email => hpi_user.email }, :authenticity_token => "abc"
-        expect(response).to redirect_to("/profile")
-        expect(controller.signed_in?).to be true
+        it "logs in without a valid email address" do
+          post :create
+          expect(response).to redirect_to(edit_user_path(controller.current_user.id))
+
+          expect(controller.current_user).to be_a(User)
+
+          post :new
+          expect(response).to redirect_to root_path
+        end
+
+        it "logs in with a valid email address" do
+          user = User.create(:username => "hpi_user", :email => "hpi_user@student.hpi.de")
+          controller.store_location_for(:user, "/")
+
+          post :create
+          expect(response).to redirect_to root_path
+
+          expect(controller.current_user).to be_a(User)
+
+          post :new
+          expect(response).to redirect_to root_path
+        end
       end
     end
   end
