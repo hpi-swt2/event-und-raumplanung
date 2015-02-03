@@ -1,0 +1,35 @@
+#################################################################################
+#
+# Acceptance Tests - Overview
+#
+#################################################################################
+
+#
+## Feature: Sign In
+
+Tests for...
+.. user stories in current sprint: 1
+.. alive user stories: 0
+.. old user stories: 6
+
+#
+## Feature: Event Creation / Editing 
+
+Tests for...
+.. user stories in current sprint: 1
+.. alive user stories: 4
+
+#
+## Feature: Tasks management
+
+Tests for...
+.. user stories in current sprint: 1
+.. alive user stories: 3
+
+#
+## Feature: Approval
+
+Tests for...
+.. user stories in current sprint: 1
+.. alive user stories: 3
+.. old user stories: 1

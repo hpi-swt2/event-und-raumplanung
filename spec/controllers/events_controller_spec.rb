@@ -523,6 +523,18 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET reset_filterrific" do 
+    it "resets the filter" do 
+      get :reset_filterrific, valid_session
+      expect(session[:filterrific_events]).to eq(nil)
+    end
+
+    it "redirects to index" do 
+      get :reset_filterrific, valid_session
+      expect(response).to redirect_to(action: :index)
+    end
+  end
+
   describe "POST create" do
     
     describe "with valid params" do
@@ -713,6 +725,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST approve" do
     it "creates activity when an event is approved" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -726,6 +739,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST decline" do
     it "creates activity when an event is declined" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -901,7 +915,7 @@ RSpec.describe EventsController, :type => :controller do
       it "changes the specified schedule" do
         weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
         put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
-        expect(response).to be_success
+        expect(response).to redirect_to(event_path(weekly_recurring_event.to_param))
         schedule = assigns(:event).schedule
         expect(schedule).to be_a(IceCube::Schedule)
         expect(schedule.recurrence_rules).not_to be_empty
@@ -921,12 +935,16 @@ RSpec.describe EventsController, :type => :controller do
       it "re-renders the 'edit' template" do
         event = Event.create! valid_attributes
         put :update, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to redirect_to(event_path(event.to_param))
       end
     end
   end
 
   describe "POST approve" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
+
     it "approves the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'
@@ -941,7 +959,7 @@ RSpec.describe EventsController, :type => :controller do
       expect(response).to redirect_to(:back)
     end
 
-    it "redirects to the events approval page if http referer is not set" do
+    it "redirects to the events approval page if http referer is not set" do   
       event = Event.create! valid_attributes
       post :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_approval_path)
@@ -998,6 +1016,9 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST decline" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
     it "declines the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'

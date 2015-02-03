@@ -397,7 +397,7 @@ RSpec.describe GroupsController, :type => :controller do
 
         it "redirects to the created group" do
           post :create, {:group => valid_attributes}, valid_session
-          expect(response).to redirect_to(Group.last)
+          expect(response).to redirect_to(edit_group_path(Group.last))
         end
       end
 
