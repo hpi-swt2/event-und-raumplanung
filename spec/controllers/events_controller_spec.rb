@@ -523,6 +523,18 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET reset_filterrific" do 
+    it "resets the filter" do 
+      get :reset_filterrific, valid_session
+      expect(session[:filterrific_events]).to eq(nil)
+    end
+
+    it "redirects to index" do 
+      get :reset_filterrific, valid_session
+      expect(response).to redirect_to(action: :index)
+    end
+  end
+
   describe "POST create" do
     
     describe "with valid params" do
