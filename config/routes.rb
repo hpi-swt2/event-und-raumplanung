@@ -39,6 +39,8 @@ Rails.application.routes.draw do
   post 'events/:id/approve' => 'events#approve', as: "approve_event"
   post 'events/:id/decline' => 'events#decline', as: "decline_event"
   get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
+  get 'events/:id/decline_all' => 'events#decline_all', as: "decline_all"
+  get 'events/:id/decline_pending' => 'events#decline_pending', as: "decline_pending"
 
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"

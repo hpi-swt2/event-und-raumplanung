@@ -153,6 +153,9 @@ de:
       remove_favorite: ! 'Aus Favoriten entfernen'
       add_favorite: ! 'Zu Favoriten hinzufügen'
       task:    ! 'Aufgabe erstellen'
+      decline_all: ! 'Alle ablehnen (bestätigte und ausstehende)'
+      decline_pending: ! 'Nur ausstehende ablehnen'
+      wo_decline: 'Fortfahren ohne Ablehnen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:

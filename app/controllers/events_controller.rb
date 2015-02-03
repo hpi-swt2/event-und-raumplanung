@@ -4,7 +4,7 @@ class EventsController < GenericEventsController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve,:declineconflicting, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve,:declineconflicting, :decline, :decline_all, :decline_pending, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
   before_action :set_feed, only: [:show]
 
@@ -126,7 +126,7 @@ class EventsController < GenericEventsController
 
   def approve
     @event.approve
-    conflicting_events = @event.check_overlapping_requests @event.id, @event.rooms.collect(&:id)
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
     if conflicting_events.empty?
       redirect_to_previous_site
     else
@@ -135,11 +135,22 @@ class EventsController < GenericEventsController
   end
 
   def declineconflicting
-    @events = @event.check_overlapping_requests @event.id, @event.rooms.collect(&:id)
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
     render 'conflictinglist'
   end
 
+  def decline_all
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    @events.map { |event| event.decline}
+    redirect_to events_approval_path
+  end
 
+  def decline_pending
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    pending_events = @events.select { |event| event.status != "approved"}
+    pending_events.each { |event| event.decline}
+    redirect_to events_approval_path
+  end
 
   def conflicting_events_msg events
     msg = {}

@@ -31,3 +31,8 @@
       </table>
   </div>
 
+  <%= link_to t("helpers.links.decline_all"), decline_all_path, {:class => 'btn btn-danger btn-xl'} %>
+  
+  <%= link_to t("helpers.links.decline_pending"), decline_pending_path, {:class => 'btn btn-warning btn-xl'} %>
+
+  <%= link_to t("helpers.links.wo_decline"), events_approval_path, {:class => 'btn btn-default btn-xl'} %>

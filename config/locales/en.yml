@@ -165,8 +165,11 @@ en:
       remove_favorite: ! 'Remove from favorites'
       add_favorite: ! 'Add to favorites'
       task:    ! 'Create task'
+      decline_all: ! 'Decline all (approved and pending)'
+      decline_pending: ! 'Only decline pending'
+      wo_decline: 'Continue without declining' 
     titles:
-      suggest: 'Suggest alternative'
+      suggest: 'Suggest alternative'     
   number:
     currency:
       format:
