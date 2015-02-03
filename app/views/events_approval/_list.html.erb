@@ -96,7 +96,7 @@
     </div>
         <div class="modal-footer">
           <a events_type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
-          <a> <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(event), :method => :decline, :class => 'btn btn-danger btn-xs' %></a>
+          <a events_type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
         </div>
       </div>
     </div>
