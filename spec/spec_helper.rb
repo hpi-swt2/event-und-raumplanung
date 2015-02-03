@@ -32,9 +32,9 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 RSpec.configure do |config|
-   
+
   # If you want to explude tests e.g. acceptance test just flag them with "exclude: true"
-  config.filter_run_excluding :exclude => true 
+  config.filter_run_excluding :exclude => true
 
   # The name of this setting is a bit misleading. What it really means in Rails
   # is "run every test method within a transaction." In the context of rspec-rails,
@@ -43,13 +43,13 @@ RSpec.configure do |config|
   # The idea is to start each example with a clean database, create whatever data
   # is necessary for that example, and then remove that data by simply rolling back
   # the transaction at the end of the example.
-  config.use_transactional_fixtures = false
+  #config.use_transactional_fixtures = false
 
 
 config.around(:each, :acceptance_test => true) do |ex|
-    DatabaseCleaner.start   
+    DatabaseCleaner.start
     DatabaseCleaner.strategy = :truncation
-    #load Rails.root + "spec/support/seeds.rb" 
+    #load Rails.root + "spec/support/seeds.rb"
     ex.run
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean
