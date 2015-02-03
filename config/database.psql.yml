@@ -17,3 +17,7 @@ test:
 production:
   <<: *default
   database: hpi_swt2_production
+
+acceptance:
+  <<: *default
+  database: hpi_swt2_acceptance
