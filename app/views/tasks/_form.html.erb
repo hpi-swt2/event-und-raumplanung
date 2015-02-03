@@ -139,7 +139,11 @@
         </a>
     </div>
   </div>
-  <%= submit_tag t('submit'), :class => 'btn btn-primary form_submit task_form_submit', :onclick => "$('.task_form').submit();" %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")), event_path(@task.event_id), :class => 'btn btn-default' %>
+  <button type="submit" class="btn btn-primary form_submit task_form_submit" title="<%= t("helpers.links.save_changes") %>" onclick="$('.task_form').submit();">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to event_path(@task.event_id), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>    
+  <% end %>
 </div>
 
