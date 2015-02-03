@@ -157,7 +157,7 @@ class RoomsController < ApplicationController
 
   def print
     set_room
-    print_rooms([@room.id])
+    render_print_rooms([@room.id])
   end
 
   def print_rooms
@@ -173,8 +173,19 @@ class RoomsController < ApplicationController
     @weekBegin = date
     @prints = []
     room_ids.each do | room_id |
+        @calevents = []
         room = Room.find(room_id)
-        @calevents = Event.approved.room_ids([room_id]).week(week, year) || []
+        events = Event.approved.room_ids([room_id])
+        events.each do |event|
+          if(event.schedule)
+            occurrences = event.schedule.occurrences_between(date.monday,date.sunday) || []
+            occurrences.each do |occurrence|
+              @calevents << Event.new(name:event.name, starts_at:occurrence.start_time, ends_at:occurrence.end_time, is_private:event.is_private)
+            end
+          else
+            @calevents << event if event.in_week(week, year)
+          end
+        end
         @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
     end
     render action: 'print', layout:'print', locals:{ prints: @prints}
