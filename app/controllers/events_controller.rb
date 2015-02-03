@@ -169,6 +169,7 @@ class EventsController < GenericEventsController
   # GET /events/:id/new_event_suggestion
   def new_event_suggestion
     @original_event_id = @event.id
+    @original_owner = @event.user_id
     render "event_suggestions/new"
   end
 
@@ -188,6 +189,7 @@ class EventsController < GenericEventsController
   def create_event_suggestion
     params = add_original_event_params event_suggestion_params
     params = add_reference_to_original_event params 
+    @old_event_owner = Event.find(params["event_id"]).user_id
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
@@ -265,7 +267,12 @@ class EventsController < GenericEventsController
       params.delete('event_template_id')
       @event = Event.new(params_without_schedule_related_params params)
       @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
-      @event.user_id = current_user_id
+      # test
+      if @old_event_owner
+        @event.user_id = @old_event_owner
+      else
+        @event.user_id = current_user_id
+      end
       create_tasks @event_template_id
 
       respond_to do |format|
