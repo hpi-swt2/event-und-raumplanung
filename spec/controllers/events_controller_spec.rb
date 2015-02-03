@@ -725,6 +725,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST approve" do
     it "creates activity when an event is approved" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -738,6 +739,7 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST decline" do
     it "creates activity when an event is declined" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
       activities = event.activities
       expect{
@@ -939,6 +941,10 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST approve" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
+
     it "approves the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'
@@ -953,7 +959,7 @@ RSpec.describe EventsController, :type => :controller do
       expect(response).to redirect_to(:back)
     end
 
-    it "redirects to the events approval page if http referer is not set" do
+    it "redirects to the events approval page if http referer is not set" do   
       event = Event.create! valid_attributes
       post :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(events_approval_path)
@@ -1010,6 +1016,9 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "POST decline" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
     it "declines the given event" do
       event = Event.create! valid_attributes
       #@request.env['HTTP_REFERER'] = 'http://test.com/'
