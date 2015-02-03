@@ -1,10 +1,7 @@
 admin:
-<<<<<<< HEAD
-  identity_url: https://openid.hpi.uni-potsdam.de/user/martina.grabs
-=======
-  email: test_admin@example.com
-  username: test_admin
-  password: test_admin
+  email: martina.grabs@student.hpi.de
+  username: martina.grabs
+  password: D=ntBl1nk
 identity_url: https://openid.hpi.uni-potsdam.de/
 domains: {"student.hpi.uni-potsdam.de","hpi.uni-potsdam.de","hpi.de","student.hpi.de"}
->>>>>>> Clownfish
+

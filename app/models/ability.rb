@@ -49,13 +49,9 @@ class Ability
         can :manage, Group
         can :manage, Room
         can :manage, Equipment
-<<<<<<< HEAD
-        can [:approve, :decline], Event
-=======
         can :manage, Event
         can :manage, RoomProperty
         can :manage, Permission
->>>>>>> Clownfish
     else
         can :read, Group
     end
