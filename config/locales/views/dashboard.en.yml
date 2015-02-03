@@ -8,7 +8,7 @@ en:
     my_tasks: My Tasks
     pending_tasks: Pending Tasks
     accept_tasks: Accept Tasks
-    no_taks: You currently have no tasks accepted.
+    no_tasks: You currently have no tasks accepted.
     calendar: Calendar
     user: User
     requests: requests
@@ -22,3 +22,4 @@ en:
     group_tasks: Group Tasks
     rooms: rooms
     date_and_time: date and time
+    export_calendar: Export calendar
