@@ -127,8 +127,6 @@
     </div>
   </div>
   <script type="text/javascript">
-    $('.end-date-group').hide();
-
     (function() {
 
       var updateEndDateVisible = function() {
@@ -142,6 +140,7 @@
       $('.recurring_select').change(updateEndDateVisible);
       $(document).on('click','.rs_dialog', updateEndDateVisible);
 
+      updateEndDateVisible();
     })();
   </script>
   <div class="control-group">
