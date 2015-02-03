@@ -41,7 +41,7 @@ RSpec.describe DashboardController, type: :controller do
     end
 
     it "assigns max 5 upcoming events as @events" do
-      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s) }
+      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: user.id) }
       get :index, {}, valid_session
       expect(assigns(:event_occurrences).size).to eq(5)
     end
