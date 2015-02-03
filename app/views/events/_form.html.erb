@@ -111,14 +111,14 @@
       <%= error_span(@event[:schedule]) %>
     </div>
   </div>
-  <div class="control-group">
+  <div class="control-group end-date-group">
     <%= f.label t('events.form.series_end'), :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6">
         <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
         <script type="text/javascript">
           $('#ScheduleEndDatePicker').datetimepicker({
-            format: 'YYYY-MM-DD',
+            language: '<%= I18n.locale %>',
             pickTime: false
           });
         </script>
@@ -126,6 +126,24 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+    $('.end-date-group').hide();
+
+    (function() {
+
+      var updateEndDateVisible = function() {
+          if($('.recurring_select').val() === 'null'){
+            $('.end-date-group').hide();
+          } else {
+            $('.end-date-group').show();
+          }
+      };
+
+      $('.recurring_select').change(updateEndDateVisible);
+      $(document).on('click','.rs_dialog', updateEndDateVisible);
+
+    })();
+  </script>
   <div class="control-group">
     <div class="row">
       <div class="controls col-sm-6">

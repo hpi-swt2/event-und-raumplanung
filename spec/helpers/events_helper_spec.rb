@@ -29,7 +29,7 @@ RSpec.describe EventsHelper, :type => :helper do
 
     it "returns the termination date if one is set" do
       event = FactoryGirl.create(:daily_recurring_terminating_event)
-      expect(schedule_ends_at_date_not_nil(event)).to eq(event.schedule_ends_at_date)
+      expect(schedule_ends_at_date_not_nil(event)).to eq(l(event.schedule_ends_at_date))
     end
   end
 end
