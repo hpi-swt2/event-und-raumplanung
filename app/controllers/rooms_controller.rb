@@ -183,9 +183,7 @@ class RoomsController < ApplicationController
               @calevents << Event.new(name:event.name, starts_at:occurrence.start_time, ends_at:occurrence.end_time, is_private:event.is_private)
             end
           else
-            puts event.name + 'has no schedule'
             @calevents << event if event.in_week(week, year)
-            puts event.name + 'is in week' if event.in_week(week, year)
           end
         end
         @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
