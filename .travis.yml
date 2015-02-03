@@ -13,8 +13,9 @@ before_script:
 script: 
 - RAILS_ENV=test bundle exec rake db:migrate
 - xvfb-run bundle exec rspec spec/ --exclude-pattern  "spec/acceptance/*.rb"
-- RAILS_ENV=acceptance rake db:setup
-- RAILS_ENV=acceptance rspec spec/ -P "spec/acceptance/*.rb"
+- export RAILS_ENV=acceptance
+- rake db:setup
+- rspec spec/ -P "spec/acceptance/*.rb"
 notifications:
   email: false
 
