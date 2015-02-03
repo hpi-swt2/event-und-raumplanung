@@ -82,7 +82,7 @@ class EventsController < GenericEventsController
                                           :action => params[:action],
                                           :controller => params[:controller])
     notice = {notice: t('notices.successful_approve', :model => @event.name)}
-    redirect_to_previous_site, flash: notice
+    redirect_to_previous_site(notice)
   end
 
   def decline
@@ -92,7 +92,7 @@ class EventsController < GenericEventsController
                                           :action => params[:action],
                                           :controller => params[:controller])
     notice = {notice: t('notices.successful_decline', :model => @event.name)}
-    redirect_to_previous_site, flash: notice
+    redirect_to_previous_site(notice)
   end
 
   def approve_event_suggestion
@@ -392,9 +392,9 @@ class EventsController < GenericEventsController
                                           :controller => params[:controller])
     end
 
-    def redirect_to_previous_site
+    def redirect_to_previous_site(message)
       begin
-        redirect_to :back
+        redirect_to :back, flash: message
       rescue ActionController::RedirectBackError
         redirect_to events_approval_path
       end
