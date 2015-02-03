@@ -15,13 +15,28 @@ en:
       unassign_user: Unassign User
       user_overview: User-overview
       enter_email: enter Email-Address
-      no_users: Currently, there are no users!
+      no_users: 'Currently, there are no users!'
+      member: member
+      leader: group leader
     edit:
       assign_rooms: assign rooms
       assigned: assigned
       unassigned: unassigned
-      user_overview: User-overview
-      select_user: 'Select a user'
+      user_overview: user overview
+      unassign: unassign
+      assign: assign
+      degrade: degrade
+      promote: promotoe
+      back: back
+      rename: rename
+      user_not_found: No user found for this e-mail address!
+      assign_user: assign user
+      actions: actions
+      role: role
+      select_user: select user
     manage_rooms:
-      currentRoomsOfGroup: 'Rooms of %{group}'
-      user_not_found: Kein Benutzer mit dieser Email-Adresse gefunden!
+      currentRooms: current rooms
+      currentRoomsOfGroup: 'current rooms of %{group}'
+      addRoom: add rooms
+      add: add
+      delete: delete

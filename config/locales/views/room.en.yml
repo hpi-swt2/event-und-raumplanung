@@ -5,12 +5,20 @@ en:
     index:
       title: room overview
       all_events: all events
+      sorted_by: 'sorted by'
+      reset_filter: 'reset filter'
+      items_per_page: 'items per page'
+      search: 'search'
     show:
       no_upcoming_events: no upcoming events
       upcoming_events: upcoming events
       all_events: all events
       no_properties: no_properties
-      message_for_event_creator: message fpr event creator
+      equipment: equipment
+      category: category
+      available: available
+      no_equipment: no equipment available
+      message_for_event_creator: message for event creator
       close: close
     upcoming_events:
       no_upcoming_events: no upcoming events
@@ -23,19 +31,22 @@ en:
       table_information: Tables upon request
       table_request: Request tables
       title: 'Details of %{model}'
-    list:
-      all_events: Alle Events
-      room_selection: Room Selection
-      requested_size: Needed Room Size
-      necessary_equipment: Necessary equipment
-      necessary_properties: Necessary properties
-      no_rooms_found: No rooms met the criteria
-      no_selection: No criteria selected
-      room_id: Room_id
-      room_name: Name of room
-      room_size: Maximum number of persons
-      equipment: Equipment
-      properties: Properties
-      create_event: Create events
+      message_for_event_creator: message for event creator
+  list:
+      all_events: all events
+      room_selection: room selection
+      requested_size: requested size
+      necessary_equipment: necessary equipment
+      necessary_properties: necessary properties
+      no_rooms_found: no suitable rooms found
+      no_selection: no search criteria entered
+      room_id: room id
+      room_name: room name
+      room_size: maximal capacity
+      equipment: equipment
+      properties: properties
+      create_event: create event
+    events:
+      title: 'upcoming %{event} in %{room}'
     print:
-      room_blocked: Room blocked
+      room_blocked: room blocked
