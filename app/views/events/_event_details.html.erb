@@ -1,3 +1,9 @@
+<% starts_at = @event.starts_at %>
+<% ends_at = @event.ends_at %>
+<% if @event_occurrence %>
+  <% starts_at = @event_occurrence.starts_occurring_at %>
+  <% ends_at = @event_occurrence.ends_occurring_at %>
+<% end %>
 <div class="event-page-header">
   <div class="row event-section-divider">
     <div class="col-xs-12 col-md-8">
@@ -13,19 +19,19 @@
       </h1>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
-      <% if (@event.ends_at.to_date - @event.starts_at.to_date).to_i > 0 %>
-        <h2><%= @event.starts_at.strftime("%d.%m.%Y") %> - <%= @event.ends_at.strftime("%d.%m.%Y")%></h2>
+      <% if (ends_at.to_date - starts_at.to_date).to_i > 0 %>
+        <h2><%= starts_at.strftime("%d.%m.%Y") %> - <%= ends_at.strftime("%d.%m.%Y")%></h2>
       <% else %>
-        <h2><%= @event.starts_at.strftime("%d.%m.%Y")%></h2>
+        <h2><%= starts_at.strftime("%d.%m.%Y")%></h2>
       <% end %>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-md-8">
-      <% if (@event.ends_at.to_date - @event.starts_at.to_date).to_i > 0 %>
-        <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr, <%= @event.starts_at.strftime("%d.%m.%Y") %> - <%= @event.ends_at.strftime("%H:%M") %> Uhr, <%= @event.ends_at.strftime("%d.%m.%Y")%></h3>
+      <% if (ends_at.to_date - starts_at.to_date).to_i > 0 %>
+        <h3><%= starts_at.strftime("%H:%M") %> Uhr, <%= starts_at.strftime("%d.%m.%Y") %> - <%= ends_at.strftime("%H:%M") %> Uhr, <%= ends_at.strftime("%d.%m.%Y")%></h3>
       <% else %>
-        <h3><%= @event.starts_at.strftime("%H:%M") %> Uhr - <%= @event.ends_at.strftime("%H:%M") %> Uhr</h3>
+        <h3><%= starts_at.strftime("%H:%M") %> Uhr - <%= ends_at.strftime("%H:%M") %> Uhr</h3>
       <% end %>
     </div>
     <div class="col-xs-6 col-md-4" style="text-align: right">
@@ -57,19 +63,24 @@
         <td><%= t('events.show.last_update') %></td>
         <td><%= @event.updated_at.strftime("%d.%m.%Y %H:%M") %></td>
       </tr>
+      <% if @event_occurrence %>
+        <tr>
+          <td><%= t('events.show.belongs_to_series') %></td>
+          <td><%= link_to(@event_occurrence.event.name, @event_occurrence.event) %></td>
+        </tr>
+      <% end %>
       <% if current_user.id == @event.user_id %>
         <tr>
           <td><%= t('events.show.status') %></td>
           <td><%= t "event.status.#{@event.status}" %></td>
         </tr>
-        <tr>
-          <td></td>
-          <td>
-            <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+        <% if (@event.is_approved) && (@event.exist_colliding_events) %>
+          <tr>
+            <td>
               <%= link_to t('.decline', :default => t("helpers.links.decline")), decline_event_path(@event), :method => :decline, :class => 'btn btn-danger decline-btn btn-xs' %>
-            <%end%>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        <%end%>
       <% end %>
     </tbody>
   </table>

@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
   post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
+  delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
 

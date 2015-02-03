@@ -6,3 +6,7 @@ de:
       ends_occurring_at: 'Endet'
       event_start: 'Event beginnt'
       event_end: 'Event endet'
+      delete_occurrence: 'Nur diesen Termin'
+      delete_occurrence_description: 'Alle anderen Termine in der Serie bleiben unverändert.'
+      delete_series: 'Alle Termine dieser Veranstaltung'
+      delete_series_description: 'Alle Termine in der Serie werden gelöscht.'

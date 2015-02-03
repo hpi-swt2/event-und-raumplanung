@@ -33,48 +33,48 @@ FactoryGirl.define do
     rooms { build_list :room, 1 }
   end
 
-  factory :standardEvent, parent: :event, :class => Event do
-
+  factory :standardEvent, parent: :event, :class => Event do 
+    
    sequence(:name) { |n| "Party#{n}" }
    description "All night long glühwein for free"
    participant_count 80
    rooms { build_list :room, 3 }
- end
+ end 
 
   factory :scheduledEvent, parent: :event do
    starts_at_date (Time.now).strftime("%Y-%m-%d")
    ends_at_date (Time.now + 7200).strftime("%Y-%m-%d")    # + 2h
    starts_at_time (Time.now).strftime("%H:%M:%S")
    ends_at_time (Time.now + 7200).strftime("%H:%M:%S")
-   room_ids ['1']
+   room_ids ['1'] 
    is_private false
   end
 
-  factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do
+  factory :event_on_multiple_days_with_multiple_rooms, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    room_ids ['1', '2']
   end
 
-  factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do
-   ends_at_date (Time.now).strftime("%Y-%m-%d")
-   ends_at_time (Time.now).strftime("%H:%M:%S")
+  factory :event_on_one_day_with_multiple_rooms, parent: :scheduledEvent do 
+   ends_at_date (Time.now).strftime("%Y-%m-%d") 
+   ends_at_time (Time.now).strftime("%H:%M:%S")  
    room_ids ['1', '2']
   end
 
-  factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do
+  factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
    rooms { create_list :room, 1 }
   end
 
-  factory :event_on_one_day_with_one_room, parent: :scheduledEvent do
-   ends_at_date (Time.now).strftime("%Y-%m-%d")
+  factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
+   ends_at_date (Time.now).strftime("%Y-%m-%d") 
    ends_at_time (Time.now).strftime("%H:%M:%S")
    rooms { create_list :room, 1 }
   end
 
-  factory :event_suggestion, :class => Event do
+  factory :event_suggestion, :class => Event do 
     starts_at Time.now + 1
     ends_at Time.now + 2
     user_id 122
@@ -120,11 +120,9 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    #starts_at = Time.local(2015, 8, 1, 8, 0, 0)
     starts_at = Time.now
     f.starts_at starts_at
 
-    #ends_at = Time.local(2015, 8, 1, 9, 30, 0)
     ends_at = starts_at + (60*60)
     f.ends_at ends_at
 
@@ -178,6 +176,7 @@ FactoryGirl.define do
     f.description "Eventdescription terminating"
     f.participant_count 15
     f.is_private false
+    f.rooms { build_list :room, 1 }
 
     starts_at = Time.local(2015, 8, 1, 8, 0, 0)
     f.starts_at starts_at
@@ -187,11 +186,10 @@ FactoryGirl.define do
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
       rule = IceCube::Rule.daily
-      rule.until(Date.new(2015, 8, 15))
+      rule.until(Time.local(2015, 8, 16, 0, 0, 0))
       s.add_recurrence_rule(rule)
     end
     f.schedule schedule
-    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_daily_recurring_event, parent: :daily_recurring_event do |f|
@@ -205,7 +203,6 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
-    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_daily_recurring_event2, parent: :daily_recurring_event do |f|
@@ -219,8 +216,7 @@ FactoryGirl.define do
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
-    f.rooms { build_list :room, 1 }
-  end
+  end 
 
   factory :sortEvent1, parent: :event do
     name "A1"
@@ -248,11 +244,11 @@ FactoryGirl.define do
     rooms []
   end
 
-  factory :conflictingEvent, parent: :event do
+  factory :conflictingEvent, parent: :event do 
       starts_at_date Time.now.strftime("%Y-%m-%d")
       ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
       starts_at_time Time.now.strftime("%H:%M:%S")
       ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
-  end
+  end 
 
 end
