@@ -282,9 +282,6 @@ en:
   event:
     altert:
       single_occurrence_successful_delete: 'You successfully deleted the event occurrence.'
-  events:
-    form:
-      series_end: 'Series end'
   menu:
     languages:
       de: DE

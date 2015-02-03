@@ -19,5 +19,9 @@ en:
       send_comment: 'Send comment'
       belongs_to_series: 'Belongs to series'
     rooms:
-      requested_size: Needed size of room
-      reuqested_equipment: Necessary equipment
+      requested_size: 'Needed size of room'
+      reuqested_equipment: 'Necessary equipment'
+    form:
+      room_selection: 'Room selection'
+      series_end: 'Series end'
+      important: 'Important'

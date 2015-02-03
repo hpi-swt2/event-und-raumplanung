@@ -258,9 +258,6 @@ de:
     desired_size: 'gewünschte Raumgröße'
   equipment:
     necessary: 'Benötigte Ausstattung'
-  events:
-    form:
-      series_end: 'Serienende'
     show:
       suggested_for: 'Vorgeschlagen für'
     links:
