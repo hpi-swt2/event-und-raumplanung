@@ -16,3 +16,4 @@ en:
       status: 'Status'
       mark_as_favorite: 'Mark as favorite'
       unmark_as_favorite: 'Remove from favorites'
+      send_comment: 'Send comment'

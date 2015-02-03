@@ -121,11 +121,13 @@
   <% unless @event_template_id.nil? %> 
      <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
   <% end %>
- <div class="notice"></div> <!-- display conflicting events -->
+  <div class="notice"></div> <!-- display conflicting events -->
 
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-            :back, :class => 'btn btn-default' %>
+  <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to :back, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>        
+  <% end %>
 
 <% end %>

@@ -24,13 +24,15 @@
 <h4><%= t '.tasks' %></h4>
 <% @event_template_id = @event_template.id %>
 <%= render :partial => '/tasks/tasks_box' %>
+<br>
+<%= link_to event_templates_path, :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+  <span class="glyphicon glyphicon-arrow-left"></span>    
+<% end %> 
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              event_templates_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_event_template_path(@event_template), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              event_template_path(@event_template),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+<%= link_to edit_event_template_path(@event_template), :title => t("helpers.links.edit"), :class => 'btn btn-default' do %>
+  <span class="glyphicon glyphicon-pencil"></span>    
+<% end %> 
+
+<%= link_to event_template_path(@event_template), :title => t("helpers.links.edit"), :method => 'delete', :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger' do %>
+  <span class="glyphicon glyphicon-trash"></span>    
+<% end %> 

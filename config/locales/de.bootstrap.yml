@@ -24,6 +24,7 @@ de:
       save_changes: Änderungen übernehmen
       skip: "Überspringen"
       save: "Speichern"
+      event_template: Veranstaltungsvorlage erstellen
     titles:
       edit: "%{model} editieren"
       save: "%{model} speichern"

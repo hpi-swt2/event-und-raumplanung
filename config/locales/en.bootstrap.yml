@@ -27,6 +27,7 @@ en:
       save_changes: Save changes
       skip: "Skip"
       save: "Save"
+      event_template: Veranstaltungsvorlage erstellen
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
