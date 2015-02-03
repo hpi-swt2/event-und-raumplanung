@@ -4,12 +4,15 @@ addons:
 language: ruby
 rvm:
 - 2.1.2
+before_install:
+- sudo apt-get install libicu-dev -y
+- sudo apt-get install libqt4-dev libqtwebkit-dev -y
 before_script:
 - cp config/database.psql.yml config/database.yml
 - psql -c 'create database hpi_swt2_test;' -U postgres
-script:
+script: 
 - RAILS_ENV=test bundle exec rake db:migrate
-- bundle exec rspec spec/
+- xvfb-run bundle exec rspec spec/
 notifications:
   email: false
 
@@ -26,4 +29,3 @@ deploy:
     - "rake db:migrate"
     - "rake db:seed"
     - restart
-
