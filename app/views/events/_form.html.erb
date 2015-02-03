@@ -30,7 +30,7 @@
     <%= error_span(@event[:description]) %>
   </div>
   <div class="row well">
-    <div class="event-section-divider"><h3>Room Selection</h3></div>
+    <div class="event-section-divider"><h3><%= t '.room_selection' %></h3></div>
     <br/>
     <div class="col-xs-4 col-md-4 room_input">
     <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
@@ -107,7 +107,7 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:schedule), :class => 'control-label' %>
     <div class="controls">
-      <%= f.select_recurring :occurence_rule, nil, :allow_blank => true %>
+      <%= f.select_recurring :occurence_rule, nil, :allow_blank => true, :class => 'schedule-selectpicker' %>
       <%= error_span(@event[:schedule]) %>
     </div>
   </div>
@@ -150,7 +150,7 @@
       <%= f.check_box :is_private %>
       </div>
       <div class="controls col-sm-6">
-      <%= f.label model_class.human_attribute_name(:Important), :class => 'control-label' %>
+      <%= f.label t('.important'), :class => 'control-label' %>
       <%= f.check_box :is_important %>
       </div>
    </div>
@@ -158,11 +158,13 @@
   <% unless @event_template_id.nil? %> 
      <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
   <% end %>
- <div class="notice"></div> <!-- display conflicting events -->
+  <div class="notice"></div> <!-- display conflicting events -->
 
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-            :back, :class => 'btn btn-default' %>
+  <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to :back, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>        
+  <% end %>
 
 <% end %>

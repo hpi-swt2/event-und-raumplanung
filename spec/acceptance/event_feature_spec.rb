@@ -25,7 +25,7 @@ RSpec.feature "Event" do
 		page.fill_in "event_ends_at_date", with: Date.tomorrow
 		page.fill_in "event_starts_at_time", with: "12:30"
 		page.fill_in "event_ends_at_time", with: "16:30"
-		page.click_button "Event erstellen"
+		page.click_button "Änderungen übernehmen"
 		page.should have_content("1 Fehler")
     end
 

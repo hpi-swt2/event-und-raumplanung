@@ -139,10 +139,10 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    starts_at = Time.now
+    starts_at = Time.now.change(:sec => 0) # zero out seconds to make testing easier
     f.starts_at starts_at
 
-    ends_at = Time.now + 90.minutes
+    ends_at = starts_at + 90.minutes
     f.ends_at ends_at
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|

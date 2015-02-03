@@ -72,21 +72,12 @@
         <%= f.label :identity, :class => 'control-label' %>
         <div class="controls">
             <%= f.hidden_field :identity, value: "#{@task[:identity_type]}:#{@task[:identity_id]}" %>
-            <input type="text" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
+            <input type="text" placeholder="<%= t('tasks.form.enter_name') %>" id="task_identity_display", class="form-control", data-autocomplete-url="<%= identities_autocomplete_path %>" value="<%= @identity_name %>">
         </div>
         <%= error_span(@task[:identity]) %>
       </div>
     <% end %>
-    <% unless @task.new_record? or @for_event_template %>
-      <div class="control-group">
-        <%= f.label :done, :class => 'control-label' %>
-        <div class="checkbox">
-          <%= f.check_box :done, :class => 'form-control' %>
-        </div>
-        <%= error_span(@task[:done]) %>
-      </div>
-    <% end %>
-
+    
     <h3><%= t('.attachments') %></h3>
     <h4><%= t('tasks.form.files') %></h4>
     <button id="add_upload_field" name="add_upload_field" onclick="addUploadField();" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
@@ -140,7 +131,7 @@
         </div>
     </form>
     <div class="list-group" data-bind="foreach: attachments">
-        <a data-bind="attr: { href: url }" class="list-group-item clearfix">
+        <a target="_blank" data-bind="attr: { href: url }" class="list-group-item clearfix">
           <span data-bind="text: title"></span>
           <span class="pull-right">
             <button class="btn btn-danger" data-bind="click: $parent.deleteAttachment"><%= t('delete') %></button>
@@ -148,7 +139,11 @@
         </a>
     </div>
   </div>
-  <%= submit_tag t('submit'), :class => 'btn btn-primary form_submit task_form_submit', :onclick => "$('.task_form').submit();" %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")), event_path(@task.event_id), :class => 'btn btn-default' %>
+  <button type="submit" class="btn btn-primary form_submit task_form_submit" title="<%= t("helpers.links.save_changes") %>" onclick="$('.task_form').submit();">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to event_path(@task.event_id), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>    
+  <% end %>
 </div>
 

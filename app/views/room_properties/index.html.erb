@@ -21,7 +21,7 @@
         <tr>
           <th><%= model_class.human_attribute_name(:name) %></th>
           <% if (can? :destroy, RoomProperty) or (can? :edit, RoomProperty)%>
-            <th><%=t '.actions', :default => t("helpers.actions") %></th>
+            <th class="text-right"><%=t '.actions', :default => t("helpers.actions") %></th>
           <% end %>
         </tr>
       </thead>
@@ -30,7 +30,7 @@
           <tr>
             <td><%= link_to roomProperty.name, room_property_path(roomProperty) %></td>
             <% if (can? :destroy, RoomProperty) or (can? :edit, RoomProperty)%>
-              <td>
+              <td class="text-right">
                 <% if can? :edit, roomProperty %>
                   <%= link_to edit_room_property_path(roomProperty), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
                     <span class="glyphicon glyphicon-pencil"></span>    
