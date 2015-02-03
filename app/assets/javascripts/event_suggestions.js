@@ -67,7 +67,6 @@ function checkVacancy() {
 }
 
 ready = function () {
-    $('#selectpicker').selectpicker();
     $('#sugguest-form input').change(function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(checkVacancy, doneTypingInterval);

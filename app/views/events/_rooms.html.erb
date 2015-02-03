@@ -1,16 +1,20 @@
-<%= label_tag(:size, 'gewünschte Raumgröße') %>
-<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :class => 'room_input') %>
+
+<h4><%= label_tag(:size, I18n.t('rooms.list.requested_size')) %> </h4>
+<%= number_field(:room, :size, in: 0.0..999999999, step: 1.0, :value => @size, :class => 'room_input form-control', :placeholder => "e.g. 20") %>
 <br>
-<%= t'.necessary_equipment' %>
-<br>
-<%  Equipment.group(:category).pluck(:category).each do |category| %> 
+<h4><label><%= t'equipment.necessary' %></label></h4>
+<ul class="equipmentList">
+<% Equipment.group(:category).pluck(:category).each do |category| %> 
+	<li>
 	<% if params.has_key?(category) %>
 	<%= check_box_tag(category,true, true, :class => 'room_input equipment') %>
 	<% else %>
 	<%= check_box_tag(category,true, false, :class => 'room_input equipment') %>
 	<% end %>
 	<%= label_tag(category, category) %>
+	</li>
 	<% end %>
+</ul>
 <br>
 <% Room.all.each do |room| %>
 	<% room.properties.each  do |property| %> 

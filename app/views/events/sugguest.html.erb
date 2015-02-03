@@ -76,9 +76,9 @@
       </div>
     </div>
   </div>
-  <%= f.submit t('.sugguest', :default => t("helpers.links.sugguest")), :class => 'btn btn-primary', :id => "submit_suggestion" %>
+  <%= f.submit t('.suggest', :default => t("helpers.links.suggest")), :class => 'btn btn-primary', :id => "submit_suggestion" %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             events_path, :class => 'btn btn-default' %>
-  <%= link_to t('.sugguest', :default => t("helpers.links.sugguest")), sugguest_event_path(17), :target => "_blank" %>
+  <%= link_to t('.suggest', :default => t("helpers.links.suggest")), sugguest_event_path(17), :target => "_blank" %>
 
 <% end %>

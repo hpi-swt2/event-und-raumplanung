@@ -40,3 +40,6 @@ de:
       mark_as_favorite: 'Als Favoriten markieren'
       unmark_as_favorite: 'Favoritenmarkierung entfernen'
       belongs_to_series: 'Gehört zur Serie'
+    rooms:
+      requested_size: Gewünschte Raumgröße
+      reuqested_equipment: Notwendige Ausstattung

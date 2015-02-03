@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150123132333) do
+ActiveRecord::Schema.define(version: 20150202145925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "activities", force: true do |t|
     t.string   "username"
@@ -36,6 +37,20 @@ ActiveRecord::Schema.define(version: 20150123132333) do
   end
 
   add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
+
+  create_table "bookings", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start"
+    t.datetime "end"
+    t.integer  "event_id"
+    t.integer  "room_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.string   "author"
@@ -101,8 +116,8 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.date     "end_date"
     t.time     "end_time"
     t.boolean  "is_important"
-    t.text     "schedule"
     t.integer  "event_id"
+    t.text     "schedule"
   end
 
   add_index "events", ["event_id"], name: "index_events_on_event_id", using: :btree
@@ -210,13 +225,13 @@ ActiveRecord::Schema.define(version: 20150123132333) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "username",               default: "",       null: false
-    t.string   "encrypted_password",     default: "",       null: false
+    t.string   "username",               default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.string   "status"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,        null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -229,11 +244,13 @@ ActiveRecord::Schema.define(version: 20150123132333) do
     t.string   "office_location",        default: ""
     t.string   "office_phone",           default: ""
     t.string   "mobile_phone",           default: ""
-    t.string   "language",               default: "German"
+    t.string   "language",               default: "de"
     t.boolean  "email_notification",     default: true
     t.boolean  "firstlogin",             default: true
+    t.string   "icaltoken"
   end
 
+  add_index "users", ["icaltoken"], name: "index_users_on_icaltoken", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
