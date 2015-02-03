@@ -51,7 +51,7 @@ class EventOccurrenceController < ApplicationController
       event = Event.find(event_id)
       schedule = event.schedule
       next_occurrence = schedule.next_occurrence(starting - 1.seconds)
-      if next_occurrence.present? && next_occurrence.to_time.to_s == starting.to_s && (next_occurrence + event.duration).to_s == ending.to_s
+      if next_occurrence.present? && next_occurrence.to_time.to_i == starting.to_i && (next_occurrence + event.duration).to_i == ending.to_i
         return false
       end
       return true
