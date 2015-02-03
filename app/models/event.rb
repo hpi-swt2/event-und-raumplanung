@@ -80,7 +80,8 @@ class Event < ActiveRecord::Base
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     unless dirty_rule.nil? || dirty_rule == "null"
       rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
-      rule.until(Date.parse(termination_date)) unless termination_date.nil?
+      date = Date.parse(termination_date) if termination_date.present?
+      rule.until(date)
       schedule.add_recurrence_rule rule
     end
     self.schedule = schedule
