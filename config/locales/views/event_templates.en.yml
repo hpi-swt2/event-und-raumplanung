@@ -1,0 +1,10 @@
+en:
+  event_templates:
+    index:
+      title: 'Event templates'
+      sorted_by: 'sorted by'
+      reset_filter: 'reset filter'
+      search: 'search'
+      name: 'name'
+      description: 'description'
+      rooms: 'rooms'
