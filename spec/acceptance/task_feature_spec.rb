@@ -3,7 +3,7 @@ include RequestHelpers
 
 RSpec.feature "Task" do
     background do
-	    # not needed anymore..
+	       # not needed anymore..
     end
 
     before(:each) do
@@ -16,20 +16,33 @@ RSpec.feature "Task" do
     #
     #
     scenario "create minimal Task", acceptance_test: true, js: true do
-  		page.visit "/tasks/new?event_id=2"
-		#page.should have_text("Aufgaben")
+  		#page.visit "/events"
+		#have_text("Eventübersicht")
+ 		#page.first(:link, "Editieren").click
+  		#page.click_link "AdminEvent"
+		#have_text("details for an event of admins")
+		#page.first(:link, "Aufgabe erstellen").click
+		page.visit "/tasks/new?event_id=2"
+		page.should have_text("Aufgabe hinzufügen")
 		#page.click_link("Aufgabe erstellen", :match => :first)
 		#page.should have_text("Aufgabe hinzufügen")
 		page.fill_in "task_name", with: "Acceptance Tests schreiben"
 		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben."
 		page.click_button "Absenden"
-		page.should have_content("Aufgabe: Acceptance Tests schreiben")
+		#page.should have_content("Aufgabe: Acceptance Tests schreiben")
+		page.should have_content("Aufgabe wurde erfolgreich erstellt")
     end
 
     #
     #
     scenario "create a task for an Event witout mandatory fields", acceptance_test: true, js: true do
-  		page.visit "/tasks/new?event_id=2"
+  		#page.visit "/events"
+		#have_text("Eventübersicht")
+ 		#page.first(:link, "Editieren").click
+  		#page.click_link "AdminEvent"
+		#have_text("details for an event of admins")
+		#page.first(:link, "Aufgabe erstellen").click
+		page.visit "/tasks/new?event_id=2"
 		#have_text("Eventübersicht")
    		#page.first(:link, "Editieren").click
 		#click_on("AdminEvent")
@@ -61,7 +74,7 @@ RSpec.feature "Task" do
 		have_text("test_admin")
     end
    
-    # currently not supported due to Anhang hinzufügen which is an linked input field
+##### currently not supported due to Anhang hinzufügen which is an linked input field ########
     #
     #
     scenario "create Task with attachment", js: true, acceptance_test: true, exclude: true do
@@ -69,13 +82,12 @@ RSpec.feature "Task" do
 		#page.should have_text("Aufgabe hinzufügen")
 		#page.click_button "Hinzufügen"
 		#page.click_link("Aufgabe erstellen", :match => :first)
-		page.fill_in "task_name", with: "Acceptance Tests schreiben"
+		page.fill_in "task_name", with: "Acceptance Tests schreiben 2"
 		page.fill_in "task_description", with: "Lasst uns Acceptance Tests schreiben mit Attachment."
 		page.fill_in "attachment_title", with: "Picture"
 		page.fill_in "attachment_url", with: "http://zlomenymec.pise.cz/img/264331.jpg"		
-		#page.click_on("Anhang hinzufügen")
 		page.first(:link, "Anhang hinzufügen").click
-		page.click_button "Löschen" # would delete Anhang
+		page.click_button "Löschen" # would delete Attachment
 		page.click_button "Absenden"
 		page.should have_content("Aufgabe wurde erfolgreich aktualisiert.")
     end

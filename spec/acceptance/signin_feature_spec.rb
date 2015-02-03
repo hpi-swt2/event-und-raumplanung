@@ -7,8 +7,9 @@ RSpec.feature "User signin" do
     	#
 	scenario "Signing in with single button", :acceptance_test => true, :user_signin_correct => true, exclude: true do
 		page.visit "/users/sign_in"
-		page.click_button "Log in"
-		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/openidlogin"
+		page.should have_content("Einloggen")
+		page.click_button "Einloggen"
+		expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/"
 	end
 
   	#
@@ -23,7 +24,8 @@ RSpec.feature "User signin" do
 	end
 
 
-	# OLD TESTS: not necessary anymore due to change in login process
+######### OLD TESTS: not necessary anymore due to change in login process ###################
+
   	#
     	#
 	scenario "Signing in with correct eMail", :acceptance_test => true, :user_signin_correct => true, exclude: true do
@@ -34,6 +36,7 @@ RSpec.feature "User signin" do
 		#expect(page.current_url).to eq "https://openid.hpi.uni-potsdam.de/"
 		expect(page.current_url).to eq "http://www.example.com/users/sign_in"
 	end
+
 	#
     	#
 	scenario "Signing in with incorrect eMail", :acceptance_test => true, :user_signin_incorrect => true, exclude: true do

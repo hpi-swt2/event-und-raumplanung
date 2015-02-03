@@ -39,6 +39,14 @@ event2 = Event.create({name: 'AdminEvent',
 					user_id: 3,
 					room_id: room1.id,
 					rooms: [room1]})
+event3 = Event.create({name: 'DeleteMePlease',
+					description: 'details for the Event DeleteMePlease',
+					starts_at: Date.today + 5,
+					ends_at: Date.today + 5,
+					participant_count: 10,
+					user_id: 3,
+					room_id: room1.id,
+					rooms: [room1]})
 
 #
 ## Task seed

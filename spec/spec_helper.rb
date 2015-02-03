@@ -49,7 +49,7 @@ RSpec.configure do |config|
 config.around(:each, :acceptance_test => true) do |ex|
     DatabaseCleaner.start   
     DatabaseCleaner.strategy = :truncation
-    load Rails.root + "spec/support/seeds.rb" 
+    #load Rails.root + "spec/support/seeds.rb" 
     ex.run
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean
