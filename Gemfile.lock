@@ -1,4 +1,4 @@
-GEM
+EM
   remote: https://rubygems.org/
   specs:
     actionmailer (4.1.6)
