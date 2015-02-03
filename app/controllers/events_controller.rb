@@ -70,6 +70,7 @@ class EventsController < GenericEventsController
   end
 
   def approve
+    authorize! :approve, @event
     @event.approve
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
@@ -82,6 +83,7 @@ class EventsController < GenericEventsController
   end
 
   def decline
+    authorize! :decline, @event
     @event.decline
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
@@ -221,7 +223,7 @@ class EventsController < GenericEventsController
     @comment = Comments.new(:content => params[:commentContent], :user_id => params[:user_id], :event_id => params[:event_id])
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_create', :model => Comments.model_name.human) }
+        format.html { redirect_to events_url + "/" + params[:event_id], notice: t('notices.successful_comment_create') }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }

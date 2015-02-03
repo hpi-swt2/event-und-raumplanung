@@ -5,26 +5,31 @@ class RoomPropertiesController < ApplicationController
   # GET /rooms
   # GET /rooms.json
   def index
+    authorize! :index, RoomProperty 
     @roomProperties = RoomProperty.all
   end
 
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    authorize! :show, @roomProperty
   end
 
   # GET /rooms/new
   def new
+    authorize! :new, RoomProperty
     @roomProperty = RoomProperty.new
   end
 
   # GET /rooms/1/edit
   def edit
+    authorize! :edit, @roomProperty
   end
 
   # POST /rooms
   # POST /rooms.json
   def create
+    authorize! :create, RoomProperty
     @roomProperty = RoomProperty.new(room_property_params)
 
     respond_to do |format|
@@ -41,6 +46,7 @@ class RoomPropertiesController < ApplicationController
   # PATCH/PUT /rooms/1
   # PATCH/PUT /rooms/1.json
   def update
+    authorize! :update, @roomProperty
     respond_to do |format|
       if @roomProperty.update(room_property_params)
         format.html { redirect_to room_properties_url, notice: t('notices.successful_update', :model => RoomProperty.model_name.human) }
@@ -55,6 +61,7 @@ class RoomPropertiesController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
+    authorize! :destroy, @roomProperty
     @roomProperty.destroy
     respond_to do |format|
       format.html { redirect_to room_properties_url, notice: t('notices.successful_destroy', :model => RoomProperty.model_name.human) }

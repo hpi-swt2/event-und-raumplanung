@@ -56,23 +56,23 @@ class Ability
         can :read, Group
     end
 
-    can [:create, :destroy], Room if user.has_permission("manage_rooms")
+    can [:new, :create, :destroy], Room if user.has_permission("manage_rooms")
 
-    can :update, Room if user.has_permission("edit_rooms")
+    can [:index, :show, :edit, :update], Room if user.has_permission("edit_rooms") or user.has_permission("manage_rooms")
 
-    can [:create, :destroy], Equipment if user.has_permission("manage_equipment")
+    can [:new, :create, :destroy], Equipment if user.has_permission("manage_equipment")
     
-    can :update, Equipment if user.has_permission("edit_equipment")
+    can [:index, :show, :edit, :update], Equipment if user.has_permission("edit_equipment") or user.has_permission("manage_equipment")
 
-    can [:create, :destroy], RoomProperty if user.has_permission("manage_properties")
+    can [:new, :create, :destroy], RoomProperty if user.has_permission("manage_properties")
     
-    can :update, RoomProperty if user.has_permission("edit_properties")
+    can [:index, :show, :edit, :update], RoomProperty if user.has_permission("edit_properties") or user.has_permission("manage_properties")
 
     can [:assign_equipment, :assign_properties], Room if user.has_permission("assign_to_rooms")
 
-    can :approve_any, Event if user.has_any_permission("approve_events")
+    can [:approve_any, :decline_any], Event if user.has_any_permission("approve_events")
 
-    can [:approve, :decline], Event do |event|
+    can [:show, :approve, :decline], Event do |event|
         if event.rooms.empty?
             user.has_permission("approve_events")
         else

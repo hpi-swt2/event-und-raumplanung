@@ -73,7 +73,9 @@
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.rooms'), rooms_path %></li>
                 <li class="dropdown-room-indent"><%= link_to t('.equipment'), equipment_index_path %></li>
-                <li class="dropdown-room-indent"><%= link_to t('.properties'), room_properties_path %></li>
+                <% if can? :index, RoomProperty %>
+                  <li class="dropdown-room-indent"><%= link_to t('.properties'), room_properties_path %></li>
+                <% end %>
                 <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
                 <li><%= link_to t('.print'), print_path %></li>
