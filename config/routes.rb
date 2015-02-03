@@ -98,7 +98,7 @@ Rails.application.routes.draw do
     collection do
       get :create_event_suggestion
       patch :create_event_suggestion
-      post :creat_event_suggestion
+      post :create_event_suggestion
       get :reset_filterrific
     end
 
