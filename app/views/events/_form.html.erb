@@ -56,10 +56,10 @@
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6" id="startDate">
-        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => @event.starts_at_date.strftime("%d/%m/%Y")}%>
+        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => l(@event.starts_at_date.to_date)}%>
         <script type="text/javascript">
           $('#startDate').datetimepicker({
-            format: 'DD/MM/YYYY',
+            language: '<%= I18n.locale %>',
             pickTime: false
           });
         </script>
@@ -82,10 +82,10 @@
     <%= f.label model_class.human_attribute_name(:ends_at) , :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6" id="endDate">
-        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => @event.ends_at_date.strftime("%d/%m/%Y") }%>
+        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => l(@event.ends_at_date.to_date) }%>
         <script type="text/javascript">
           $('#endDate').datetimepicker({
-            format: 'DD/MM/YYYY',
+            language: '<%= I18n.locale %>',
             pickTime: false
           });
         </script>
@@ -127,8 +127,6 @@
     </div>
   </div>
   <script type="text/javascript">
-    $('.end-date-group').hide();
-
     (function() {
 
       var updateEndDateVisible = function() {
@@ -142,6 +140,7 @@
       $('.recurring_select').change(updateEndDateVisible);
       $(document).on('click','.rs_dialog', updateEndDateVisible);
 
+      updateEndDateVisible();
     })();
   </script>
   <div class="control-group">
