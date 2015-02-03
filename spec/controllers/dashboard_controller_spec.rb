@@ -134,5 +134,20 @@ RSpec.describe DashboardController, type: :controller do
         expect(assigns(:my_upcoming_events).include? other_user_event). to eq(false)
       end
     end
+
+    describe "GET events_between" do
+      it "gets a json with calender events" do
+        2.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: user.id) }
+        get :events_between, {start: Time.now.to_s, :end => Time.now.advance(days: 2).to_s}
+        json = JSON.parse(response.body)
+        expect(json.size).to eq(2)
+      end
+
+      it "raises an error if no start and en params are set" do
+        expect {
+          get :events_between, format: :json
+        }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
   end
 end

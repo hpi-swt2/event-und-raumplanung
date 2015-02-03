@@ -9,8 +9,9 @@ class DashboardController < ApplicationController
   end
 
   def events_between
-    start_datetime = Time.parse(params['start'])
-    end_datetime = Time.parse(params['end'])
+    raise ActionController::ParameterMissing.new('start, end') unless events_between_params['start'].present? && events_between_params['end'].present?
+    start_datetime = Time.parse(events_between_params['start'])
+    end_datetime = Time.parse(events_between_params['end'])
     events = Event.events_between(start_datetime, end_datetime).select{|occ| can? :show, occ.event}
     events_json = "["
     events.each do |event_occurrence|
@@ -20,11 +21,16 @@ class DashboardController < ApplicationController
     events_json = events_json[0..-2] if events_json.size > 1
     events_json += "]"
     respond_to do |format|
+      format.html { render json: events_json }
       format.json { render json: events_json }
     end
   end
 
  private
+
+  def events_between_params
+    params.permit(:start, :end)
+  end
 
   def get_my_tasks 
     @my_accepted_tasks = []
