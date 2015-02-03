@@ -1,0 +1,17 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      task:
+        one: 'Aufgabe'
+        other: 'Aufgaben'
+    attributes:
+      task:
+        name: 'Name'
+        description: 'Beschreibung'
+        identity: 'Zugewiesen an'
+        event: 'Event'
+        status: 'Status'
+        done: 'Erledigt'
+        assigned_to: 'Zugewiesen an'

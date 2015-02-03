@@ -1,6 +1,8 @@
 <%- model_class = EventTemplate -%>
+<% page_header = t '.title', :default => model_class.model_name.human.pluralize.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%= page_header %></h1>
 </div>
 <div class="well">
   <div class="row">
@@ -48,6 +50,6 @@
 ) %>
 <div class="clear"></div>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_event_template_path,
-            :class => 'btn btn-primary' %>
+<%= link_to new_event_template_path, :title => t("helpers.links.new"), :class => 'btn btn-primary' do %>
+  <span class="glyphicon glyphicon-plus"></span>
+<% end %>

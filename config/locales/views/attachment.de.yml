@@ -1,0 +1,15 @@
+de:
+  tasks:
+    attachments:
+      none: Keine Anhänge
+      title: Titel
+      url: URL
+    form:
+      add_attachment: 'Anhang hinzufügen'
+      attachments: 'Anhänge'
+      files: Dateien
+      links: Links
+    show:
+      attachments: 'Anhänge'
+      files: Dateien
+      links: Links

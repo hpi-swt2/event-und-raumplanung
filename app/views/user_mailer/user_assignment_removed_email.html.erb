@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>English version below</p>
+
+    <h1>Hallo <%= @user.username %></h1>
+    <p>
+      <%= @assigner.username %> hat 
+      <% if @group_assigment %>
+        die Zuordnung der Gruppe <%= @group_name %>
+      <% else %>
+        Ihre Zuordnung
+      <% end %>
+      zum Task <%= link_to @task.name, task_url(@task) %> gelöscht.
+    </p>
+    <p>Einen schönen Tag!</p>
+    <hr/>
+
+    <h1>Hello <%= @user.username %></h1>
+    <p>
+      <%= @assigner.username %> removed 
+      <% if @group_assigment %>
+        the assignment of the group <%= @group_name %>
+      <% else %>
+        your assignment 
+      <% end %>
+      to the task <%= link_to @task.name, task_url(@task) %>
+    </p>
+    <p>Thanks and have a great day!</p>
+  </body>
+</html>

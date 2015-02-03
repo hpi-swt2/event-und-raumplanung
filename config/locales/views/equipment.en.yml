@@ -1,0 +1,32 @@
+en:
+  equipment:
+    index:
+      title: Equipment
+      search_name: Search for name
+      search_category: Search for category
+      search_room: Search for room
+      new: New
+    list: 
+      description: Description
+      room: Room
+      category: Category
+      action: Actions
+      new: New
+      edit: Edit
+      delete: Delete
+    show:
+      description: Description
+      room: Room
+      back: Back
+      edit: Edit
+      delete: Delete
+    form:
+      name: Name
+      description: Description
+      room: Room
+      category: Category
+      cancel: Cancel
+      submit: Submit
+      category_tooltip: Please enter a category for this equipment. The category will be used for filtering.
+    edit:
+      title: Edit Equipment

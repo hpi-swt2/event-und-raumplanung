@@ -1,8 +1,32 @@
-Hello <%= @user.email %>
-===========================
-Someone assigned the task <%= @task.name %> to you
+English version below
 
-Click here to accept: <%= link_to "Accept", accept_task_url(@task)%>.
-Click here to decline: <%= link_to "Decline", decline_task_url(@task) %>.
+Hallo <%= @user.username %>
+===========================
+
+<% if @group_assignment %>
+<%= @assigner.username %> hat der Gruppe <%= @group_name %> den Task <%= @task.name %> zugewiesen
+<% else %>
+<%= @assigner.username %> hat Ihnen den Task <%= @task.name %> zugewiesen
+<% end %>
+
+Rufen Sie diese Seite auf, um den Task anzusehen: <%= task_url(@task)%>.
+Rufen Sie diese Seite auf, um die Zuordnung <% if @group_assignment %>im Namen der Gruppe<% end %> zu akzeptieren: <%= accept_task_url(@task)%>.
+Rufen Sie diese Seite auf, um die Zuordnung <% if @group_assignment %>im Namen der Gruppe<% end %> abzulehnen: <%= decline_task_url(@task) %>.
+
+Einen schönen Tag!
+
+============================================
+
+Hello <%= @user.username %>
+===========================
+<% if @group_assignment %>
+<%= @assigner.username %> assigned the task <%= @task.name %> to the group <%= @group_name %>
+<% else %>
+<%= @assigner.username %> assigned the task <%= @task.name %> to you
+<% end %>
+
+Visit this URL to see the task: <%= task_url(@task)%>.
+Visit this URL to accept<% if @group_assignment %> on behalf of the group<% end %>: <%= accept_task_url(@task)%>.
+Visit this URL to decline<% if @group_assignment %> on behalf of the group<% end %>: <%= decline_task_url(@task) %>.
 
 Thanks and have a great day!

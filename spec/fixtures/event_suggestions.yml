@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  starts_at: MyString
+  datetime: MyString
+  ends_at: MyString
+  datetime: MyString
+  status: MyString
+  room_id: 1
+
+two:
+  starts_at: MyString
+  datetime: MyString
+  ends_at: MyString
+  datetime: MyString
+  status: MyString
+  room_id: 1

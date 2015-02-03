@@ -1,5 +1,7 @@
-<h1>EventsApproval#index</h1>
+<% title t '.title' %>
+<h1><%=t '.title' %></h1>
 
+<<<<<<< HEAD
 <table class="table table-striped">
   <thead>
     <tr>
@@ -116,3 +118,25 @@
     </div>
   </div>
 </div>
+=======
+<div id='open_events'>
+  <%= render partial: 'list', locals: { events: @open_events, events_type: 'open' } %>
+</div>
+<br>
+
+<div id='approved_events'>
+  <h4><%=t '.approved_events' %></h4>
+  <center>
+    <table>
+      <td><%= link_to "<--", events_approval_path(date: @date.yesterday) %></td>
+      <td>
+        <%= form_tag("events_approval", method: "get", :name => "datePicker") do %>
+          <%= select_date(@date, {}, :onchange => ("javascript: document.datePicker.submit();")) %>
+        <% end %>
+      </td>
+      <td><%= link_to "-->", events_approval_path(date: @date.tomorrow) %></td>
+    </table>
+  </center>
+<%= render partial: 'list', locals: { events: @approved_events, events_type: 'approved' } %>
+</div>
+>>>>>>> Clownfish

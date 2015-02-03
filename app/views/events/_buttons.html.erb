@@ -1,0 +1,29 @@
+<% if can? :edit, event%>
+  <%= link_to edit_event_path(event), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
+    <span class="glyphicon glyphicon-pencil"></span>		
+  <% end %>  	
+<% end %>
+
+<%= link_to new_event_template_event_path(event), :title => t("helpers.submit.create", :model => EventTemplate.model_name.human.titleize), :class => 'btn btn-default btn-xs' do %>
+  <span class="glyphicon glyphicon-list-alt"></span>		
+<% end %>   
+
+<% if @favorites.include?(event) %>
+  <%= link_to index_toggle_favorite_event_path(event), :title => t("helpers.links.remove_favorite"), remote: true, :class => 'btn btn-default btn-xs' do %>
+    <span class="glyphicon glyphicon-star event-favorite-icon-checked-button"></span>
+  <% end %>
+  
+<% else %>
+  <%= link_to index_toggle_favorite_event_path(event), :title => t("helpers.links.add_favorite"), remote: true, :class => 'btn btn-default btn-xs' do %>
+    <span class="glyphicon glyphicon-star event-favorite-icon-unchecked-button"></span>
+  <% end %>
+<% end %>
+
+<% if can? :destroy, event %> 
+  <%= link_to event_path(event),
+              :method => :delete,
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :title => t("helpers.links.destroy"), :class => 'btn btn-xs btn-danger' do %>
+    <span class="glyphicon glyphicon-trash"></span>		
+  <% end %>  
+<% end %>

@@ -1,0 +1,15 @@
+en:
+  tasks:
+    attachments:
+      none: No Attachments
+      title: Title
+      url: URL
+    form:
+      add_attachment: 'Add Attachment'
+      attachments: 'Attachments'
+      files: Files
+      links: Links
+    show:
+      attachments: 'Attachments'
+      files: Dateien
+      links: Links

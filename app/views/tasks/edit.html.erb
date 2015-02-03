@@ -1,13 +1,10 @@
-<%- model_class = Task -%>
+<% model_class = Task %>
+<% page_header = t '.title', :default => [:'helpers.titles.edit'], :model => model_class.model_name.human.titleize %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+  <h1><%= page_header %></h1>
 </div>
-<%= render :partial => 'form' %>
 
-<script>
-	var viewModel = new TaskEditViewModel(true, <%= @task.id %>);
-	ko.applyBindings(viewModel);
-    $.getJSON('<%= attachments_path(task_id: @task.id) %>', function(attachments) {
-    	viewModel.attachments(attachments);
-    });
-</script>
+<div id="task-form-edit" data-task-id="<%= @task.id %>">
+	<%= render :partial => 'form', :locals => {:for_event_template => @for_event_template} %>
+</div>

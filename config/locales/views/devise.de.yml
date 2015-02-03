@@ -1,0 +1,6 @@
+de:
+  devise:
+    sessions:
+      new:
+        title: Login
+        login: Einloggen

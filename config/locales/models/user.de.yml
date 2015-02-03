@@ -1,0 +1,21 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      user:
+        one: Benutzer
+        other: Benutzer
+    attributes:
+      user:
+        username: Benutzername
+        email: E-Mail
+        status: Status
+        identity_url: Identity url
+        encrypted_password: Passwort
+        office_location: 'Büro Adresse'
+        office_phone: 'Büro Telefonnummer'
+        mobile_phone: 'Mobil Telefonnummer'
+        language: 'Sprache'
+        email_notification: 'E-Mail Benachrichtigungen'
+        fullname: 'Name'

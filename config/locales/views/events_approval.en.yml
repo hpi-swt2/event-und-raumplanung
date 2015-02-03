@@ -1,0 +1,14 @@
+# ruby encoding: utf-8
+
+en:
+  events_approval:
+    index:
+      title: Approve Events
+      approved_events: Approved Events
+    list:
+      decline: Decline
+      approve: Approve
+      time: Time
+      no_open_events: No open events
+      no_approved_events: No approved events
+      unknown: Unkown

@@ -1,0 +1,22 @@
+<%- model_class = Event -%>
+<% return_url = request.env['PATH_INFO'] %>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= t('dashboard.upcoming_events') %></h3>
+    </div>
+    <div class="panel-body">
+        <% if !@event_occurrences.empty? %>
+            <ul class="list-group">
+                <% @event_occurrences.each do |event_occurrence| %>
+                    <li class="list-group-item">
+                        <%= link_to event_occurrence.event.name, show_occurrence_path(:eventid => event_occurrence.event.id, :starting => event_occurrence.starts_occurring_at.to_s, :ending => event_occurrence.ends_occurring_at.to_s) %>
+                        (<%= event_occurrence.starts_occurring_at.strftime("%A, %d.%m.%Y, %H:%M") if event_occurrence.starts_occurring_at %>)
+                    </li>
+                <% end %>
+            </ul>
+        <% else %>
+            <%= t('dashboard.no_events') %>
+        <% end %>
+    </div>
+</div>

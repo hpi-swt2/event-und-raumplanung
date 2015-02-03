@@ -5,10 +5,47 @@ de:
     index:
       title: Raumübersicht
       all_events: Alle Events
+      sorted_by: 'Sortiert nach'
+      reset_filter: 'Filter zurücksetzen'
+      items_per_page: 'Räume pro Seite'
+      search: 'Suche'
     show:
       no_upcoming_events: Keine anstehenden Events
       upcoming_events: Anstehende Events
       all_events: Alle Events
       no_properties: Keine speziellen Eigenschaften
-    events:
+      equipment: Ausstattung
+      category: Kategorie
+      available: Vorhanden
+      no_equipment: Keine Ausstattung vorhanden
+      message_for_event_creator: Message for event creator
+      close: Schließen
+    upcoming_events:
       no_upcoming_events: Keine anstehenden Events
+      create_event: Event erstellen
+    details:
+      capacity: Kapazität
+      equipment: Ausstattung
+      request: Jetzt anfragen
+      people: Personen
+      table_information: Tische auf Anfrage
+      table_request: Tische anfragen
+      title: 'Details von %{model}'
+    list:
+      all_events: Alle Events
+      room_selection: Raumauswahl
+      requested_size: gewünschte Raumgröße
+      necessary_equipment: Notwendige Ausstattung
+      necessary_properties: Notwenige Eigenschaften
+      no_rooms_found: Keine passenden Räume gefunden
+      no_selection: Noch keine Suchkriterien eingegeben
+      room_id: Raum ID
+      room_name: Raumname
+      room_size: maximale Personenzahl
+      equipment: Ausstattung
+      properties: Eigenschaften
+      create_event: Event erstellen
+    events:
+      title: 'Anstehende %{event} in %{room}'
+    print:
+      room_blocked: Raum blockiert

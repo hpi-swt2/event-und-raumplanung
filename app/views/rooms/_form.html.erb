@@ -1,46 +1,69 @@
 <%= form_for @room, :html => { :class => "form-horizontal room" } do |f| %>
-
     <% if @room.errors.any? %>
-    <div id="error_expl" class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Room.model_name.human, :count => @room.errors.count %></h3>
-      </div>
-      <div class="panel-body">
-        <ul>
-        <% @room.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
-      </div>
+        <div id="error_expl" class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title"><%= t 'errors.template.header.other', :model => Room.model_name.human, :count => @room.errors.count %></h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <% @room.errors.full_messages.each do |msg| %>
+                        <li><%= msg %></li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+    <% end %>
+    <div class="control-group">
+        <%= f.label :name, :class => 'control-label' %>
+        <div class="controls">
+            <%= f.text_field :name, :class => 'form-control' %>
+        </div>
+        <%= error_span(@room[:name]) %>
     </div>
-  <% end %>
-
-  <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
+    <div class="control-group">
+        <%= f.label :size, :class => 'control-label' %>
+        <div class="controls">
+            <%= f.text_field :size, :class => 'form-control' %>
+        </div>
+        <%= error_span(@room[:size]) %>
     </div>
-    <%= error_span(@room[:name]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :size, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :size, :class => 'form-control' %>
+    <div class="control-group">
+        <%= f.label :properties, :class => 'control-label' %>
+        <div class="controls">
+            <%= f.collection_check_boxes :property_ids, @properties, :id, :name do |b| %>
+                <%= b.check_box + b.text %><br/>
+            <% end %>
+        </div>
     </div>
-    <%= error_span(@room[:size]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :properties, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.collection_check_boxes :property_ids, @properties, :id, :name do |b| %>
-      <%= b.check_box + b.text %><br/>
-      <% end %>
+    <br />
+    <div class="control-group">
+        <h3><%= Room.human_attribute_name :equipment, :class => 'control-label' %></h3>
+        <div class="table-responsive">
+            <table class="table table-column">
+                <thead>
+                <tr>
+                    <th><%= f.label :category, :class => 'control-label' %></th>
+                    <th><%= f.label :available, :class => 'control-label' %></th>
+                    <th><%= f.label :max_count, :class => 'control-label' %></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @available_equipment.each do |category, count| %>
+                    <tr>
+                        <td><%= category%></td>
+                        <% existing_count = 0 %>
+                        <% if @assigned_equipment.has_key?(category) %>
+                            <% existing_count = @assigned_equipment[category] %>
+                        <% end %>
+                        <td><%= number_field_tag category+'_equipment_count', existing_count, in: 0.0..count %></td>
+                        <td><%= count %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            rooms_path, :class => 'btn btn-default' %>
-
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                rooms_path, :class => 'btn btn-default' %>
 <% end %>

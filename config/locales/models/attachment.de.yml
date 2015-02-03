@@ -1,0 +1,11 @@
+# ruby encoding: utf-8
+
+de:
+  activerecord:
+    models:
+      attachment: 'Anhang'
+    attributes:
+      attachment:
+        title: 'Titel'
+        id: 'ID'
+        url: 'URL'

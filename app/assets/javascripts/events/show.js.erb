@@ -1,0 +1,52 @@
+<% url = EventUndRaumplanung::Application.routes.url_helpers %>
+$(document).on('page:load', initialize);
+$(initialize);
+
+function initialize() {
+  makeTasksSortable();
+  enableFavoriteStarToggling();
+}
+
+function makeTasksSortable() {
+  if ($('#tasks-sortable').length > 0) {
+    $('#tasks-sortable').sortable({
+      axis: 'y',
+      items: '.item',
+      cursor: 'move',
+      placeholder: "task-placeholder info",
+      sort: function(e, ui) {
+        ui.item.addClass('active');
+      },
+      stop: function(e, ui) {
+        ui.item.removeClass('active');
+      },
+      update: function(e, ui) {
+        item_id = ui.item.data('item-id');
+        position = ui.item.index();
+        $.post('<%= url.update_task_order_tasks_path %>', { task: { task_id: item_id, task_order_position: position }}, function() {
+          ui.item.children('td').effect('highlight', {}, 1000);  
+        });
+      }
+    })
+  }
+}
+
+function enableFavoriteStarToggling() {
+  var button = $("#btn_mark_as_favorite");
+  button.bind("ajax:success", function() {
+    button.toggleClass("event-favorite-icon-checked");
+    button.toggleClass("event-favorite-icon-unchecked");
+    updateFavoriteTitle(button);    
+  });
+  updateFavoriteTitle(button);
+}
+
+function updateFavoriteTitle(button) {
+  var active = button.hasClass("event-favorite-icon-checked");
+  if (active) {
+    var title = button.data("title-unmark");
+  } else {
+    var title = button.data("title-mark");
+  }
+  button.attr({title: title});
+}

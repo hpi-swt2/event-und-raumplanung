@@ -3,7 +3,7 @@ class EventTemplatesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event, :reset_filterrific]
 
   def current_user_id
     current_user.id
@@ -18,7 +18,7 @@ class EventTemplatesController < ApplicationController
       @filterrific.select_options =   {
         sorted_by: EventTemplate.options_for_sorted_by
       }
-      
+
       @event_templates = EventTemplate.only_from(current_user_id).filterrific_find(@filterrific).page(params[:page])
 
       session[:filterrific_event_templates] = @filterrific.to_hash
@@ -39,6 +39,8 @@ class EventTemplatesController < ApplicationController
   # GET /templates/1
   # GET /templates/1.json
   def show
+    @creator = User.find(@event_template.user_id).name unless @event_template.user_id.nil?
+    @tasks = @event_template.tasks.rank(:task_order)
   end
 
   # GET /templates/new
@@ -52,11 +54,13 @@ class EventTemplatesController < ApplicationController
     time = Time.new.getlocal
     time -= time.sec
     time += time.min % 15
+    @event.participant_count = @event_template.participant_count
     @event.starts_at = time
     @event.ends_at = (time+(60*60))
     @event.name = @event_template.name
     @event.description = @event_template.description
     @event.rooms = @event_template.rooms
+    @event_template_id = @event_template.id
     render "events/new"
   end
 
@@ -67,8 +71,12 @@ class EventTemplatesController < ApplicationController
   # POST /templates
   # POST /templates.json
   def create
-    @event_template = EventTemplate.new(eventtemplate_params)
+    params = eventtemplate_params
+    @event_id = params['event_id']
+    params.delete('event_id')
+    @event_template = EventTemplate.new(params)
     @event_template.user_id = current_user_id
+    create_tasks @event_id
 
     respond_to do |format|
       if @event_template.save
@@ -113,6 +121,39 @@ class EventTemplatesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def eventtemplate_params
-      params.require(:event_template).permit(:name, :description, :participant_count, :room_ids => [])
+      params.require(:event_template).permit(:name, :description, :participant_count, :event_id, :room_ids => [])
     end
+
+    def create_tasks event_id
+      if event_id
+        event = Event.find(event_id)
+        event.tasks.collect do |original_task|
+          event_template_task = Task.new task_parameters original_task.attributes            
+          event_template_task.event_id = nil
+          event_template_task = create_attachments original_task, event_template_task
+          @event_template.tasks << event_template_task 
+        end
+      else 
+        return
+      end
+      return 
+    end
+
+    def task_parameters task_attributes   #only name, description and task_order are relevant for event_template tasks
+      params = {}
+      params['name'] = task_attributes['name']
+      params['description'] = task_attributes['description']
+      params['task_order'] = task_attributes['task_order']
+      # this probably makes no sense
+      params['deadline'] = task_attributes['deadline']
+      return params
+    end
+
+    def create_attachments original_task, new_task
+      original_task.attachments.collect do |original_attachments| 
+        event_attachment = original_attachments.dup 
+        new_task.attachments << event_attachment
+      end
+      return new_task
+    end  
 end

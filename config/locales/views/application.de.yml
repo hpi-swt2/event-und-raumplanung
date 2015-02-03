@@ -1,0 +1,18 @@
+de:
+  layouts:
+    application:
+      student: Student
+      staff: Mitarbeiter
+      events: Veranstaltungen
+      rooms: Räume
+      groups: Gruppen
+      tasks: Aufgaben
+      requests: Offene Anfragen
+      room_mate: Room Mate
+      configuration: Verwaltung
+      equipment: Ausstattung
+      print: Drucken
+      properties: Eigenschaften
+      permissions: Berechtigungen
+      templates: Vorlagen
+
