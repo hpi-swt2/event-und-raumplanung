@@ -74,7 +74,7 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    notice = {notice: "Successfully approved the event"}
+    notice = {notice: t('notices.successful_approve', :model => @event.name)}
     begin
       redirect_to :back, flash: notice
     rescue ActionController::RedirectBackError
@@ -87,7 +87,7 @@ class EventsController < GenericEventsController
     @event.activities << Activity.create(:username => current_user.username, 
                                           :action => params[:action],
                                           :controller => params[:controller])
-    notice = {notice: "Successfully declined the event"}
+    notice = {notice: t('notices.successful_decline', :model => @event.name)}
     begin
       redirect_to :back, flash: notice
     rescue ActionController::RedirectBackError
