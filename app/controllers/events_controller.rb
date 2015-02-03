@@ -13,10 +13,10 @@ class EventsController < GenericEventsController
   load_and_authorize_resource
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
   after_filter :flash_to_headers, :only => :check_vacancy
-  
+
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
   before_action :get_model, only: [:new, :create, :update, :destroy]
-  
+
   before_action :log_activity, only: [:approve, :decline]
 
   def flash_to_headers
@@ -135,11 +135,11 @@ class EventsController < GenericEventsController
     msg = {}
     if events.empty?
       msg[:status] = true
-    else  
+    else
       msg = build_conflicting_events_response events
-    end 
+    end
     return msg
-  end 
+  end
 
   # GET /events/1
   # GET /events/1.json
@@ -158,15 +158,16 @@ class EventsController < GenericEventsController
   def new
     super
     @event.assign_attributes(params.permit(:name, :description, :participant_count, :starts_at, :ends_at, :is_private, :is_important, :room_ids => []))
-  end 
+  end
 
   # GET /events/:id/new_event_suggestion
   def new_event_suggestion
     @original_event_id = @event.id
+    @original_owner = @event.user_id
     render "event_suggestions/new"
   end
 
-  # GET /events/1/edit 
+  # GET /events/1/edit
   def edit
     #authorize! :edit, @event
   end
@@ -180,7 +181,8 @@ class EventsController < GenericEventsController
   # POST /events/event_suggestion
   def create_event_suggestion
     params = add_original_event_params event_suggestion_params
-    params = add_reference_to_original_event params 
+    params = add_reference_to_original_event params
+    @old_event_owner = Event.find(params["event_id"]).user_id
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
 
@@ -193,7 +195,7 @@ class EventsController < GenericEventsController
     changed_attributes = @event.changed
     @update_result = @event.update(filtered_params)
     if @update_result
-      @event.activities << Activity.create(:username => current_user.username, 
+      @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)
     end
@@ -254,17 +256,26 @@ class EventsController < GenericEventsController
     def create_event params, new_url, model
       @event = Event.new(params_without_schedule_related_params_or_event_template_id params)
       @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
+
       @event_template_id = params['event_template_id']
-      @event.user_id = current_user_id
+
+      # test
+      if @old_event_owner
+        @event.user_id = @old_event_owner
+      else
+        @event.user_id = current_user_id
+      end
+
       if params['event_template_id']
         params = copy_items_from_event_template params
       end
       if params['event_id']
         @original_event_id = params['event_id']
       end
+
       respond_to do |format|
         if @event.save
-          @event.activities << Activity.create(:username => current_user.username, 
+          @event.activities << Activity.create(:username => current_user.username,
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
 
@@ -279,23 +290,23 @@ class EventsController < GenericEventsController
 
     def create_tasks event_template_id
       event_template = EventTemplate.find(event_template_id)
-      event_template.tasks.collect do |original_task| 
+      event_template.tasks.collect do |original_task|
         event_task = original_task.dup
         event_task = create_tasks_with_attachments original_task, event_task
         event_task.event_template_id = nil
         event_task.creator = current_user
-        @event.tasks << event_task 
+        @event.tasks << event_task
       end
       return
     end
 
     def create_tasks_with_attachments original_task, new_task
-      original_task.attachments.collect do |original_attachments| 
-        event_attachment = original_attachments.dup 
+      original_task.attachments.collect do |original_attachments|
+        event_attachment = original_attachments.dup
         new_task.attachments << event_attachment
       end
       return new_task
-    end          
+    end
 
     def add_original_event_params params
       @event = Event.find(params['original_event_id'])
@@ -343,7 +354,7 @@ class EventsController < GenericEventsController
       end
     end
 
-    def build_conflicting_events_response conflicting_events 
+    def build_conflicting_events_response conflicting_events
       logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
                   conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
@@ -361,19 +372,19 @@ class EventsController < GenericEventsController
       rooms_translation = conflicting_event.rooms.size > 1 ? 'multiple_rooms' : 'one_room'
       days_translation = (same_day conflicting_event.starts_at, conflicting_event.ends_at )? 'same_days' : 'different_days'
       return I18n.t('event.alert.conflict_'+ days_translation + '_' + rooms_translation, name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-    end 
+    end
 
     def same_day starts_at, ends_at
       Time.at(starts_at).to_date === Time.at(ends_at).to_date
     end
 
     def log_activity
-      @event.activities << Activity.create(:username => current_user.username, 
+      @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
     end
 
-    def redirect_to_previous_site   
+    def redirect_to_previous_site
       begin
         redirect_to :back
       rescue ActionController::RedirectBackError

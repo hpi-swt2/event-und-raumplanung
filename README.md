@@ -71,3 +71,9 @@ Deployment
 
 Travis CI deployed den Master-Branch (nach erfolgreichem Build) auf Heroku.
 Die Badges enthalten die Links zu den verschiedenen Diensten.
+
+FAQ
+----------
+In case of strange errors around Capybara-Webkit, please keep in mind to install QT windowing framework
+
+sudo apt-get install libqt4-dev
