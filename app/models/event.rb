@@ -43,7 +43,8 @@ class Event < ActiveRecord::Base
   validates_presence_of :name, :starts_at, :ends_at, :rooms
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
-  validate :dates_cannot_be_in_the_past,:start_before_end_date
+  validate :dates_cannot_be_in_the_past, :if => lambda{ new_record? }
+  validate :start_before_end_date
 
   validate :validate_schedule
 
@@ -68,9 +69,14 @@ class Event < ActiveRecord::Base
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
   end
 
-  def schedule_from_rule(dirty_rule, termination_date)
+  def schedule_from_rule(dirty_rule, termination_date=nil)
     validate_schedule
     schedule = self.schedule
+    if schedule.exception_times
+      schedule.exception_times.each do |exception_time|
+        schedule.remove_exception_time(exception_time)
+      end
+    end
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     unless dirty_rule.nil? || dirty_rule == "null"
       rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
@@ -83,6 +89,16 @@ class Event < ActiveRecord::Base
   def occurence_rule
     schedule = self.schedule
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
+  end
+
+  def delete_occurrence(time)
+    schedule = self.schedule
+    schedule.add_exception_time(time)
+    self.update!(schedule: schedule)
+  end
+
+  def single_occurrence_event?
+    occurence_rule.nil?
   end
 
   def schedule_ends_at_date
@@ -126,6 +142,12 @@ class Event < ActiveRecord::Base
       end
     end
     return involved
+  end
+
+  def in_week(week, year)
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
+    return (self.ends_at >= weekBegin && self.starts_at <= weekEnd)
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord

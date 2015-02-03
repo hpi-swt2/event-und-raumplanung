@@ -7,7 +7,7 @@ class IcalController < ApplicationController
       return redirect_to root_path
     end
     @owned_events     = Event.where(user_id: current_user.id)
-    @favorites        = Event.joins(:favorites).where('events.user_id != ? AND favorites.user_id = ? AND favorites.is_favorite = true', current_user.id, current_user.id)
+    @favorites        = Event.joins(:favorites).where('events.user_id != ? AND favorites.user_id = ? AND favorites.is_favorite = ?', current_user.id, current_user.id, true)
     @events_with_task = Event.joins(:tasks).where("tasks.identity_type = 'User' AND tasks.identity_id = ?" , current_user.id)
 
     @event_ids  = @owned_events.collect{ |event| event.id }.uniq

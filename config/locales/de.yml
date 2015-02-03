@@ -237,6 +237,7 @@ de:
     successful_degradation: 'Dem Benutzer %{email} wurde erfolgreich die Gruppenleiter entzogen'
     successful_room_assign: 'Räume erfolgreich hinzugefügt'
     successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
+    successful_comment_create: 'Kommentar wurde erfolgreich erstellt'
     set_language: 'Sprache erfolgreich umgestellt.'
   tasks:
   alert:
@@ -249,6 +250,7 @@ de:
       conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
       conflict_different_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
       conflict_different_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
+      single_occurrence_successful_delete: 'Sie haben den Veranstaltungstermin erfolgreich gelöscht.'
     status:
       suggested: Vorschlag
       approved: bestätigt
