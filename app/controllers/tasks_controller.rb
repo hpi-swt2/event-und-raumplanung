@@ -28,14 +28,11 @@ class TasksController < ApplicationController
     if params[:event_id].present?
       @task.event_id = params[:event_id]
       @for_event_template = false
-      @event_field_readonly = :true
       authorize! :create, @task
       @task.deadline = @task.event.starts_at.strftime("%d/%m/%Y")
     elsif params[:event_template_id].present?
-        @task.event_template_id = params[:event_template_id]
-        @for_event_template = true
-    #else
-     # redirect_to events_path
+      @task.event_template_id = params[:event_template_id]
+      @for_event_template = true
     end
   end
 
