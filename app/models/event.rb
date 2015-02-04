@@ -289,9 +289,9 @@ class Event < ActiveRecord::Base
   def self.upcoming_events(limit=5, user_id)
     list = []
     events = Event.where('starts_at >= ?', Time.now)
-    involved_users_in = Event.involved_in(user_id)
+    involved_in_and_favorite_users = Event.involved_in(user_id) + Event.favorites(user_id)
     events.each do |e|
-      if e.occurence_rule.nil? && !involved_users_in.include?(e) && !e.is_private
+      if e.occurence_rule.nil? && !involved_in_and_favorite_users.include?(e) && !e.is_private
         list << EventOccurrence.new({event: e, starts_occurring_at: e.starts_at, ends_occurring_at: e.ends_at})
       end
     end
