@@ -1,7 +1,7 @@
 <div id="filterrific_results">
   <%= will_paginate @groups, renderer: BootstrapPagination::Rails %>
   <div>
-    <%= page_entries_info groups %>
+    <%= page_entries_info groups unless @groups.empty? %>
   </div>
 
 <div class="table-responsive">
@@ -54,5 +54,10 @@
       </tbody>
     </table>
 </div>
+
+  <div>
+    <%= page_entries_info groups if @groups.empty? %>
+  </div>
+
 <%= will_paginate groups, renderer: BootstrapPagination::Rails %>
 </div>

@@ -1,7 +1,7 @@
 <div id="filterrific_results">
   <%= will_paginate @rooms, renderer: BootstrapPagination::Rails %>
   <div>
-    <%= page_entries_info rooms %>
+    <%= page_entries_info rooms unless @rooms.empty? %>
   </div>
 
   <div class="table-responsive">
@@ -47,6 +47,11 @@
         </tbody>
         </table>
     </div>
+
+  <div>
+    <%= page_entries_info rooms if @rooms.empty? %>
+  </div>
+
 <%= will_paginate rooms, renderer: BootstrapPagination::Rails %>
 </div>
 
