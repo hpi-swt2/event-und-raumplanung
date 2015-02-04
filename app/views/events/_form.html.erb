@@ -29,6 +29,7 @@
     </div>
     <%= error_span(@event[:description]) %>
   </div>
+
   <div class="row well">
     <div class="event-section-divider"><h3><%= t '.room_selection' %></h3></div>
     <br/>
@@ -39,12 +40,20 @@
       <div class="control-group">
         <h4><%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %></h4>
         <div class="controls">
-          <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), {}, {:id => 'selectpicker', :multiple =>'' }%>
+          <%= f.select :room_ids, 
+            options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), 
+            {}, 
+            {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'', :data => { :remote => true, :url => url_for(:controller => "events", :action => "change_chosen_rooms", :id => @event.id) }} %>
         </div>
       <%= error_span(@event[:rooms]) %>
       </div>
     </div>
   </div>
+
+  <div class="control-group" id="chosen_rooms">
+    <%= render :partial => 'events/chosen_rooms' %>
+  </div>
+  
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
     <div class="controls">
@@ -158,6 +167,7 @@
   <% unless @event_template_id.nil? %> 
      <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
   <% end %>
+
   <div class="notice"></div> <!-- display conflicting events -->
 
   <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
@@ -166,5 +176,6 @@
   <%= link_to :back, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
     <span class="glyphicon glyphicon-remove"></span>        
   <% end %>
+
 
 <% end %>

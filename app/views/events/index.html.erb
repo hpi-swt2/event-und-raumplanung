@@ -43,7 +43,7 @@
         <div class="chardin_box">
           <%= t '.only_show_own' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.check_box :user %>
+          <%= f.check_box :user, {}, 'only_show_own', 'show_all' %>
        </div>
       </div>
     </div>
@@ -115,7 +115,8 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.number_field(
             :participants_gte,
-            class: 'form-control'
+            class: 'form-control',
+            min:0
           ) %>
        </div>
       </div>
@@ -127,7 +128,8 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.number_field(
             :participants_lte,
-            class: 'form-control'
+            class: 'form-control', 
+            min:0
           ) %>
        </div>
       </div>

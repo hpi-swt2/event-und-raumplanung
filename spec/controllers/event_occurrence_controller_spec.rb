@@ -59,7 +59,7 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       it "and gets an error when trying deletes an occurrence" do
         weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
         expect {
-          delete :destroy, {:eventid => weekly_recurring_event.to_param}.merge(FactoryGirl.attributes_for(:event_occurrence_for_weekly_event1))
+          delete :destroy, {:eventid => weekly_recurring_event.to_param, starting: weekly_recurring_event.starts_at.advance(weeks: 1), ending: weekly_recurring_event.ends_at.advance(weeks: 1)}
         }.to raise_error(ActionController::RoutingError)
       end
     end

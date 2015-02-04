@@ -11,7 +11,8 @@ class EventsController < GenericEventsController
   #respond_to :html, :js
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :change_chosen_rooms, :create_event_suggestion, :edit_event_with_suggestion]
+
   after_filter :flash_to_headers, :only => :check_vacancy
 
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
@@ -27,6 +28,7 @@ class EventsController < GenericEventsController
       flash.discard
     end
   end
+  
 
   # GET /events/:id/new_event_template
   def new_event_template
@@ -50,6 +52,31 @@ class EventsController < GenericEventsController
     toggle_favorite
     render nothing: true
   end
+  
+  def change_chosen_rooms
+    if params[:event]
+      room_ids = params[:event][:room_ids]
+      @chosen_rooms = Room.find(room_ids)
+      @available_equipment = Equipment.all.select(:category).distinct
+
+      @room_equipment = Hash.new
+      for room in @chosen_rooms
+        @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+      end
+      
+      if params[:id]
+        set_event
+        set_requested_equipment
+      end
+
+    end
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
+  end
 
   # GET /events
   # GET /events.json
@@ -58,14 +85,15 @@ class EventsController < GenericEventsController
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
+    @filterrific.user = @filterrific.user == current_user_id ? 'only_show_own' : 'show_all'
     session[:filterrific_events] = @filterrific.to_hash
   end
 
   def initialize_filterrific params
       @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
       @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
-      @filterrific.user = nil if @filterrific.user == 0;
+      @filterrific.user = nil             if @filterrific.user == 'show_all'
+      @filterrific.user = current_user_id if @filterrific.user == 'only_show_own'
   end
 
   def reset_filterrific
@@ -75,10 +103,31 @@ class EventsController < GenericEventsController
     redirect_to action: :index
   end
 
+  
+  
+  def approve
+    authorize! :approve, @event
+    @event.approve
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    if conflicting_events.empty?
+      @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+      notice = {notice: t('notices.successful_approve', :model => @event.name)}
+      redirect_to_previous_site(notice)
+    else
+      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
+    end
+  end
+
   def decline
     authorize! :decline, @event
     @event.decline
-    redirect_to_previous_site
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    notice = {notice: t('notices.successful_decline', :model => @event.name)}
+    redirect_to_previous_site(notice)
   end
 
   def approve_event_suggestion
@@ -122,17 +171,6 @@ class EventsController < GenericEventsController
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
-    end
-  end
-
-  def approve
-    authorize! :approve, @event
-    @event.approve
-    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
-    if conflicting_events.empty?
-      redirect_to_previous_site
-    else
-      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
     end
   end
 
@@ -193,6 +231,14 @@ class EventsController < GenericEventsController
   # GET /events/1/edit
   def edit
     #authorize! :edit, @event
+
+    @chosen_rooms = Room.find(@event.room_ids)
+    @available_equipment = Equipment.all.select(:category).distinct
+    @room_equipment = Hash.new
+    for room in @chosen_rooms
+      @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+    end
+    set_requested_equipment
   end
 
   # POST /events
@@ -217,6 +263,10 @@ class EventsController < GenericEventsController
     @event.attributes = filtered_params
     changed_attributes = @event.changed
     @update_result = @event.update(filtered_params)
+    if @update_result
+      EquipmentRequest.where(:event_id => @event.id).destroy_all
+      create_equipment_requests
+    end
     if @update_result && changed_attributes.any?
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
@@ -257,6 +307,17 @@ class EventsController < GenericEventsController
   helper_method :delete_comment
 
   private
+    def set_requested_equipment
+      @requested_equipment = Hash.new
+      for room in @chosen_rooms
+        temp = EquipmentRequest.where(room_id: room.id, event_id: @event.id).select(:category, :count)
+        @requested_equipment[room.id] = Hash.new
+
+        temp.each do |element|
+          @requested_equipment[room.id][element.category] = element.count
+        end
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
@@ -301,7 +362,7 @@ class EventsController < GenericEventsController
           @event.activities << Activity.create(:username => current_user.username,
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
-
+          create_equipment_requests
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
@@ -338,7 +399,7 @@ class EventsController < GenericEventsController
       params['participant_count'] = @event.participant_count
       params['is_private'] = @event.is_private
       params['is_important'] = @event.is_important
-      params['status'] = 'suggested'
+      params['status'] = 'approved'
       return params
     end
 
@@ -359,6 +420,20 @@ class EventsController < GenericEventsController
         else
           favorite.last().is_favorite = true
           favorite.last().save();
+        end
+      end
+    end
+
+    def create_equipment_requests
+      available_equipment = Equipment.all.select(:category).distinct
+      for room in @event.room_ids
+        for equipment in available_equipment
+          category = equipment.category
+          key = category+'_equipment_count_'+room.to_s
+          equipment_count = params[key].to_i
+          if equipment_count>0
+            EquipmentRequest.create(:event_id => @event.id, :room_id => room, :category => category, :count => params[key]) 
+          end
         end
       end
     end
@@ -406,9 +481,9 @@ class EventsController < GenericEventsController
                                           :controller => params[:controller])
     end
 
-    def redirect_to_previous_site
+    def redirect_to_previous_site(message)
       begin
-        redirect_to :back
+        redirect_to :back, flash: message
       rescue ActionController::RedirectBackError
         redirect_to events_approval_path
       end
