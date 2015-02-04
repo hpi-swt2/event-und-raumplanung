@@ -85,14 +85,15 @@ class EventsController < GenericEventsController
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
+    @filterrific.user = @filterrific.user == current_user_id ? 'only_show_own' : 'show_all'
     session[:filterrific_events] = @filterrific.to_hash
   end
 
   def initialize_filterrific params
       @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
       @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
-      @filterrific.user = nil if @filterrific.user == 0;
+      @filterrific.user = nil             if @filterrific.user == 'show_all'
+      @filterrific.user = current_user_id if @filterrific.user == 'only_show_own'
   end
 
   def reset_filterrific
