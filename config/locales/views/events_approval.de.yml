@@ -8,7 +8,7 @@ de:
     list:
       decline: Ablehnen
       approve: Genehmigen
-      decline_successful: Das Event wurde erfolgreich abgelehnt.
+      decline_successful: Die Veranstaltung wurde erfolgreich abgelehnt.
       time: Zeit
       no_open_events: Keine offenen Buchungen
       no_approved_events: Keine genehmigten Buchungen
