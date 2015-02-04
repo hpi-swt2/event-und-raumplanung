@@ -102,14 +102,21 @@ class EventsController < GenericEventsController
     redirect_to action: :index
   end
 
+  
+  
   def approve
     authorize! :approve, @event
     @event.approve
-    @event.activities << Activity.create(:username => current_user.username,
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    if conflicting_events.empty?
+      @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action],
                                           :controller => params[:controller])
-    notice = {notice: t('notices.successful_approve', :model => @event.name)}
-    redirect_to_previous_site(notice)
+      notice = {notice: t('notices.successful_approve', :model => @event.name)}
+      redirect_to_previous_site(notice)
+    else
+      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
+    end
   end
 
   def decline
@@ -163,17 +170,6 @@ class EventsController < GenericEventsController
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
-    end
-  end
-
-  def approve
-    authorize! :approve, @event
-    @event.approve
-    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
-    if conflicting_events.empty?
-      redirect_to_previous_site
-    else
-      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
     end
   end
 
