@@ -1,11 +1,10 @@
 require 'rails_helper'
-require 'pry'
 
 RSpec.describe TasksController, type: :controller do
     let(:event) { create :event }
     let(:user) { create :user }
     let(:another_user) { create :user }
-    let(:task) { FactoryGirl.create :task, creator_id: user.id }
+    let(:task) { create :task, creator_id: user.id }
     let(:group) { create :group, users: [user, another_user]}
     let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
     let(:unassigned_task) { create :unassigned_task, event_id: event.id }
@@ -110,12 +109,12 @@ RSpec.describe TasksController, type: :controller do
   end
 
   describe "GET decline" do
-    let(:event) { FactoryGirl.create(:event) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:event) { create :event }
+    let(:user) { create :user }
     let(:another_user) { create :user }
     let(:group) { create :group, users: [user, another_user]}
-    let(:assigned_task) { FactoryGirl.create :assigned_task, event_id: event.id, identity: user }
-    let(:unassigned_task) { FactoryGirl.create :unassigned_task, event_id: event.id }
+    let(:assigned_task) { create :assigned_task, event_id: event.id, identity: user }
+    let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:assigned_task_group) { create :assigned_task, event_id: event.id, identity: group}
     
     before(:each) { sign_in user }
@@ -152,7 +151,7 @@ RSpec.describe TasksController, type: :controller do
     let(:anotherUser) { create :user }
     let(:group) { create :group, users: [user, anotherUser]}
     let(:event) { create :event, user_id: user.id }
-    let(:task) { create :task, event_id: event.id, identity: user }
+    let(:task) { create :task, event_id: event.id, event: event, identity: user }
     let(:task_with_group) { create :task, event_id: event.id, identity: group }  
     let(:unassigned_task) { create :unassigned_task, event_id: event.id }
     let(:valid_attributes) {
@@ -275,7 +274,8 @@ RSpec.describe TasksController, type: :controller do
         DatabaseCleaner.clean
       end
     end
-  describe "POST create" do 
+
+  describe "POST create" do
     it "creates task" do
       expect { post :create, task: valid_attributes }
         .to change { Task.count }.by(1)
@@ -401,9 +401,11 @@ RSpec.describe TasksController, type: :controller do
       it "sets the event for a new task that should belong to the event" do
         get :new, event_id: 1
         expect(assigns(:task).event_id).to eq(1)
+      end
+
+      it "does not set the event for a new task that should not belong to the event" do
         get :new
         expect(assigns(:task).event_id).to eq(nil)
-        expect(assigns(:event_field_readonly)).to be(:true)
       end
 
       it "sends an email if a user is assigned to a new task" do

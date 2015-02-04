@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
   filterrific(
-    default_settings: { sorted_by: 'created_at_desc',  items_per_page: 10},
+    default_settings: { sorted_by: 'created_at_desc',  items_per_page: 10, user: 'show_all'},
     filter_names: [
       :search_query,
       :room_ids,

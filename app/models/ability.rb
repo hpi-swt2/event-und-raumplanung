@@ -38,6 +38,7 @@ class Ability
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can :show, Event, :is_private => false
     can :show, Event, :is_private => true, :involved_users => { :id => user.id }
+    can :events_between, Event
     can :show, EventOccurrence do |occurrence| 
         can?(:show, occurrence.event)
     end
@@ -48,6 +49,9 @@ class Ability
     can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event_template => { :user_id => user.id }
     can [:read, :set_done], Task, :identity_id => user.id, :identity_type => 'User'
     can [:edit], User, :id => user.id
+    can :show, Group do |group|
+        group.users.include? user
+    end
     if user.username == load_admin
         can :manage, Group
         can :manage, Room
@@ -55,8 +59,6 @@ class Ability
         can :manage, Event
         can :manage, RoomProperty
         can :manage, Permission
-    else
-        can :read, Group
     end
 
     can [:new, :create, :destroy], Room if user.has_permission("manage_rooms")
