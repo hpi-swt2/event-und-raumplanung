@@ -95,8 +95,9 @@
   </dl>
     </div>
         <div class="modal-footer">
+        <p><strong><%= t('.decline_successful') %></strong></p>
+         <a events_type="button" class="btn btn-default modal-decline-btn" href=""><%= t('.close') %></a>        
           <a events_type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
-          <a events_type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
         </div>
       </div>
     </div>
