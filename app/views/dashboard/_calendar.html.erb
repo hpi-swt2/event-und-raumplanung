@@ -16,11 +16,11 @@
 			},
 			theme: false,
       events: function(start, end, timezone, callback) {
-        $.get('/events_between', {
+        $.get('/events_between.json', {
           start: start.toISOString(),
           end: end.toISOString()
         }).then(function(events) {
-          callback(JSON.parse(events));
+          callback(events);
         });
       },
       eventClick: function(calEvent, jsEvent, view){
