@@ -30,7 +30,8 @@ class UserMailer < ActionMailer::Base
     @user = user
     @task = task
     @creator = @task.creator
-    mail(to: @creator.email, subject: 'Task Accepted: ' + @task.name)
+    subject_status = @accepted ?  'Accepted: ' : 'Declined: '
+    mail(to: @creator.email, subject: 'Task ' + subject_status + @task.name)
   end
 
   def event_accepted_email_with_message(user, event, message)

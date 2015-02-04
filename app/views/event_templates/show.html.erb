@@ -1,36 +1,84 @@
 <%- model_class = EventTemplate -%>
-<% title @event_template.name %>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+
+<div class="event-page-header">
+  <div class="row event-section-divider">
+    <div class="col-xs-12 col-md-8">
+      <h1>
+        <%= @event_template.name %>
+      </h1>
+    </div>
+    <div class="col-xs-6 col-md-4" style="text-align: right">
+      <h2><%= concat_rooms(@event_template) %></h2>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:id) %>:</strong></dt>
-  <dd><%= @event_template.id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @event_template.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
-  <dd><%= raw nl2br h @event_template.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:rooms) %>:</strong></dt>
-  <dd><%= concat_rooms(@event_template) %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:participant_count) %>:</strong></dt>
-  <dd><%= @event_template.participant_count %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:created_at) %>:</strong></dt>
-  <dd><%= @event_template.created_at.strftime("%d.%m.%Y %T") %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:updated_at) %>:</strong></dt>
-  <dd><%= @event_template.updated_at.strftime("%d.%m.%Y %T") %></dd>
-</dl>
+<div class="row event-section-divider">
+  <div class="col-xs-10 col-md-7 event-description">
+    <%= raw nl2br h @event_template.description %>
+  </div>
+  <div class="col-xs-8 col-md-5">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td><%= t('events.show.rooms') %></td>
+          <td><%= concat_rooms(@event_template) %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.creator') %></td>
+          <td><%= @creator %></td>
+        </tr>
+        <tr>
+          <td><%= t('events.show.participant_count') %></td>
+          <td><%= @event_template.participant_count %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<h4><%= t '.tasks' %></h4>
-<% @event_template_id = @event_template.id %>
-<%= render :partial => '/tasks/tasks_box' %>
+<div class="event-view-section">
+  <h3><%= t '.tasks' %></h3>
+  <% @event_template_id = @event_template.id %>
+  <%= render(partial: '/tasks/tasks_box', locals: { tasks: @tasks, event_template: @event_template })%> 
+</div>
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              event_templates_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_event_template_path(@event_template), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              event_template_path(@event_template),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+<% unless @feed_entries.nil? %>
+
+<div class="event-view-section">
+  <h3><%= t 'activities.activity_log' %></h3>
+
+  <div class="feed-container">
+    <div class="feed">
+      <% @feed_entries.each_with_index do |feed_entry, index| %>
+        <%= render :partial => 'feed_entry', :locals => { :feed_entry => feed_entry, :index => index } %>
+      <% end %>
+    </div>
+  </div> 
+</div>
+
+<% end %>
+
+<div class="row" style="margin-top: 10px">
+  <div class="col-xs-4 col-md-3">
+    <%= link_to event_templates_path, :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-arrow-left"></span>    
+    <% end %>
+  </div>
+  <div class="col-xs-14 col-md-9 text-right">
+    <%= link_to new_event_from_template_path(@event_template), :title => t('.create', :default => t("helpers.submit.create", :model => Event.model_name.human.titleize)), :class => 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+    <% end %>  
+    <% if can? :edit, @event_template %>
+      <%= link_to edit_event_template_path(@event_template), :title => t("helpers.links.edit"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-pencil"></span>    
+      <% end %>
+    <% end %>
+
+    <% if can? :destroy, @event_template %>
+      <%= link_to event_template_path(@event_template), :title => t("helpers.links.destroy"), :method => 'delete', :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger' do %>
+        <span class="glyphicon glyphicon-trash"></span>    
+      <% end %> 
+    <% end %>
+  </div>
+</div>

@@ -31,5 +31,7 @@
 <% if can? :update, @group %>
   <%= render :partial => 'form' %>
 <% else%>
-  <%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
+  <%= link_to group_path(@group), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>    
+  <% end %>
 <% end %>

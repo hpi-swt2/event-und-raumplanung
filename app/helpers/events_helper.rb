@@ -18,4 +18,13 @@ module EventsHelper
 	def get_name_of_original_event event 
 		return 'Event ' + event.event.name
 	end
+
+  def schedule_ends_at_date_not_nil(event)
+    date = event.schedule_ends_at_date
+    if date.nil?
+      ""
+    else
+      l(date.to_date)
+    end
+  end
 end

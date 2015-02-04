@@ -64,6 +64,14 @@ class PermissionsController < ApplicationController
     return params
   end
 
+  def permit_entity(entity, permission)
+    if permission != 'approve_events'
+      entity.permit(permission)
+    else
+      permit_per_room(entity, permission)
+    end
+  end
+
   def submit_permissions
     entities = @users + @groups
     permission = permission_params[:permission]
@@ -71,11 +79,7 @@ class PermissionsController < ApplicationController
       form_name = 'User:' + entity.id.to_s if entity.is_a?(User)
       form_name = 'Group:' + entity.id.to_s if entity.is_a?(Group)
       if params[form_name].present? and params[form_name] == "1"
-        if permission != 'approve_events'
-          entity.permit(permission)
-        else
-          permit_per_room(entity, permission)
-        end
+        permit_entity(entity, permission)
       else
         entity.unpermit_all(permission)
       end
@@ -90,11 +94,7 @@ class PermissionsController < ApplicationController
     entity = determine_permitted_entity(entity_params[:entity])
     @categories.each do |permission|
       if entity_params[permission] == "1"
-        if permission != 'approve_events'
-          entity.permit(permission)
-        else
-          permit_per_room(entity, permission)
-        end
+        permit_entity(entity, permission)
       else
         entity.unpermit_all(permission)
       end

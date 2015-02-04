@@ -1,6 +1,9 @@
 <table class="table table-striped">
 <thead>
   <tr>
+    <% if events_type == 'open' %>
+      <th/>
+    <% end %>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
     <th><%= Event.human_attribute_name(:rooms) %></th>
@@ -15,6 +18,25 @@
 <tbody>
   <% events.each do |event| %>
     <tr>
+      <% if events_type == 'open' %>
+        <% conflict = false %>
+            <%  @conflict_events.each do |approved_event| %>
+                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at%>
+                    <% approved_event.rooms.each do |room| %>
+                        <% event.rooms.each do |room2| %>
+                            <% if room2.id == room.id %>
+                                <% conflict = true %>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% if conflict %>
+            <td bgcolor="#E91010"/>
+        <% else %>
+            <td/>
+        <% end %>
+      <% end %>
       <td>
         <% if event.user_id %>
           <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
@@ -31,10 +53,10 @@
       <% if events_type == 'open' %>
         <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
           <td>
-            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
             <%= link_to approve_event_path(event), :method => :approve, :title => t("helpers.links.approve"), :class => 'btn btn-success btn-xs' do %>
                 <span class="glyphicon glyphicon-ok"></span>
             <% end %>
+            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
           </td>
       <% end %>
     </tr>

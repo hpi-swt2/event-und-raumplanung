@@ -5,12 +5,15 @@
 <div class="row">
 	<div class="col-md-9">
 		<%= render "event_overview" %>
-		<%= render "urgent_suggestions_overview" %>
+		<% if can? :approve_any, Event %>
+            <%= render "urgent_suggestions_overview" %>
+        <% end %>
 		<div class="panel panel-default">
 		    <div class="panel-heading">
 		        <h3 class="panel-title"><%= t('dashboard.calendar') %></h3>
 		    </div>
 		    <div class="panel-body">
+                <a href="ical/<%= current_user.icaltoken %>.ics"><%=t('dashboard.export_calendar') %></a>
 				<%= render 'calendar' %>
 	  	  </div>
 		</div>

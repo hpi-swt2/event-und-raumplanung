@@ -47,3 +47,9 @@ de:
       create_event: Event erstellen
     events:
       title: 'Anstehende %{event} in %{room}'
+    print:
+      room_blocked: Raum blockiert
+    printoverview:
+      title: Druckübersicht
+      rooms: Räume
+      week: Woche
