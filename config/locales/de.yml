@@ -57,6 +57,9 @@ de:
     - :year
   datetimepicker:
     format: "%d.%m.%Y %H:%M Uhr"
+  datepicker:
+    format_picker: 'DD.MM.YYYY'
+    format: '%d.%m.%Y'
   datetime:
     distance_in_words:
       about_x_hours:

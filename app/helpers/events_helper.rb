@@ -24,7 +24,7 @@ module EventsHelper
     if date.nil?
       ""
     else
-      l(date.to_date)
+      date.strftime(t('datepicker.format'))
     end
   end
 end
