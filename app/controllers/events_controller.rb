@@ -286,6 +286,7 @@ class EventsController < GenericEventsController
           @event.activities << Activity.create(:username => current_user.username,
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
+          Favorite.create(:user_id => @event.user_id, :event_id => @event.id, :is_favorite => true)
 
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }

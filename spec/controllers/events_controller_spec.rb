@@ -544,6 +544,12 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(Event, :count).by(1)
       end
 
+      it "marks created event as a favorite event of the user" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        expect(Event.find(Event.last).favorites.count).to eq(1)
+        expect(Event.find(Event.last).favorites.first.user).to eq(user)
+      end
+
       it "assigns a newly created event as @event" do
         post :create, {:event => valid_attributes_for_request}, valid_session
         expect(assigns(:event)).to be_a(Event)
