@@ -58,7 +58,10 @@
       <div class="control-group">
         <%= f.label :deadline, :class => 'control-label' %>
         <div class="controls" id="Deadline">
-          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput', :value => l(@task.deadline.to_date)}%>
+          <%= f.text_field :deadline, {
+                  :class => 'form-control', :id => 'DeadlineInput',
+                  :value => (@task.deadline ? @task.deadline.to_date : Date.today.strftime("%d/%m/%Y"))
+          }%>
         </div>
         <script type="text/javascript">
           $('#Deadline').datetimepicker({
@@ -142,14 +145,8 @@
   <button type="submit" class="btn btn-primary form_submit task_form_submit" title="<%= t("helpers.links.save_changes") %>" onclick="$('.task_form').submit();">
     <span class="glyphicon glyphicon-floppy-disk"></span>
   </button>
-  <% if @task.event_id %>
-    <%= link_to event_path(@task.event_id), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
-      <span class="glyphicon glyphicon-remove"></span>    
+    <%= link_to (@task.event_id ? event_path(@task.event_id) : event_template_path(@task.event_template_id)), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-remove"></span>
     <% end %>
-  <% else %> 
-    <%= link_to event_template_path(@task.event_template_id), :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
-      <span class="glyphicon glyphicon-remove"></span>    
-    <% end %>
-  <% end %>
 </div>
 

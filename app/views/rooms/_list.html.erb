@@ -26,9 +26,6 @@
                 <%= link_to edit_room_path(room), :title => t("helpers.links.edit"), :class => 'btn btn-default btn-xs' do %>
                   <span class="glyphicon glyphicon-pencil"></span>    
                 <% end %>
-                <%= link_to room, :title => t("helpers.links.details"),  method: :details, :class => 'btn btn-default btn-xs' do %>
-                  <span class="glyphicon glyphicon-zoom-in"></span>
-                <% end %>  
               <% end %>
               <%= link_to new_event_path(room_ids: [room.id]), :title => t("helpers.links.create_event"), :class => 'btn btn-default btn-xs' do %>
                 <span class="glyphicon glyphicon-plus"></span>

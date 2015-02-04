@@ -143,10 +143,6 @@ class RoomsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  def details
-  render action: 'details'
-  end
 
   def printoverview
     @rooms = Room.all
