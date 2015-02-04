@@ -58,7 +58,7 @@
       <div class="control-group">
         <%= f.label :deadline, :class => 'control-label' %>
         <div class="controls" id="Deadline">
-          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput', :value => l(@task.deadline.to_date)}%>
+          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput', :value => (@task.deadline.to_date)}%>
         </div>
         <script type="text/javascript">
           $('#Deadline').datetimepicker({

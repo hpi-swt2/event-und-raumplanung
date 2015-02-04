@@ -24,18 +24,18 @@ class TasksController < ApplicationController
   def new
     @task = Task.new
     @assignable_entities = Group.all
-    @assignable_entities.concat(User.all)
+    @assignable_entities.concat User.all
     if params[:event_id].present?
       @task.event_id = params[:event_id]
       @for_event_template = false
       @event_field_readonly = :true
       authorize! :create, @task
       @task.deadline = @task.event.starts_at.strftime("%d/%m/%Y")
-    else
-      unless params[:event_template_id].blank?
+    elsif params[:event_template_id].present?
         @task.event_template_id = params[:event_template_id]
         @for_event_template = true
-      end
+    #else
+     # redirect_to events_path
     end
   end
 

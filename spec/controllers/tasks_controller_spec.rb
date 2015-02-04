@@ -411,13 +411,13 @@ RSpec.describe TasksController, type: :controller do
 
       it "sets the event for a new task that should belong to the event" do
         get :new, event_id: 1
-        expect(assigns(:task).event_id).to eq(1)
+        expect(assigns(:task).event_id).to eq 1
+        expect(assigns(:event_field_readonly)).to be(:true)
       end
 
       it "does not set the event for a new task that should not belong to the event" do
         get :new
-        expect(assigns(:task).event_id).to eq(nil)
-        expect(assigns(:event_field_readonly)).to be(:true)
+        expect(assigns(:task).event_id).to eq nil
       end
 
       it "sends an email if a user is assigned to a new task" do
