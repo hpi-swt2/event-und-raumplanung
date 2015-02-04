@@ -175,7 +175,7 @@ describe Event do
         next_occurrence = daily_recurring_terminating_event.schedule.next_occurrence
         daily_recurring_terminating_event.delete_occurrence(next_occurrence.start_time)
         expect(daily_recurring_terminating_event.schedule.exception_times).not_to be_empty
-        
+
         daily_recurring_terminating_event.schedule_from_rule('{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}')
         expect(daily_recurring_terminating_event.schedule.exception_times).to be_empty
       end

@@ -42,7 +42,7 @@ class Event < ActiveRecord::Base
   validates_presence_of :name, :starts_at, :ends_at, :rooms
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
-  validate :dates_cannot_be_in_the_past, :if => lambda{ new_record? }
+  # validate :dates_cannot_be_in_the_past, :if => lambda{ new_record? }
   validate :start_before_end_date
 
   validate :validate_schedule
@@ -66,6 +66,18 @@ class Event < ActiveRecord::Base
 
   def schedule
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
+  end
+
+  def reset_schedule
+    write_attribute(:schedule, nil)
+    validate_schedule
+  end
+
+  def duplicate
+    dup_event = self.dup
+    dup_event.rooms = self.rooms
+    dup_event.favorites = self.favorites
+    return dup_event
   end
 
   def schedule_from_rule(dirty_rule, termination_date=nil)

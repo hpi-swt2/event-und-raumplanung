@@ -284,6 +284,7 @@ en:
   cancel: Cancel
   event:
     altert:
+      single_occurrence_successful_decline: 'You successfully declined the event occurrence.'
       single_occurrence_successful_delete: 'You successfully deleted the event occurrence.'
   menu:
     languages:

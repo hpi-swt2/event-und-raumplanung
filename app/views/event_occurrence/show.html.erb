@@ -58,8 +58,22 @@
           <span class="glyphicon glyphicon-trash"></span>
         <% end %>
       <% else %>
-        <button id="trigger-delete-dialog" class="btn btn-danger glyphicon glyphicon-trash"></span>
+        <button id="trigger-delete-dialog" class="btn btn-danger glyphicon glyphicon-trash"></button>
       <% end %>
+    <% end %>
+    <% if can? :decline, @event %>
+      <% #if @event.single_occurrence_event? %>
+        <%= link_to   decline_occurrence_path(:eventid => @event_occurrence.event.id, :starting => @event_occurrence.starts_occurring_at.to_s, :ending => @event_occurrence.ends_occurring_at.to_s),
+                      :title => t("helpers.links.decline"),
+                      :method => 'get',
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-danger decline-btn' do %>
+      <span class="glyphicon glyphicon-remove"></span>
+      <% end %>
+      <% #end %>
+      <% #else %>
+        <!-- <button id="trigger-delete-dialog" class="btn btn-danger glyphicon glyphicon-trash"></button> -->
+      <% #end %>
     <% end %>
   </div>
 
@@ -89,7 +103,3 @@
   </div>
   <div id="delete-event-overlay"></div>
   <!-- DeleteDialog ende -->
-
-
-
-</div>

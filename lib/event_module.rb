@@ -16,10 +16,10 @@ module EventModule
     end
   end
 
-  def dates_cannot_be_in_the_past
-    errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
-    errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at && ends_at < Date.today
-  end
+  # def dates_cannot_be_in_the_past
+  #   errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.date_in_the_past')) if starts_at && starts_at < Date.today
+  #   errors.add(I18n.t('time.ends_at'), I18n.t('errors.messages.date_in_the_past')) if ends_at && ends_at < Date.today
+  # end
   def start_before_end_date
     errors.add(I18n.t('time.starts_at'), I18n.t('errors.messages.start_date_not_before_end_date')) if starts_at && starts_at && ends_at < starts_at
   end
@@ -44,19 +44,18 @@ module EventModule
     return colliding_events
   end
 
-  def check_overlapping_requests id, rooms
-    colliding_events = []
-    return colliding_events if rooms.nil?
+  #def check_overlapping_requests id, rooms
+  #  colliding_events = []
+  #  return colliding_events if rooms.nil?
 
-    rooms = rooms.collect{|i| i.to_i}
-    events =  Event.other_to(id).open.overlapping(self.starts_at,self.ends_at)
+  #  rooms = rooms.collect{|i| i.to_i}
+  #  events =  Event.other_to(id).open.overlapping(self.starts_at,self.ends_at)
 
-    return colliding_events if events.empty?
+  #  return colliding_events if events.empty?
 
-    events.each do | event |
-      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
-    end
-    return colliding_events
-  end
-
+  #  events.each do | event |
+  #    colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
+  #  end
+  #  return colliding_events
+  #end
 end
