@@ -23,7 +23,6 @@
 //= require turbolinks
 //= require bootstrap-select
 //= require jquery.multi-select
-//= require_tree .
 //= require fullcalendar
 //= require lang-all
 //= require moment
@@ -32,6 +31,7 @@
 //= require bootstrap-datetimepicker
 //= require moment/de
 //= require recurring_select
+//= require_tree .
 //= require jquery-ui/autocomplete
 //= require bootstrap-multiselect
 
