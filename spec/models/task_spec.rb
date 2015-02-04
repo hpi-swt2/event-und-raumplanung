@@ -29,7 +29,8 @@ describe Task do
   end
 
   it "requires a deadline" do
-  	@task = FactoryGirl.build(:task)
+    event = FactoryGirl.build(:event)
+    @task = FactoryGirl.build(:task, :event_id => 1)
   	@task.deadline = nil
   	expect(@task.valid?).to be false
   end

@@ -1,7 +1,7 @@
 class Task < ActiveRecord::Base  
   attr_accessor :skip_sending_mails
 
-  before_save :send_mails
+  before_save :send_mails, if: :for_event
   skip_callback :save, :before, :send_mails, if: :skip_sending_mails
 
   include RankedModel
@@ -14,7 +14,8 @@ class Task < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   has_many :uploads, :dependent => :destroy
   accepts_nested_attributes_for :uploads
-  validates_presence_of :name, :deadline
+  validates_presence_of :name
+  validates_presence_of :deadline, if: :for_event
   ranks :task_order, :with_same => :event_id
   date_time_attribute :deadline
   validate :deadline_cannot_be_in_the_past
@@ -87,5 +88,10 @@ class Task < ActiveRecord::Base
       end
       UserMailer.assignment_response_notification_email(status == 'accepted', identity, self, assigned_group).deliver
     end
+  end
+
+  def for_event
+    return_value = self.event_id ? true : false 
+    return return_value
   end
 end
