@@ -912,6 +912,14 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(activities, :count).by(0)
       end
 
+      it "creates no activity when no fields are updated" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expect{
+        put :update, {:id => event.to_param, :event => valid_attributes}, valid_session
+        }.to change(activities, :count).by(0)
+      end
+
       it "changes the specified schedule" do
         weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
         put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}

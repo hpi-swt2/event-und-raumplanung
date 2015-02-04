@@ -4,7 +4,7 @@ class EventsController < GenericEventsController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve,:declineconflicting, :decline, :decline_all, :decline_pending, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
   before_action :set_feed, only: [:show]
 
@@ -75,12 +75,6 @@ class EventsController < GenericEventsController
     redirect_to action: :index
   end
 
-  def approve
-    authorize! :approve, @event
-    @event.approve
-    redirect_to_previous_site
-  end
-
   def decline
     authorize! :decline, @event
     @event.decline
@@ -129,6 +123,35 @@ class EventsController < GenericEventsController
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
     end
+  end
+
+  def approve
+    authorize! :approve, @event
+    @event.approve
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    if conflicting_events.empty?
+      redirect_to_previous_site
+    else
+      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
+    end
+  end
+
+  def declineconflicting
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    render 'conflictinglist'
+  end
+
+  def decline_all
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    @events.map { |event| event.decline}
+    redirect_to events_approval_path
+  end
+
+  def decline_pending
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    pending_events = @events.select { |event| event.status != "approved"}
+    pending_events.each { |event| event.decline}
+    redirect_to events_approval_path
   end
 
   def conflicting_events_msg events
@@ -194,7 +217,7 @@ class EventsController < GenericEventsController
     @event.attributes = filtered_params
     changed_attributes = @event.changed
     @update_result = @event.update(filtered_params)
-    if @update_result
+    if @update_result && changed_attributes.any?
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)
@@ -354,8 +377,7 @@ class EventsController < GenericEventsController
       end
     end
 
-    def build_conflicting_events_response conflicting_events
-      logger.info conflicting_events.inspect
+    def build_conflicting_events_response conflicting_events 
       msg = Hash[conflicting_events.map { |conflicting_event|
                   conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
