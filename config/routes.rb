@@ -50,13 +50,11 @@ Rails.application.routes.draw do
 
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
-  get 'rooms/:id/details' => 'rooms#details'
   get 'rooms/printoverview', as: 'print'
   get 'rooms/:id/print' => 'rooms#print'
   get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
-  post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
   delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 
