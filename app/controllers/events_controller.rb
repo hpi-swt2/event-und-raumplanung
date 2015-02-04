@@ -217,7 +217,7 @@ class EventsController < GenericEventsController
     @event.attributes = filtered_params
     changed_attributes = @event.changed
     @update_result = @event.update(filtered_params)
-    if @update_result
+    if @update_result && changed_attributes.any?
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)
