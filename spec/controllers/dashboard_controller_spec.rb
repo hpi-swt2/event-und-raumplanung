@@ -7,6 +7,7 @@ RSpec.describe DashboardController, type: :controller do
 
   let(:valid_session) { }
   let(:user) { create :user }
+  let(:other_user) {create(:user)}
 
   let(:valid_attributes) {{
     name:'Michas GB',
@@ -18,6 +19,19 @@ RSpec.describe DashboardController, type: :controller do
     ends_at_time:'23:59',
     is_private: true,
     user_id: user.id,
+    rooms: [FactoryGirl.build(:room)]
+  }}
+
+  let(:valid_attributes_upcoming) {{
+    name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
+    is_private: false,
+    user_id: other_user.id,
     rooms: [FactoryGirl.build(:room)]
   }}
 
@@ -33,15 +47,16 @@ RSpec.describe DashboardController, type: :controller do
   end
 
   describe "GET index" do
+
     it "assigns upcoming event to @events" do
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_upcoming
       get :index, {}, valid_session
       event_occurrence = EventOccurrence.new({ event: event, starts_occurring_at: event.starts_at, ends_occurring_at: event.ends_at })
       expect(assigns(:event_occurrences).to_s).to eq([event_occurrence].to_s)
     end
 
     it "assigns max 5 upcoming events as @events" do
-      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: user.id) }
+      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: other_user.id, is_private: false) }
       get :index, {}, valid_session
       expect(assigns(:event_occurrences).size).to eq(5)
     end

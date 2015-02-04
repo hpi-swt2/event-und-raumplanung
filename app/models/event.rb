@@ -228,6 +228,10 @@ class Event < ActiveRecord::Base
     where(user_id: id) if id.present?
   }
 
+  scope :favorites, lambda { | user_id |
+    joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', user_id, true)
+  }
+
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
@@ -270,9 +274,9 @@ class Event < ActiveRecord::Base
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant
-  def self.events_between(start_datetime, end_datetime)
+  def self.events_between(start_datetime, end_datetime, user_id)
     list = []
-    events = Event.all
+    events = (Event.favorites(user_id) + Event.involved_in(user_id)).uniq
     events.each do |e|
       e.schedule.occurrences_between(start_datetime - e.duration, end_datetime).each do |time|
         list << EventOccurrence.new({event: e, starts_occurring_at: time, ends_occurring_at: time + e.duration})
@@ -282,16 +286,27 @@ class Event < ActiveRecord::Base
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant
-  def self.upcoming_events(limit=5)
+  def self.upcoming_events(limit=5, user_id)
     list = []
-    events = Event.all
+    events = Event.where('starts_at >= ?', Time.now)
+    involved_users_in = Event.involved_in(user_id)
     events.each do |e|
-      e.schedule.next_occurrences(limit, Time.now).each do |time|
-        list << EventOccurrence.new({event: e, starts_occurring_at: time, ends_occurring_at: time + e.duration})
+      if e.occurence_rule.nil? && !involved_users_in.include?(e) && !e.is_private
+        list << EventOccurrence.new({event: e, starts_occurring_at: e.starts_at, ends_occurring_at: e.ends_at})
       end
     end
     list.sort_by! { |occurrence| occurrence.starts_occurring_at }
     list[0 .. limit-1]
+  end
+
+  # we are aware of the aweful performance :), refactore it, if relevant
+  def self.involved_in(user_id)
+    list = []
+    user = User.find(user_id)
+    Event.all.each do | event |
+      list << event if event.involved_users.include?(user)
+    end
+    return list
   end
 
   def set_status_to_pending_and_destroy_suggestion

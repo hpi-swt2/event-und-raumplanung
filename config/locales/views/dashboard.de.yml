@@ -1,9 +1,9 @@
 de:
   dashboard:
     title: Dashboard
-    upcoming_events: Anstehende Events
-    urgent_event_suggestions: Wichtige Eventanfragen
-    no_events: Keine anstehenden Events
+    upcoming_events: Anstehende öffentliche Veranstaltungen
+    urgent_event_suggestions: Wichtige Veranstaltungsanfragen
+    no_events: Keine anstehenden öffentlichen Veranstaltungen
     no_event_requests: Keine ausstehenden Anfragen
     my_tasks: Meine Aufgaben
     pending_tasks: Ausstehende Aufgaben
@@ -15,8 +15,8 @@ de:
     decline_event: Ablehnen
     approve_event: Genehmigen
     show_all: Zeige alle
-    my_events: Meine Events
-    no_own_upcoming_events: Sie haben keine Events erstellt.
+    my_events: Meine Veranstaltungen
+    no_own_upcoming_events: Sie haben keine Veranstaltungen erstellt.
     more: Mehr
     personal_tasks: Persönliche Aufgaben
     group_tasks: Gruppenaufgaben
