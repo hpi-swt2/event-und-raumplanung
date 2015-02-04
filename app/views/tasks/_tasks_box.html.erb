@@ -56,9 +56,8 @@
 
 <% if can? :edit, @event or @event.nil? %>    
     <% if params[:controller] == 'events' %>
-      <%= link_to t('helpers.links.task'), new_task_path(event_id: @event_id), :class => 'btn btn-primary' %>
-              <button id="modaltesttogglebutton" class="btn btn-link" data-toggle="testmodal" data-target="#testmodal">
-                View notes
+              <button id="modaltesttogglebutton" class="btn btn-primary" data-toggle="testmodal" data-target="#testmodal">
+                Create Task
               </button>
 
               <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -70,7 +69,7 @@
                     </div>
                     <div class="modal-body">
                       <div id="task-form-create">
-                        <%= render partial: 'tasks/form', :locals => { :event_id => @event_id} %>
+                        <%= render partial: 'tasks/form', :locals => {event: @event} %>
                       </div>
                     </div>
                     <div class="modal-footer">

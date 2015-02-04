@@ -65,6 +65,50 @@ function initializeAttachmentForm() {
   }
 }
 
+function addUploadField()
+{
+
+    var template = $("#task_upload_template");
+    var newUpload = template.clone();
+    var uploadsCount = $("input[name='uploads[]']").size() + 1;
+    console.log(uploadsCount)
+    newUpload.attr("id", "task_upload_" + uploadsCount);
+    newUpload.children("input").attr("id", "uploads_" + uploadsCount);
+    newUpload.children("button").attr("id", "delete_upload_" + uploadsCount);
+    newUpload.children("button").attr("name", "delete_upload_" + uploadsCount);
+    newUpload.children(".task-upload-name").text("");
+
+    newUpload.children("input").show();
+    newUpload.children(".task-upload-name, button").hide();
+    template.parent().append(newUpload);
+}
+
+function onUploadFileSelected(target)
+{
+
+    var upload = $(target).parent();
+    var fileName = $(target).prop("files")[0].name;
+    upload.children(".task-upload-name").text(fileName);
+
+    upload.children("input").hide();
+    upload.children(".task-upload-name, button").show();
+
+    addUploadField();
+}
+
+function removeUploadFile(target)
+{
+   var upload = $(target).parent();
+   upload.remove(); 
+}
+
+function removeTaskFile(target)
+{
+    var upload = $(target).parent();
+    upload.children("input[type='hidden']").val("true");
+    upload.hide();
+}
+
 $(initializeAttachmentForm);
 $(document).on('page:load', initializeAttachmentForm);
 

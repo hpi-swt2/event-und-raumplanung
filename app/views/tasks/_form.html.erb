@@ -1,7 +1,9 @@
 <div class="col-lg-8">
-  <% @task = Task.new()%>
-  <%= @task.event_id = params[:id] %>
-  <%= form_for @task, url: { :action => "create", :controller => "tasks", task: @task}, :html => { :class => 'form-horizontal task edit-task task_form'} do |f| %>
+  <% if @task.nil? %>
+    <%@task = Task.new()%>
+    <% @task.event_id = params[:id] %>
+  <% end %>
+  <%= form_for @task, :html => { :class => 'form-horizontal task edit-task task_form', :multipart => true } do |f| %>
      <% if @task.errors.any? %>
       <div id="error_expl" class="panel panel-danger">
         <div class="panel-heading">
@@ -60,7 +62,7 @@
       <div class="control-group">
         <%= f.label :deadline, :class => 'control-label' %>
         <div class="controls" id="Deadline">
-          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput'}%>
+          <%= f.text_field :deadline, {:class => 'form-control', :id => 'DeadlineInput', :value => @event.ends_at.strftime("%d/%m/%Y")} %>
         </div>
         <script type="text/javascript">
           $('#Deadline').datetimepicker({
@@ -91,7 +93,6 @@
 
     <h3><%= t('.attachments') %></h3>
     <h4><%= t('tasks.form.files') %></h4>
-    <button id="add_upload_field" name="add_upload_field" onclick="addUploadField();" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
     <div class="control-group" id="upload_div">
         <div class="controls" data-task-id="<%= @task.id %>">
             <div class="task-upload" id="task_upload_template">
@@ -151,6 +152,5 @@
     </div>
   </div>
   <%= submit_tag t('submit'), :class => 'btn btn-primary form_submit task_form_submit', :onclick => "$('.task_form').submit();" %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")), event_path(@task.event_id), :class => 'btn btn-default' %>
 </div>
 
