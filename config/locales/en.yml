@@ -73,6 +73,9 @@ en:
     - :day
     - :month
     - :year
+  datepicker:
+    format_picker: 'DD-MM-YYYY'
+    format: '%d-%m-%Y'
   datetime:
     distance_in_words:
       about_x_hours:

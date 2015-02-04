@@ -60,12 +60,12 @@
         <div class="controls" id="Deadline">
           <%= f.text_field :deadline, {
                   :class => 'form-control', :id => 'DeadlineInput',
-                  :value => (@task.deadline ? @task.deadline.to_date : Date.today.strftime("%d/%m/%Y"))
+                  :value => (@task.deadline ? @task.deadline : Time.now).strftime(t('datepicker.format'))
           }%>
         </div>
         <script type="text/javascript">
           $('#Deadline').datetimepicker({
-            language: '<%= I18n.locale %>',
+            format: '<%= t("datepicker.format_picker") %>',
             pickTime: false
           });
         </script>

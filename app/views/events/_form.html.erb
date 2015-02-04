@@ -65,10 +65,10 @@
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6" id="startDate">
-        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => l(@event.starts_at_date.to_date)}%>
+        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => @event.starts_at_date.strftime(t('datepicker.format'))}%>
         <script type="text/javascript">
           $('#startDate').datetimepicker({
-            language: '<%= I18n.locale %>',
+            format: '<%= t("datepicker.format_picker") %>',
             pickTime: false
           });
         </script>
@@ -91,10 +91,10 @@
     <%= f.label model_class.human_attribute_name(:ends_at) , :class => 'control-label' %>
     <div class="row">
       <div class="controls col-sm-6" id="endDate">
-        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => l(@event.ends_at_date.to_date) }%>
+        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => @event.ends_at_date.strftime(t('datepicker.format')) }%>
         <script type="text/javascript">
           $('#endDate').datetimepicker({
-            language: '<%= I18n.locale %>',
+            format: '<%= t("datepicker.format_picker") %>',
             pickTime: false
           });
         </script>
@@ -127,7 +127,7 @@
         <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
         <script type="text/javascript">
           $('#ScheduleEndDatePicker').datetimepicker({
-            language: '<%= I18n.locale %>',
+            format: '<%= t("datepicker.format_picker") %>',
             pickTime: false
           });
         </script>
