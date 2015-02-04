@@ -72,30 +72,20 @@
       <div class="modal-content">
         <div class="modal-header">
           <button events_type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Event</h4>
+          <h4 class="modal-title" id="myModalLabel"><span id="event_name"></span>: <%= t('.decline_successful') %></h4>
         </div>
         <div class="modal-body">
   <dl class="dl-horizontal">
-    <dt><strong><%= Event.human_attribute_name(:id) %>:</strong></dt>
-    <dd id="event_id"></dd>
-    <dt><strong><%= Event.human_attribute_name(:name) %>:</strong></dt>
-    <dd id="event_name"></dd>
-    <dt><strong><%= Event.human_attribute_name(:description) %>:</strong></dt>
-    <dd id="event_description"></dd>
+
     <dt><strong><%= Event.human_attribute_name(:rooms) %>:</strong></dt>
     <dd id="event_rooms"></dd>
-    <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
-    <dd id="event_participant_count"></dd>
     <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
     <dd id="event_starts_at"></dd>
     <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
     <dd id="event_ends_at"></dd>
-    <dt><strong><%= Event.human_attribute_name(:user) %>:</strong></dt>
-    <dd id="event_user"></dd>
   </dl>
     </div>
         <div class="modal-footer">
-        <p><strong><%= t('.decline_successful') %></strong></p>
          <a events_type="button" class="btn btn-default modal-decline-btn" href=""><%= t('.close') %></a>        
           <a events_type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
         </div>

@@ -47,15 +47,10 @@ function convertUTCDateToLocalDate(date) {
 function insertEventIntoModal(data) {
     var starts_at = convertUTCDateToLocalDate(new Date(data.starts_at)),
         ends_at = convertUTCDateToLocalDate(new Date(data.ends_at));
-    $("#myModalLabel").html("Event " + data.id);
-    $("#event_id").html(data.id);
     $("#event_name").html(data.name);
-    $("#event_description").html(data.description);
     $("#event_rooms").html(getRoomNames(data.rooms));
-    $("#event_participant_count").html(data.participant_count);
     $("#event_starts_at").html(starts_at.toLocaleString());
     $("#event_ends_at").html(ends_at.toLocaleString());
-    $("#event_user").html(data.user);
 }
 
 function clickHandler(e) {
