@@ -10,6 +10,8 @@ RSpec.describe PermissionsController, :type => :controller do
   let(:user) { create :user }
   let(:group) { create :group }
   let(:adminUser) { create :adminUser }
+  let(:room) { create :room }
+  let(:another_room) { create :room }
 
   let(:permission_parameters) {
     {
@@ -19,10 +21,57 @@ RSpec.describe PermissionsController, :type => :controller do
     }
   }
 
+  let(:permission_for_room_parameters) {
+    {
+      type: 'permission',
+      permission: 'approve_events',
+      rooms: {
+        approve_events: [room.id.to_s]
+      },
+      format: :json
+    }
+  }
+
+  let(:permission_for_all_rooms_parameters) {
+    {
+      type: 'permission',
+      permission: 'approve_events',
+      rooms: {
+        approve_events: ['all']
+      },
+      format: :json
+    }
+  }
+
   let(:user_parameters) {
     {
       type: 'entity',
       entity: 'User:' + user.id.to_s,
+      edit_rooms: '1',
+      format: :json
+    }
+  }
+
+  let(:user_parameters_for_room) {
+    {
+      type: 'entity',
+      entity: 'User:' + user.id.to_s,
+      approve_events: '1',
+      rooms: {
+        approve_events: [room.id.to_s]
+      },
+      format: :json
+    }
+  }
+
+  let(:user_parameters_for_all_rooms) {
+    {
+      type: 'entity',
+      entity: 'User:' + user.id.to_s,
+      approve_events: '1',
+      rooms: {
+        approve_events: ['all']
+      },
       format: :json
     }
   }
@@ -31,6 +80,7 @@ RSpec.describe PermissionsController, :type => :controller do
     {
       type: 'entity',
       entity: 'Group:' + group.id.to_s,
+      edit_rooms: '1',
       format: :json
     }
   }
@@ -67,16 +117,57 @@ RSpec.describe PermissionsController, :type => :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "user", :isAdmin => true do
+      it "updates a users permissions", :isAdmin => true do
+        expect(user.has_permission('edit_rooms')).to be(false)
         post :submit, user_parameters, valid_session
+        expect(user.has_permission('edit_rooms')).to be(true)
       end
 
-      it "group", :isAdmin => true do
+      it "updates a users permissions for specific rooms", :isAdmin => true do
+        expect(user.has_permission('approve_events', room)).to be(false)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+        post :submit, user_parameters_for_room, valid_session
+        expect(user.has_permission('approve_events', room)).to be(true)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+      end
+
+      it "updates a users permissions for all rooms", :isAdmin => true do
+        expect(user.has_permission('approve_events', room)).to be(false)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+        post :submit, user_parameters_for_all_rooms, valid_session
+        expect(user.has_permission('approve_events', room)).to be(true)
+        expect(user.has_permission('approve_events', another_room)).to be(true)
+      end
+
+      it "updates a groups permission", :isAdmin => true do
+        expect(group.has_permission('edit_rooms')).to be(false)
         post :submit, group_parameters, valid_session
+        expect(group.has_permission('edit_rooms')).to be(true)
       end
 
-      it "permissions", :isAdmin => true do
+      it "updates users or groups for permission", :isAdmin => true do
+        expect(user.has_permission('edit_rooms')).to be(false)
+        permission_parameters['User:' + user.id.to_s] = '1'
         post :submit, permission_parameters, valid_session
+        expect(user.has_permission('edit_rooms')).to be(true)
+      end
+
+      it "updates users or groups for permission for specific rooms", :isAdmin => true do
+        expect(user.has_permission('approve_events', room)).to be(false)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+        permission_for_room_parameters['User:' + user.id.to_s] = '1'
+        post :submit, permission_for_room_parameters, valid_session
+        expect(user.has_permission('approve_events', room)).to be(true)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+      end
+
+      it "updates users or groups for permission for all rooms", :isAdmin => true do
+        expect(user.has_permission('approve_events', room)).to be(false)
+        expect(user.has_permission('approve_events', another_room)).to be(false)
+        permission_for_all_rooms_parameters['User:' + user.id.to_s] = '1'
+        post :submit, permission_for_all_rooms_parameters, valid_session
+        expect(user.has_permission('approve_events', room)).to be(true)
+        expect(user.has_permission('approve_events', another_room)).to be(true)
       end
     end
 
@@ -86,8 +177,9 @@ RSpec.describe PermissionsController, :type => :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "redirects to the root path as normal user", :isAdmin => true do
+      it "renders checkboxes_by_entity as admin user", :isAdmin => true do
         post :checkboxes_by_entity, {entity: 'User:' + user.id.to_s}, valid_session
+        expect(response).to render_template('permissions/_checkboxes_by_entity')
       end
     end
 
@@ -97,8 +189,9 @@ RSpec.describe PermissionsController, :type => :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "redirects to the root path as normal user", :isAdmin => true do
+      it "renders checkboxes_by_permission as admin user", :isAdmin => true do
         post :checkboxes_by_permission, {permission: 'edit_rooms'}, valid_session
+        expect(response).to render_template('permissions/_checkboxes_by_permission')
       end
     end
 

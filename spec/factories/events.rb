@@ -8,6 +8,7 @@ FactoryGirl.define do
     f.ends_at Time.now + 7200
     f.is_private false
     f.user_id 122
+    f.rooms { build_list :room, 1 }
   end
 
   factory :upcoming_event, :class => Event do
@@ -17,7 +18,8 @@ FactoryGirl.define do
     starts_at DateTime.now.advance(:days => +1)
     ends_at DateTime.now.advance(:days => +1, :hours => +1)
     is_private true
-    user_id 122
+    user_id 2
+    rooms { build_list :room, 1 }
   end
 
   factory :my_upcoming_event, :class => Event do
@@ -28,6 +30,7 @@ FactoryGirl.define do
     ends_at Date.new(9999, 10, 10)
     is_private true
     sequence(:user_id) { |id| id }
+    rooms { build_list :room, 1 }
   end
 
   factory :standardEvent, parent: :event, :class => Event do 
@@ -62,13 +65,13 @@ FactoryGirl.define do
   factory :event_on_multiple_days_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now + 86400).strftime("%Y-%m-%d")    # + 24h
    ends_at_time (Time.now + 86400).strftime("%H:%M:%S")
-   room_ids ['1']
+   rooms { create_list :room, 1 }
   end
 
   factory :event_on_one_day_with_one_room, parent: :scheduledEvent do 
    ends_at_date (Time.now).strftime("%Y-%m-%d") 
    ends_at_time (Time.now).strftime("%H:%M:%S")
-   room_ids ['1']
+   rooms { create_list :room, 1 }
   end
 
   factory :event_suggestion, :class => Event do 
@@ -117,16 +120,17 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    starts_at = Time.now
     f.starts_at starts_at
 
-    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    ends_at = starts_at + (60*60)
     f.ends_at ends_at
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
       s.add_recurrence_rule(IceCube::Rule.daily)
     end
     f.schedule schedule
+    f.rooms { build_list :room, 1 }
   end
 
   factory :weekly_recurring_event, :class => Event do |f|
@@ -135,14 +139,55 @@ FactoryGirl.define do
     f.participant_count 15
     f.is_private false
 
-    starts_at = Time.local(2015, 2, 1, 11, 0, 0)
+    starts_at = Time.now.change(:sec => 0) # zero out seconds to make testing easier
     f.starts_at starts_at
 
-    ends_at = Time.local(2015, 2, 1, 12, 30, 0)
+    ends_at = starts_at + 90.minutes
     f.ends_at ends_at
 
     schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
       s.add_recurrence_rule(IceCube::Rule.weekly)
+    end
+    f.schedule schedule
+    f.rooms { build_list :room, 1 }
+  end
+
+  factory :weekly_recurring_event_ending, :class => Event do |f|
+    f.name "Weekly recurring ending"
+    f.description "Eventdescription"
+    f.participant_count 15
+    f.is_private false
+
+    starts_at = Time.now
+    f.starts_at starts_at
+
+    ends_at = Time.now + 90.minutes
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      s.add_recurrence_rule(IceCube::Rule.weekly.until(Date.today + 10))
+    end
+    f.schedule schedule
+    f.rooms { build_list :room, 1 }
+  end
+
+  factory :daily_recurring_terminating_event, :class => Event do |f|
+    f.name "Daily recurring until x"
+    f.description "Eventdescription terminating"
+    f.participant_count 15
+    f.is_private false
+    f.rooms { build_list :room, 1 }
+
+    starts_at = Time.local(2015, 8, 1, 8, 0, 0)
+    f.starts_at starts_at
+
+    ends_at = Time.local(2015, 8, 1, 9, 30, 0)
+    f.ends_at ends_at
+
+    schedule = IceCube::Schedule.new(starts_at, end_time: ends_at) do |s|
+      rule = IceCube::Rule.daily
+      rule.until(Time.local(2015, 8, 16, 0, 0, 0))
+      s.add_recurrence_rule(rule)
     end
     f.schedule schedule
   end
@@ -194,10 +239,16 @@ FactoryGirl.define do
     status "BIn Bearbeitung"
   end
 
+  factory :invalid_event_without_rooms, parent: :event do
+    room_ids []
+    rooms []
+  end
+
   factory :conflictingEvent, parent: :event do 
       starts_at_date Time.now.strftime("%Y-%m-%d")
       ends_at_date (Time.now + 3600).strftime("%Y-%m-%d")
       starts_at_time Time.now.strftime("%H:%M:%S")
       ends_at_time (Time.now + 3600).strftime("%H:%M:%S")
   end 
+
 end

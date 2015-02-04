@@ -35,3 +35,26 @@ de:
       begin: 'Beginn'
       end: 'Ende'
       tasks: 'Aufgaben'
+      last_update: 'Letzte Aktualisierung'
+      status: 'Status'
+      mark_as_favorite: 'Als Favoriten markieren'
+      unmark_as_favorite: 'Favoritenmarkierung entfernen'
+      send_comment: 'Kommentar senden'
+      belongs_to_series: 'Gehört zur Serie'
+    chosen_rooms:
+      details: 'Details und zusätzliche Ausstattung'
+      requestable_equipment: 'Zusätzliche Ausstattung'
+      category: 'Ausstattung'
+      requested: 'Zusätzlich Beantragt'
+      present: 'Vorhanden'
+    rooms:
+      requested_size: 'Gewünschte Raumgröße'
+      reuqested_equipment: 'Notwendige Ausstattung'
+    form:
+      room_selection: 'Raumauswahl'
+      series_end: 'Serienende'
+      important: 'Wichtig'
+    conflictinglist:
+      conflicting_requests: 'Konfligierende Anfragen'
+    edit:
+      attention: 'Achtung, falls Sie Änderungen an diesem Event vornehmen, verliert Ihr Event ggf. seinen "Akzeptiert" Status!'

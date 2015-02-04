@@ -1,6 +1,11 @@
 <% url = EventUndRaumplanung::Application.routes.url_helpers %>
-$(document).on('page:load', makeTasksSortable);
-$(makeTasksSortable);
+$(document).on('page:load', initialize);
+$(initialize);
+
+function initialize() {
+  makeTasksSortable();
+  enableFavoriteStarToggling();
+}
 
 function makeTasksSortable() {
   if ($('#tasks-sortable').length > 0) {
@@ -24,4 +29,26 @@ function makeTasksSortable() {
       }
     })
   }
+}
+
+function enableFavoriteStarToggling() {
+  var button = $("#btn_mark_as_favorite");
+  if (button.length) {
+    button.off("ajax:success").on("ajax:success", function() {
+      button.toggleClass("event-favorite-icon-checked");
+      button.toggleClass("event-favorite-icon-unchecked");
+      updateFavoriteTitle(button);    
+    });
+    updateFavoriteTitle(button);
+  }
+}
+
+function updateFavoriteTitle(button) {
+  var active = button.hasClass("event-favorite-icon-checked");
+  if (active) {
+    var title = button.data("title-unmark");
+  } else {
+    var title = button.data("title-mark");
+  }
+  button.attr({title: title});
 }

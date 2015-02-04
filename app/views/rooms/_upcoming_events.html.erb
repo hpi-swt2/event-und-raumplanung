@@ -1,5 +1,12 @@
 <% @calevents = Event.all %>
 
+<%= link_to new_event_path(room_ids: [@room.id]), :title => t('.create_event'), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-plus"></span>    
+<% end %>
+
+<br>
+<br>
+
 <div id="calendar" class="room-events-calendar"></div>
 
 <script>
@@ -101,5 +108,3 @@
     </div>
   </div>
 </div>
-
-<%= link_to t('.create_event'),  new_event_path(room_ids: [@room.id]), :class => 'btn btn-default' %>

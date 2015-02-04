@@ -1,0 +1,44 @@
+<% 
+@prints.each do |print| 
+  %>
+  <div class="page" style="page-break-after: always">
+    <h1 style="position:absolute; margin-top:0px; margin-left:10px;"><%= print[:room].name %></h1>
+    <div id="calendar<%=print[:room].id %>" class="room-events-calendar"></div>
+    <script>
+      $(document).ready(function(){
+        $("#calendar<%= print[:room].id %>").fullCalendar({
+          header: {
+            left: '',
+            center: 'title',
+            right: ''
+          },
+          lang: '<%=print[:lang]%>',
+          defaultDate: '<%=print[:weekBegin]%>',
+          events: [
+           <% print[:events].each do |each| %>
+              {
+                id : '<%= each.id %>',
+                title: '<%= each.is_private ? t(".room_blocked",default:"room blocked") : each.name %>',
+                start: '<%= each.starts_at %>',
+                end: '<%= each.ends_at %>'           
+              },
+            <% end %>
+          ],
+          businessHours:
+            {
+                start: '08:00', 
+                end: '18:00', 
+                dow: [ 1, 2, 3, 4, 5 ]
+            },
+          minTime: "07:00",
+          maxTime: "20:00",
+          theme: false,
+          defaultView:'agendaWeek',
+          firstDay: 1,
+          allDaySlot:false
+        });
+      });
+    </script>
+  </div>
+<% end %>
+<script>window.print();</script>

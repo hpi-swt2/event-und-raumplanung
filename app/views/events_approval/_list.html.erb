@@ -1,9 +1,11 @@
 <table class="table table-striped">
 <thead>
   <tr>
+    <% if events_type == 'open' %>
+      <th/>
+    <% end %>
     <th><%= Event.human_attribute_name(:user) %></th>
     <th><%= Event.human_attribute_name(:name) %></th>
-    <th><%= Event.human_attribute_name(:description) %></th>
     <th><%= Event.human_attribute_name(:rooms) %></th>
     <th><%= t '.time' %></th>
     <th><%= Event.human_attribute_name(:participant_count) %></th>
@@ -16,10 +18,34 @@
 <tbody>
   <% events.each do |event| %>
     <tr>
-      <td><%= User.find(event.user_id).username if event.user_id && !User.where(id: event.user_id).empty? %></td>
+      <% if events_type == 'open' %>
+        <% conflict = false %>
+            <%  @conflict_events.each do |approved_event| %>
+                <% if approved_event.starts_at <= event.ends_at && approved_event.ends_at >= event.starts_at%>
+                    <% approved_event.rooms.each do |room| %>
+                        <% event.rooms.each do |room2| %>
+                            <% if room2.id == room.id %>
+                                <% conflict = true %>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% if conflict %>
+            <td bgcolor="#E91010"/>
+        <% else %>
+            <td/>
+        <% end %>
+      <% end %>
+      <td>
+        <% if event.user_id %>
+          <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+        <% else %>
+          t('.unknown')
+        <% end %>
+      </td>
       <td><%= link_to event.name, event_path(event) %></td>
-      <td><%= trimDescription event.description %></td>
-      <td><%= event.rooms.map(&:name).to_sentence %></td>
+        <td><%= event.rooms.map(&:name).to_sentence %></td>
       <td>
         <%= events_type == 'open' ? timeslot_with_date_as_string(event) : timeslot_as_string(event) %>
       </td>
@@ -27,8 +53,10 @@
       <% if events_type == 'open' %>
         <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
           <td>
-            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs"><%= t('.decline', :default => t("helpers.links.decline"))%></button>
-            <%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_path(event), :method => :approve, :class => 'btn btn-success btn-xs' %>
+            <%= link_to approve_event_path(event), :method => :approve, :title => t("helpers.links.approve"), :class => 'btn btn-success btn-xs' do %>
+                <span class="glyphicon glyphicon-ok"></span>
+            <% end %>
+            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
           </td>
       <% end %>
     </tr>
@@ -44,31 +72,22 @@
       <div class="modal-content">
         <div class="modal-header">
           <button events_type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Event</h4>
+          <h4 class="modal-title" id="myModalLabel"><span id="event_name"></span>: <%= t('.decline_successful') %></h4>
         </div>
         <div class="modal-body">
   <dl class="dl-horizontal">
-    <dt><strong><%= Event.human_attribute_name(:id) %>:</strong></dt>
-    <dd id="event_id"></dd>
-    <dt><strong><%= Event.human_attribute_name(:name) %>:</strong></dt>
-    <dd id="event_name"></dd>
-    <dt><strong><%= Event.human_attribute_name(:description) %>:</strong></dt>
-    <dd id="event_description"></dd>
+
     <dt><strong><%= Event.human_attribute_name(:rooms) %>:</strong></dt>
     <dd id="event_rooms"></dd>
-    <dt><strong><%= Event.human_attribute_name(:participant_count) %>:</strong></dt>
-    <dd id="event_participant_count"></dd>
     <dt><strong><%= Event.human_attribute_name(:starts_at) %>:</strong></dt>
     <dd id="event_starts_at"></dd>
     <dt><strong><%= Event.human_attribute_name(:ends_at) %>:</strong></dt>
     <dd id="event_ends_at"></dd>
-    <dt><strong><%= Event.human_attribute_name(:user) %>:</strong></dt>
-    <dd id="event_user"></dd>
   </dl>
     </div>
         <div class="modal-footer">
+         <a events_type="button" class="btn btn-default modal-decline-btn" href=""><%= t('.close') %></a>        
           <a events_type="button" class="btn btn-warning suggest-btn" href="" ><%= t('.suggest', :default => t("helpers.links.suggest")) %></a>
-          <a events_type="button" class="btn btn-danger modal-decline-btn" href=""><%= t('.decline', :default => t("helpers.links.decline"))%></a>
         </div>
       </div>
     </div>

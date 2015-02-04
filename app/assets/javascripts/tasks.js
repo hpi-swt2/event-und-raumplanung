@@ -22,8 +22,13 @@ function handleTaskCheckboxClick()
 			url: taskPath,
 			type: 'PUT',
 			data: {task: {done: target.checked }},
-			dataType: 'json'
-		});
+			dataType: 'text'
+		}).then(function() {
+            if ( $(target).hasClass("task-done-checkbox-from-dashboard") ){
+                window.location.reload(); 
+            } 
+        });
+            
 	});
 }
 
@@ -73,6 +78,25 @@ function userAutocomplete()
     $("#task_identity_display").autocomplete(
     {
         minLength: 2,
+        change: function(event, ui)
+        {
+            if (ui.item == null || ui.item == undefined)
+            {
+                $("#task_identity").val("");
+                if ($("#task_identity_display").val() != "")
+                {
+                    $("#task_identity_display").val("");
+                    $("#task_identity_display").parent().addClass("has-error");
+                    setTimeout(function(){
+                        $('#task_identity_display').parent().removeClass("has-error");
+                    },1000);
+                }
+                else
+                {
+                    $("#task_identity_display").parent().removeClass("has-error");
+                }
+            }
+        },
         select: function( event, ui ) 
         {
             $("#task_identity").val(ui.item.id);

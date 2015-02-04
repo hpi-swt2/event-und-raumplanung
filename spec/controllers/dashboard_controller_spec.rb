@@ -7,6 +7,7 @@ RSpec.describe DashboardController, type: :controller do
 
   let(:valid_session) { }
   let(:user) { create :user }
+  let(:other_user) {create(:user)}
 
   let(:valid_attributes) {{
     name:'Michas GB',
@@ -17,7 +18,21 @@ RSpec.describe DashboardController, type: :controller do
     starts_at_time:'17:00',
     ends_at_time:'23:59',
     is_private: true,
-    user_id: user.id
+    user_id: user.id,
+    rooms: [FactoryGirl.build(:room)]
+  }}
+
+  let(:valid_attributes_upcoming) {{
+    name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date:'2020-08-23',
+    ends_at_date:'2020-08-23',
+    starts_at_time:'17:00',
+    ends_at_time:'23:59',
+    is_private: false,
+    user_id: other_user.id,
+    rooms: [FactoryGirl.build(:room)]
   }}
 
   let(:event) { create :event, user_id: user.id, starts_at: Date.today + 5, ends_at: Date.today + 6 }
@@ -32,15 +47,16 @@ RSpec.describe DashboardController, type: :controller do
   end
 
   describe "GET index" do
+
     it "assigns upcoming event to @events" do
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_upcoming
       get :index, {}, valid_session
       event_occurrence = EventOccurrence.new({ event: event, starts_occurring_at: event.starts_at, ends_occurring_at: event.ends_at })
       expect(assigns(:event_occurrences).to_s).to eq([event_occurrence].to_s)
     end
 
     it "assigns max 5 upcoming events as @events" do
-      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s) }
+      6.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: other_user.id, is_private: false) }
       get :index, {}, valid_session
       expect(assigns(:event_occurrences).size).to eq(5)
     end
@@ -52,6 +68,7 @@ RSpec.describe DashboardController, type: :controller do
       let!(:past_task) { create :assigned_task, name: 'Past Task', event_id: past_event.id, identity: user, status: 'accepted' }
       let!(:another_group) { create :group }
       let!(:group_task) { create :assigned_task, event_id: event.id, identity: group}
+      let!(:task_done) { create :assigned_task, event_id: event.id, identity: user, done: true}
 
       before do
         Timecop.freeze(Date.today + 3)
@@ -61,12 +78,13 @@ RSpec.describe DashboardController, type: :controller do
         Timecop.return
       end
 
-      it 'assigns only accepted tasks for the currently logged in user to @my_accepted_tasks' do
+      it 'assigns only accepted tasks for the currently logged in user that have not been done yet to @my_accepted_tasks' do
         get :index, {}, valid_session
         expect(assigns(:my_accepted_tasks).include? task).to eq(true)
         expect(assigns(:my_accepted_tasks).include? other_task).to eq(false)
         expect(assigns(:my_accepted_tasks).include? pending_task).to eq(false)
         expect(assigns(:my_accepted_tasks).include? past_task).to eq(false)
+        expect(assigns(:my_accepted_tasks).include? task_done).to eq(false)
       end
 
       it 'assigns only pending tasks for the currently logged to @my_pending_tasks' do
@@ -129,6 +147,21 @@ RSpec.describe DashboardController, type: :controller do
         get :index, {}, valid_session
         expect(assigns(:my_upcoming_events).include? event). to eq(true)
         expect(assigns(:my_upcoming_events).include? other_user_event). to eq(false)
+      end
+    end
+
+    describe "GET events_between" do
+      it "gets a json with calender events" do
+        2.times { |i| FactoryGirl.create(:upcoming_event, name: i.to_s, user_id: user.id) }
+        get :events_between, {start: Time.now.to_s, :end => Time.now.advance(days: 2).to_s}
+        json = JSON.parse(response.body)
+        expect(json.size).to eq(2)
+      end
+
+      it "raises an error if no start and en params are set" do
+        expect {
+          get :events_between, format: :json
+        }.to raise_error(ActionController::ParameterMissing)
       end
     end
   end

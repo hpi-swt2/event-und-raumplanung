@@ -57,6 +57,9 @@ de:
     - :year
   datetimepicker:
     format: "%d.%m.%Y %H:%M Uhr"
+  datepicker:
+    format_picker: 'DD.MM.YYYY'
+    format: '%d.%m.%Y'
   datetime:
     distance_in_words:
       about_x_hours:
@@ -129,12 +132,11 @@ de:
       wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
       date_in_the_past: kann nicht in der Vergangenheit liegen
       start_date_not_before_end_date: muss vor dem Endzeitpunkt liegen
-      unsuccessful_user_assign: 'Benutzer %{email} erfolgreich der Gruppe hinzugefügt'
+      unsuccessful_user_assign: 'Benutzer %{email} ist bereits Mitglied der Gruppe'
       unsuccessful_user_unassign: 'Benutzer %{email} kann nicht aus der Gruppe entfernt werden, da er Gruppenleiter ist.'
       unsuccessful_promotion: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_degradation: 'Benutzer %{email} ist kein Mitglied der Gruppe'
       unsuccessful_room_assign: 'Kein Raum ausgewählt'
-
     template:
       body: ! 'Bitte überprüfen Sie die folgenden Felder:'
       header:
@@ -151,7 +153,12 @@ de:
       suggest: ! 'Alternative vorschlagen'
       decline: ! 'Ablehnen'
       approve: ! 'Akzeptieren'
+      remove_favorite: ! 'Aus Favoriten entfernen'
+      add_favorite: ! 'Zu Favoriten hinzufügen'
       task:    ! 'Aufgabe erstellen'
+      decline_all: ! 'Alle ablehnen (bestätigte und ausstehende)'
+      decline_pending: ! 'Nur ausstehende ablehnen'
+      wo_decline: 'Fortfahren ohne Ablehnen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:
@@ -226,32 +233,39 @@ de:
     successful_decline: ! '%{model} wurde erfolgreich abgelehnt.'
     successful_update: ! '%{model} wurde erfolgreich aktualisiert.'
     successful_destroy: ! '%{model} wurde erfolgreich gelöscht.'
-    successful_sugguest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
+    successful_suggest: ! '%{model} wurde erfolgreich erneut vorgeschlagen.'
     successful_user_assign: 'Benutzer %{email} erfolgreich der Gruppe hinzugefügt'
     successful_user_unassign: 'Benutzer %{email} erfolgreich aus Gruppe entfernt'
     successful_promotion: 'Benutzer %{email} erfolgreich zum Gruppenleiter ernannt'
     successful_degradation: 'Dem Benutzer %{email} wurde erfolgreich die Gruppenleiter entzogen'
     successful_room_assign: 'Räume erfolgreich hinzugefügt'
     successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
-  tasks:
-    
+    successful_comment_create: 'Kommentar wurde erfolgreich erstellt'
+    set_language: 'Sprache erfolgreich umgestellt.'
   alert:
-    successful_sugguest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
+    successful_suggest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
-  event: 
-    alert: 
+  event:
+    private: 'Privates Event'
+    alert:
       conflict_same_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
       conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
       conflict_different_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
       conflict_different_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
-    status: 
+      single_occurrence_successful_delete: 'Sie haben den Veranstaltungstermin erfolgreich gelöscht.'
+      single_occurrence_successful_decline: 'Sie haben den Veranstaltungstermin erfolgreich abgelehnt.'
+    status:
       suggested: Vorschlag
       approved: bestätigt
       declined: abgelehnt
       pending: In Bearbeitung
       rejected_suggestion: Abgelehnter Vorschlag
-  events: 
-    show: 
+      request: Anfrage
+  room:
+    desired_size: 'gewünschte Raumgröße'
+  equipment:
+    necessary: 'Benötigte Ausstattung'
+    show:
       suggested_for: 'Vorgeschlagen für'
     links:
       edit_original_event: 'Original editieren'
@@ -262,11 +276,8 @@ de:
       pending: ausstehend
       accepted: bestätigt
       declined: abgelehnt
-    user:
-      none: Keine Auswahl
     attachments:
       none: Keine Anhänge
-
   will_paginate:
     next_label: Weiter →
     page_entries_info:
@@ -282,3 +293,7 @@ de:
         zero: Kein(e) %{model} gefunden
     page_gap: "&hellip;"
     previous_label: "← Vorige"
+  menu:
+    languages:
+      de: DE
+      en: EN

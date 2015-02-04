@@ -7,6 +7,7 @@ en:
       declined: declined
     user:
       none: None
+    filter: Filter      
     decline:
       you_already_accepted_this_task: You already accepted this task.
       you_are_not_authorized_to_decline_this_task: You are not authorized to decline this task.
@@ -16,6 +17,11 @@ en:
       this_task_was_already_declined: This task was already declined.
     show:
       new: New Task
-      no_tasks: There are no tasks for this event yet or you aren't allowed to see them.
+      no_tasks: There are no tasks for this event yet.
+      done: Done
+      not_done: Not done
+      files: Attachments
+      links: Links
     form:
       areYouSure: Are you sure?
+      enter_name: Enter user or group name

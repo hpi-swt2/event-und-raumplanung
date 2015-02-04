@@ -1,9 +1,12 @@
 <%- model_class = Room -%>
+<% page_header = t '.title', :event => Event.model_name.human.pluralize.titleize, :room => @room.name %>
+<% title page_header %>
 <div class="page-header">
-  <h1>Anstehende <%=t '.title', :default => Event.model_name.human.pluralize.titleize %> in <%= @room.name %></h1>
+  <h1><%= page_header %></h1>
 </div>
 
-<%= render :partial => 'upcoming_events' %>
+<%= link_to room_path(@room), :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-arrow-left"></span>    
+<% end %>
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              room_path(@room), :class => 'btn btn-default'  %>
+<%= render :partial => 'upcoming_events' %>

@@ -3,7 +3,7 @@ class EventTemplatesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event_template, only: [:show, :edit, :update, :destroy, :new_event]
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event, :reset_filterrific]
 
   def current_user_id
     current_user.id
@@ -39,6 +39,7 @@ class EventTemplatesController < ApplicationController
   # GET /templates/1
   # GET /templates/1.json
   def show
+    @creator = User.find(@event_template.user_id).name unless @event_template.user_id.nil?
     @tasks = @event_template.tasks.rank(:task_order)
   end
 
@@ -143,6 +144,8 @@ class EventTemplatesController < ApplicationController
       params['name'] = task_attributes['name']
       params['description'] = task_attributes['description']
       params['task_order'] = task_attributes['task_order']
+      # this probably makes no sense
+      params['deadline'] = task_attributes['deadline']
       return params
     end
 

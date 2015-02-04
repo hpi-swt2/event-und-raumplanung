@@ -40,7 +40,50 @@ RSpec.describe EventsController, :type => :controller do
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
     is_private: true,
+    rooms: [build(:room)],
     user_id: user.id
+    }
+  }
+
+  let(:valid_attributes_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: true,
+    rooms: [build(:room)],
+    user_id: user2.id
+    }
+  }
+
+  let(:valid_attributes_not_private) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user.id
+    }
+  }
+
+  let(:valid_attributes_not_private_user2) {
+    {name:'Michas GB',
+    description:'Coole Sache',
+    participant_count: 2000,
+    starts_at_date: (Time.now).strftime("%Y-%m-%d"),
+    ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
+    starts_at_time: (Time.now).strftime("%H:%M:%S"),
+    ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    is_private: false,
+    rooms: [build(:room)],
+    user_id: user2.id
     }
   }
 
@@ -80,7 +123,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id
     }
@@ -94,7 +137,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: (Time.now).strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: ["1", "2"], 
+    room_ids: [create(:room).id, create(:room).id],
     is_private: true,
     user_id: user.id,
     event_template_id: 1
@@ -108,6 +151,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date:'2014-08-23',
     starts_at_time:'17:00',
     ends_at_time:'23:59',
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -119,7 +163,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: Date.today,
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: Time.now.strftime("%H:%M:%S"),
-    rooms:[],
+    rooms: [build(:room)],
     user_id: user.id
   }
   }
@@ -131,6 +175,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -142,7 +187,7 @@ RSpec.describe EventsController, :type => :controller do
     ends_at_date: (Time.now + 7200).strftime("%Y-%m-%d"),    # + 2h
     starts_at_time: Time.now.strftime("%H:%M:%S"),
     ends_at_time: (Time.now + 7200).strftime("%H:%M:%S"),
-    rooms: [],
+    rooms: [build(:room)],
     user_id: user.id
     }
   }
@@ -155,6 +200,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   } 
@@ -166,6 +212,7 @@ RSpec.describe EventsController, :type => :controller do
       starts_at_time: Time.now.strftime("%H:%M:%S"),
       ends_at_time: Time.now.strftime("%H:%M:%S"),
       user_id: 122,
+      room_ids: [create(:room).id],
       original_event_id: 1
     }
   }
@@ -209,6 +256,7 @@ RSpec.describe EventsController, :type => :controller do
       ends_at_time: "10:30",
       is_private: false,
       user_id: user.id,
+      rooms: [build(:room)],
       occurence_rule: '{"interval":1, "validations": {"day": [1,4]}, "rule_type": "IceCube::WeeklyRule"}',
     }
   }
@@ -235,6 +283,31 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:event)).to eq(event)
     end
 
+    it "shows not private events to any user" do
+      event = Event.create! valid_attributes_not_private_user2
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to owner" do
+      event = Event.create! valid_attributes_user2
+      my_event = Event.create! valid_attributes
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).to redirect_to(root_path)
+      get :show, {:id => my_event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
+    it "shows private events to involved user" do
+      event = Event.create! valid_attributes_user2
+      firstTask = create(:task)
+      firstTask.event = event
+      firstTask.identity = user
+      firstTask.save
+      get :show, {:id => event.to_param}, valid_session      
+      expect(response).not_to redirect_to(root_path)
+    end
+
     it "assigns the tasks of the requested event as @tasks ordered by rank" do
       event = Event.create! valid_attributes
       firstTask = create(:task)
@@ -254,7 +327,7 @@ RSpec.describe EventsController, :type => :controller do
       assigned_user = create(:user)
       sign_in assigned_user
 
-      event = Event.create! valid_attributes
+      event = Event.create! valid_attributes_not_private
       firstTask = create(:task, event_id: event.id, identity: assigned_user)
       secondTask = create(:task, event_id: event.id)
 
@@ -273,6 +346,23 @@ RSpec.describe EventsController, :type => :controller do
       expect(assigns(:tasks)).to eq [firstTask, secondTask]
     end
 
+    it "shows all tasks of the event to the event owner" do
+      skip ("Group members cannnot see tasks that are assigned to that group")
+      assigned_group = create(:group)
+      group_member = create(:user)
+      assigned_group.users << group_member
+      sign_in group_member
+      
+      event = Event.create! valid_attributes
+      firstTask = create(:task, event_id: event.id, identity: assigned_group)
+      secondTask = create(:task, event_id: event.id)
+
+      get :show, {:id => event.to_param}, valid_session
+      puts (assigns(:tasks).inspect)
+      puts (firstTask.inspect)
+      expect(assigns(:tasks)).to eq [firstTask]
+    end
+
     context "if the user has created the event" do
       it "shows the activity log" do
         e = create(:event, user_id: user.id)
@@ -287,25 +377,24 @@ RSpec.describe EventsController, :type => :controller do
     context "if the user `owns` the event's room" do
       it "shows the activity log" do
 
-        # make user leader of group g
-        g = create(:group)
-        g.users << user
-        mem = g.memberships.last
-        mem.isLeader = true
-        mem.save
+        # make user leader of group 
+        group = create(:group)
+        group.users << user
+        member = group.memberships.last
+        member.isLeader = true
+        member.save
 
-        # create room r and assign it to group g
-        r = create(:room)
-        r.group = g
-        r.save
+        # create room and assign it to group 
+        room = create(:room)
+        group.rooms << room
 
-        # create new event with r as room
-        e2 = create(:event, user_id: user2.id)
-        e2.rooms << r
-        e2.save
+        # create new event with room
+        event = create(:event, user_id: user2.id)
+        event.rooms << room
+        event.save
 
         # verify that group leader is now able to see the log
-        get :show, {:id => e2.id}
+        get :show, {:id => event.id}
         expect(assigns(:feed_entries)).not_to be_nil
       end
     end
@@ -405,10 +494,10 @@ RSpec.describe EventsController, :type => :controller do
   end
 
   describe "GET show_toggle_favorite" do
-    it "redirects to event" do
+    it "executes successfully" do
       event = Event.create! valid_attributes
       get :show_toggle_favorite, {:id => event.to_param}, valid_session
-      expect(response).to redirect_to(event)
+      expect(response).to be_success
     end
     it "toggles the favorite event" do
       event = Event.create! valid_attributes
@@ -432,6 +521,27 @@ RSpec.describe EventsController, :type => :controller do
       get :edit, {:id => event.to_param}, valid_session
       expect(assigns(:event)).to eq(event)
     end
+    
+    it "assigns already requested equipment event as @event" do
+      event = Event.create! valid_attributes
+      room_id = event.rooms.first.id
+      FactoryGirl.create(:equipment, :category => 'Chair')
+      FactoryGirl.create(:equipment_request, :event_id => event.id, :room_id => room_id, :category => 'Chair', :count => 1)      
+      get :edit, {:id => event.to_param}, valid_session
+      expect(assigns(:requested_equipment)).to eq({room_id => {'Chair' => 1} })
+    end
+  end
+
+  describe "GET reset_filterrific" do 
+    it "resets the filter" do 
+      get :reset_filterrific, valid_session
+      expect(session[:filterrific_events]).to eq(nil)
+    end
+
+    it "redirects to index" do 
+      get :reset_filterrific, valid_session
+      expect(response).to redirect_to(action: :index)
+    end
   end
 
   describe "POST create" do
@@ -441,6 +551,12 @@ RSpec.describe EventsController, :type => :controller do
         expect {
           post :create, {:event => valid_attributes_for_request}, valid_session
         }.to change(Event, :count).by(1)
+      end
+
+      it "marks created event as a favorite event of the user" do
+        post :create, {:event => valid_attributes_for_request}, valid_session
+        expect(Event.find(Event.last).favorites.count).to eq(1)
+        expect(Event.find(Event.last).favorites.first.user).to eq(user)
       end
 
       it "assigns a newly created event as @event" do
@@ -464,6 +580,53 @@ RSpec.describe EventsController, :type => :controller do
         expect(create_event_activity.action).to eq("create")
         expect(create_event_activity.controller).to eq("events")
         expect(create_event_activity.username).to eq(user.username)
+      end
+    end
+    
+    describe "with equipment_requests" do
+      before(:all) do
+        FactoryGirl.create(:equipment, :name => 'c1', :category => 'Chair')
+        FactoryGirl.create(:equipment, :name => 'b1', :category => 'Beamer')
+        FactoryGirl.create(:equipment, :name => 'w1', :category => 'Whiteboard')
+      end
+    
+      it 'creates equipment_request for requested additional equipment' do
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_key = 'Chair_equipment_count_' + room_id.to_s
+        expect { post :create, :event => valid_attributes_for_request, 
+          equipment_key => '2'}
+          .to change(EquipmentRequest, :count).by(1)
+      end
+      
+      it 'creates equipment_requests for two different equipment types' do
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_request_chair = 'Chair_equipment_count_' + room_id.to_s
+        equipment_request_beamer = 'Beamer_equipment_count_' + room_id.to_s
+        post :create, :event => valid_attributes_for_request, 
+          equipment_request_chair => '10', equipment_request_beamer => '2'
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Chair', count: 10)).to exist
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Beamer', count: 2)).to exist
+      end
+      
+      it 'creates no equipment_requests if the request is for a count of zero' do
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_request_chair = 'Chair_equipment_count_' + room_id.to_s
+        equipment_request_beamer = 'Beamer_equipment_count_' + room_id.to_s
+        post :create, :event => valid_attributes_for_request, 
+          equipment_request_chair => '0', equipment_request_beamer => '0'
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Chair', count: 0)).not_to exist
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Beamer', count: 0)).not_to exist
+      end
+      
+      it 'creates equipment_requests for two differrent rooms' do
+        room_id_1 = valid_attributes_for_request[:room_ids][0]
+        room_id_2 = valid_attributes_for_request[:room_ids][1]
+        equipment_request_1 = 'Chair_equipment_count_' + room_id_1.to_s
+        equipment_request_2 = 'Chair_equipment_count_' + room_id_2.to_s
+        post :create, :event => valid_attributes_for_request, 
+          equipment_request_1 => '1', equipment_request_2 => '2'
+        expect(EquipmentRequest.where(room_id: room_id_1, category: 'Chair', count: 1)).to exist
+        expect(EquipmentRequest.where(room_id: room_id_2, category: 'Chair', count: 2)).to exist
       end
     end
 
@@ -558,9 +721,17 @@ RSpec.describe EventsController, :type => :controller do
         it "then events tasks have the same values as the event_templates tasks" do
           post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
           event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
-          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id']
+          ignored = ['id', 'updated_at', 'created_at', 'event_template_id', 'event_id', 'creator_id']
           assigns(:event).tasks.each_with_index do |task, i|
             expect(task.attributes.except(*ignored)).to eql(event_template.tasks[i].attributes.except(*ignored))
+          end
+        end
+
+        it "then events tasks have the same creator as the event" do
+          post :create, {:event => valid_attributes_with_template_id_for_request}, valid_session
+          event_template = EventTemplate.find(valid_attributes_with_template_id_for_request[:event_template_id]) 
+          assigns(:event).tasks.each_with_index do |task, i|
+            expect(task.creator_id).to eql(assigns(:event).user_id)
           end
         end
 
@@ -616,12 +787,12 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST approve" do
     it "creates activity when an event is approved" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :approve, {:id => event.to_param, :date => Date.today}
-      }.to change(activities, :count).by(1)
+      }.to change(activities, :count).by(2)
       expect(activities.last.action).to eq("approve")
       expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
@@ -630,12 +801,12 @@ RSpec.describe EventsController, :type => :controller do
 
   describe "POST decline" do
     it "creates activity when an event is declined" do
+      user.permit("approve_events")
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
       activities = event.activities
       expect{
       post :decline, {:id => event.to_param, :date => Date.today}
-      }.to change(activities, :count).by(1)
+      }.to change(activities, :count).by(2)
       expect(activities.last.action).to eq("decline")
       expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
@@ -659,10 +830,10 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(Event, :count).by(1)
       end  
 
-      it "creates a new Event with the status suggested" do
+      it "creates a new Event with the status approved" do
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
-        expect(assigns(:event)[:status]).to eq('suggested')
+        expect(assigns(:event)[:status]).to eq('approved')
       end
 
       it "creates a new Event with the name, description, participant_count, importance and privacy of the old event" do
@@ -716,8 +887,9 @@ RSpec.describe EventsController, :type => :controller do
       end  
      
       it "re-renders the 'new' template" do
+        pending "tests relies on constraint that events can not be created in the past but reguarding recurring events they can"
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session        
+        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session
         expect(response).to render_template("event_suggestions/new")
       end
     end
@@ -803,10 +975,18 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(activities, :count).by(0)
       end
 
+      it "creates no activity when no fields are updated" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expect{
+        put :update, {:id => event.to_param, :event => valid_attributes}, valid_session
+        }.to change(activities, :count).by(0)
+      end
+
       it "changes the specified schedule" do
         weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, :user_id => user.id)
         put :update, {:id => weekly_recurring_event.to_param, :event => valid_attributes_weekly_recurring_event}
-        expect(response).to be_success
+        expect(response).to redirect_to(event_path(weekly_recurring_event.to_param))
         schedule = assigns(:event).schedule
         expect(schedule).to be_a(IceCube::Schedule)
         expect(schedule.recurrence_rules).not_to be_empty
@@ -826,24 +1006,86 @@ RSpec.describe EventsController, :type => :controller do
       it "re-renders the 'edit' template" do
         event = Event.create! valid_attributes
         put :update, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to redirect_to(event_path(event.to_param))
       end
     end
+    
+    describe "with equipment_requests" do
+      before(:all) do
+        FactoryGirl.create(:equipment, :name => 'c1', :category => 'Chair')
+        FactoryGirl.create(:equipment, :name => 'b1', :category => 'Beamer')
+        FactoryGirl.create(:equipment, :name => 'w1', :category => 'Whiteboard')
+      end
+    
+      it 'creates equipment_request for requested additional equipment' do
+        event = Event.create! valid_attributes
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_key = 'Chair_equipment_count_' + room_id.to_s
+        expect { put :update, :id=> event.to_param, :event => valid_attributes_for_request, 
+          equipment_key => '2'}
+          .to change(EquipmentRequest, :count).by(1)
+      end
+      
+      it 'creates equipment_requests for two different equipment types' do
+        event = Event.create! valid_attributes
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_request_chair = 'Chair_equipment_count_' + room_id.to_s
+        equipment_request_beamer = 'Beamer_equipment_count_' + room_id.to_s
+        put :update, :id=> event.to_param, :event => valid_attributes_for_request, 
+          equipment_request_chair => '10', equipment_request_beamer => '2'
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Chair', count: 10)).to exist
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Beamer', count: 2)).to exist
+      end
+      
+      it 'creates no equipment_requests if the request is for a count of zero' do
+        event = Event.create! valid_attributes
+        room_id = valid_attributes_for_request[:room_ids].first
+        equipment_request_chair = 'Chair_equipment_count_' + room_id.to_s
+        equipment_request_beamer = 'Beamer_equipment_count_' + room_id.to_s
+        put :update, :id=> event.to_param, :event => valid_attributes_for_request, 
+          equipment_request_chair => '0', equipment_request_beamer => '0'
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Chair', count: 0)).not_to exist
+        expect(EquipmentRequest.where(room_id: room_id, category: 'Beamer', count: 0)).not_to exist
+      end
+      
+      it 'creates equipment_requests for two differrent rooms' do
+        event = Event.create! valid_attributes
+        room_id_1 = valid_attributes_for_request[:room_ids][0]
+        room_id_2 = valid_attributes_for_request[:room_ids][1]
+        equipment_request_1 = 'Chair_equipment_count_' + room_id_1.to_s
+        equipment_request_2 = 'Chair_equipment_count_' + room_id_2.to_s
+        put :update, :id=> event.to_param, :event => valid_attributes_for_request,
+          equipment_request_1 => '1', equipment_request_2 => '2'
+        expect(EquipmentRequest.where(room_id: room_id_1, category: 'Chair', count: 1)).to exist
+        expect(EquipmentRequest.where(room_id: room_id_2, category: 'Chair', count: 2)).to exist
+      end
+    end
+    
   end
 
-  describe "GET approve" do 
+  describe "POST approve" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
+
     it "approves the given event" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :approve, {:id => event.to_param}
+      #@request.env['HTTP_REFERER'] = 'http://test.com/'
+      post :approve, {:id => event.to_param}
       expect(assigns(:event).status).to eq('approved')
     end
 
     it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :approve, {:id => event.to_param}, valid_session
+      post :approve, {:id => event.to_param}, valid_session
       expect(response).to redirect_to(:back)
+    end
+
+    it "redirects to the events approval page if http referer is not set" do   
+      event = Event.create! valid_attributes
+      post :approve, {:id => event.to_param}, valid_session
+      expect(response).to redirect_to(events_approval_path)
     end
   end
 
@@ -896,20 +1138,30 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
-  describe "GET decline" do 
+  describe "POST decline" do 
+    before (:each) do 
+      user.permit("approve_events")
+    end
     it "declines the given event" do
       event = Event.create! valid_attributes
-      @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      #@request.env['HTTP_REFERER'] = 'http://test.com/'
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(assigns(:event).status).to eq('declined')
     end
 
     it "redirects to the last page" do
       event = Event.create! valid_attributes
       @request.env['HTTP_REFERER'] = 'http://test.com/'
-      get :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
       expect(response).to redirect_to(:back)
     end
+
+    it "redirects to events approval page if http rererer is not set" do
+      event = Event.create! valid_attributes
+      post :decline, {:id => event.to_param, :event => invalid_attributes_for_request}, valid_session
+      expect(response).to redirect_to(events_approval_path)
+    end
+
   end
 
   describe "DELETE destroy" do
@@ -979,6 +1231,7 @@ RSpec.describe EventsController, :type => :controller do
         expect(result.length).to eq(2)
       end
 
+
       describe "and if the conflicting event" do 
         it "takes place on one day in one room, the correct error message gets returned" do 
           event = FactoryGirl.create :event_on_one_day_with_one_room
@@ -1021,7 +1274,44 @@ RSpec.describe EventsController, :type => :controller do
           expect(result[event.id.to_s]).to include('msg')
           expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: event.name, start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
         end
+
+        it "is private, the events name is not shown" do
+          event = FactoryGirl.create :event_on_one_day_with_multiple_rooms, :is_private => true 
+          start_time = I18n.l event.starts_at, format: :time_only
+          end_time = I18n.l event.ends_at, format: :time_only
+          conflicting_event = attributes_for(:event_on_one_day_with_multiple_rooms)
+          patch :check_vacancy, event: conflicting_event, format: :json
+          result = JSON.parse(response.body)
+          expect(result[event.id.to_s]).to include('msg')
+          expect(result[event.id.to_s]['msg']).to eq(I18n.t('event.alert.conflict_same_days_multiple_rooms', name: I18n.t('event.private'), start_date: event.starts_at.strftime("%d.%m.%Y"), end_date: event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: event.rooms.pluck(:name).to_sentence))
+        end
       end
+    end
+  end
+  describe 'GET changeChosenRooms' do
+    it "renders the room overview for a new event" do
+      room.id = create(:room).id
+      xhr :get, :change_chosen_rooms, :event => {:room_ids => [room.id]}
+      expect(response).to render_template("events/change_chosen_rooms")
+    end 
+    
+    it "renders the room overview while editing an event" do
+      event = Event.create! valid_attributes
+      room.id = create(:room).id
+      xhr :get, :change_chosen_rooms, :id => event.id, :event => {:room_ids => [room.id]}
+      expect(response).to render_template("events/change_chosen_rooms")
+    end 
+  end
+
+  describe 'comments' do
+    it "create and delete a new comment" do
+      event = Event.create! valid_attributes
+      attr = {event_id: event.id, commentContent: 'some content', user_id: user.id}
+      get "create_comment", attr
+      expect(Comments.all.count).to be(1)
+
+      get "delete_comment", {comment_id: Comments.all.first.id, event_id: event.id}
+      expect(Comments.all.count).to be(0)
     end
   end
 end

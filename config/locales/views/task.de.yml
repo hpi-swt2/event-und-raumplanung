@@ -7,15 +7,21 @@ de:
       declined: abgelehnt
     user:
       none: Keine Auswahl
+    filter: Filtern
     decline:
-      you_already_accepted_this_task: Sie haben diesen Task bereits akzeptiert.
-      you_are_not_authorized_to_decline_this_task: "Sie sind nicht berechtigt, diesen Task abzulehnen."
+      you_already_accepted_this_task: Sie haben diese Aufgabe bereits akzeptiert.
+      you_are_not_authorized_to_decline_this_task: "Sie sind nicht berechtigt, diese Aufgabe abzulehnen."
     accept:
-      this_task_was_already_accepted_by: Dieser Task wurde schon akzeptiert von
-      you_are_not_authorized_to_accept_this_task: "Sie sind nicht berechtigt, diesen Task zu akzeptieren."
-      this_task_was_already_declined: Dieser Task wurde bereits abgelehnt.
+      this_task_was_already_accepted_by: Diese Aufgabe wurde schon akzeptiert von
+      you_are_not_authorized_to_accept_this_task: "Sie sind nicht berechtigt, diese Aufgabe zu akzeptieren."
+      this_task_was_already_declined: Diese Aufgabe wurde bereits abgelehnt.
     show:
-      new: Neue Task
-      no_tasks: Es gibt für dieses Event noch keine Aufgaben oder Sie dürfen sie nicht sehen.
+      new: Neue Aufgabe
+      no_tasks: Es gibt für dieses Event noch keine Aufgaben.
+      done: Erledigt
+      not_done: Nicht erledigt
+      files: Dateianhänge
+      links: Links
     form:
       areYouSure: Sind Sie sicher?
+      enter_name: Nutzer- oder Gruppenname eingeben

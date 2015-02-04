@@ -18,18 +18,22 @@
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
 //= require jquery.ui.touch-punch
+//= require jquery.multi-select
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-select
-//= require_tree .
+//= require jquery.multi-select
 //= require fullcalendar
+//= require lang-all
 //= require moment
 //= require filterrific/filterrific-jquery
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/de
 //= require recurring_select
+//= require_tree .
 //= require jquery-ui/autocomplete
+//= require bootstrap-multiselect
 
 jQuery.fn.bootstrap_flash = function(message, options) {
   options = options || {};

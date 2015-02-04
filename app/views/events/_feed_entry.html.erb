@@ -2,7 +2,11 @@
 	<div class="feed-entry <%= (index % 2 != 0) ? ("odd") : ("even") %>">
 		<% if feed_entry.class == Activity %>
 			<span class="<%= feed_entry.get_css_class %>"></span>
-	  	<strong><%= feed_entry.username %></strong>
+	  	<strong><% feed_entry_author = User.find_by_username(feed_entry.username) %>
+				<% unless feed_entry_author.nil? %>
+	  			<%= link_to feed_entry_author.display_name, user_path(feed_entry_author) %>
+	  		<% end %>
+	  	</strong>
 	  	<% if feed_entry.controller == "tasks" %>
 	  		<% if feed_entry.action == "create" %>
 	  			<span><%= t('activities.' + feed_entry.action) + " " + t('activities.the_task') %></span>
@@ -37,8 +41,12 @@
 			<div class="comment">
 				<div class="comment-meta">
 					<span class="comment-author">
-						<% @user = User.where(id: feed_entry.user_id).first %>
-						<span><%= @user.username %></span>
+						<% comment_author = User.where(id: feed_entry.user_id).first %>
+						<span>
+							<% unless comment_author.nil? %>
+								<%= link_to comment_author.display_name, user_path(comment_author) %>
+							<% end %>
+						</span>
 					</span>
 				  <div class="comment-timestamp">
 				  	<span>&nbsp;<%= t('comments.commented') + " " %></span>
@@ -50,7 +58,7 @@
 		  <p class="comment-content">
 		    <%= feed_entry.content %>
 		  </p>
-		  <% if @user.id === current_user.id %>
+		  <% if comment_author.id === current_user.id %>
 	    	<%= form_tag( { :action => "delete_comment", :controller => "events", comment_id: feed_entry.id, event_id: @event.id}, { :method => :post }) do %>
 	    		<%= submit_tag "Löschen", class: "btn btn-xs btn-danger comment-delete-btn" %>
 	    	<% end %>

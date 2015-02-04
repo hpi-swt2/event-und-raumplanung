@@ -3,15 +3,15 @@
   They will automatically be included in application.css.
 */
 
-.pending {
+.pending a {
     color: gray;
 }
 
-.accepted {
+.accepted a {
     color: green;
 }
 
-.declined {
+.declined a {
     color: red;
 }
 
@@ -49,4 +49,75 @@
 
 .no-tasks-text {
     margin: 1em 0em 2em 3em;
+}
+
+.task-section-divider {
+    border-bottom: 2px solid #aaa;
+}
+
+.task-page-header h1, .task-page-header h2, .task-page-header h3 {
+    margin: 5px;
+}
+
+.task-page-header {
+    margin: 3em 0;
+}
+
+.task-description {
+    font-size: 1.2em;
+    text-align: justify;
+}
+
+.task-glyphicon-done {
+    font-size: 5em;
+    color: green;
+}
+
+.task-glyphicon-undone {
+    font-size: 5em;
+    color: grey;
+}
+
+.task-done {
+    font-size: 1.2em;
+    color: green;
+}
+
+.task-undone {
+    font-size: 1.2em; 
+    color: grey;  
+}
+
+.task-done-indicator {
+    text-align: center !important;
+}
+
+.task-done-indicator span {
+    text-align: right;
+}
+
+.task-section {
+    padding-bottom: 3em;
+}
+
+.task-middle-section {
+    padding-top: 1.5em;
+    padding-left: 1em;
+}
+
+.task-lower-section {
+    padding-top: 2em
+}
+
+ul.task-attachment {
+    list-style-type: none;
+    margin: 0 0 0 1.5em;
+    padding: 0;
+}
+
+.task-glyphicon-file {
+    font-size: 1.5em;
+    color: grey;
+    padding-right: 0.5em;
+    top: 0.25em;
 }

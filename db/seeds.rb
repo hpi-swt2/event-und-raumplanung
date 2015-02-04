@@ -32,13 +32,13 @@ room12 = Room.create(name: 'HS 2', size: 100)
 room13 = Room.create(name: 'HS 3', size: 99)
 
 ## Create Users
-user2 = User.find_by username: 'maxe1992'
+user2 = User.find_by username: 'max.mustermann'
 if user2.nil?
-	user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'maxe1992', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
+	user2 = User.create(email: 'Max.Mustermann.' + DateTime.now.to_s + '@example.com', username: 'max.mustermann', identity_url: 'http://example.com/Max.Mustermann.' + DateTime.now.to_s)
 end
-user3 = User.find_by username: 'eri1942'
+user3 = User.find_by username: 'erika.musterfrau'
 if user3.nil?
-	user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', username: 'eri1942', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
+	user3 = User.create(email: 'Erika.Musterfrau.' + DateTime.now.to_s + '@example.com', username: 'erika.musterfrau', identity_url: 'http://example.com/Erika.Musterfrau.' + DateTime.now.to_s)
 end
 user1 = User.all.first
 
@@ -58,36 +58,48 @@ another_event = Event.create({name: 'Vorlesung',
 					rooms: [room2],
 					user_id: user1.id})
 
-Task.create({name: 'An accepted Task', 
+task = Task.new({name: 'An accepted Task', 
 			description: 'This is an accepted task.',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'accepted'})
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'Another accepted Task', 
+task = Task.new({name: 'Another accepted Task', 
 			description: 'This is a accepted task which is already done.',
 			event_id: another_event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'accepted',
 			done: true })
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'A pending Task', 
+task = Task.new({name: 'A pending Task', 
 			description: 'This is a pending task.',
 			event_id: event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'pending'})
+task.skip_sending_mails = true
+task.save
 
-Task.create({name: 'A second pending Task', 
+task = Task.new({name: 'A second pending Task', 
 			description: 'This is another pending task.',
 			event_id: another_event.id,
 			identity_type: 'User',
 			identity_id: 1,
+			creator_id: user1.id,
 			status: 'pending'})
 
-Task.create({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned"})
+task = Task.new({:name => 'A Task', :description => 'This is a task.', :status => "not_assigned", creator_id: user1.id})
+task.skip_sending_mails = true
+task.save
 
 #
 # Create Equipment
