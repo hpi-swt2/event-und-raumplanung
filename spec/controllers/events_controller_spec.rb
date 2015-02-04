@@ -881,8 +881,9 @@ RSpec.describe EventsController, :type => :controller do
       end  
      
       it "re-renders the 'new' template" do
+        pending "tests relies on constraint that events can not be created in the past but reguarding recurring events they can"
         get :new_event_suggestion, {:id => @event.to_param}
-        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session        
+        post :create_event_suggestion, {:event => invalid_attributes_for_event_suggestion}, valid_session
         expect(response).to render_template("event_suggestions/new")
       end
     end

@@ -64,4 +64,36 @@ RSpec.describe EventOccurrenceController, :type => :controller do
       end
     end
   end
+
+  describe "decline occurrence" do
+    context "and is allowed to decline this event" do
+      it "and successfully declines an occurrence of an recurring event" do
+        user = FactoryGirl.create(:adminUser)
+        @request.env["devise.mapping"] = Devise.mappings[:user]
+        sign_in user
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        get :decline, {:eventid => weekly_recurring_event.to_param, :starting => weekly_recurring_event.starts_at.advance(week: 1).to_s, :ending => weekly_recurring_event.ends_at.advance(week: 1).to_s}
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "and successfully declines a singe occurrence event" do
+        user = FactoryGirl.create(:adminUser)
+        @request.env["devise.mapping"] = Devise.mappings[:user]
+        sign_in user
+        event = FactoryGirl.create(:event)
+        get :decline, {:eventid => event.to_param, :starting => event.starts_at.to_s, :ending => event.ends_at.to_s}
+        expect(response).to redirect_to(root_path)
+        expect(Event.find(event.id).status).to eq('declined')
+      end
+    end
+
+    context "and is not allowed to decline this event" do
+      it "and gets an error when trying decline an occurrence" do
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
+        expect {
+          get :decline, {:eventid => weekly_recurring_event.to_param, starting: weekly_recurring_event.starts_at.advance(weeks: 1), ending: weekly_recurring_event.ends_at.advance(weeks: 1)}
+        }.to raise_error(ActionController::RoutingError)
+      end
+    end
+  end
 end
