@@ -1,3 +1,7 @@
+span.ui-helper-hidden-accessible {
+  visibility: hidden;
+}
+
 .ui-autocomplete {
   position: absolute;
   top: 100%;

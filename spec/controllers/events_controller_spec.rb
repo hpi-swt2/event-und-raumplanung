@@ -1302,4 +1302,16 @@ RSpec.describe EventsController, :type => :controller do
       expect(response).to render_template("events/change_chosen_rooms")
     end 
   end
+
+  describe 'comments' do
+    it "create and delete a new comment" do
+      event = Event.create! valid_attributes
+      attr = {event_id: event.id, commentContent: 'some content', user_id: user.id}
+      get "create_comment", attr
+      expect(Comments.all.count).to be(1)
+
+      get "delete_comment", {comment_id: Comments.all.first.id, event_id: event.id}
+      expect(Comments.all.count).to be(0)
+    end
+  end
 end
