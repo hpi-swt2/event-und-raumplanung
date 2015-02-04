@@ -2,18 +2,35 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @event_occurrences = Event.upcoming_events(5)
+    @event_occurrences = Event.upcoming_events(5).select{|occ| can? :show, occ.event}
     @my_upcoming_events = next_five_own_events
     @requests = Event.open.order(:starts_at, :user_id, :id).select{|event| can? :approve, event}.first(5)
     get_my_tasks
   end
 
-  def get_calendar_events
-    return Event.events_between(Time.current - 5.months, Time.now + 1.years).select{|occ| can? :show, occ.event}
+  def events_between
+    raise ActionController::ParameterMissing.new('start, end') unless events_between_params['start'].present? && events_between_params['end'].present?
+    start_datetime = Time.parse(events_between_params['start'])
+    end_datetime = Time.parse(events_between_params['end'])
+    events = Event.events_between(start_datetime, end_datetime).select{|occ| can? :show, occ.event}
+    events_json = "["
+    events.each do |event_occurrence|
+      events_json += event_occurrence.to_json
+      events_json += ","
+    end
+    events_json = events_json[0..-2] if events_json.size > 1
+    events_json += "]"
+    respond_to do |format|
+      format.html { render json: events_json }
+      format.json { render json: events_json }
+    end
   end
-  helper_method :get_calendar_events
 
  private
+
+  def events_between_params
+    params.permit(:start, :end)
+  end
 
   def get_my_tasks 
     @my_accepted_tasks = []

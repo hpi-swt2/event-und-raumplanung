@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   match "events/:id/approve" => "events#approve", as: :approve_event, via: [:get, :post]
   match "events/:id/decline" => "events#decline", as: :decline_event, via: [:get, :post]
+
+  get 'events_between' => 'dashboard#events_between'
   get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
   get 'events/:id/decline_all' => 'events#decline_all', as: "decline_all"
   get 'events/:id/decline_pending' => 'events#decline_pending', as: "decline_pending"
