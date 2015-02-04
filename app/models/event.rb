@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
   # We define a default sorting by most recent sign up, and then
   # we make a number of filters available through Filterrific.
   filterrific(
-    default_settings: { sorted_by: 'created_at_desc',  items_per_page: 10},
+    default_settings: { sorted_by: 'created_at_desc',  items_per_page: 10, user: 'show_all'},
     filter_names: [
       :search_query,
       :room_ids,
@@ -27,10 +27,9 @@ class Event < ActiveRecord::Base
   self.per_page = 12
 
   has_many :tasks
+  has_many :equipment_requests
   has_many :activities
-
   belongs_to :event
-
   has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
 
   has_many :favorites
@@ -43,7 +42,8 @@ class Event < ActiveRecord::Base
   validates_presence_of :name, :starts_at, :ends_at, :rooms
 
   validates_numericality_of :participant_count, only_integer: true, greater_than_or_equal_to: 0
-  validate :dates_cannot_be_in_the_past,:start_before_end_date
+  validate :dates_cannot_be_in_the_past, :if => lambda{ new_record? }
+  validate :start_before_end_date
 
   validate :validate_schedule
 
@@ -68,13 +68,21 @@ class Event < ActiveRecord::Base
     IceCube::Schedule.from_yaml(read_attribute(:schedule)) if read_attribute(:schedule)
   end
 
-  def schedule_from_rule(dirty_rule, termination_date)
+  def schedule_from_rule(dirty_rule, termination_date=nil)
     validate_schedule
     schedule = self.schedule
+    schedule.start_time = self.starts_at
+    schedule.end_time = self.ends_at
+    if schedule.exception_times
+      schedule.exception_times.each do |exception_time|
+        schedule.remove_exception_time(exception_time)
+      end
+    end
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     unless dirty_rule.nil? || dirty_rule == "null"
       rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
-      rule.until(Date.parse(termination_date)) unless termination_date.nil?
+      date = Date.parse(termination_date) if termination_date.present?
+      rule.until(date)
       schedule.add_recurrence_rule rule
     end
     self.schedule = schedule
@@ -83,6 +91,16 @@ class Event < ActiveRecord::Base
   def occurence_rule
     schedule = self.schedule
     schedule.recurrence_rules.first if schedule && !schedule.recurrence_rules.empty?
+  end
+
+  def delete_occurrence(time)
+    schedule = self.schedule
+    schedule.add_exception_time(time)
+    self.update!(schedule: schedule)
+  end
+
+  def single_occurrence_event?
+    occurence_rule.nil?
   end
 
   def schedule_ends_at_date
@@ -126,6 +144,12 @@ class Event < ActiveRecord::Base
       end
     end
     return involved
+  end
+
+  def in_week(week, year)
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
+    return (self.ends_at >= weekBegin && self.starts_at <= weekEnd)
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord

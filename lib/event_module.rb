@@ -30,12 +30,26 @@ module EventModule
   end
 
   def check_vacancy id, rooms
-    logger.info id
     colliding_events = []
     return colliding_events if rooms.nil?
 
     rooms = rooms.collect{|i| i.to_i}
     events =  Event.other_to(id).not_declined.overlapping(self.starts_at,self.ends_at)
+
+    return colliding_events if events.empty?
+
+    events.each do | event |
+      colliding_events.push(event) if (rooms & event.rooms.pluck(:id)).size > 0
+    end
+    return colliding_events
+  end
+
+  def check_overlapping_requests id, rooms
+    colliding_events = []
+    return colliding_events if rooms.nil?
+
+    rooms = rooms.collect{|i| i.to_i}
+    events =  Event.other_to(id).open.overlapping(self.starts_at,self.ends_at)
 
     return colliding_events if events.empty?
 

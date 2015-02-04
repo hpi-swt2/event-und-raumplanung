@@ -153,6 +153,9 @@ de:
       remove_favorite: ! 'Aus Favoriten entfernen'
       add_favorite: ! 'Zu Favoriten hinzufügen'
       task:    ! 'Aufgabe erstellen'
+      decline_all: ! 'Alle ablehnen (bestätigte und ausstehende)'
+      decline_pending: ! 'Nur ausstehende ablehnen'
+      wo_decline: 'Fortfahren ohne Ablehnen'
     titles:
       suggest: 'Alternative vorschlagen'
   number:
@@ -236,7 +239,6 @@ de:
     successful_room_unassign: 'Raum %{room} erfolgreich gelöscht'
     successful_comment_create: 'Kommentar wurde erfolgreich erstellt'
     set_language: 'Sprache erfolgreich umgestellt.'
-  tasks:
   alert:
     successful_suggest_conflict: ! '%{model} konfligiert mit anderem %{model}. %{model} wurde erfolgreich erneut vorgeschlagen.'
     conflict_detected: ! '%{model} konfligiert mit anderem %{model}.'
@@ -247,19 +249,18 @@ de:
       conflict_same_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend am %{start_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
       conflict_different_days_multiple_rooms: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} in den Räumen %{rooms}.'
       conflict_different_days_one_room: 'Ihre Alternative konfligiert mit dem Event %{name} stattfindend vom %{start_date} bis zum %{end_date} von %{start_time} bis %{end_time} im Raum %{rooms}.'
+      single_occurrence_successful_delete: 'Sie haben den Veranstaltungstermin erfolgreich gelöscht.'
     status:
       suggested: Vorschlag
       approved: bestätigt
       declined: abgelehnt
       pending: In Bearbeitung
       rejected_suggestion: Abgelehnter Vorschlag
+      request: Anfrage
   room:
     desired_size: 'gewünschte Raumgröße'
   equipment:
     necessary: 'Benötigte Ausstattung'
-  events:
-    form:
-      series_end: 'Serienende'
     show:
       suggested_for: 'Vorgeschlagen für'
     links:
@@ -271,11 +272,8 @@ de:
       pending: ausstehend
       accepted: bestätigt
       declined: abgelehnt
-    user:
-      none: Keine Auswahl
     attachments:
       none: Keine Anhänge
-
   will_paginate:
     next_label: Weiter →
     page_entries_info:

@@ -26,7 +26,9 @@
             <% if params[:action] == "edit" %>
               <td class="text-right">
                 <% unless is_leader %>
-                  <%= link_to t('.unassign', :default => t("groups.edit.unassign")), unassign_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
+                  <%= link_to unassign_user_group_path(@group, user), :title => t("groups.edit.unassign"), :class => 'btn btn-default btn-xs' do %>
+                      <span class="glyphicon glyphicon-trash"></span>    
+                  <% end %>
                   <% if can? :promote_user, @group %>
                     <%= link_to t('.promote', :default => t("groups.edit.promote")), promote_user_group_path(@group, user), :class => 'btn btn-default btn-xs' %>
                   <% end %>

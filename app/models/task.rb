@@ -22,7 +22,7 @@ class Task < ActiveRecord::Base
 
 
   def deadline_cannot_be_in_the_past
-    errors.add(:deadline, "can't be in the past") if deadline && deadline.to_date < Date.current
+    errors.add(:deadline, (I18n.t 'warnings.deadline_in_past')) if deadline && deadline.to_date < Date.current
   end
 
   def identity_changed?

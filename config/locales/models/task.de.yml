@@ -15,3 +15,5 @@ de:
         status: 'Status'
         done: 'Erledigt'
         assigned_to: 'Zugewiesen an'
+  warnings:
+    deadline_in_past: darf nicht in der Vergangenheit liegen!

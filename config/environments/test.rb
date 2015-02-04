@@ -42,4 +42,6 @@ Rails.application.configure do
 
   #don't send an e-mail whilst testing
   ActionMailer::Base.delivery_method = :test
+
+  config.middleware.use RackSessionAccess::Middleware
 end

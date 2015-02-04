@@ -22,12 +22,12 @@ function handleTaskCheckboxClick()
 			url: taskPath,
 			type: 'PUT',
 			data: {task: {done: target.checked }},
-			dataType: 'json'
-		});
-
-        if ( $(target).hasClass("task-done-checkbox-from-dashboard") ){
-            window.location.reload(); 
-        } 
+			dataType: 'text'
+		}).then(function() {
+            if ( $(target).hasClass("task-done-checkbox-from-dashboard") ){
+                window.location.reload(); 
+            } 
+        });
             
 	});
 }

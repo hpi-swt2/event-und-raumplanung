@@ -20,7 +20,12 @@
             <tbody>
               <% @requests.each do |event| %>
                   <td>
-                    <%= t('dashboard.user') + ' '+ event.user_id.to_s + ' ' + t('dashboard.requests') %>
+                    <% if event.user_id %>
+                      <%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %>
+                    <% else %>
+                      t('.unknown')
+                    <% end %>
+                    <%= t('dashboard.requests') %> 
                     <span id="event<%=event.id%>" style="display:none"><%=event.id%></span>
                     <br>
                     <%= link_to event.name, event_path(event) %> -
@@ -43,8 +48,12 @@
                     <%= event.rooms.map(&:name).to_sentence %>
                   </td>
                   <td>
-                    <%= link_to t('.decline_event', :default => t("helpers.links.decline")), decline_event_path(event, date: @date), :method => :decline, :class => 'btn btn-danger btn-xs' %>
-                    <%= link_to t('.approve_event', :default => t("helpers.links.approve")), approve_event_path(event, date: @date), :method => :approve, :class => 'btn btn-success btn-xs' %>
+                    <%= link_to approve_event_path(event, date: @date), :title => t("helpers.links.approve"), :method => :approve, :class => 'btn btn-success btn-xs' do %>
+                      <span class="glyphicon glyphicon-ok"></span> 
+                    <% end %>
+                    <%= link_to decline_event_path(event, date: @date), :title => t("helpers.links.decline"), :method => :decline, :class => 'btn btn-danger btn-xs' do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                    <% end %>
                   </td>
                 </tr>
               <% end %>

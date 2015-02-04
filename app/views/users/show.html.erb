@@ -1,6 +1,8 @@
 <%- model_class = User -%>
+<% page_header = @user.display_name %>
+<% title page_header %>
 <div class="page-header">
-  <h1><%= @user.display_name %></h1>
+  <h1><%= page_header %></h1>
 </div>
 
 <dl class="dl-horizontal">

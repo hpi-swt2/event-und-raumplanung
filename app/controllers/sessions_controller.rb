@@ -41,7 +41,7 @@ class SessionsController < Devise::SessionsController
 
     # init icaltoken
     if @user.icaltoken.nil?
-      @user.icaltoken = SecureRandom.base64(24)
+      @user.icaltoken = SecureRandom.urlsafe_base64(24)
       @user.save
     end
   end

@@ -53,10 +53,10 @@
       <% if events_type == 'open' %>
         <td><%= image_tag("flag.png", :alt => "Important", :width => 20, :height => 20) if event.is_important %></td>
           <td>
-            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
             <%= link_to approve_event_path(event), :method => :approve, :title => t("helpers.links.approve"), :class => 'btn btn-success btn-xs' do %>
                 <span class="glyphicon glyphicon-ok"></span>
             <% end %>
+            <button events_type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%= t("helpers.links.decline") %>"><span class="glyphicon glyphicon-remove"></span></button>
           </td>
       <% end %>
     </tr>
