@@ -46,7 +46,9 @@
                     <%= link_to approve_event_path(event, date: @date), :title => t("helpers.links.approve"), :method => :approve, :class => 'btn btn-success btn-xs' do %>
                       <span class="glyphicon glyphicon-ok"></span> 
                     <% end %>
-                    <button type="button" id="event#<%=event.id%>" class="btn btn-danger decline-btn btn-xs" title="<%=t("helpers.links.decline")%>"><span class="glyphicon glyphicon-remove"></span></button>
+                    <%= link_to decline_event_path(event, date: @date), :title => t("helpers.links.decline"), :method => :decline, :class => 'btn btn-danger btn-xs' do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                    <% end %>
                   </td>
                 </tr>
               <% end %>
