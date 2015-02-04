@@ -28,8 +28,10 @@ describe Event do
     }
   }
 
+  let(:user) {create(:user)}
+
   describe "events_between" do
-    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event) }
+    let(:daily_recurring_event) { FactoryGirl.create(:daily_recurring_event, user_id: user.id) }
 
     before(:all) do
       Event.destroy_all
@@ -37,7 +39,7 @@ describe Event do
 
     context "daily event present" do
       it "finds 7 occurrences in a week for a weekly schedule", skip_before: true do
-        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days, daily_recurring_event.user_id)
         expect(occurrences.count).to eq(7)
         expect(occurrences.first).to be_instance_of(EventOccurrence)
         expect(occurrences.first.starts_occurring_at).to eq(daily_recurring_event.starts_at)
@@ -50,8 +52,8 @@ describe Event do
 
     context "daily and weekly event present" do
       it "finds 8 occurrences in a week", skip_before: true do
-        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event)
-        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days)
+        weekly_recurring_event = FactoryGirl.create(:weekly_recurring_event, user_id: user.id)
+        occurrences = Event.events_between(daily_recurring_event.starts_at, daily_recurring_event.starts_at + 6.days, weekly_recurring_event.user_id)
         expect(occurrences.count).to eq(8)
         expect(occurrences.first.event).to eq(weekly_recurring_event)
       end
@@ -183,14 +185,14 @@ describe Event do
   end
 
   context "schedule is recurring and terminating" do
-    let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event) }
+    let(:daily_recurring_terminating_event) { FactoryGirl.create(:daily_recurring_terminating_event, user_id: user.id) }
 
     it "and occurence rule is set" do
       expect(daily_recurring_terminating_event.schedule_ends_at_date).to eq(Date.new(2015, 8, 16))
     end
 
     it "and there is no event occurrence after the termination date (inclusive)" do
-      event_times = Event.events_between(daily_recurring_terminating_event.starts_at, Date.new(2015, 8, 15).advance(weeks: 1))
+      event_times = Event.events_between(daily_recurring_terminating_event.starts_at, Date.new(2015, 8, 15).advance(weeks: 1), daily_recurring_terminating_event.user_id)
       expect(event_times.size).to eq(15)
     end
   end

@@ -12,7 +12,7 @@ class DashboardController < ApplicationController
     raise ActionController::ParameterMissing.new('start, end') unless events_between_params['start'].present? && events_between_params['end'].present?
     start_datetime = Time.parse(events_between_params['start'])
     end_datetime = Time.parse(events_between_params['end'])
-    events = Event.events_between(start_datetime, end_datetime).select{|occ| can? :show, occ.event}
+    events = Event.events_between(start_datetime, end_datetime, current_user.id)
     events_json = "["
     events.each do |event_occurrence|
       events_json += event_occurrence.to_json
