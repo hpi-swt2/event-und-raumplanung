@@ -1,0 +1,12 @@
+
+.room-events-calendar {
+	margin-bottom: 20px;
+}
+
+@page {
+  size: landscape;
+}
+.page {
+    width: 267mm;
+    height: 170mm;
+}

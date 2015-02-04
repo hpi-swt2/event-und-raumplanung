@@ -1,20 +1,26 @@
 <% if event.status == "suggested" %> 
-	<% if can? :decline_event_suggestion, event %>
-		<%= link_to t('.decline', :default => t("helpers.links.decline")), 
-			decline_event_suggestion_event_path(event), :class => 'btn btn-danger btn-xs' %>
-	<% end %> 
 	<% if can? :approve_event_suggestion, event %>   
-    	<%= link_to t('.approve', :default => t("helpers.links.approve")), approve_event_suggestion_event_path(event), :class => 'btn btn-success btn-xs' %>
+    	<%= link_to approve_event_suggestion_event_path(event), :title => t("helpers.links.approve"), :class => 'btn btn-success btn-xs' do %>
+    		<span class="glyphicon glyphicon-ok"></span>		
+  		<% end %> 
 	<% end %>
-<% elsif event.status == "rejeceted_suggestion" %> 
+	<% if can? :decline_event_suggestion, event %>
+		<%= link_to decline_event_suggestion_event_path(event), :title => t("helpers.links.decline"), :class => 'btn btn-danger btn-xs' do %>
+    		<span class="glyphicon glyphicon-remove"></span>		
+  		<% end %> 
+	<% end %> 
+<% elsif event.status == "rejected_suggestion" %> 
 	<% if can? :edit, event.event %>
-		<%= link_to t('.edit_original_event', :default => t("events.links.edit_original_event")), edit_event_path(event.event), :class => 'btn btn-warning btn-xs' %>
+		<%= link_to edit_event_path(event.event), :title => t("helpers.links.edit_original_event"), :class => 'btn btn-warning btn-xs' do %>
+    		<span class="glyphicon glyphicon-pencil"></span>		
+  		<% end %>
 	<% end %>
 	<% if can? :destroy, event.event %> 
-  		<%= link_to t('.destroy', :default => t("events.links.destroy_original_event")),
-              event_path(event.event),
+		<%= link_to event_path(event.event),
               :method => :delete,
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-xs btn-danger' %>
+              :title => t("helpers.links.destroy_original_event"), :class => 'btn btn-xs btn-danger' do %>
+    		<span class="glyphicon glyphicon-trash"></span>		
+  		<% end %> 
     <% end %> 
 <% end %>

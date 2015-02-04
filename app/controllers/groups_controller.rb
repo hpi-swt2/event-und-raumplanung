@@ -1,41 +1,59 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms, :assign_room ,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability]
-  before_action :set_room, only: [:assign_room ,:unassign_room]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :manage_rooms,:unassign_room, :assign_user, :unassign_user, :promote_user, :degrade_user, :current_ability, :assign_rooms, :autocomplete]
+  before_action :set_room, only: [:unassign_room]
   before_action :set_user, only: [:promote_user, :degrade_user, :current_ability]
   before_action :get_user_roles, only: [:show, :edit]
   before_action :load_user_from_email, only: [:assign_user]
   before_action :load_user_from_id, only: [:unassign_user]
 
+  respond_to :json
+
   def index
-    @groups = Group.all
+    @my_groups = Group.get_all_groups_of_current_user (current_user.id) 
+    
+    @filterrific = Filterrific.new(
+      Group, params[:filterrific])
+      @groups = Group.filterrific_find(@filterrific).paginate(:page => params[:page], :per_page => 10)
+
+    @my_groups = @my_groups & @groups 
+    @other_groups = @groups - @my_groups
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def show
+    authorize! :show, @group
     @users = @group.users 
   end
     
   def assign_user
     authorize! :assign_user, @group
-    flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
-    @group.users << @user
+    if @user.is_member_of_group(@group)
+      flash[:error] = t('errors.messages.unsuccessful_user_assign', :email => @user.email)
+    else
+      flash[:notice] = t('notices.successful_user_assign', :email => @user.email)
+      @group.users << @user
+    end
     redirect_to edit_group_path(@group)
   end
 
   def unassign_user
     authorize! :unassign_user, @group
-    if @user.is_leader_of_group(@group.id) == false
-      flash[:notice] = t('notices.successful_user_unassign', :email => @user.email)
+    if not @user.is_leader_of_group(@group.id)
+      flash[:notice] = t('notices.successful_user_unassign', :email => @user.username)
       @group.users.delete(@user)
     else
-      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.email)
+      flash[:error] = t('errors.messages.unsuccessful_user_unassign', :email => @user.username)
     end
     redirect_to edit_group_path(@group)
   end
 
   def new
     authorize! :new, Group
-
     @group = Group.new    
   end
 
@@ -48,10 +66,9 @@ class GroupsController < ApplicationController
     authorize! :create, Group
 
     @group = Group.new(group_params)
-
     respond_to do |format|
       if @group.save
-        format.html { redirect_to @group, notice: t('notices.successful_create', :model => Group.model_name.human) }
+        format.html { redirect_to edit_group_path(@group), notice: t('notices.successful_create', :model => Group.model_name.human) }
         format.json { render :show, status: :created, location: @group }
       else
         format.html { render :new }
@@ -90,14 +107,19 @@ class GroupsController < ApplicationController
     @unassigned_rooms = Room.where(:group_id => nil)
   end
 
-  def assign_room
+  def assign_rooms
     authorize! :manage_rooms, Group
-
-    if @room.group == nil  
-      @group.rooms << @room
-      flash[:notice] = "Raum "+@room.name+" erfolgreich hinzugefügt."
+    room_ids = params[:group][:room_ids]
+    room_ids.delete("")
+    if room_ids.any?
+      room_ids.each do |room_id|
+        if  Room.find(room_id).group == nil 
+          @group.rooms <<  Room.find(room_id)
+        end
+      end
+      flash[:notice] = t("notices.successful_room_assign")
     else
-      flash[:error] = "Raum "+@room.name+" bereits an Gruppe "+@room.group.name+" vergeben."
+      flash[:error] = t("errors.messages.unsuccessful_room_assign")
     end
     redirect_to manage_rooms_group_path(@group)
   end
@@ -106,7 +128,7 @@ class GroupsController < ApplicationController
     authorize! :manage_rooms, Group
 
     @group.rooms.delete(@room)
-    flash[:notice] = "Raum "+@room.name+" erfolgreich gelöscht."
+    flash[:notice] = t('notices.successful_room_unassign', :room => @room.name)
     redirect_to manage_rooms_group_path(@group)
   end
 
@@ -136,14 +158,22 @@ class GroupsController < ApplicationController
     redirect_to edit_group_path(@group)
   end
 
+  def autocomplete
+    if params[:search]
+      unassigned = @group.get_unassigned_by_search(params[:search])
+      json_unassigned = unassigned.collect {|u| {label: u.username, value: u.email}}
+      respond_with json_unassigned
+    end
+  end
+
   private
     def set_group
       @group = Group.find(params[:id])
     end
 
     def load_user_from_email
-      if params.include?(:User)
-        @user = User.find_by_email(params[:User][:email])
+      if params.include?(:email)
+        @user = User.find_by_email(params[:email])
         if @user == nil
           flash[:error] = t("groups.edit.user_not_found")
           redirect_to edit_group_path(@group)
@@ -153,10 +183,11 @@ class GroupsController < ApplicationController
 
     def load_user_from_id
       if params.include?(:user_id)
-        @user = User.find(params[:user_id])
-        if @user == nil
-          flash[:error] = t("groups.edit.user_not_found")
-          redirect_to edit_group_path(@group)
+        if User.exists?(params[:user_id])
+          @user = User.find(params[:user_id])
+        else
+        flash[:error] = t("groups.edit.user_not_found")
+        redirect_to edit_group_path(@group)
         end
       end
     end

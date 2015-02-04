@@ -29,17 +29,31 @@
     </div>
     <%= error_span(@event[:description]) %>
   </div>
-  <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
-  <div class="control-group">
-    <%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :room_ids, options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), {}, {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'' }%>
+
+  <div class="row well">
+    <div class="event-section-divider"><h3><%= t '.room_selection' %></h3></div>
+    <br/>
+    <div class="col-xs-4 col-md-4 room_input">
+    <%= render :partial => 'events/rooms', locals: {model_class: model_class} %>
     </div>
-    <script>
-    $('#selectpicker').selectpicker();
-    </script>
-    <%= error_span(@event[:rooms]) %>
+    <div class="row col-xs-6 col-md-6 col-xs-offset-2 col-md-offset-2">
+      <div class="control-group">
+        <h4><%= f.label model_class.human_attribute_name(:rooms), :class => 'control-label' %></h4>
+        <div class="controls">
+          <%= f.select :room_ids, 
+            options_from_collection_for_select(Room.all, :id, :name, selected: @event.room_ids), 
+            {}, 
+            {:class=> 'selectpicker', :id => 'selectpicker', :multiple =>'', :data => { :remote => true, :url => url_for(:controller => "events", :action => "change_chosen_rooms", :id => @event.id) }} %>
+        </div>
+      <%= error_span(@event[:rooms]) %>
+      </div>
+    </div>
   </div>
+
+  <div class="control-group" id="chosen_rooms">
+    <%= render :partial => 'events/chosen_rooms' %>
+  </div>
+  
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:participant_count), :class => 'control-label' %>
     <div class="controls">
@@ -50,12 +64,24 @@
   <div class="control-group">
     <%= f.label model_class.human_attribute_name(:starts_at), :class => 'control-label' %>
     <div class="row">
-      <div class="controls col-sm-6">
-        <%= f.date_field :starts_at_date, :class => 'form-control' %>
+      <div class="controls col-sm-6" id="startDate">
+        <%= f.text_field :starts_at_date, {:class => 'form-control', :value => l(@event.starts_at_date.to_date)}%>
+        <script type="text/javascript">
+          $('#startDate').datetimepicker({
+            language: '<%= I18n.locale %>',
+            pickTime: false
+          });
+        </script>
          <%= error_span(@event[:starts_at_date]) %>
       </div>
-      <div class="controls col-sm-6">
-        <%= f.time_field :starts_at_time, :class => 'form-control', value: @event.starts_at_time.strftime('%H:%M') %>
+      <div class="controls col-sm-6" id="startTime">
+        <%= f.time_field :starts_at_time, {:class => 'form-control', :value => @event.starts_at_time.strftime('%H:%M')}%>
+        <script type="text/javascript">
+          $('#startTime').datetimepicker({
+            format: 'HH:mm',
+            pickDate: false         
+          });
+        </script>
         <%= error_span(@event[:starts_at_time]) %>
       </div>
     </div>
@@ -64,12 +90,24 @@
  <div class="control-group">
     <%= f.label model_class.human_attribute_name(:ends_at) , :class => 'control-label' %>
     <div class="row">
-      <div class="controls col-sm-6">
-        <%= f.date_field :ends_at_date, :class => 'form-control' %>
+      <div class="controls col-sm-6" id="endDate">
+        <%= f.text_field :ends_at_date, {:class => 'form-control', :value => l(@event.ends_at_date.to_date) }%>
+        <script type="text/javascript">
+          $('#endDate').datetimepicker({
+            language: '<%= I18n.locale %>',
+            pickTime: false
+          });
+        </script>
         <%= error_span(@event[:ends_at_date]) %>
       </div>
-      <div class="controls col-sm-6">
-        <%= f.time_field :ends_at_time, :class => 'form-control', value: @event.ends_at_time.strftime('%H:%M') %>
+      <div class="controls col-sm-6" id="endTime">
+        <%= f.text_field :ends_at_time, {:class => 'form-control', :value => @event.ends_at_time.strftime('%H:%M')}%>
+        <script type="text/javascript">
+          $('#endTime').datetimepicker({
+            format: 'HH:mm',
+            pickDate: false         
+          });
+        </script>
         <%= error_span(@event[:ends_at_time]) %>
       </div>
     </div>
@@ -82,6 +120,38 @@
       <%= error_span(@event[:schedule]) %>
     </div>
   </div>
+  <div class="control-group end-date-group">
+    <%= f.label t('events.form.series_end'), :class => 'control-label' %>
+    <div class="row">
+      <div class="controls col-sm-6">
+        <%= f.text_field :schedule_ends_at_date, {:class => 'form-control', :id => 'ScheduleEndDatePicker', value: schedule_ends_at_date_not_nil(@event)}%>
+        <script type="text/javascript">
+          $('#ScheduleEndDatePicker').datetimepicker({
+            language: '<%= I18n.locale %>',
+            pickTime: false
+          });
+        </script>
+        <%= error_span(@event[:schedule_ends_at_date]) %>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    (function() {
+
+      var updateEndDateVisible = function() {
+          if($('.recurring_select').val() === 'null'){
+            $('.end-date-group').hide();
+          } else {
+            $('.end-date-group').show();
+          }
+      };
+
+      $('.recurring_select').change(updateEndDateVisible);
+      $(document).on('click','.rs_dialog', updateEndDateVisible);
+
+      updateEndDateVisible();
+    })();
+  </script>
   <div class="control-group">
     <div class="row">
       <div class="controls col-sm-6">
@@ -89,7 +159,7 @@
       <%= f.check_box :is_private %>
       </div>
       <div class="controls col-sm-6">
-      <%= f.label model_class.human_attribute_name(:Important), :class => 'control-label' %>
+      <%= f.label t('.important'), :class => 'control-label' %>
       <%= f.check_box :is_important %>
       </div>
    </div>
@@ -97,11 +167,15 @@
   <% unless @event_template_id.nil? %> 
      <%= f.hidden_field :event_template_id, :value => @event_template_id, :readonly => true%>
   <% end %>
- <div class="notice"></div> <!-- display conflicting events -->
 
+  <div class="notice"></div> <!-- display conflicting events -->
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-            :back, :class => 'btn btn-default' %>
+  <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to :back, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>        
+  <% end %>
+
 
 <% end %>

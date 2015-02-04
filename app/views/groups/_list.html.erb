@@ -1,0 +1,58 @@
+<div id="filterrific_results">
+  <%= will_paginate @groups, renderer: BootstrapPagination::Rails %>
+  <div>
+    <%= page_entries_info groups %>
+  </div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= model_class.human_attribute_name(:name) %></th>
+          <% if can? :destroy, Group %>
+            <th  class="text-right"><%=t '.actions', :default => t("helpers.actions") %></th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @my_groups.each do |group| %>
+          <tr>
+            <td><%= link_to group.name, group_path(group) %></td>
+            <% if can? :destroy, group %>
+              <td class="text-right">
+                <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                          group_path(group),
+                          :method => :delete,
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-xs btn-danger' %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+        <% @other_groups.each do |group| %>
+          <tr>
+            <!-- very uncool! we need more information whether the current user is admin or not -->
+            <% if can? :destroy, group %>
+              <td><%= link_to group.name, group_path(group) %></td>
+            <% else %>
+              <td><%= group.name %></td>
+            <% end %>
+            <% if can? :destroy, group %>
+              <td class="text-right">
+                <%= link_to group_path(group),
+                      :title => t("helpers.links.destroy"),
+                            :method => 'delete',
+                            :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                            :class => 'btn btn-danger btn-xs' do %>
+                          <span class="glyphicon glyphicon-trash"></span>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+</div>
+<%= will_paginate groups, renderer: BootstrapPagination::Rails %>
+</div>

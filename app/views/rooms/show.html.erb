@@ -1,69 +1,66 @@
 <%-
-  model_class = Room
-  maximum_events = 5
+    model_class = Room
+    maximum_events = 5
+    title @room.name
 -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= @room.name%></h1>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @room.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:size) %>:</strong></dt>
   <dd><%= @room.size %></dd>
   <dt><strong><%= model_class.human_attribute_name(:properties) %>:</strong></dt>
   <dd><%= @room.list_properties.presence || t('.no_properties') %></dd>
 </dl>
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              rooms_path, :class => 'btn btn-default'  %>
-
-<% if can? :edit, Room %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_room_path(@room), :class => 'btn btn-default' %>
-<% end %>
-
-<% if can? :edit, Room %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              room_path(@room),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-<% end %>
-
+<div>
+    <h2><%=t '.equipment' %> </h2>
+    <% if @assigned_equipment != {} %>
+        <div class="table-responsive">
+            <table class="table table-column">
+                <thead>
+                <tr>
+                    <th><%= t '.category'%></th>
+                    <th><%= t '.available'%></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @assigned_equipment.each do |category, count| %>
+                    <tr>
+                        <td><%= category %></td>
+                        <td><%= count %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    <% else %>
+        <em><%=t '.no_equipment' %></em><br/>
+    <% end %>
+    <%= link_to rooms_path, :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-arrow-left"></span>    
+    <% end %>
+    <% if can? :edit, Room %>
+        <%= link_to edit_room_path(@room), :title => t("helpers.links.edit"), :class => 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-pencil"></span>    
+        <% end %>
+    <% end %>
+    <% if can? :edit, Room %>
+        <%= link_to room_path(@room),
+            :title => t("helpers.links.destroy"),
+            :method => 'delete',
+            :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+            :class => 'btn btn-danger' do %>
+                <span class="glyphicon glyphicon-trash"></span>
+        <% end %>
+    <% end %>
+</div>
 <div id="events">
   <div class="page-header upcoming-events">
     <h2><%=t '.upcoming_events' %></h2>
-    <%= link_to t('.all_events'),
-                  room_events_path(@room), :class => 'btn btn-default' %>
   </div>
 
   <%= render :partial => 'upcoming_events' %>
 </div>
-<div class "page-header">
-    <h2><%=t '.equipment' %> </h2>
-    <% if @assigned_equipment != {} %>
-      <div class="table-responsive">
-          <table class="table table-column">
-            <thead>
-            <tr>
-              <th><%= t '.category'%></th>
-              <th><%= t '.available'%></th>
-            </tr>
-            </thead>
-            <tbody>
-              <% @assigned_equipment.each do |category, count| %>
-                <tr>
-                  <td><%= category%></td>
-                  <td><%= count %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-      </div>
-    <% else %>
-      <em><%=t '.no_equipment' %></em><br/>
-    <% end %>
-</div>
-<br></br>
 

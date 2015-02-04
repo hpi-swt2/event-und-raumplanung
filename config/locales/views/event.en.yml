@@ -12,3 +12,27 @@ en:
       begin: 'Begin'
       end: 'End'
       tasks: 'Tasks'
+      last_update: 'Last Update'
+      status: 'Status'
+      mark_as_favorite: 'Mark as favorite'
+      unmark_as_favorite: 'Remove from favorites'
+      send_comment: 'Send comment'
+      belongs_to_series: 'Belongs to series'
+
+    chosen_rooms:
+      details: 'Details And Additional Equipment'
+      requestable_equipment: 'Requestable Equipment'
+      category: 'Ausstattung'
+      requested: 'additional requested'
+      present: 'vorhanden'
+
+    rooms:
+      requested_size: 'Needed size of room'
+      reuqested_equipment: 'Necessary equipment'
+    form:
+      room_selection: 'Room selection'
+      series_end: 'Series end'
+      important: 'Important'
+    conflictinglist:
+      conflicting_requests: 'Conflicting Requests'      
+

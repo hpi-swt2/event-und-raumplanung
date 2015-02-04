@@ -65,16 +65,23 @@ class RoomsController < ApplicationController
          end
      end
      if rooms_ids.empty?
-   @empty = true
+       @empty = true
      end
      @rooms = Room.find(rooms_ids)
   end
 
-  def getValidRooms
-    needed_rooms = Equipment.where("category IN (?)", params['room']['equipment']).pluck(:room_id)
-    needed_rooms = Room.where("id IN (:rooms) and size >= :room_size", { :rooms => needed_rooms, :room_size => params['room']['size']})
-    msg = Hash[needed_rooms.map { |room| [room.id, {"name" => room.name}]}]
-
+  def get_valid_rooms
+    needed_rooms = []
+    if params['room']['equipment']
+      needed_rooms = get_valid_rooms_for_equipment(params['room']['equipment'])
+    end
+    if params['room']['size']
+      needed_rooms = get_valid_rooms_for_size(needed_rooms, params['room']['size'].to_i)
+    end
+    if !params['room']['equipment'] && !params['room']['size']
+      needed_rooms = Room.all
+    end
+    msg = needed_rooms.map { |room|  {"id" => room.id, "name" => room.name}}
     respond_to do |format|
         format.json { render :json => msg} 
     end 
@@ -136,9 +143,72 @@ class RoomsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  def details
-  render action: 'details'
+
+  def printoverview
+    @rooms = Room.all
+    render locals: {rooms:@rooms}
+  end
+
+
+
+  def print
+    set_room
+    render_print_rooms([@room.id])
+  end
+
+  def print_rooms
+    throw "need room ids" unless params[:rooms]
+    room_ids = params[:rooms].split(',')
+    render_print_rooms(room_ids)
+  end
+
+  def render_print_rooms(room_ids)   
+    date = params[:date] ? Date.parse(params[:date]) :  Date.today.monday
+    week = date.cweek
+    year = date.cwyear
+    @weekBegin = date
+    @prints = []
+    room_ids.each do | room_id |
+        @calevents = []
+        room = Room.find(room_id)
+        events = Event.approved.room_ids([room_id])
+        events.each do |event|
+          if(event.schedule)
+            occurrences = event.schedule.occurrences_between(date.monday,date.sunday) || []
+            occurrences.each do |occurrence|
+              @calevents << Event.new(name:event.name, starts_at:occurrence.start_time, ends_at:occurrence.end_time, is_private:event.is_private)
+            end
+          else
+            @calevents << event if event.in_week(week, year)
+          end
+        end
+        @prints << {room:room, events:@calevents, lang: I18n.locale, weekBegin: @weekBegin } if room
+    end
+    render action: 'print', layout:'print', locals:{ prints: @prints}
+  end
+
+  def fetch_event
+    if Event.exists?(params[:id])
+      event = Event.find(params[:id])
+      rooms = event.rooms.map(&:name).to_sentence
+      if event.starts_at
+        startTime = event.starts_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        startTime = ''
+      end
+      if event.ends_at
+        endTime = event.ends_at.strftime("%d.%m.%Y - %H:%M")
+      else
+        endTime = ''
+      end
+      user = User.find(event.user_id).identity_url
+      declinePath = decline_event_suggestion_event_path(event)
+      approvePath = approve_event_suggestion_event_path(event)
+      render json: {success: true, body: {event: event, rooms: rooms, startTime: startTime, endTime: endTime, 
+                      user: user, approvePath: approvePath, declinePath: declinePath}}
+    else
+      render json: {success: false}
+    end
   end
 
   private
@@ -161,7 +231,7 @@ class RoomsController < ApplicationController
         @assigned_equipment = {}
       end
     end
-    
+
     def assign_equipment
       @available_equipment.each do |category, count|
         key = category+'_equipment_count'
@@ -197,5 +267,23 @@ class RoomsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def room_params
       params.require(:room).permit(:name, :size, :property_ids => [])
+    end
+
+    def get_valid_rooms_for_equipment needed_equipment
+      needed_equipment = Equipment.where("category IN (?)", params['room']['equipment'])
+      needed_rooms = needed_equipment.collect { |equipment| equipment.room }
+      h = Hash.new(0)
+      needed_rooms.each { |room| h.store(room, h[room]+1) }
+      needed_rooms.to_a.keep_if { |room| h[room] == params['room']['equipment'].size}
+      return needed_rooms
+    end
+    
+    def get_valid_rooms_for_size filtered_rooms, size
+      if filtered_rooms.empty? 
+        filtered_rooms = Room.where("size >= :room_size", {:room_size => size})
+      else
+        filtered_rooms.to_a.keep_if {|room| room.size >= size}
+      end
+      return filtered_rooms
     end
 end

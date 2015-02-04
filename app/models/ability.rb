@@ -36,11 +36,19 @@ class Ability
     can [:assign_user, :unassign_user, :edit, :update], Group, memberships: {user_id: user.id, isLeader:true}
     can [:update, :destroy, :edit], Event, :user_id => user.id
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
+    can :show, Event, :is_private => false
+    can :show, Event, :is_private => true, :involved_users => { :id => user.id }
+    can :events_between, Event
+    can :show, EventOccurrence do |occurrence| 
+        can?(:show, occurrence.event)
+    end
     can [:create_comment, :delete_comment], Event
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 
     can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event => { :user_id => user.id }
+    can [:read, :create, :edit, :update, :destroy, :set_done], Task, :event_template => { :user_id => user.id }
     can [:read, :set_done], Task, :identity_id => user.id, :identity_type => 'User'
+    can [:edit], User, :id => user.id
     if user.username == load_admin
         can :manage, Group
         can :manage, Room
@@ -52,23 +60,23 @@ class Ability
         can :read, Group
     end
 
-    can [:create, :destroy], Room if user.has_permission("manage_rooms")
+    can [:new, :create, :destroy], Room if user.has_permission("manage_rooms")
 
-    can :update, Room if user.has_permission("edit_rooms")
+    can [:index, :show, :edit, :update], Room if user.has_permission("edit_rooms") or user.has_permission("manage_rooms")
 
-    can [:create, :destroy], Equipment if user.has_permission("manage_equipment")
+    can [:new, :create, :destroy], Equipment if user.has_permission("manage_equipment")
     
-    can :update, Equipment if user.has_permission("edit_equipment")
+    can [:index, :show, :edit, :update], Equipment if user.has_permission("edit_equipment") or user.has_permission("manage_equipment")
 
-    can [:create, :destroy], RoomProperty if user.has_permission("manage_properties")
+    can [:new, :create, :destroy], RoomProperty if user.has_permission("manage_properties")
     
-    can :update, RoomProperty if user.has_permission("edit_properties")
+    can [:index, :show, :edit, :update], RoomProperty if user.has_permission("edit_properties") or user.has_permission("manage_properties")
 
     can [:assign_equipment, :assign_properties], Room if user.has_permission("assign_to_rooms")
 
-    can :approve_any, Event if user.has_any_permission("approve_events")
+    can [:approve_any, :decline_any], Event if user.has_any_permission("approve_events")
 
-    can [:approve, :decline], Event do |event|
+    can [:show, :approve, :decline], Event do |event|
         if event.rooms.empty?
             user.has_permission("approve_events")
         else

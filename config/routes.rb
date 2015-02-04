@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/change_locale/:locale' => 'locale#change_locale', as: "change_locale"
+
   resources :uploads, :only => [:new, :create, :destroy]
 
   resources :permissions, :only => [:index] do
@@ -17,7 +19,9 @@ Rails.application.routes.draw do
       get 'manage_rooms'
       get 'assign_room/:room_id', :action => 'assign_room', :as => 'assign_room'
       get 'unassign_room/:room_id', :action => 'unassign_room', :as => 'unassign_room'
+      patch 'assign_rooms'
       patch 'assign_user', :action => 'assign_user', :as => 'assign_user'
+      get 'autocomplete', :action => 'autocomplete', :as => 'autocomplete'
       get 'unassign_user/:user_id', :action => 'unassign_user', :as => 'unassign_user'
       get 'promote_user/:user_id', :action => 'promote_user', :as => 'promote_user'
       get 'degrade_user/:user_id', :action => 'degrade_user', :as => 'degrade_user'
@@ -29,29 +33,44 @@ Rails.application.routes.draw do
 
   get 'events_approval/index'
   get 'events_approval/' => 'events_approval#index'
+
   post 'events_create_comment' => 'events#create_comment', as: "create_comment"
   post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
-  post 'events/:id/approve' => 'events#approve', as: "approve_event"
-  post 'events/:id/decline' => 'events#decline', as: "decline_event"
 
-  # post 'events/:id/approve' => 'events#approve', as: "approve_event"
-  # get 'events/:id/decline' => 'events#decline', as: "decline_event"
-  # get 'events/:id/approve_event_suggestion' => 'events#approve_event_suggestion', as: "approve_event_suggestion"
-  # get 'events/:id/decline_event_suggestion' => 'events#decline_event_suggestion', as: "decline_event_suggestion"
+  get 'events/changeChosenRooms' => 'events#change_chosen_rooms'
+
+
+  match "events/:id/approve" => "events#approve", as: :approve_event, via: [:get, :post]
+  match "events/:id/decline" => "events#decline", as: :decline_event, via: [:get, :post]
+
+  get 'events_between' => 'dashboard#events_between'
+  get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
+  get 'events/:id/decline_all' => 'events#decline_all', as: "decline_all"
+  get 'events/:id/decline_pending' => 'events#decline_pending', as: "decline_pending"
 
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
-  get 'rooms/:id/details' => 'rooms#details'
+  get 'rooms/printoverview', as: 'print'
+  get 'rooms/:id/print' => 'rooms#print'
+  get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
-  post 'rooms/getValidRooms' => 'rooms#getValidRooms', as: "valid_rooms"
-  post 'rooms/:id' => 'rooms#details'
+  post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
+  delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 
   post 'tasks/upload_file' => 'tasks#upload_file'
+
+  devise_scope :user do
+    get 'admin', controller: 'sessions', action: 'show_admin_login'
+    post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin', as: 'authenticate_admin'
+  end
+
+  # post 'authenticate_admin', controller: 'sessions', action: 'authenticate_admin'
 
   devise_for :users, :controllers => {:sessions => "sessions"}
 
   get "identities/autocomplete" => "identities#autocomplete"
+
 
   resources :attachments
 
@@ -73,13 +92,15 @@ Rails.application.routes.draw do
 
   resources :equipment
 
-  patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
+  get 'fetch_event' => 'rooms#fetch_event', as: :fetch_event
 
+  patch 'checkVacancy' => 'events#check_vacancy', as: :check_event_vacancy
+  
   resources :events do
-    collection do 
+    collection do
       get :create_event_suggestion
-      patch :create_event_suggestion 
-      post :creat_event_suggestion
+      patch :create_event_suggestion
+      post :create_event_suggestion
       get :reset_filterrific
     end
 
@@ -87,7 +108,7 @@ Rails.application.routes.draw do
       post :approve
       post :decline
       get :decline
-      get :approve_event_suggestion 
+      get :approve_event_suggestion
       get :decline_event_suggestion
       get :new_event_template
       get :new_event_suggestion
@@ -97,14 +118,14 @@ Rails.application.routes.draw do
   end
 
   resources :maps
-  resources :profile
+  resources :users, only: [:edit, :show, :update]
 
   resources :event_templates, :path => "templates"
   resources :event_templates do
     get :reset_filterrific, on: :collection
   end
 
-
+  get 'ical/:icaltoken' => 'ical#get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -119,53 +140,6 @@ Rails.application.routes.draw do
   get 'events/:id/index_toggle_favorite' => 'events#index_toggle_favorite', as: :index_toggle_favorite_from_event
   get 'events/:id/show_toggle_favorite' => 'events#show_toggle_favorite', as: :show_toggle_favorite_from_event
 
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'rooms/:id/events' => 'rooms#list_events', as: :room_events
 
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

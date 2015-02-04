@@ -1,4 +1,4 @@
-<%= form_for @roomProperty, :html => { :class => "form-horizontal room" } do |f| %>
+<%= form_for @roomProperty, :html => { :class => 'room' } do |f| %>
 
     <% if @roomProperty.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -15,16 +15,16 @@
     </div>
   <% end %>
 
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
-    </div>
+    <%= f.text_field :name, :class => 'form-control' %>
     <%= error_span(@roomProperty[:name]) %>
   </div>
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            room_properties_path, :class => 'btn btn-default' %>
-
+  <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+  <%= link_to room_properties_path, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-remove"></span>    
+  <% end %>
 <% end %>

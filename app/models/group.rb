@@ -6,13 +6,30 @@ class Group < ActiveRecord::Base
 	has_many :rooms
 	has_many :tasks, as: :identity
 
+  filterrific(
+    filter_names: [
+      :search_name
+    ]
+  )
+  scope :search_name, lambda { |name|
+    terms = name.downcase.split(/\s+/)
+    terms = terms.map { |e| ('%'+e.gsub('*', '%') + '%').gsub(/%+/, '%')}
+    test = terms.map { |term| "LOWER(groups.name) LIKE ?"}.join(' AND '), *terms.map { |e| [e]}
+    where( test )
+  }
+
 	def is_group
 		true
-    end
+  end
   has_many :permissions, :as => :permitted_entity, :dependent => :destroy
 
   def leaders
     self.users.select{|user| user.is_leader_of_group(self.id)}
+  end
+
+  def self.get_all_groups_of_current_user(current_user_id)
+    group_ids = Membership.where("user_id = ?",current_user_id).pluck(:group_id)
+    return Group.where('id in (?)',group_ids)
   end
 
   def has_permission(category, room = nil)
@@ -37,5 +54,11 @@ class Group < ActiveRecord::Base
     self.permissions.find_all{ |permission| permission.category == category}.each do |permission|
       permission.destroy
     end
+  end
+
+  def get_unassigned_by_search(search)
+    users = User.where("LOWER(username) LIKE ? ","%#{search.downcase}%")
+    users = users.reject { |user| user.groups.include?(self)}
+    return users
   end
 end
