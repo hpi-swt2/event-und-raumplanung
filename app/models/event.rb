@@ -228,6 +228,10 @@ class Event < ActiveRecord::Base
     where(user_id: id) if id.present?
   }
 
+  scope :calendar_events, lambda { | user_id |
+    where('? IN ? OR ? IN favorites', user_id, involved_users, user_id)
+  }
+
   def self.options_for_sorted_by
   [
     [(I18n.t 'sort_options.sort_name'), 'name_asc'],
