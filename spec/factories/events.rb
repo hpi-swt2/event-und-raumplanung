@@ -18,7 +18,7 @@ FactoryGirl.define do
     starts_at DateTime.now.advance(:days => +1)
     ends_at DateTime.now.advance(:days => +1, :hours => +1)
     is_private true
-    user_id 122
+    user_id 2
     rooms { build_list :room, 1 }
   end
 

@@ -231,17 +231,6 @@ RSpec.describe TasksController, type: :controller do
       sign_in user
       ActionMailer::Base.deliveries.clear
     end
-    describe "GET index" do 
-      it "renders the index template" do
-        get :index
-        expect(response).to render_template("index")
-      end
-
-      it "loads the events in order to filter tasks" do
-        get :index
-        expect(assigns(:events)).not_to be_nil
-      end
-    end
 
     describe "GET new" do
       before(:all) do

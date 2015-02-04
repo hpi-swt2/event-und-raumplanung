@@ -14,7 +14,7 @@
 		    </div>
 		    <div class="panel-body">
                 <a href="ical/<%= current_user.icaltoken %>.ics"><%=t('dashboard.export_calendar') %></a>
-				<%= render 'calendar' %>
+                <%= render partial: 'calendar', locals: {calevents: @calevents, favorites: @favorites} %>
 	  	  </div>
 		</div>
 	</div>
