@@ -1,0 +1,43 @@
+<%- model_class = Event -%>
+
+<% title t 'events.conflictinglist.conflicting_requests' %>
+<h1><%=t 'events.conflictinglist.conflicting_requests' %></h1>
+
+
+  <div class="table-responsive">
+      <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= model_class.human_attribute_name 'name' %></th>
+          <th><%= model_class.human_attribute_name 'description' %></th>
+          <th><%= model_class.human_attribute_name 'rooms' %></th>
+          <th><%= model_class.human_attribute_name 'starts_at' %> /
+              <%= model_class.human_attribute_name 'ends_at' %></th>
+          <th><%= model_class.human_attribute_name 'status' %></th>
+          <th><%= model_class.human_attribute_name 'user' %></th>
+          <th><%= t '.actions', :default => t("helpers.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @events.each do |event| %>
+          <tr>
+            <td><%= link_to event.name, event_path(event) %></td>
+            <td><%= trimDescription event.description %></td>
+            <td><%= event.rooms.map(&:name).to_sentence %></td>
+            <td><%=l event.starts_at if event.starts_at  %> / <br />
+            <%=l event.ends_at if event.ends_at %></td>
+            <td><%=t "event.status.#{event.status}" %></td>
+                <td><%= link_to User.find(event.user_id).display_name, user_path(User.find(event.user_id)) %></td>
+                <td>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      </table>
+  </div>
+
+  <%= link_to t("helpers.links.decline_all"), decline_all_path, {:class => 'btn btn-danger btn-xl'} %>
+  
+  <%= link_to t("helpers.links.decline_pending"), decline_pending_path, {:class => 'btn btn-warning btn-xl'} %>
+
+  <%= link_to t("helpers.links.wo_decline"), events_approval_path, {:class => 'btn btn-default btn-xl'} %>

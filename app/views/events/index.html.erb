@@ -115,7 +115,8 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.number_field(
             :participants_gte,
-            class: 'form-control'
+            class: 'form-control',
+            min:0
           ) %>
        </div>
       </div>
@@ -127,7 +128,8 @@
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
           <%= f.number_field(
             :participants_lte,
-            class: 'form-control'
+            class: 'form-control', 
+            min:0
           ) %>
        </div>
       </div>

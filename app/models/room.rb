@@ -3,6 +3,7 @@ class Room < ActiveRecord::Base
   
   has_many :bookings
   has_many :equipment, :inverse_of => :room # The plural of 'equipment' is 'equipment' 
+  has_many :equipment_requests
   has_and_belongs_to_many :properties, :class_name => 'RoomProperty'
   has_and_belongs_to_many :events
   belongs_to :group

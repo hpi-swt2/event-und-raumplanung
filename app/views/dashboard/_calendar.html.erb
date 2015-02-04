@@ -22,39 +22,39 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
 			},
 			events: [
                 <% @calevents.each do |each| %>
-					
+
 					<% if each.event.user_id === current_user.id %>
 					{
-						title: '<%= each.event.name %>',
-						start: '<%= each.starts_occurring_at %>',
-                        end:   '<%= each.ends_occurring_at %>',
-                        event_id: '<%= each.event_id %>'
+						'title': '<%= each.event.name %>',
+						'start': '<%= each.starts_occurring_at.iso8601 %>',
+                        'end':   '<%= each.ends_occurring_at.iso8601 %>',
+                        'event_id': '<%= each.event_id %>'
 
 
                     	<% if each.event.is_approved %>
-                        	, color: 'green'
+                        	, 'color': 'green'
                     	<% else %>
-                    		, color: 'red'
-                    	<% end %> 
-					
+                    		, 'color': 'red'
+                    	<% end %>
+
 					},
 					<% end %>
                 <% end %>
 
                 <% @favorites.each do |each| %>
-					
+
 					<% @event = Event.find_by_id(each.event_id) %>
 						<% if @event && @event.user_id != current_user.id && each.is_favorite %>
 						{
-							title: '<%= @event.name %>',
-							start: '<%= @event.starts_at %>',
-                            event_id: '<%= each.event_id %>'
-							
+							'title': '<%= @event.name %>',
+							'start': '<%= @event.starts_at.iso8601 %>',
+                            'event_id': '<%= each.event_id.iso8601 %>'
+
 							<% if @event.is_approved %>
-		                       	, color: 'blue'
+		                       	, 'color': 'blue'
 		                    <% else %>
-		                    	, color: 'red'
-		                    <% end %> 	
+		                    	, 'color': 'red'
+		                    <% end %>
 						},
 						<% end %>
                 <% end %>
