@@ -25,3 +25,5 @@ en:
       room_selection: 'Room selection'
       series_end: 'Series end'
       important: 'Important'
+    conflictinglist:
+      conflicting_requests: 'Conflicting Requests'      
