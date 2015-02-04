@@ -4,10 +4,6 @@
        inside ruby tags to display the calendar on any page
 -->
 
-<!-- TODO: implement filtering (by month, week, day) to call Event.events_between(...) appropriatly. Ask Team Biber (Daniel Stolpe, Meike Baumgärtner) in case of questions concerning Event.events_between(...) and recurring events
-Event.events_between(..) returns a collection of EventOccurrences. To access the "real" Event call "event" on an EventOccurrence instance
--->
-
 <div id="calendar"></div>
 
 <script>
@@ -24,7 +20,7 @@ Event.events_between(..) returns a collection of EventOccurrences. To access the
           start: start.toISOString(),
           end: end.toISOString()
         }).then(function(events) {
-          callback(events);
+          callback(JSON.parse(events));
         });
       },
       eventClick: function(calEvent, jsEvent, view){
