@@ -85,14 +85,15 @@ class EventsController < GenericEventsController
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
+    @filterrific.user = @filterrific.user == current_user_id ? 'only_show_own' : 'show_all'
     session[:filterrific_events] = @filterrific.to_hash
   end
 
   def initialize_filterrific params
       @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
       @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
-      @filterrific.user = nil if @filterrific.user == 0;
+      @filterrific.user = nil             if @filterrific.user == 'show_all'
+      @filterrific.user = current_user_id if @filterrific.user == 'only_show_own'
   end
 
   def reset_filterrific
@@ -102,10 +103,31 @@ class EventsController < GenericEventsController
     redirect_to action: :index
   end
 
+  
+  
+  def approve
+    authorize! :approve, @event
+    @event.approve
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    if conflicting_events.empty?
+      @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+      notice = {notice: t('notices.successful_approve', :model => @event.name)}
+      redirect_to_previous_site(notice)
+    else
+      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
+    end
+  end
+
   def decline
     authorize! :decline, @event
     @event.decline
-    redirect_to_previous_site
+    @event.activities << Activity.create(:username => current_user.username, 
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    notice = {notice: t('notices.successful_decline', :model => @event.name)}
+    redirect_to_previous_site(notice)
   end
 
   def approve_event_suggestion
@@ -149,17 +171,6 @@ class EventsController < GenericEventsController
     respond_to do |format|
       msg = conflicting_events_msg conflicting_events
       format.json { render :json => msg}
-    end
-  end
-
-  def approve
-    authorize! :approve, @event
-    @event.approve
-    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
-    if conflicting_events.empty?
-      redirect_to_previous_site
-    else
-      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
     end
   end
 
@@ -388,7 +399,7 @@ class EventsController < GenericEventsController
       params['participant_count'] = @event.participant_count
       params['is_private'] = @event.is_private
       params['is_important'] = @event.is_important
-      params['status'] = 'suggested'
+      params['status'] = 'approved'
       return params
     end
 
@@ -470,9 +481,9 @@ class EventsController < GenericEventsController
                                           :controller => params[:controller])
     end
 
-    def redirect_to_previous_site
+    def redirect_to_previous_site(message)
       begin
-        redirect_to :back
+        redirect_to :back, flash: message
       rescue ActionController::RedirectBackError
         redirect_to events_approval_path
       end

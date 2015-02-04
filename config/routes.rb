@@ -42,19 +42,19 @@ Rails.application.routes.draw do
 
   match "events/:id/approve" => "events#approve", as: :approve_event, via: [:get, :post]
   match "events/:id/decline" => "events#decline", as: :decline_event, via: [:get, :post]
+
+  get 'events_between' => 'dashboard#events_between'
   get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
   get 'events/:id/decline_all' => 'events#decline_all', as: "decline_all"
   get 'events/:id/decline_pending' => 'events#decline_pending', as: "decline_pending"
 
   get 'rooms/list'
   post 'rooms/list', as: 'roomlist'
-  get 'rooms/:id/details' => 'rooms#details'
   get 'rooms/printoverview', as: 'print'
   get 'rooms/:id/print' => 'rooms#print'
   get 'rooms/print/' => 'rooms#print_rooms'
   post 'rooms/list'
   post 'rooms/getValidRooms' => 'rooms#get_valid_rooms', as: "valid_rooms"
-  post 'rooms/:id' => 'rooms#details'
   get 'event_occurrence' => 'event_occurrence#show', as: "show_occurrence"
   delete 'event_occurrence' => 'event_occurrence#destroy', as: "delete_occurrence"
 

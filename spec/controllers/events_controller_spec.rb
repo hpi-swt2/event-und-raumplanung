@@ -786,7 +786,7 @@ RSpec.describe EventsController, :type => :controller do
       activities = event.activities
       expect{
       post :approve, {:id => event.to_param, :date => Date.today}
-      }.to change(activities, :count).by(1)
+      }.to change(activities, :count).by(2)
       expect(activities.last.action).to eq("approve")
       expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
@@ -800,7 +800,7 @@ RSpec.describe EventsController, :type => :controller do
       activities = event.activities
       expect{
       post :decline, {:id => event.to_param, :date => Date.today}
-      }.to change(activities, :count).by(1)
+      }.to change(activities, :count).by(2)
       expect(activities.last.action).to eq("decline")
       expect(activities.last.controller).to eq("events")
       expect(activities.last.username).to eq(user.username)
@@ -824,10 +824,10 @@ RSpec.describe EventsController, :type => :controller do
         }.to change(Event, :count).by(1)
       end  
 
-      it "creates a new Event with the status suggested" do
+      it "creates a new Event with the status approved" do
         get :new_event_suggestion, {:id => @event.to_param}
         post :create_event_suggestion, {:event => valid_attributes_for_event_suggestion}, valid_session
-        expect(assigns(:event)[:status]).to eq('suggested')
+        expect(assigns(:event)[:status]).to eq('approved')
       end
 
       it "creates a new Event with the name, description, participant_count, importance and privacy of the old event" do

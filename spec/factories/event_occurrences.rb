@@ -1,4 +1,9 @@
 FactoryGirl.define do
+  factory :event_occurrence_object, :class => EventOccurrence do |f|
+    f.starts_occurring_at Time.now.to_s
+    f.ends_occurring_at Time.now.advance(hours: 1).to_s
+  end
+
   factory :event_occurrence do |f|
     f.starting Time.now.to_s
     f.ending Time.now.advance(hours: 1).to_s
