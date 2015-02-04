@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20150202145925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "activities", force: true do |t|
     t.string   "username"
@@ -36,6 +37,20 @@ ActiveRecord::Schema.define(version: 20150202145925) do
   end
 
   add_index "attachments", ["task_id"], name: "index_attachments_on_task_id", using: :btree
+
+  create_table "bookings", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start"
+    t.datetime "end"
+    t.integer  "event_id"
+    t.integer  "room_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bookings", ["event_id"], name: "index_bookings_on_event_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.string   "author"
