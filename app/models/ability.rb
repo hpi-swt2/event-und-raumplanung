@@ -38,6 +38,9 @@ class Ability
     can [:sugguest, :create_suggestion], Event, {:user_id => user.id, :status => "In Bearbeitung"}
     can :show, Event, :is_private => false
     can :show, Event, :is_private => true, :involved_users => { :id => user.id }
+    can :show, EventOccurrence do |occurrence| 
+        can?(:show, occurrence.event)
+    end
     can [:create_comment, :delete_comment], Event
     can [:update, :destroy, :edit], EventTemplate, :user_id => user.id
     can [:decline_event_suggestion, :approve_event_suggestion], Event, :user_id => user.id 

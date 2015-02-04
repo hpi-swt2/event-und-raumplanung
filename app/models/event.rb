@@ -27,10 +27,9 @@ class Event < ActiveRecord::Base
   self.per_page = 12
 
   has_many :tasks
+  has_many :equipment_requests
   has_many :activities
-
   belongs_to :event
-
   has_one :event_suggestion, class_name: 'Event', foreign_key: "event_id", dependent: :destroy
 
   has_many :favorites
