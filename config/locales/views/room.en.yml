@@ -39,3 +39,7 @@ en:
       create_event: Create events
     print:
       room_blocked: Room blocked
+    printoverview:
+      title: Print overview
+      rooms: Rooms
+      week: Week

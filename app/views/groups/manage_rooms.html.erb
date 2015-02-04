@@ -33,6 +33,10 @@
     </script>
   </div>
 <br>
-<%= f.submit t("groups.manage_rooms.add") , :class => 'btn btn-primary' %>
-<%= link_to t('.back', :default => t("groups.edit.back")), group_path(@group), :class => 'btn btn-default' %>
+<button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+  	<span class="glyphicon glyphicon-floppy-disk"></span>
+</button>
+<%= link_to group_path(@group), :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-arrow-left"></span>    
+<% end %>
 <% end %>

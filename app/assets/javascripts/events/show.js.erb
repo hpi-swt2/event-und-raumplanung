@@ -33,12 +33,14 @@ function makeTasksSortable() {
 
 function enableFavoriteStarToggling() {
   var button = $("#btn_mark_as_favorite");
-  button.bind("ajax:success", function() {
-    button.toggleClass("event-favorite-icon-checked");
-    button.toggleClass("event-favorite-icon-unchecked");
-    updateFavoriteTitle(button);    
-  });
-  updateFavoriteTitle(button);
+  if (button.length) {
+    button.off("ajax:success").on("ajax:success", function() {
+      button.toggleClass("event-favorite-icon-checked");
+      button.toggleClass("event-favorite-icon-unchecked");
+      updateFavoriteTitle(button);    
+    });
+    updateFavoriteTitle(button);
+  }
 }
 
 function updateFavoriteTitle(button) {
