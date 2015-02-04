@@ -1,0 +1,19 @@
+# ruby encoding: utf-8
+
+en:
+  activerecord:
+    models:
+      task:
+        one: 'Task'
+        other: 'Tasks'
+    attributes:
+      task:
+        name: 'Name'
+        description: 'Description'
+        identity: 'Assigned to'
+        event: 'Event'
+        status: 'Status'
+        done: 'Done'
+        assigned_to: 'Assigned to'
+  warnings:
+    deadline_in_past: can not be in the past!

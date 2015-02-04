@@ -49,3 +49,7 @@ de:
       title: 'Anstehende %{event} in %{room}'
     print:
       room_blocked: Raum blockiert
+    printoverview:
+      title: Druckübersicht
+      rooms: Räume
+      week: Woche

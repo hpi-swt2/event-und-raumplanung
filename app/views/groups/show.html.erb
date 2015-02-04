@@ -13,11 +13,13 @@
 <% end %>
 
 
-<%= link_to t('.back', :default => t('helpers.links.back')),
-            groups_path, :class => 'btn btn-default'  %>
+<%= link_to groups_path, :title => t("helpers.links.back"), :class => 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-arrow-left"></span>    
+<% end %>
 <% if can? :edit, @group %>
-    <%= link_to t('.edit', :default => t('helpers.links.edit')),
-                edit_group_path(@group), :class => 'btn btn-default' %>
+    <%= link_to edit_group_path(@group), :title => t("helpers.links.edit"), :class => 'btn btn-default' do %>
+    	<span class="glyphicon glyphicon-pencil"></span>    
+	<% end %>
 <% end %>
 <% if can? :manage_rooms, @group %>
     <%= link_to t('.assign_room', :default => t('groups.show.assign_rooms')),

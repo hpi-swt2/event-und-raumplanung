@@ -16,9 +16,13 @@
       
       <div id="entitiesDiv"></div>
 
-      <%= submit_tag nil, :class => 'btn btn-primary' %>
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-              permissions_path, :class => 'btn btn-default' %>
+      <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+      </button>
+      
+      <%= link_to permissions_path, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-remove"></span>
+      <% end %>
 
     </div>
   </div>  
