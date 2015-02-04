@@ -11,7 +11,8 @@ class EventsController < GenericEventsController
   #respond_to :html, :js
 
   load_and_authorize_resource
-  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :create_event_suggestion, :edit_event_with_suggestion]
+  skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :change_chosen_rooms, :create_event_suggestion, :edit_event_with_suggestion]
+
   after_filter :flash_to_headers, :only => :check_vacancy
 
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
@@ -27,6 +28,7 @@ class EventsController < GenericEventsController
       flash.discard
     end
   end
+  
 
   # GET /events/:id/new_event_template
   def new_event_template
@@ -49,6 +51,31 @@ class EventsController < GenericEventsController
   def show_toggle_favorite
     toggle_favorite
     render nothing: true
+  end
+  
+  def change_chosen_rooms
+    if params[:event]
+      room_ids = params[:event][:room_ids]
+      @chosen_rooms = Room.find(room_ids)
+      @available_equipment = Equipment.all.select(:category).distinct
+
+      @room_equipment = Hash.new
+      for room in @chosen_rooms
+        @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+      end
+      
+      if params[:id]
+        set_event
+        set_requested_equipment
+      end
+
+    end
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
   end
 
   # GET /events
@@ -193,6 +220,14 @@ class EventsController < GenericEventsController
   # GET /events/1/edit
   def edit
     #authorize! :edit, @event
+
+    @chosen_rooms = Room.find(@event.room_ids)
+    @available_equipment = Equipment.all.select(:category).distinct
+    @room_equipment = Hash.new
+    for room in @chosen_rooms
+      @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
+    end
+    set_requested_equipment
   end
 
   # POST /events
@@ -217,6 +252,10 @@ class EventsController < GenericEventsController
     @event.attributes = filtered_params
     changed_attributes = @event.changed
     @update_result = @event.update(filtered_params)
+    if @update_result
+      EquipmentRequest.where(:event_id => @event.id).destroy_all
+      create_equipment_requests
+    end
     if @update_result && changed_attributes.any?
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
@@ -257,6 +296,17 @@ class EventsController < GenericEventsController
   helper_method :delete_comment
 
   private
+    def set_requested_equipment
+      @requested_equipment = Hash.new
+      for room in @chosen_rooms
+        temp = EquipmentRequest.where(room_id: room.id, event_id: @event.id).select(:category, :count)
+        @requested_equipment[room.id] = Hash.new
+
+        temp.each do |element|
+          @requested_equipment[room.id][element.category] = element.count
+        end
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
@@ -301,7 +351,7 @@ class EventsController < GenericEventsController
           @event.activities << Activity.create(:username => current_user.username,
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
-
+          create_equipment_requests
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
@@ -359,6 +409,20 @@ class EventsController < GenericEventsController
         else
           favorite.last().is_favorite = true
           favorite.last().save();
+        end
+      end
+    end
+
+    def create_equipment_requests
+      available_equipment = Equipment.all.select(:category).distinct
+      for room in @event.room_ids
+        for equipment in available_equipment
+          category = equipment.category
+          key = category+'_equipment_count_'+room.to_s
+          equipment_count = params[key].to_i
+          if equipment_count>0
+            EquipmentRequest.create(:event_id => @event.id, :room_id => room, :category => category, :count => params[key]) 
+          end
         end
       end
     end

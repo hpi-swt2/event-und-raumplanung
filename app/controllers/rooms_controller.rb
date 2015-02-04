@@ -65,7 +65,7 @@ class RoomsController < ApplicationController
          end
      end
      if rooms_ids.empty?
-   @empty = true
+       @empty = true
      end
      @rooms = Room.find(rooms_ids)
   end

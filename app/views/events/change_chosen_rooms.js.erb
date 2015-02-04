@@ -1,0 +1,1 @@
+$("#event-form #chosen_rooms").html('<%= escape_javascript(render :partial => 'events/chosen_rooms', locals: {rooms: @chosen_rooms, available_equipment: @available_equipment, room_equipment: @room_equipment } ) %>');
