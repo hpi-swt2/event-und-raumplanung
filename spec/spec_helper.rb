@@ -46,34 +46,6 @@ RSpec.configure do |config|
   #config.use_transactional_fixtures = false
 
 
-config.around(:each, :acceptance_test => true) do |ex|
-    DatabaseCleaner.start
-    DatabaseCleaner.strategy = :truncation
-    #load Rails.root + "spec/support/seeds.rb"
-    ex.run
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
-end
-
-  config.before(:each, :acceptance_test => true ) do
-      #config.use_transactional_fixtures = false
-     #DatabaseCleaner.strategy = :transaction
-     #DatabaseCleaner.clean_with(:truncation)
-     #Rails.application.load_seed # loading seeds
-     # Capybara.javascript_driver = :webkit
-  end
-
-  config.before(:each, :acceptance_test => false ) do
-      #config.use_transactional_fixtures = true
-  end
-
- # config.before(:suite) do
- #   DatabaseCleaner.strategy = :transaction
- #    DatabaseCleaner.clean_with(:truncation)
- #    Rails.application.load_seed # loading seeds
- # end
-
-
   config.include Devise::TestHelpers, type: :controller
   config.include UserHelper
   config.include Capybara::DSL
