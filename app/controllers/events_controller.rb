@@ -239,6 +239,7 @@ class EventsController < GenericEventsController
       @room_equipment[room.id] = Equipment.all.where(room_id: room.id).group(:category).count
     end
     set_requested_equipment
+    flash[:error] = t('.attention', t('.attention'))
   end
 
   # POST /events
@@ -268,6 +269,7 @@ class EventsController < GenericEventsController
       create_equipment_requests
     end
     if @update_result && changed_attributes.any?
+      @event.update(status: 'open')
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)

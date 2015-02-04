@@ -56,3 +56,5 @@ de:
       important: 'Wichtig'
     conflictinglist:
       conflicting_requests: 'Konfligierende Anfragen'
+    edit:
+      attention: 'Attention, in case you change your event it might loose its approval status!'
