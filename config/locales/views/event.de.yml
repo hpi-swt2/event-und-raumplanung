@@ -48,3 +48,5 @@ de:
       room_selection: 'Raumauswahl'
       series_end: 'Serienende'
       important: 'Wichtig'
+    conflictinglist:
+      conflicting_requests: 'Konfligierende Anfragen'

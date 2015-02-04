@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   post 'events_create_comment' => 'events#create_comment', as: "create_comment"
   post 'events_delete_comment' => 'events#delete_comment', as: "delete_comment"
+
  # post 'events/:id/approve' => 'events#approve', as: "approve_event"
  # post 'events/:id/decline' => 'events#decline', as: "decline_event"
 
@@ -43,6 +44,9 @@ Rails.application.routes.draw do
   match "events/:id/decline" => "events#decline", as: :decline_event, via: [:get, :post]
 
   get 'events_between' => 'dashboard#events_between'
+  get 'events/:id/declineconflicting' => 'events#declineconflicting', as: "decline_conflicting"
+  get 'events/:id/decline_all' => 'events#decline_all', as: "decline_all"
+  get 'events/:id/decline_pending' => 'events#decline_pending', as: "decline_pending"
 
   # post 'events/:id/approve' => 'events#approve', as: "approve_event"
   # get 'events/:id/decline' => 'events#decline', as: "decline_event"
@@ -103,7 +107,7 @@ Rails.application.routes.draw do
     collection do
       get :create_event_suggestion
       patch :create_event_suggestion
-      post :creat_event_suggestion
+      post :create_event_suggestion
       get :reset_filterrific
     end
 
