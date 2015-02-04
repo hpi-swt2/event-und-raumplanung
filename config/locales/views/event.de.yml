@@ -57,4 +57,4 @@ de:
     conflictinglist:
       conflicting_requests: 'Konfligierende Anfragen'
     edit:
-      attention: 'Attention, in case you change your event it might loose its approval status!'
+      attention: 'Achtung, falls Sie Änderungen an diesem Event vornehmen, verliert Ihr Event ggf. seinen "Akzeptiert" Status!'

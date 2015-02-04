@@ -269,7 +269,7 @@ class EventsController < GenericEventsController
       create_equipment_requests
     end
     if @update_result && changed_attributes.any?
-      @event.update(status: 'open')
+      @event.update(status: 'pending')
       @event.activities << Activity.create(:username => current_user.username,
                                           :action => params[:action], :controller => params[:controller],
                                           :changed_fields => changed_attributes)
