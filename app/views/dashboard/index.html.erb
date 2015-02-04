@@ -14,7 +14,7 @@
 		        <h3 class="panel-title"><%= t('dashboard.calendar') %></h3>
 		    </div>
 		    <div class="panel-body">
-				<%= render 'calendar' %>
+				<%= render partial: 'calendar', locals: {calevents: @calevents, favorites: @favorites} %>
 	  	  </div>
 		</div>
 	</div>

@@ -11,6 +11,7 @@ class TasksController < ApplicationController
     @events = Event.all
     @event_id = event_id
     @tasks.where! event_id: event_id if event_id
+    redirect_to events_path
   end
 
   # GET /tasks/1

@@ -6,12 +6,13 @@ class DashboardController < ApplicationController
     @my_upcoming_events = next_five_own_events
     @requests = Event.open.order(:starts_at, :user_id, :id).select{|event| can? :approve, event}.first(5)
     get_my_tasks
+    get_calendar_events
   end
 
   def get_calendar_events
-    return Event.events_between(Time.current - 5.months, Time.now + 1.years).select{|occ| can? :show, occ.event}
+    @calevents = Event.events_between(Time.current - 5.months, Time.now + 1.years).select{|occ| can? :show, occ.event}
+    @favorites = Favorite.all
   end
-  helper_method :get_calendar_events
 
  private
 
