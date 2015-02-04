@@ -25,7 +25,7 @@ class TasksController < ApplicationController
     @task = Task.new
     @assignable_entities = Group.all
     @assignable_entities.concat(User.all)
-    unless params[:event_id].blank?
+    if params[:event_id].present?
       @task.event_id = params[:event_id]
       @for_event_template = false
       @event_field_readonly = :true
@@ -42,13 +42,13 @@ class TasksController < ApplicationController
   # GET /tasks/1/edit
   def edit
     if @task.identity_type && @task.identity_id
-      if @task.identity_type == "User"
+      if @task.identity_type == 'User'
         @identity_name = User.find(@task.identity_id).username
       else
         @identity_name = Group.find(@task.identity_id).name + " (#{t('groups.group')})"
       end
     else
-      @identity_name = "" 
+      @identity_name = ''
     end
     authorize! :edit, @task
   end
@@ -57,9 +57,9 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(set_status task_params_with_attachments)
-    @task.creator = current_user    
+    @task.creator = current_user
     @task.done = false
-    if identity_params 
+    if identity_params
       @task.identity_id =  identity_params[:id]
       @task.identity_type =  identity_params[:type]
     end
@@ -141,16 +141,9 @@ class TasksController < ApplicationController
 
   def accept
     if @task.identity
-      if !can_task_be_accepted?
-        redirect_to root_path
-        return 
-      end
-
-      if is_member_of_assigned_group?
-        @task.identity = current_user
-      end
-      
-      @task.status = "accepted"
+      return redirect_to root_path unless can_task_be_accepted?
+      @task.identity = current_user if is_member_of_assigned_group?
+      @task.status = 'accepted'
       @task.save
     end 
     respond_to do |format| 
@@ -159,48 +152,46 @@ class TasksController < ApplicationController
     end
   end
 
-  def can_task_be_accepted?
-    if @task.status == 'declined'
-      flash[:warning] = t(".this_task_was_already_declined")
-      return false
-    elsif @task.status == 'accepted'
-      flash[:warning] = t(".this_task_was_already_accepted_by") + " " + @task.identity.name
-      return false
-    elsif !@task.identity.is_group and @task.identity.id != current_user.id
-      flash[:warning] = t(".you_are_not_authorized_to_accept_this_task")
-      return false
-    else 
-      return true
-    end
-  end 
 
   def decline
-    if @task.identity and (is_member_of_assigned_group? or is_assigned_user?)
-      if @task.status == "accepted"
+    if @task.identity && (is_member_of_assigned_group? || is_assigned_user?)
+      if @task.status == 'accepted'
         flash[:warning] = t('.you_already_accepted_this_task')
-        redirect_to root_path
-        return
+        return redirect_to root_path
       else
-        @task.status = "declined"
+        @task.status = 'declined'
         @task.save
       end
     else
-      flash[:warning] = t(".you_are_not_authorized_to_decline_this_task")
-      redirect_to root_path
-      return
+      flash[:warning] = t('.you_are_not_authorized_to_decline_this_task')
+      return redirect_to root_path
     end
-    respond_to do |format| 
+    respond_to do |format|
       format.html { redirect_to @task }
       format.json { render json: @task }
     end
   end
 
+  def can_task_be_accepted?
+    if @task.status == 'declined'
+      flash[:warning] = t('.this_task_was_already_declined')
+      return false
+    elsif @task.status == 'accepted'
+      flash[:warning] = t('.this_task_was_already_accepted_by') + ' ' + @task.identity.name
+      return false
+    elsif !@task.identity.is_group and @task.identity.id != current_user.id
+      flash[:warning] = t('.you_are_not_authorized_to_accept_this_task')
+      return false
+    end
+    true
+  end
+
   def is_member_of_assigned_group?
-    return (@task.identity.is_group and @task.identity.users.include?(current_user))
+    @task.identity.is_group && @task.identity.users.include?(current_user)
   end
 
   def is_assigned_user?
-    return (!@task.identity.is_group and @task.identity.id == current_user.id)
+    !@task.identity.is_group && @task.identity.id == current_user.id
   end 
 
   private
@@ -243,22 +234,22 @@ class TasksController < ApplicationController
 
     def set_status(params)
       updated_params = params
-      if !@task
+      if @task
+        current_identity = @task.identity.nil? ? '' : @task.identity_type + ':' + @task.identity_id.to_s
         if updated_params[:identity].blank?
-          updated_params[:status] = "not_assigned"
-        else
-          updated_params[:status] = "pending"
+          updated_params[:status] = 'not_assigned'
+        elsif updated_params[:identity] != current_identity
+          updated_params[:status] = 'pending'
         end
       else
-        currentIdentity = @task.identity.nil? ? "" : @task.identity_type + ":" + @task.identity_id.to_s
         if updated_params[:identity].blank?
-          updated_params[:status] = "not_assigned"
-        elsif updated_params[:identity] != currentIdentity
-          updated_params[:status] = "pending"
+          updated_params[:status] = 'not_assigned'
+        else
+          updated_params[:status] = 'pending'
         end
       end
       updated_params.delete(:identity)
-      return updated_params
+      updated_params
     end
 
     def create_activity(task)
@@ -272,8 +263,8 @@ class TasksController < ApplicationController
       end
     end
 
-    def set_for_event_template 
-      @for_event_template = @task.event_id.nil? ? true : false
+    def set_for_event_template
+      @for_event_template = @task.event_id.blank? ? true : false
     end
 
     def upload_files
@@ -283,7 +274,7 @@ class TasksController < ApplicationController
         new_upload = @task.uploads.create(:file => upload)
         @uploads << new_upload
       end
-      return (@uploads.any? { |u| u.errors.any? }) ? false : true
+      (@uploads.any? { |u| u.errors.any? }) ? false : true
     end
   
     def delete_files
