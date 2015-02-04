@@ -43,7 +43,7 @@
         <div class="chardin_box">
           <%= t '.only_show_own' %>
           <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
-          <%= f.check_box :user %>
+          <%= f.check_box :user, {}, 'only_show_own', 'show_all' %>
        </div>
       </div>
     </div>
