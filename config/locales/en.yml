@@ -165,8 +165,11 @@ en:
       remove_favorite: ! 'Remove from favorites'
       add_favorite: ! 'Add to favorites'
       task:    ! 'Create task'
+      decline_all: ! 'Decline all (approved and pending)'
+      decline_pending: ! 'Only decline pending'
+      wo_decline: 'Continue without declining' 
     titles:
-      suggest: 'Suggest alternative'
+      suggest: 'Suggest alternative'     
   number:
     currency:
       format:
@@ -234,6 +237,7 @@ en:
     successful_update: ! '%{model} successfully updated.'
     successful_destroy: ! '%{model} successfully destroyed.'
     successful_suggest: ! '%{model} successfully suggested.'
+    successful_approve: ! '%{model} successfully approved.'
     set_language: 'Language successfully changed.'
   alert:
     successful_sugguest_conflict: ! '%{model} is in conflict with %{model}. %{model} was successfully suggested.'
@@ -244,8 +248,6 @@ en:
       pending: pending
       accepted: accepted
       declined: declined
-    user:
-      none: Nothing selected
     attachments:
       none: No Attachments
   event:
@@ -260,7 +262,8 @@ en:
       approved: approved
       declined: declined
       pending: pending
-      rejected_suggestion: rejected suggestion    
+      rejected_suggestion: rejected suggestion
+      request: Request      
   will_paginate:
     next_label: Next →
     page_entries_info:
@@ -282,9 +285,6 @@ en:
   event:
     altert:
       single_occurrence_successful_delete: 'You successfully deleted the event occurrence.'
-  events:
-    form:
-      series_end: 'Series end'
   menu:
     languages:
       de: DE

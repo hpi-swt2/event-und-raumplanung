@@ -69,14 +69,12 @@
                 <%= t('.configuration') %> <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider">
-                <li><%= link_to t('.templates'), event_templates_path %></li>
-                <li role="presentation" class="divider"></li>
+                <li class="dropdown-divider-line"><%= link_to t('.templates'), event_templates_path %></li>
                 <li><%= link_to t('.rooms'), rooms_path %></li>
                 <li class="dropdown-room-indent"><%= link_to t('.equipment'), equipment_index_path %></li>
                 <% if can? :index, RoomProperty %>
-                  <li class="dropdown-room-indent"><%= link_to t('.properties'), room_properties_path %></li>
+                  <li class="dropdown-room-indent dropdown-divider-line"><%= link_to t('.properties'), room_properties_path %></li>
                 <% end %>
-                <li role="presentation" class="divider"></li>
                 <li><%= link_to t('.groups'), groups_path %></li>
                 <li><%= link_to t('.print'), print_path %></li>
                 <% if can? :manage, Permission %>

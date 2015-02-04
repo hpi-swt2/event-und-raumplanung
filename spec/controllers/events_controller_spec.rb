@@ -532,6 +532,18 @@ RSpec.describe EventsController, :type => :controller do
     end
   end
 
+  describe "GET reset_filterrific" do 
+    it "resets the filter" do 
+      get :reset_filterrific, valid_session
+      expect(session[:filterrific_events]).to eq(nil)
+    end
+
+    it "redirects to index" do 
+      get :reset_filterrific, valid_session
+      expect(response).to redirect_to(action: :index)
+    end
+  end
+
   describe "POST create" do
     
     describe "with valid params" do
@@ -953,6 +965,14 @@ RSpec.describe EventsController, :type => :controller do
         expected_changed_fields = ["name", "description", "participant_count"]
         expect{
         put :update, {:id => event.to_param, :event => new_invalid_attributes}, valid_session
+        }.to change(activities, :count).by(0)
+      end
+
+      it "creates no activity when no fields are updated" do
+        event = Event.create! valid_attributes
+        activities = event.activities
+        expect{
+        put :update, {:id => event.to_param, :event => valid_attributes}, valid_session
         }.to change(activities, :count).by(0)
       end
 

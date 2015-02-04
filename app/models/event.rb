@@ -71,6 +71,8 @@ class Event < ActiveRecord::Base
   def schedule_from_rule(dirty_rule, termination_date=nil)
     validate_schedule
     schedule = self.schedule
+    schedule.start_time = self.starts_at
+    schedule.end_time = self.ends_at
     if schedule.exception_times
       schedule.exception_times.each do |exception_time|
         schedule.remove_exception_time(exception_time)
@@ -79,7 +81,8 @@ class Event < ActiveRecord::Base
     schedule.remove_recurrence_rule(schedule.recurrence_rules.first) unless schedule.recurrence_rules.empty?
     unless dirty_rule.nil? || dirty_rule == "null"
       rule = RecurringSelect.dirty_hash_to_rule(dirty_rule)
-      rule.until(Date.parse(termination_date)) unless termination_date.nil?
+      date = Date.parse(termination_date) if termination_date.present?
+      rule.until(date)
       schedule.add_recurrence_rule rule
     end
     self.schedule = schedule
@@ -141,6 +144,12 @@ class Event < ActiveRecord::Base
       end
     end
     return involved
+  end
+
+  def in_week(week, year)
+    weekBegin = Date.commercial(year, week, 1)
+    weekEnd = Date.commercial(year, week+1, 1)
+    return (self.ends_at >= weekBegin && self.starts_at <= weekEnd)
   end
 
   # Scope definitions. We implement all Filterrific filters through ActiveRecord

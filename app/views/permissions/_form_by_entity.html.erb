@@ -14,12 +14,14 @@
       
       <div id="permissionsDiv"></div>
 
+      <br>
+
       <button type="submit" class="btn btn-primary" title="<%= t("helpers.links.save_changes") %>">
         <span class="glyphicon glyphicon-floppy-disk"></span>
       </button>
 
-      <%= link_to permissions_path, :class => 'btn btn-default' do %>
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <%= t("helpers.links.cancel") %>
+      <%= link_to permissions_path, :title => t("helpers.links.cancel"), :class => 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-remove"></span>
       <% end %>
     </div>
   </div>

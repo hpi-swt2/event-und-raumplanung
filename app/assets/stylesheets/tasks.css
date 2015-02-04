@@ -3,15 +3,15 @@
   They will automatically be included in application.css.
 */
 
-.pending {
+.pending a {
     color: gray;
 }
 
-.accepted {
+.accepted a {
     color: green;
 }
 
-.declined {
+.declined a {
     color: red;
 }
 

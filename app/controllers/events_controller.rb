@@ -4,7 +4,7 @@ class EventsController < GenericEventsController
   skip_before_filter :authenticate_user!
   before_action :authenticate_user!
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve, :decline, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :approve,:declineconflicting, :decline, :decline_all, :decline_pending, :new_event_template, :new_event_suggestion, :index_toggle_favorite , :show_toggle_favorite, :decline_event_suggestion, :approve_event_suggestion, :edit_event_with_suggestion, :update_event_with_suggestion]
   before_action :set_return_url, only: [:show, :new, :edit]
   before_action :set_feed, only: [:show]
 
@@ -14,10 +14,12 @@ class EventsController < GenericEventsController
   skip_load_and_authorize_resource :only =>[:index, :show, :new, :create, :new_event_template, :reset_filterrific, :check_vacancy, :new_event_suggestion, :decline, :approve, :index_toggle_favorite, :show_toggle_favorite, :change_chosen_rooms, :create_event_suggestion, :edit_event_with_suggestion]
 
   after_filter :flash_to_headers, :only => :check_vacancy
-  
+
   before_action :get_instance_variable, only: [:new, :create, :update, :destroy]
   before_action :get_model, only: [:new, :create, :update, :destroy]
-  
+
+  before_action :log_activity, only: [:approve, :decline]
+
   def flash_to_headers
     if request.xhr?
       #avoiding XSS injections via flash
@@ -79,14 +81,18 @@ class EventsController < GenericEventsController
   # GET /events
   # GET /events.json
   def index
-    @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
-    @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
-    @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
-    @filterrific.user = nil if @filterrific.user == 0;
+    initialize_filterrific params
     filterred_events = Event.filterrific_find(@filterrific)
     @events = filterred_events.select{ |event| can? :show, event }.paginate page: params[:page], per_page: (@filterrific.items_per_page || Event.per_page)
     @favorites = Event.joins(:favorites).where('favorites.user_id = ? AND favorites.is_favorite = ?', current_user_id, true).select('events.id')
     session[:filterrific_events] = @filterrific.to_hash
+  end
+
+  def initialize_filterrific params
+      @filterrific = Filterrific.new(Event, params[:filterrific] || session[:filterrific_events])
+      @filterrific.select_options =  {sorted_by: Event.options_for_sorted_by, items_per_page: Event.options_for_per_page}
+      @filterrific.user = current_user_id if @filterrific.user == 1 || params[:only_own];
+      @filterrific.user = nil if @filterrific.user == 0;
   end
 
   def reset_filterrific
@@ -96,30 +102,10 @@ class EventsController < GenericEventsController
     redirect_to action: :index
   end
 
-  def approve
-    authorize! :approve, @event
-    @event.approve
-    @event.activities << Activity.create(:username => current_user.username,
-                                          :action => params[:action],
-                                          :controller => params[:controller])
-    begin
-      redirect_to :back
-    rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
-    end
-  end
-
   def decline
     authorize! :decline, @event
     @event.decline
-    @event.activities << Activity.create(:username => current_user.username, 
-                                          :action => params[:action],
-                                          :controller => params[:controller])
-    begin
-      redirect_to :back
-    rescue ActionController::RedirectBackError
-      redirect_to events_approval_path
-    end
+    redirect_to_previous_site
   end
 
   def approve_event_suggestion
@@ -166,15 +152,44 @@ class EventsController < GenericEventsController
     end
   end
 
+  def approve
+    authorize! :approve, @event
+    @event.approve
+    conflicting_events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    if conflicting_events.empty?
+      redirect_to_previous_site
+    else
+      redirect_to decline_conflicting_path, notice: t('notices.successful_approve', :model => t('event.status.request'))
+    end
+  end
+
+  def declineconflicting
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    render 'conflictinglist'
+  end
+
+  def decline_all
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    @events.map { |event| event.decline}
+    redirect_to events_approval_path
+  end
+
+  def decline_pending
+    @events = @event.check_vacancy @event.id, @event.rooms.collect(&:id)
+    pending_events = @events.select { |event| event.status != "approved"}
+    pending_events.each { |event| event.decline}
+    redirect_to events_approval_path
+  end
+
   def conflicting_events_msg events
     msg = {}
     if events.empty?
       msg[:status] = true
-    else  
+    else
       msg = build_conflicting_events_response events
-    end 
+    end
     return msg
-  end 
+  end
 
   # GET /events/1
   # GET /events/1.json
@@ -193,7 +208,7 @@ class EventsController < GenericEventsController
   def new
     super
     @event.assign_attributes(params.permit(:name, :description, :participant_count, :starts_at, :ends_at, :is_private, :is_important, :room_ids => []))
-  end 
+  end
 
   # GET /events/:id/new_event_suggestion
   def new_event_suggestion
@@ -202,7 +217,7 @@ class EventsController < GenericEventsController
     render "event_suggestions/new"
   end
 
-  # GET /events/1/edit 
+  # GET /events/1/edit
   def edit
     #authorize! :edit, @event
 
@@ -224,7 +239,7 @@ class EventsController < GenericEventsController
   # POST /events/event_suggestion
   def create_event_suggestion
     params = add_original_event_params event_suggestion_params
-    params = add_reference_to_original_event params 
+    params = add_reference_to_original_event params
     @old_event_owner = Event.find(params["event_id"]).user_id
     create_event params, "event_suggestions/new", 'Vorschlag'
   end
@@ -233,19 +248,18 @@ class EventsController < GenericEventsController
   # PATCH/PUT /events/1.json
   def update
     @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
-    filtered_params = params_without_schedule_related_params(event_params)
+    filtered_params = params_without_schedule_related_params_or_event_template_id(event_params)
     @event.attributes = filtered_params
-
     changed_attributes = @event.changed
-
     @update_result = @event.update(filtered_params)
-
     if @update_result
-      @event.activities << Activity.create(:username => current_user.username, 
-                                          :action => params[:action], :controller => params[:controller],
-                                          :changed_fields => changed_attributes)
       EquipmentRequest.where(:event_id => @event.id).destroy_all
       create_equipment_requests
+    end
+    if @update_result && changed_attributes.any?
+      @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action], :controller => params[:controller],
+                                          :changed_fields => changed_attributes)
     end
     super
   end
@@ -303,8 +317,9 @@ class EventsController < GenericEventsController
       params.require(:event).permit(:name, :description, :participant_count, :starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time, :is_private, :is_important, :show_only_my_events, :message, :event_template_id, :commit, :occurence_rule, :schedule, :schedule_ends_at_date, :room_ids => [])
     end
 
-    def params_without_schedule_related_params(params)
-      params.reject {|k,v| k == "occurence_rule" || k == "schedule_ends_at_date"}
+
+    def params_without_schedule_related_params_or_event_template_id(params)
+      params.reject {|k,v| k == "occurence_rule" || k == "schedule_ends_at_date" || k == "event_template_id"}
     end
 
     def event_suggestion_params
@@ -312,30 +327,34 @@ class EventsController < GenericEventsController
     end
 
     def create_event params, new_url, model
-      @event_template_id = params['event_template_id']
-      params.delete('event_template_id')
-      @event = Event.new(params_without_schedule_related_params params)
+      @event = Event.new(params_without_schedule_related_params_or_event_template_id params)
       @event.schedule_from_rule(event_params[:occurence_rule], event_params[:schedule_ends_at_date])
+
+      @event_template_id = params['event_template_id']
+
       # test
       if @old_event_owner
         @event.user_id = @old_event_owner
       else
         @event.user_id = current_user_id
       end
-      create_tasks @event_template_id
+
+      if params['event_template_id']
+        params = copy_items_from_event_template params
+      end
+      if params['event_id']
+        @original_event_id = params['event_id']
+      end
 
       respond_to do |format|
         if @event.save
-          @event.activities << Activity.create(:username => current_user.username, 
+          @event.activities << Activity.create(:username => current_user.username,
                                           :action => "create", :controller => "events",
                                           :changed_fields => @event.changed)
           create_equipment_requests
           format.html { redirect_to @event, notice: t('notices.successful_create', :model => model) } # redirect to overview
           format.json { render :show, status: :created, location: @event }
         else
-          if params['event_id']
-            @original_event_id = params['event_id']
-          end
           format.html { render new_url}
           format.json { render json: @event.errors, status: :unprocessable_entity }
         end
@@ -343,26 +362,24 @@ class EventsController < GenericEventsController
     end
 
     def create_tasks event_template_id
-      if event_template_id
-        event_template = EventTemplate.find(event_template_id)
-        event_template.tasks.collect do |original_task| 
-          event_task = original_task.dup
-          event_task = create_tasks_with_attachments original_task, event_task
-          event_task.event_template_id = nil
-          event_task.creator = current_user
-          @event.tasks << event_task 
-        end
+      event_template = EventTemplate.find(event_template_id)
+      event_template.tasks.collect do |original_task|
+        event_task = original_task.dup
+        event_task = create_tasks_with_attachments original_task, event_task
+        event_task.event_template_id = nil
+        event_task.creator = current_user
+        @event.tasks << event_task
       end
-      return 
+      return
     end
 
     def create_tasks_with_attachments original_task, new_task
-      original_task.attachments.collect do |original_attachments| 
-        event_attachment = original_attachments.dup 
+      original_task.attachments.collect do |original_attachments|
+        event_attachment = original_attachments.dup
         new_task.attachments << event_attachment
       end
       return new_task
-    end          
+    end
 
     def add_original_event_params params
       @event = Event.find(params['original_event_id'])
@@ -425,7 +442,6 @@ class EventsController < GenericEventsController
     end
 
     def build_conflicting_events_response conflicting_events 
-      logger.info conflicting_events.inspect
       msg = Hash[conflicting_events.map { |conflicting_event|
                   conflicting_event_name = (conflicting_event.user_id == current_user_id || !conflicting_event.is_private) ? conflicting_event.name : I18n.t('event.private')
                   room_msg = conflicting_event.rooms.pluck(:name).to_sentence
@@ -442,10 +458,31 @@ class EventsController < GenericEventsController
       rooms_translation = conflicting_event.rooms.size > 1 ? 'multiple_rooms' : 'one_room'
       days_translation = (same_day conflicting_event.starts_at, conflicting_event.ends_at )? 'same_days' : 'different_days'
       return I18n.t('event.alert.conflict_'+ days_translation + '_' + rooms_translation, name: conflicting_event_name, start_date: conflicting_event.starts_at.strftime("%d.%m.%Y"), end_date: conflicting_event.ends_at.strftime("%d.%m.%Y"), start_time: start_time, end_time: end_time, rooms: room_msg)
-    end 
+    end
 
     def same_day starts_at, ends_at
       Time.at(starts_at).to_date === Time.at(ends_at).to_date
-    end 
+    end
+
+    def log_activity
+      @event.activities << Activity.create(:username => current_user.username,
+                                          :action => params[:action],
+                                          :controller => params[:controller])
+    end
+
+    def redirect_to_previous_site
+      begin
+        redirect_to :back
+      rescue ActionController::RedirectBackError
+        redirect_to events_approval_path
+      end
+    end
+
+    def copy_items_from_event_template params
+      @event_template_id = params[:event_template_id]
+      create_tasks @event_template_id
+      params.delete('event_template_id')
+      return params
+    end
 
 end

@@ -1,59 +1,61 @@
 <%-
-  model_class = Room
+    model_class = Room
 -%>
 
 
-
 <script type="text/javascript">
-	function print(){
-		var url="/rooms/print?";
-		url += "date="+$('#printdate').val()+"&";
-		url += "rooms="+$('#printselect').val().join();
-		fenster = window.open(url, "Print");
-		fenster.focus();
-	}
+    function print(){
+        var url="/rooms/print?";
+        url += "date="+$('#printdate').val()+"&";
+        url += "rooms="+$('#printselect').val().join();
+        fenster = window.open(url, "Print");
+        fenster.focus();
+    }
 
-    function selectAll() {        
+    function selectAll() {
         $('#printselect').multiSelect('select_all');
-        }
-     function deselectAll() {        
+    }
+    function deselectAll() {
         $('#printselect').multiSelect('deselect_all');
-        }
+    }
 </script>
-    
 
+<% page_header = t '.title' %>
+<% title page_header %>
 
-<h1>Print</h1>
+<div class="page-header">
+    <h1><%= page_header %></h1>
+</div>
 
 <div class="row">
     <div class=".col-md-6">
-	   <h2> Rooms </h2>
-	   <div class="btn-group" role="group" aria-label="selection">
-  		<button type="button" class="btn btn-default" onclick="deselectAll()"><span class="glyphicon glyphicon-chevron-left"></span> </button>
-  		<button type="button" class="btn btn-default" onclick="selectAll()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-		</div>
+        <h2><%= t '.rooms' %></h2>
+        <div class="btn-group" role="group" aria-label="selection">
+            <button type="button" class="btn btn-default" onclick="deselectAll()"><span class="glyphicon glyphicon-chevron-left"></span> </button>
+            <button type="button" class="btn btn-default" onclick="selectAll()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+        </div>
 
-	   <select multiple="multiple" id="printselect" name="printselect[]">
-		  <% @rooms.each do |room| %>
-		      <option value="<%= room.id %>"><%= room.name %></option>
-		  <% end -%>
-	   </select>
-	   <script> $('#printselect').multiSelect(); </script>
+        <select multiple="multiple" id="printselect" name="printselect[]">
+            <% @rooms.each do |room| %>
+                <option value="<%= room.id %>"><%= room.name %></option>
+            <% end -%>
+        </select>
+        <script> $('#printselect').multiSelect(); </script>
     </div>
 
     <div class=".col-md-6">
-        <h2>Week</h2>
-	   <select id="printdate">
+        <h2><%= t '.week' %></h2>
+        <select id="printdate">
             <% monday = Date.today.monday
-		  4.times do %>
-		  <option value="<%= monday %>"><%= l monday %> - <%= l monday.end_of_week %></option>
-		  <% monday = monday.next_week
-		  end %>
-	   </select>
+               4.times do %>
+                <option value="<%= monday %>"><%= l monday %> - <%= l monday.end_of_week %></option>
+            <% monday = monday.next_week
+               end %>
+        </select>
     </div>
 </div>
 
 <button type="button" class="btn btn-default btn-lg" aria-label="Left Align">
-  <a href="javascript:print()">
-  	<span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+    <a href="javascript:print()">
+        <span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
 </button>
