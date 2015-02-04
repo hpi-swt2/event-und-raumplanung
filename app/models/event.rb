@@ -286,12 +286,13 @@ class Event < ActiveRecord::Base
   end
 
   # we are aware of the aweful performance :), refactore it, if relevant
-  def self.upcoming_events(limit=5)
+  def self.upcoming_events(limit=5, user_id)
     list = []
-    events = Event.all
+    events = Event.where('starts_at >= ?', Time.now)
+    involved_users_in = Event.involved_in(user_id)
     events.each do |e|
-      e.schedule.next_occurrences(limit, Time.now).each do |time|
-        list << EventOccurrence.new({event: e, starts_occurring_at: time, ends_occurring_at: time + e.duration})
+      if e.occurence_rule.nil? && !involved_users_in.include?(e) && !e.is_private
+        list << EventOccurrence.new({event: e, starts_occurring_at: e.starts_at, ends_occurring_at: e.ends_at})
       end
     end
     list.sort_by! { |occurrence| occurrence.starts_occurring_at }

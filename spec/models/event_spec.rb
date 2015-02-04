@@ -66,26 +66,35 @@ describe Event do
       Event.destroy_all
     end
 
+    let(:other_user) {create(:user)}
+
     context "daily event present" do
-      it "finds the next 5 upcoming event occurrences", skip_before: true do
-        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
-        occurrences = Event.upcoming_events(5)
-        expect(occurrences.count).to eq(5)
+      it "finds the next 5 upcoming events", skip_before: true do
+        upcoming_event = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        occurrences = Event.upcoming_events(5, user.id)
+        expect(occurrences.count).to eq(1)
         occurrences.each do |o|
-          expect(o.event).to eq(upcoming_daily_recurring_event)
+          expect(o.event).to eq(upcoming_event)
         end
       end
 
-      it "finds the next 5 upcoming event occurrences from multiple events", skip_before: true do
-        upcoming_daily_recurring_event = FactoryGirl.create(:upcoming_daily_recurring_event)
-        upcoming_daily_recurring_event2 = FactoryGirl.create(:upcoming_daily_recurring_event2)
-        occurrences = Event.upcoming_events(5)
+      it "finds the next 5 upcoming events from multiple events", skip_before: true do
+        upcoming_event = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        upcoming_event2 = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        upcoming_event3 = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        upcoming_event4 = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        upcoming_event_user = FactoryGirl.create(:upcoming_event, user_id: user.id, is_private: false)
+        upcoming_event_user_private = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: true)
+        upcoming_event5 = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        upcoming_event6 = FactoryGirl.create(:upcoming_event, user_id: other_user.id, is_private: false)
+        occurrences = Event.upcoming_events(5, user.id)
         expect(occurrences.count).to eq(5)
-        expect(occurrences.first.event).to eq(upcoming_daily_recurring_event)
-        expect(occurrences.second.event).to eq(upcoming_daily_recurring_event2)
-        expect(occurrences.third.event).to eq(upcoming_daily_recurring_event)
-        expect(occurrences.fourth.event).to eq(upcoming_daily_recurring_event2)
-        expect(occurrences.fifth.event).to eq(upcoming_daily_recurring_event)
+        events = occurrences.collect {|occ| occ.event}
+        expect(events.include?(upcoming_event)).to be
+        expect(events.include?(upcoming_event2)).to be
+        expect(events.include?(upcoming_event3)).to be
+        expect(events.include?(upcoming_event4)).to be
+        expect(events.include?(upcoming_event5)).to be
       end
     end
   end

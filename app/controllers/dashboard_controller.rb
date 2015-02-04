@@ -2,7 +2,7 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @event_occurrences = Event.upcoming_events(5).select{|occ| can? :show, occ.event}
+    @event_occurrences = Event.upcoming_events(5, current_user.id)
     @my_upcoming_events = next_five_own_events
     @requests = Event.open.order(:starts_at, :user_id, :id).select{|event| can? :approve, event}.first(5)
     get_my_tasks
